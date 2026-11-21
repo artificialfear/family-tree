@@ -938,7 +938,7 @@ function treeArt(st,dl){if(st==='classic')return null;
     let grain='';TBR.filter(b=>b.w>=8).forEach(b=>{[-.22,.18].forEach(o=>{const n=12;let d='';for(let i=2;i<=n-2;i++){const t=i/n,u=1-t,x=u*u*b.x1+2*u*t*b.cx+t*t*b.x2,y=u*u*b.y1+2*u*t*b.cy+t*t*b.y2,dx=2*u*(b.cx-b.x1)+2*t*(b.x2-b.cx),dy=2*u*(b.cy-b.y1)+2*t*(b.y2-b.cy),l=Math.hypot(dx,dy)||1,w=b.w*(1-.5*t)*o;d+=(i===2?'M':'L')+f(x-dy/l*w)+' '+f(y+dx/l*w);}grain+=`<path d="${d}" fill="none" stroke="${K.grain}" stroke-width="${b.w>=20?1.6:.9}" opacity="${K.grainO}"/>`;});});
     // watercolor tint under the ink, slightly offset
     const tint=TBR.map(b=>`<path d="${taperPath({...b,x1:b.x1+3,x2:b.x2+3,cx:b.cx+3,y1:b.y1+2,y2:b.y2+2,cy:b.cy+2},b.w*1.15,Math.max(2,b.w*.5))}" fill="${K.tint}" opacity="${K.tintO}"/>`).join('');
-    let lv='';TBR.forEach(b=>{if(b.w<3)return;const n=b.w>=20?5:b.w>=8?3:2;for(let i=0;i<n;i++){const t=.25+rnd()*.7,[x,y]=qpt(b,t),ang=Math.atan2(b.y2-b.y1,b.x2-b.x1)*180/Math.PI+(rnd()<.5?55:-55),s=.75+rnd()*.5;
+    let lv='';TBR.forEach(b=>{if(b.w<3||b.w>=12||Math.min(b.y1,b.y2)>=880)return;const n=b.w>=20?5:b.w>=8?3:2;for(let i=0;i<n;i++){const t=.25+rnd()*.7,[x,y]=qpt(b,t),ang=Math.atan2(b.y2-b.y1,b.x2-b.x1)*180/Math.PI+(rnd()<.5?55:-55),s=.75+rnd()*.5;
       lv+=`<g class="deco" style="--d:${dl(y,x)+150}ms" transform="translate(${f(x)} ${f(y)}) rotate(${ang.toFixed(0)}) scale(${s.toFixed(2)}) translate(6 0)"><path d="${LEAFP}" fill="${K.lf}" fill-opacity="${K.lfO}" stroke="${K.ink}" stroke-width="1"/><path d="M1 0L17 0" stroke="${K.ink}" stroke-width=".7"/></g>`;}});
     let tufts='';for(let x=X0+30;x<X1;x+=46+rnd()*40){const y=1384-Math.max(0,170*(1-Math.pow((x-915)/((X1-X0)/2),2)))*.55+rnd()*6;if(rnd()<.5)continue;tufts+=`<path d="M${f(x)} ${f(y)}l-5 -12M${f(x+4)} ${f(y)}l1 -15M${f(x+8)} ${f(y)}l6 -11" stroke="${K.line}" stroke-width="1.1" fill="none" stroke-linecap="round"/>`;}
     ground=`<g class="art"><path d="M${X0} 1384 Q915 1205 ${X1} 1384 L${X1} ${gb} L${X0} ${gb}Z" fill="${K.hill}" opacity="${K.hillO}" filter="url(#wc)"/>${K.hill2?`<path d="M${X0} 1430 Q${X0+500} 1330 915 1420 T${X1} 1415 L${X1} ${gb} L${X0} ${gb}Z" fill="${K.hill2}" opacity=".7" filter="url(#wc)"/>`:''}<path d="M${X0} 1384 Q915 1205 ${X1} 1384" fill="none" stroke="${K.line}" stroke-width="1.6"/>${tufts}</g>`;
@@ -1363,7 +1363,7 @@ function closeCover(story){
 // quietly fetch every face while the opening screen is showing, so they're ready when the tree grows
 (window.requestIdleCallback||(f=>setTimeout(f,1200)))(()=>{Object.values(photo).forEach(u=>{if(!u)return;const i=new Image();i.decoding='async';i.src=u;});});
 $('#begin').onclick=()=>{startMusic();closeCover(true);};
-$('#skip').onclick=()=>closeCover(false);
+$('#skip').onclick=()=>{startMusic();closeCover(false);};
 
 /* ---------- map ---------- */
 let mapMode='region',mapSel=null;
