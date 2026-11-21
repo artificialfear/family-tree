@@ -691,7 +691,7 @@ function build(){
     P.push(np);byId[id]=np;
   }
   photo={};for(const k in PHOTOS)photo[k]=PHOTOS[k].p;
-  contribs.filter(c=>c.type==='photo'&&c.asset&&c.portrait!==false).sort((a,b)=>(a.at||0)-(b.at||0)).forEach(c=>{photo[c.pid]=assetUrl(c.asset);});
+  contribs.filter(c=>c.type==='photo'&&c.asset&&c.portrait===true).sort((a,b)=>(a.at||0)-(b.at||0)).forEach(c=>{photo[c.pid]=assetUrl(c.asset);});
 }
 
 /* ---------- layout ---------- */

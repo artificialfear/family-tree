@@ -12,6 +12,8 @@ def rep(a,b,c=1):
 # search engines
 rep('<meta name="viewport" content="width=device-width, initial-scale=1">','<meta name="viewport" content="width=device-width, initial-scale=1">\n<meta name="robots" content="noindex, nofollow, noimageindex">\n<meta name="googlebot" content="noindex, nofollow, noimageindex">')
 
+# a memory photo only replaces someone's face when 'use as picture' was ticked
+rep("c.type==='photo'&&c.asset&&c.portrait!==false","c.type==='photo'&&c.asset&&c.portrait===true")
 # photo urls
 s=s.replace("'/_blob/'+c.asset","assetUrl(c.asset)")
 n=s.count('/_blob/${esc(c.asset)}');assert n>=3,n
