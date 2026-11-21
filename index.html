@@ -1428,7 +1428,7 @@ refresh();route();
 
 /* ---------- shared family additions (Google Sheet via Apps Script) ---------- */
 const API="https://script.google.com/macros/s/AKfycbzD4Jhho5n9FtifLnANFA3JmElnLuGW0fuMA_bOSh94HwK9atmtwfymyIzEPhrip8hU/exec";
-function assetUrl(id){return 'https://drive.google.com/thumbnail?id='+encodeURIComponent(id)+'&sz=w1600';}
+function assetUrl(id){id=String(id||'');return id.startsWith('photos/')?id:'https://drive.google.com/thumbnail?id='+encodeURIComponent(id)+'&sz=w1600';}
 var devId=store.get('devid');if(!devId){devId=(crypto.randomUUID?crypto.randomUUID():Math.random().toString(36).slice(2)+Date.now().toString(36)).slice(0,24);store.set('devid',devId);}
 async function apiPost(o){const r=await fetch(API,{method:'POST',body:JSON.stringify(o),headers:{'Content-Type':'text/plain;charset=utf-8'}});return r.json();}
 async function refreshContribs(){if(!API)return;const r=await fetch(API+(API.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});const j=await r.json();if(!j.ok)return;
