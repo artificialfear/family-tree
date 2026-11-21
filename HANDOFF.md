@@ -27,7 +27,7 @@ A Thanksgiving 2026 gift for Mat's mom, Renee. Interactive illustrated family tr
 
 ## Decisions Mat made
 - Public site (GitHub Pages) so relatives need no account; family passcode (not per-post approval) for adding memories; noindex tags so search engines skip it.
-- Grandkids: photos + first names only, no birth years. Johnny & Annie Mae's great-grandkids (Jacob, Lilly(H), Madison, Lydia(H)) stay off for now.
+- Grandkids and minors: photos + first names only, no birth years. Jacob (Jeff & David's son) added 2026-11-21 as a cousin. Other great-grandkids of Johnny & Annie Mae (Lilly(H), Madison, Lydia(H)) stay off for now.
 - No sound effects. "passes away" instead of "dies". Ed and Renee are the largest faces.
 - Default sky: automatic (sunset by day, night after dark); sun is fixed in the sky and lights the scene by its height.
 - Living people: no birth dates beyond what Mat supplied.
