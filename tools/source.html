@@ -1326,7 +1326,7 @@ function closeCover(story){
       const st=$('#tstage').getBoundingClientRect(),toS=(x,y)=>[st.left+tv.x+x*tv.k,st.top+tv.y+y*tv.k];
       const b0=tw.querySelector('.br'),bark=b0?rgb((cs=>cs.stroke==='none'?cs.fill:cs.stroke)(getComputedStyle(b0))):[125,95,66],gold=[243,217,184];
       const big=[...TBR].sort((a,b)=>b.w-a.w).slice(0,3);
-      const tg0=big.map(b=>{const p=toS(b.x1,b.y1),q=toS(b.x2,b.y2);return [p[0],p[1],q[0],q[1],Math.max(1.5,b.w*tv.k*.8)];}),tg=from.map((_,i)=>tg0[i%tg0.length]);
+      const cy=y=>Math.min(y,1205);const tg0=big.map(b=>{const p=toS(b.x1,cy(b.y1)),q=toS(b.x2,cy(b.y2));return [p[0],p[1],q[0],q[1],Math.max(1.5,b.w*tv.k*.8)];}),tg=from.map((_,i)=>tg0[i%tg0.length]);
       if(!tg.length)return;
       const fx=document.createElementNS('http://www.w3.org/2000/svg','svg');fx.setAttribute('class','morphfx');
       fx.innerHTML=tg.map(()=>'<line stroke-linecap="round"/>').join('');document.body.appendChild(fx);
