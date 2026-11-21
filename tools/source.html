@@ -806,13 +806,15 @@ function tLayout(){
   const pos={},br=[],put=(id,x,y,t)=>{if(byId[id]&&!pos[id])pos[id]={x,y,r:RAD[t],t};return pos[id];};
   const B=(x1,y1,cx,cy,x2,y2,w)=>br.push({d:`M${x1.toFixed(1)} ${y1.toFixed(1)}Q${cx.toFixed(1)} ${cy.toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`,w,x1,y1,cx,cy,x2,y2});
   const BX=915,BY=1225,F={x:915,y:905},GN={x:650,y:625},HN={x:1180,y:625};
-  B(BX,BY+30,BX-6,(BY+F.y)/2,F.x,F.y,44);                                   // trunk
+  B(BX,BY+62,BX-6,(BY+F.y)/2,F.x,F.y,44);                                   // trunk, reaching into the ground
   {const row=[];['chris','mat','jon','dustin'].forEach(id=>{if(!byId[id])return;row.push([id,0]);const w=byId[id].sp;if(w&&byId[w]&&byId[w].g===0)row.push([w,1]);});
+   // the sons and their wives stand along the curve of the planet (radius 2200, top at y 1272)
+   const ground=x=>1272+2200-Math.sqrt(2200*2200-(x-BX)*(x-BX));
    let x=0;const xs=row.map(([id,isSp],i)=>{if(i>0)x+=isSp?150:165;return x;});const off=BX-x/2,y=1295;
-   row.forEach(([id,isSp],i)=>{const px=xs[i]+off;put(id,px,y,isSp?'ssp':'son');
-     if(!isSp)B(BX,BY+10,(BX+px)/2,BY+18,px,y-RAD.son,9);else{const h=pos[row[i-1][0]];B(h.x+RAD.son,y,(h.x+px)/2,y-6,px-RAD.ssp,y,4);}});
+   row.forEach(([id,isSp],i)=>{const px=xs[i]+off,py=ground(px)+23;put(id,px,py,isSp?'ssp':'son');
+     if(isSp){const h=pos[row[i-1][0]],dx=px-h.x,dy=py-h.y,l=Math.hypot(dx,dy);B(h.x+dx/l*RAD.son,h.y+dy/l*RAD.son,(h.x+px)/2,(h.y+py)/2-6,px-dx/l*RAD.ssp,py-dy/l*RAD.ssp,4);}});
    // grandchildren stand on the lawn below their parents
-   const gy=1440;row.filter(r=>!r[1]).forEach(([id])=>{const a=pos[id],w=byId[id].sp&&pos[byId[id].sp],cx=w?(a.x+w.x)/2:a.x,sy=w?y:y+RAD.son;
+   row.filter(r=>!r[1]).forEach(([id])=>{const a=pos[id],w=byId[id].sp&&pos[byId[id].sp],cx=w?(a.x+w.x)/2:a.x,sy=w?(a.y+w.y)/2:a.y+RAD.son,gy=ground(cx)+168;
      const ks=P.filter(k=>k.g<0&&k.par.includes(id)&&!pos[k.id]).sort((p,q)=>p.ord-q.ord),n=ks.length;
      ks.forEach((k,j)=>{const kx=cx+(j-(n-1)/2)*88;put(k.id,kx,gy,'gk');B(cx,sy,cx,gy-52,kx,gy-RAD.gk,3.5);});});}
   put('ed',800,872,'par');put('renee',1030,872,'par');B(F.x,F.y,872,896,800+RAD.par,872,12);B(F.x,F.y,958,896,1030-RAD.par,872,12);
