@@ -43,7 +43,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .stage svg{position:absolute;inset:0;width:100%;height:100%;cursor:grab}
 #tsvg{inset:auto;left:-40%;top:-40%;width:180%;height:180%;transform-origin:22.2222% 22.2222%}
 #tstage{overflow:clip}
-.stage.moving #tsvg,.stage.moving .wlayer{will-change:transform}
+#tsvg,.stage .wlayer{will-change:transform}
 .stage.moving .sky *,.stage.moving #tfront i,.stage.moving #tbackimg,.stage.moving .mstar svg{animation-play-state:paused!important}
 .stage.moving .sky{transition:none!important}
 .stage svg.drag{cursor:grabbing}
@@ -1044,7 +1044,7 @@ function drawLeafTree(grow){
 /* stage size is cached so dragging never forces the browser to re-measure the page */
 $('#tstage').addEventListener('scroll',e=>{const t=e.currentTarget;if(t.scrollTop||t.scrollLeft){t.scrollTop=0;t.scrollLeft=0;}});
 let TSZ={w:0,h:0};const tsz=()=>{if(!TSZ.w){const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};}return TSZ;};
-new ResizeObserver(()=>{const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};if(tw.childElementCount)tApply(false);}).observe($('#tstage'));
+new ResizeObserver(()=>{const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};if(tw.childElementCount&&!G)tApply(false);}).observe($('#tstage'));
 function tClamp(){const r={width:tsz().w,height:tsz().h};if(!r.width||!(TB.x1>TB.x0))return;const W=r.width,H=r.height,bw=TB.x1-TB.x0,bh=TB.y1-TB.y0;
   const kmin=Math.min(W/bw,H/bh)*.75;if(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
   const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(H*.5-(TB.y1+(PRINT?0:280))*k,tv.y));}
@@ -1059,7 +1059,9 @@ function tApply(anim){tClamp();sunLight();const T=`translate(${tv.x}px,${tv.y}px
 /* while a finger is dragging or pinching, move the already-drawn picture instead of redrawing the tree every frame */
 let G=null,gRaf=0;
 function gBegin(){if(G)return;G={...tv};$('#tstage').classList.add('moving');}
-function gApply(){tClamp();if(!G){tApply(false);return;}const s=tv.k/G.k;
+function gApply(){tClamp();if(!G){tApply(false);return;}let s=tv.k/G.k;
+  // before the moving picture runs out of pre-drawn edge (or gets too blurry), redraw it at the new spot and carry on
+  {const z=tsz(),dx=tv.x-G.x*s,dy=tv.y-G.y*s;if(Math.abs(dx)>z.w*.3||Math.abs(dy)>z.h*.3||s>1.6||s<.65){tApply(false);gBegin();s=1;}}
   tsvg.style.transform=`translate(${tv.x-G.x*s}px,${tv.y-G.y*s}px) scale(${s})`;const T=`translate(${tv.x}px,${tv.y}px) scale(${tv.k})`;wl().forEach(e=>{if(e){e.classList.add('nomo');e.style.transform=T;}});}
 const gFrame=()=>{if(!gRaf)gRaf=requestAnimationFrame(()=>{gRaf=0;gApply();});};
 function gEnd(){if(gRaf){cancelAnimationFrame(gRaf);gRaf=0;}if(G)tApply(false);}
@@ -1082,7 +1084,7 @@ function tZoom(f,cx,cy,fast){tTouched=1;hidePop();const r=tsz();cx??=r.w/2;cy??=
  tsvg.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,[e.clientX,e.clientY]);
    if(pts.size===2&&pinch){const [a,b]=[...pts.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),r=pinchR||(pinchR=$('#tstage').getBoundingClientRect());tZoom(d/pinch,(a[0]+b[0])/2-r.left,(a[1]+b[1])/2-r.top,true);pinch=d;moved=99;return;}
    const dx=e.clientX-last[0],dy=e.clientY-last[1];moved+=Math.abs(dx)+Math.abs(dy);last=[e.clientX,e.clientY];if(moved<4)return;tv.x+=dx;tv.y+=dy;tTouched=1;gBegin();gFrame();});
- const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(!pts.size){tsvg.classList.remove('drag');gEnd();}
+ const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(pts.size===1){last=[...pts.values()][0].slice();moved=99;}if(!pts.size){tsvg.classList.remove('drag');gEnd();}
    if(e.type==='pointerup'&&moved<6){const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);if(e.pointerType!=='mouse'){showPop(c.dataset.id);popT=setTimeout(hidePop,2200);}}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
  tsvg.addEventListener('pointerup',up);tsvg.addEventListener('pointercancel',up);
  tsvg.addEventListener('wheel',e=>{e.preventDefault();const r=$('#tstage').getBoundingClientRect();tZoom(e.deltaY<0?1.12:1/1.12,e.clientX-r.left,e.clientY-r.top);},{passive:false});
@@ -1443,7 +1445,7 @@ function route(){const h=location.hash.slice(1),v=['tree','help','chart','places
   if(v==='chart')requestAnimationFrame(()=>{if(!fitted){initView();fitted=1;}});}
 addEventListener('hashchange',route);
 new ResizeObserver(()=>{if(!$('#v-chart').classList.contains('on'))return;if(!touched)initView();}).observe($('#stage'));
-new ResizeObserver(()=>{if(!$('#v-tree').classList.contains('on'))return;if(si>=0)tFrame(STORY[si].f,false);else if(!tTouched)tStart();}).observe($('#tstage'));
+new ResizeObserver(()=>{if(!$('#v-tree').classList.contains('on')||G)return;if(si>=0)tFrame(STORY[si].f,false);else if(!tTouched)tStart();}).observe($('#tstage'));
 
 function refresh(){build();drawTree(false);apply(false);drawLeafTree(false);renderPanel(false);drawTimeline();drawMap();}
 refresh();route();

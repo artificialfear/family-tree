@@ -11,3 +11,9 @@
 - Moving updates are bundled into one per screen refresh; the page no longer re-measures itself while you drag.
 - Lighter effects: fewer stars on phones, softer clouds without blur, no glowing shadows on hometown markers, no swaying foliage on phones, smaller background image on phones. Animations pause while dragging.
 - Ending the story no longer pops open Renee's details over the tree.
+
+## 2026-11-21 — Android fixes
+- Lifting one finger after a pinch no longer makes the tree jump to a different spot.
+- The tree's picture layers stay ready all the time, so starting or ending a drag no longer flashes.
+- Long, fast drags refresh the picture before its pre-drawn edges run out, instead of showing blank patches.
+- The phone's address bar appearing/disappearing mid-drag no longer snaps the view.
