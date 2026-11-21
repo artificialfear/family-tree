@@ -33,7 +33,7 @@ A Thanksgiving 2026 gift for Mat's mom, Renee. Interactive illustrated family tr
 - Living people: no birth dates beyond what Mat supplied.
 
 ## Open items
-- Mat to deploy the Apps Script and paste the /exec URL into tools/api.txt, then rebuild.
+- Apps Script deployed (personal Gmail, project "Family Tree Memories Backend", bound to Sheet "Family Tree Memories" 1HkfTGciP1XuJdExkbUpby_ip1TJzKUZnhXYrVG5cml4). URL in tools/api.txt. To update the backend: paste backend/Code.gs, then Deploy > Manage deployments > edit > New version (never "New deployment").
 - Remaining "died"/"Died" wording not yet changed to "passed away"/"Passed" (Mat hasn't decided).
 - Idea offered, not built: hometown markers glow during story chapters.
 - The claude.ai artifact version (slug 3be5a35b-…) still exists as a private working copy.
