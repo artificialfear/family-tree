@@ -348,9 +348,12 @@ function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!
   const cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=60,avail=r.height-capH-top-8,b=(ids&&ids.length)?tBox(ids):TB,w=b.x1-b.x0,h=b.y1-b.y0;
   const k=Math.max(.12,Math.min((r.width-36)/w,avail/h,ids&&ids.length===1?1.5:1.2));
   tv.k=k;tv.x=r.width/2-(b.x0+b.x1)/2*k;tv.y=top+avail/2-(b.y0+b.y1)/2*k;tApply(anim);}
-const tFit=(anim=true)=>tFrame([],anim);
+// the setting sun sits right behind the trunk whenever the view is framed (first load, Fit); panning leaves it where it is
+function sunToTrunk(jump){const st=SKYEL||(SKYEL=$('#tstage .sky')),W=$('#tstage').getBoundingClientRect().width;if(!st||!W)return;
+  if(jump)st.style.transition='none';st.style.setProperty('--sunx',Math.max(8,Math.min(92,(tv.x+915*tv.k)/W*100)).toFixed(2)+'%');if(jump){void st.offsetWidth;st.style.transition='';}}
+const tFit=(anim=true)=>{tFrame([],anim);sunToTrunk(!anim);};
 const TCORE=['jack','margaret','johnny','annie','ed','renee','chris','mat','jon','dustin'];
-const tStart=()=>innerWidth<600?tFrame(TCORE,false):tFit(false);
+const tStart=()=>{innerWidth<600?tFrame(TCORE,false):tFit(false);sunToTrunk(true);};
 function tFocus(id){tTouched=1;const v=TP[id];if(!v)return;const r=$('#tstage').getBoundingClientRect();tv.k=Math.max(tv.k,1);tv.x=r.width/2-v.x*tv.k;tv.y=r.height/2-v.y*tv.k;tApply(true);}
 function tZoom(f,cx,cy,fast){tTouched=1;hidePop();const r=tsz();cx??=r.w/2;cy??=r.h/2;const k=Math.min(3,Math.max(.12,tv.k*f));tv.x=cx-(cx-tv.x)*k/tv.k;tv.y=cy-(cy-tv.y)*k/tv.k;tv.k=k;if(fast){gBegin();gFrame();}else tApply(false);}
 {const pts=new Map();let moved=0,last=null,pinch=null,pinchR=null;

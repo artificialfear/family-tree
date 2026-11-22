@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Sun behind the trunk
+- The setting sun now sits right behind the trunk when the tree first opens and whenever you press Fit, on any screen size.
+
 ## 2026-11-22 — Names centered under every photo
 - Every name scroll now sits centered under its photo. Where two people were crowded, both the photo and the name move apart together, and their branches follow.
 - More room along the planet for the brothers, their wives and the grandchildren, so their names no longer crowd each other.
