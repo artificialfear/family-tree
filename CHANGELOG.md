@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Story flicker found and fixed
+- The flash during the story was the hidden person-info panel briefly sliding across the screen each time a new chapter picked a person. It now stays hidden.
+
 ## 2026-11-22 — Calmer tree on phones
 - On phones, story chapters now change their highlighting while the tree is faded out, and the pulsing glows on faces and the twinkling memory stars inside the tree hold still, so the phone isn't constantly redrawing the whole tree.
 - The theater sign is drawn on its own layer so it no longer flickers when things change behind it.
