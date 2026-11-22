@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noimageindex">
+<meta name="googlebot" content="noindex, nofollow, noimageindex">
+<title>Graham &amp; Harper Family</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,500;0,600;0,700;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+<!--CSS-->
+</style>
+</head>
+<body>
+<div class="cover" id="cover" role="dialog" aria-label="Welcome">
+  <div class="drift" id="drift" aria-hidden="true"></div><div class="veil" aria-hidden="true"></div><div class="specks" id="specks" aria-hidden="true"></div>
+  <div class="coverIn">
+    <svg class="leaf" id="leaf" viewBox="-12 -14 244 172" aria-hidden="true"><g class="branches">
+      <path pathLength="1" d="M110 148V92M110 92C110 70 80 60 60 40M110 92C110 70 140 60 160 40M110 110C95 100 70 100 40 88M110 110C125 100 150 100 180 88M60 40C55 30 45 24 30 20M60 40C62 28 70 18 80 10M160 40C165 30 175 24 190 20M160 40C158 28 150 18 140 10"/>
+      <circle cx="30" cy="20" r="5" style="animation-delay:1.6s"/><circle cx="80" cy="10" r="5" style="animation-delay:1.8s"/><circle cx="140" cy="10" r="5" style="animation-delay:2s"/><circle cx="190" cy="20" r="5" style="animation-delay:2.2s"/><circle cx="40" cy="88" r="5" style="animation-delay:1.4s"/><circle cx="180" cy="88" r="5" style="animation-delay:1.5s"/></g><g id="faces"></g>
+    </svg>
+    <div class="ded">For Renee — Thanksgiving 2026</div>
+    <h1>The Graham &amp; Harper Family</h1>
+    <p>Four generations, from North Carolina, Kentucky and Upson County down to Newborn — and a story about how they found each other.</p>
+    <div class="go"><button class="gold" id="begin">Begin the story</button><button class="ghost" id="skip">Explore the tree</button></div>
+  </div>
+</div>
+
+<header class="band">
+  <h1>The Graham &amp; Harper Family</h1>
+  <p><span class="dedic">For Renee — Thanksgiving 2026.</span> Click anyone to see what we know, how sure we are, and to add what you remember.</p>
+  <div class="hdrbtns"><button class="gold" id="storyBtn">▶ Play the story</button><button id="bigBtn" aria-pressed="false">Aa Larger text</button><span class="mus"><button id="mPlay" aria-label="Play music">♪ Music</button><input type="range" id="mVol" min="0" max="1" step="0.05" value="0.6" aria-label="Music volume"><span class="lbl" id="mLbl"></span></span></div>
+  <nav class="tabs" id="tabs">
+    <a href="#tree" data-v="tree">Tree</a><a href="#help" data-v="help">Can you help?</a><a href="#chart" data-v="chart">Chart</a><a href="#places" data-v="places">Map</a><a href="#timeline" data-v="timeline">Timeline</a><a href="#sources" data-v="sources">Sources</a>
+  </nav>
+</header>
+
+<section class="band view" id="v-tree">
+  <div class="legend">
+    <span class="b proven"><i></i>Proven — a document says it</span>
+    <span class="b probable"><i></i>Probable — records agree</span>
+    <span class="b possible"><i></i>Possible — a lead to check</span>
+    <span class="b family"><i></i>Family memory</span>
+  </div>
+  <div class="treewrap">
+    <div class="stage" id="tstage">
+      <svg id="tsvg" role="group" aria-label="Illustrated family tree"><defs id="tdefs"></defs><g id="tworld"></g></svg>
+      <div class="tools">
+        <input id="q" list="names" placeholder="Find a person" aria-label="Find a person">
+        <datalist id="names"></datalist>
+        <button class="sq" id="tzin" aria-label="Zoom in">+</button>
+        <button class="sq" id="tzout" aria-label="Zoom out">−</button>
+        <button id="tfit">Fit</button>
+        <button id="tFull" aria-pressed="false">⤢ Full screen</button>
+        <button class="sq" id="tMusic" aria-label="Play music">♪</button>
+        <button class="sq" id="tBig" aria-pressed="false" aria-label="Larger text">Aa</button>
+        <button class="sq" id="tSky" aria-label="Sky">◐</button>
+        <button class="gold" id="tStory">▶ Story</button>
+      </div>
+      <div class="cap" id="cap" aria-live="polite"></div>
+      <div class="hint" id="hint" role="status">Tap any face to learn about them</div>
+    </div>
+    <aside class="panel" id="panel" aria-live="polite"></aside>
+  </div>
+</section>
+
+<section class="band view" id="v-help">
+  <h2 style="margin:0 0 6px;font-size:32px">Can you help fill in the tree?</h2>
+  <p class="lead">These are the questions the records couldn't answer. If you know — or even half-remember — type it in. Short answers are perfect. On a phone, you can tap the microphone on your keyboard and talk instead of typing.</p>
+  <div class="asks" id="asks"></div>
+  <h3 style="font-size:24px">Photos we're still looking for</h3>
+  <p class="note">Tap a name to add a photo of that person.</p>
+  <div class="wanted" id="wanted"></div>
+</section>
+<section class="band view" id="v-chart">
+  <div class="legend">
+    <span class="b proven"><i></i>Proven — a document says it</span>
+    <span class="b probable"><i></i>Probable — records agree</span>
+    <span class="b possible"><i></i>Possible — a lead to check</span>
+    <span class="b family"><i></i>Family memory</span>
+  </div>
+  <div class="treewrap">
+    <div class="stage" id="stage">
+      <svg id="svg" role="group" aria-label="Family chart"><defs id="defs"></defs><g id="world"></g></svg>
+      <div class="tools" id="tools">
+        <input id="qc" list="names" placeholder="Find a person" aria-label="Find a person">
+        <button class="sq" id="zin" aria-label="Zoom in">+</button>
+        <button class="sq" id="zout" aria-label="Zoom out">−</button>
+        <button id="fit">Fit</button>
+        <button id="gside">Graham side</button>
+        <button id="hside">Harper side</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band view" id="v-places">
+  <h2 style="margin:0 0 4px;font-size:32px">Where the family lived</h2>
+  <p class="note" style="margin:0 0 14px">Every place a record puts someone. Tap a dot for who was there and when.</p>
+  <div style="display:flex;gap:8px;margin-bottom:12px"><button id="mRegion" class="pri">Whole region</button><button id="mGa">Georgia close-up</button></div>
+  <div class="mapgrid">
+    <div class="fig"><svg id="map" viewBox="0 0 900 640" role="img" aria-label="Map of family places"></svg></div>
+    <div id="mapInfo"></div>
+  </div>
+</section>
+
+<section class="band view" id="v-timeline">
+  <h2 style="margin:0 0 14px;font-size:32px">A family timeline</h2>
+  <ol class="tl" id="tl"></ol>
+</section>
+
+<section class="band view" id="v-sources">
+  <h2 style="margin:0 0 6px;font-size:32px">Sources and how sure we are</h2>
+  <p class="note" style="max-width:70ch">Every fact on this tree carries a badge. <b>Proven</b> means an obituary or record states it directly. <b>Probable</b> means records agree but haven't been checked against an original document. <b>Possible</b> means a lead from another researcher's online tree that still needs proof. <b>Family memory</b> is what someone in the family remembers — often the most valuable part, and worth checking too.</p>
+  <ol class="srcs" id="srcs"></ol>
+  <h3>Still unknown — can you help?</h3>
+  <ul id="gaps"></ul>
+  <h3>A poster of the tree</h3>
+  <p class="note" style="max-width:70ch">Prints the illustrated tree on one landscape page, with a code that opens this page when someone points a phone camera at it.</p>
+  <button id="posterBtn">🖨 Print a poster</button>
+  <div id="musicAdmin"></div>
+</section>
+<footer></footer>
+
+<div id="codeDlg" class="codedlg" hidden><form id="codeForm" class="codebox" role="dialog" aria-labelledby="codeT">
+  <h3 id="codeT">Family passcode</h3><p>To keep the tree just for family, enter the passcode Mat shared. You'll only need to do this once on this device.</p>
+  <input id="codeIn" autocomplete="off" autocapitalize="none" placeholder="Passcode"><p id="codeErr" class="err"></p>
+  <div class="row"><button type="button" id="codeX">Cancel</button><button class="pri" id="codeOk">Continue</button></div></form></div>
+<div id="poster" aria-hidden="true"></div>
+<div class="pop" id="pop" aria-hidden="true"><img alt=""><span></span></div>
+<div class="lb" id="lb" role="dialog" aria-label="Photo"><figure style="margin:0;text-align:center"><img id="lbImg" alt=""><figcaption id="lbCap" style="color:#f3f7f3;margin-top:12px;font:500 18px Spectral,serif"></figcaption></figure><button id="lbX">Close</button></div>
+
+<script>
+{
+<!--JS-->
+}
+</script>
+</body>
+</html>

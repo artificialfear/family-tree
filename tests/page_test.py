@@ -1,8 +1,9 @@
-"""Loads the built page with a fake Apps Script backend and checks the passcode + memory flow.
+"""Builds mock.html (fake backend URL) and loads it with a fake Apps Script backend and checks the passcode + memory flow.
 Run: python3 tests/page_test.py (serves this folder on :8766)."""
 import json,subprocess,time,sys,os
 from playwright.sync_api import sync_playwright
 os.chdir(os.path.dirname(os.path.abspath(__file__))+'/..')
+subprocess.run([sys.executable,'build.py','--api','https://mock.test/exec','--out','mock.html'],check=True)
 srv=subprocess.Popen([sys.executable,'-m','http.server','8766'],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL);time.sleep(1)
 items=[];CODE='wolfie';fails=[]
 def check(name,cond):
@@ -29,7 +30,7 @@ try:
   pg=b.new_page(viewport={'width':390,'height':844},is_mobile=True,has_touch=True)
   errs=[];pg.on('pageerror',lambda e:errs.append(str(e)))
   pg.route('https://mock.test/**',handle)
-  pg.goto('http://localhost:8766/index.html?sky=night');pg.wait_for_timeout(1200)
+  pg.goto('http://localhost:8766/mock.html?sky=night');pg.wait_for_timeout(1200)
   check('noindex tag present',pg.evaluate("!!document.querySelector('meta[name=robots][content*=noindex]')"))
   pg.click('#skip');pg.wait_for_timeout(5000);pg.click('#tFull');pg.wait_for_timeout(300)
   pg.evaluate("select('jack')");pg.wait_for_timeout(300)
