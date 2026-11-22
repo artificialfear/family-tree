@@ -6,15 +6,21 @@
  *
  *   Sheet tab "Memories": one row per memory, photo, answer or correction.
  *   To hide a row from the tree, type anything in its "hidden" column.
- *   Drive folder "Family Tree Uploads": photos people add.
+ *   Drive folder "Family Tree Uploads": photos and voice memories people add.
+ *
+ * Security: device ids are stored only as SHA-256 hashes, and too many wrong
+ * passcodes lock that device (5 tries) or everyone (25 tries) out for 15 minutes.
  *
  * Set the family passcode with the "Family Tree > Set family passcode" menu.
  */
 
 var SHEET = 'Memories';
-var COLS = ['id','type','pid','from','at','text','asset','portrait','q','of','name','rel','born','died','living','note','by','hidden'];
+// New columns are only ever added at the end so existing rows stay lined up.
+var COLS = ['id','type','pid','from','at','text','asset','portrait','q','of','name','rel','born','died','living','note','by','hidden','audio'];
 var MAX_TEXT = 4000;
 var MAX_PHOTO_BYTES = 6 * 1024 * 1024;
+var MAX_AUDIO_BYTES = 6 * 1024 * 1024;
+var LOCK_SECS = 900, DEVICE_TRIES = 5, ALL_TRIES = 25;
 
 function onOpen() {
   SpreadsheetApp.getUi().createMenu('Family Tree')
@@ -50,6 +56,8 @@ function promptPasscode() {
 /* ---------- web app ---------- */
 
 function doGet(e) {
+  var audioId = e && e.parameter && e.parameter.audio;
+  if (audioId) return json_(audio_(String(audioId)));
   return json_({ ok: true, items: list_() });
 }
 
@@ -57,12 +65,13 @@ function doPost(e) {
   var req;
   try { req = JSON.parse(e.postData.contents); } catch (err) { return json_({ ok: false, error: 'bad_request' }); }
   var action = String(req.action || '');
-  if (action === 'check') return json_({ ok: codeOk_(req.code) });
-  if (!codeOk_(req.code)) return json_({ ok: false, error: 'bad_code' });
+  var gate = gate_(req.code, String(req.devId || ''));
+  if (action === 'check') return json_(gate);
+  if (!gate.ok) return json_(gate);
   var lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    if (action === 'add') return json_({ ok: true, item: add_(req.doc || {}, req.photo, String(req.devId || '')) });
+    if (action === 'add') return json_({ ok: true, item: add_(req.doc || {}, req.photo, String(req.devId || ''), req.audio) });
     if (action === 'del') return json_({ ok: del_(String(req.id || ''), String(req.devId || '')) });
     return json_({ ok: false, error: 'unknown_action' });
   } finally {
@@ -75,6 +84,12 @@ function doPost(e) {
 function sheet_() {
   var sh = SpreadsheetApp.getActive().getSheetByName(SHEET);
   if (!sh) { setup(); sh = SpreadsheetApp.getActive().getSheetByName(SHEET); }
+  // add any new column headers (at the end) that an older sheet doesn't have yet
+  var width = sh.getLastColumn();
+  if (width < COLS.length) {
+    var head = sh.getRange(1, 1, 1, width).getValues()[0];
+    for (var c = width; c < COLS.length; c++) if (head.indexOf(COLS[c]) < 0) sh.getRange(1, c + 1).setValue(COLS[c]).setFontWeight('bold');
+  }
   return sh;
 }
 
@@ -89,7 +104,7 @@ function list_() {
     head.forEach(function (h, i) { o[h] = r[i]; });
     if (!o.id || String(o.hidden).trim()) return;
     var item = { id: String(o.id), type: String(o.type), pid: String(o.pid), from: String(o.from), at: Number(o.at) || 0, text: String(o.text) };
-    ['asset', 'q', 'of', 'name', 'rel', 'born', 'died', 'note'].forEach(function (k) { if (String(o[k])) item[k] = String(o[k]); });
+    ['asset', 'audio', 'q', 'of', 'name', 'rel', 'born', 'died', 'note'].forEach(function (k) { if (o[k] != null && String(o[k])) item[k] = String(o[k]); });
     if (o.portrait === true || String(o.portrait).toUpperCase() === 'TRUE') item.portrait = true;
     if (o.living === true || String(o.living).toUpperCase() === 'TRUE') item.living = true;
     if (String(o.by)) item.by = String(o.by);
@@ -98,7 +113,7 @@ function list_() {
   return out;
 }
 
-function add_(doc, photo, devId) {
+function add_(doc, photo, devId, audio) {
   var types = ['story', 'photo', 'fix', 'answer', 'person'];
   var type = types.indexOf(doc.type) >= 0 ? doc.type : 'story';
   var row = {
@@ -118,8 +133,9 @@ function add_(doc, photo, devId) {
     died: clip_(doc.died, 20),
     living: doc.living === true,
     note: clip_(doc.note, 2000),
-    by: clip_(devId, 40),
-    hidden: ''
+    by: devId ? hash_(devId) : '',
+    hidden: '',
+    audio: ''
   };
   if (photo && photo.b64) {
     var bytes = Utilities.base64Decode(String(photo.b64));
@@ -129,6 +145,14 @@ function add_(doc, photo, devId) {
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     row.asset = file.getId();
     if (row.type === 'story') { row.type = 'photo'; row.portrait = false; }
+  }
+  if (audio && audio.b64) {
+    var abytes = Utilities.base64Decode(String(audio.b64));
+    if (abytes.length > MAX_AUDIO_BYTES) throw new Error('audio_too_big');
+    var amime = /^audio\/(webm|mp4|ogg|mpeg|aac|x-m4a|wav)(;.*)?$/.test(audio.mime) ? String(audio.mime).split(';')[0] : 'audio/webm';
+    var ext = { 'audio/webm': 'webm', 'audio/mp4': 'm4a', 'audio/x-m4a': 'm4a', 'audio/ogg': 'ogg', 'audio/mpeg': 'mp3', 'audio/aac': 'aac', 'audio/wav': 'wav' }[amime] || 'audio';
+    var afile = folder_().createFile(Utilities.newBlob(abytes, amime, row.id + '-voice.' + ext));
+    row.audio = afile.getId();
   }
   sheet_().appendRow(COLS.map(function (c) { return row[c]; }));
   return row;
@@ -142,7 +166,8 @@ function del_(id, devId) {
   var byCol = COLS.indexOf('by') + 1, hidCol = COLS.indexOf('hidden') + 1;
   for (var i = 0; i < ids.length; i++) {
     if (String(ids[i][0]) === id) {
-      if (String(sh.getRange(i + 2, byCol).getValue()) !== devId) return false;
+      var owner = String(sh.getRange(i + 2, byCol).getValue());
+      if (!owner || owner !== hash_(devId)) return false;
       sh.getRange(i + 2, hidCol).setValue('removed by sharer');
       return true;
     }
@@ -158,6 +183,37 @@ function folder_() {
   var f = DriveApp.createFolder('Family Tree Uploads');
   p.setProperty('FOLDER_ID', f.getId());
   return f;
+}
+
+/* Voice memories are only served from our own uploads folder. */
+function audio_(id) {
+  try {
+    var f = DriveApp.getFileById(id), mine = false, parents = f.getParents(), folderId = folder_().getId();
+    while (parents.hasNext()) if (parents.next().getId() === folderId) mine = true;
+    if (!mine) return { ok: false, error: 'not_found' };
+    var blob = f.getBlob();
+    if (blob.getBytes().length > MAX_AUDIO_BYTES) return { ok: false, error: 'too_big' };
+    return { ok: true, mime: blob.getContentType(), b64: Utilities.base64Encode(blob.getBytes()) };
+  } catch (e) {
+    return { ok: false, error: 'not_found' };
+  }
+}
+
+/* Passcode check with a lockout after too many wrong tries. */
+function gate_(code, devId) {
+  var cache = CacheService.getScriptCache();
+  var dk = 'bad:' + (devId ? hash_(devId) : 'none'), ak = 'bad:all';
+  var dn = Number(cache.get(dk) || 0), an = Number(cache.get(ak) || 0);
+  if (dn >= DEVICE_TRIES || an >= ALL_TRIES) return { ok: false, error: 'locked' };
+  if (codeOk_(code)) return { ok: true };
+  cache.put(dk, String(dn + 1), LOCK_SECS);
+  cache.put(ak, String(an + 1), LOCK_SECS);
+  return { ok: false, error: 'bad_code' };
+}
+
+function hash_(s) {
+  var d = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(s), Utilities.Charset.UTF_8);
+  return d.map(function (b) { return ((b + 256) % 256).toString(16); }).map(function (h) { return h.length < 2 ? '0' + h : h; }).join('');
 }
 
 function codeOk_(code) {

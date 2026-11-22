@@ -18,13 +18,14 @@ function renderPanel(fresh){
    ${p.sibs?`<p class="note">${esc(p.sibs)}</p>`:''}
    ${rel?`<h3>Family</h3><div class="rel">${rel}</div>`:''}
    <h3>Memories &amp; photos</h3>
-   ${mine.length?mine.map(c=>`<div class="contrib">${c.type==='photo'&&c.asset?`<img src="${esc(assetUrl(c.asset))}" alt="${esc(c.text||'Family photo')}" loading="lazy" data-lb="${esc(assetUrl(c.asset))}">`:''}<div>${c.type==='fix'?'<b>Correction: </b>':''}${c.type==='answer'&&ASKQ[c.q]?`<b>${esc(ASKQ[c.q])}</b><br>`:''}${esc(c.text)}</div><small>From ${esc(whoOf(c))} · ${c.at?new Date(c.at).toLocaleDateString():''}${(c.by&&c.by===me)||isEditor?` · <a data-del="${esc(c.id)}" style="cursor:pointer;color:var(--clay)">remove</a>`:''}</small></div>`).join(''):'<p class="note">Nothing added yet.</p>'}
+   ${mine.length?mine.map(c=>`<div class="contrib">${c.type==='photo'&&c.asset?`<img src="${esc(assetUrl(c.asset))}" alt="${esc(c.text||'Family photo')}" loading="lazy" data-lb="${esc(assetUrl(c.asset))}">`:''}${c.audio?`<button type="button" class="vplay" data-audio="${esc(c.audio)}">▶ Play voice memory</button>`:''}<div>${c.type==='fix'?'<b>Correction: </b>':''}${c.type==='answer'&&ASKQ[c.q]?`<b>${esc(ASKQ[c.q])}</b><br>`:''}${esc(c.text)}</div><small>From ${esc(whoOf(c))} · ${c.at?new Date(c.at).toLocaleDateString():''}${(c.by&&c.by===me)||isEditor?` · <a data-del="${esc(c.id)}" style="cursor:pointer;color:var(--clay)">remove</a>`:''}</small></div>`).join(''):'<p class="note">Nothing added yet.</p>'}
    ${forms(p)}`;
   if(fresh){el.classList.remove('fresh');void el.offsetWidth;el.classList.add('fresh');}
 }
 function forms(p){
   if(!db)return `<p class="note">Sharing memories isn't switched on yet.</p>`;
   return `<details open data-k="story"><summary>Add a memory or story</summary><form class="form" data-f="story"><textarea name="text" required placeholder="What do you remember about ${esc(p.s)}?"></textarea>
+   ${canRecord()?`<div class="voice"><button type="button" class="rec" data-rec>🎤 Record a voice memory instead</button><span class="rtime" aria-live="polite"></span><audio class="rprev" controls hidden></audio><button type="button" class="rdel" data-rdel hidden>Delete recording</button></div>`:''}
    ${assets?`<label class="addph">📷 Add a photo too (optional)<input type="file" name="file" accept="image/*"></label>`:''}<p class="tip">On a phone, tap the microphone on your keyboard to talk instead of type.</p><label class="fromf"><span>Shared by</span><input name="from" required maxlength="60" autocomplete="name" placeholder="Your name — so everyone knows who shared this" value="${esc(myName)}"></label><button class="pri">Save memory</button></form></details>
   ${assets?`<details data-k="photo"><summary>Add a photo of ${esc(p.s.split(' ')[0])}</summary><form class="form" data-f="photo"><input type="file" name="file" accept="image/*" required><input name="text" placeholder="Caption — who, where, when"><label class="chk"><input type="checkbox" name="portrait" checked> Use as ${esc(p.s)}'s picture on the tree</label><label class="fromf"><span>Shared by</span><input name="from" required maxlength="60" autocomplete="name" placeholder="Your name — so everyone knows who shared this" value="${esc(myName)}"></label><button class="pri">Upload photo</button></form></details>`:''}
   <details><summary>Suggest a correction</summary><form class="form" data-f="fix"><textarea name="text" required placeholder="What's wrong or missing?"></textarea><label class="fromf"><span>Shared by</span><input name="from" required maxlength="60" autocomplete="name" placeholder="Your name — so everyone knows who shared this" value="${esc(myName)}"></label><button class="pri">Save correction</button></form></details>
@@ -35,19 +36,22 @@ function forms(p){
    <textarea name="note" placeholder="Anything else (optional)"></textarea><button class="pri">Add to tree</button></form></details>
   <p class="note" id="fmsg"></p>`;
 }
-$('#panel').addEventListener('click',async e=>{if(e.target.closest('[data-close]')){document.body.classList.remove('pdrawer');return;}if(e.target.closest('[data-share]')){openForm('story');return;}const im=e.target.closest('[data-lb]');if(im){openLb(im.dataset.lb,im.alt,im.dataset.cap);return;}const g=e.target.closest('[data-go]');if(g){select(g.dataset.go);($('#v-chart').classList.contains('on')?focusOn:tFocus)(g.dataset.go);return;}
+$('#panel').addEventListener('click',async e=>{const rb=e.target.closest('[data-rec]');if(rb){toggleRecord(rb.closest('form'));return;}
+  const rd=e.target.closest('[data-rdel]');if(rd){clearRecording(rd.closest('form'));return;}if(e.target.closest('[data-close]')){document.body.classList.remove('pdrawer');return;}if(e.target.closest('[data-share]')){openForm('story');return;}const im=e.target.closest('[data-lb]');if(im){openLb(im.dataset.lb,im.alt,im.dataset.cap);return;}const g=e.target.closest('[data-go]');if(g){select(g.dataset.go);($('#v-chart').classList.contains('on')?focusOn:tFocus)(g.dataset.go);return;}
   const d=e.target.closest('[data-del]');if(d&&db){d.textContent='removing…';try{const r=await withCode(code=>apiPost({action:'del',code,devId,id:d.dataset.del}));if(!r.ok)throw 0;await refreshContribs();}catch(err){if(err!=='cancel')d.textContent='could not remove';else d.textContent='remove';}}});
-$('#panel').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,t=f.dataset.f,fd=new FormData(f),btn=f.querySelector('button'),msg=$('#fmsg');
+$('#panel').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,t=f.dataset.f,fd=new FormData(f),btn=f.querySelector('button.pri'),msg=$('#fmsg');
+  if(f._recording){if(msg)msg.textContent='Tap Stop to finish your recording first.';return;}
   btn.disabled=true;btn.textContent='Saving…';
   try{const fr=String(fd.get('from')||'').trim().slice(0,60);if(fr){myName=fr;store.set('myname',fr);}const doc={type:t,pid:sel,by:me||'',from:fr,at:Date.now(),text:String(fd.get('text')||'').slice(0,4000)};
     let photo=null;
     if(t==='photo'){photo=await shrinkPhoto(fd.get('file'));doc.portrait=fd.get('portrait')==='on';}
     if(t==='story'){const fl=fd.get('file');if(fl&&fl.size)photo=await shrinkPhoto(fl);}
     if(t==='person'){Object.assign(doc,{of:sel,name:String(fd.get('name')).slice(0,120),rel:fd.get('rel'),born:String(fd.get('born')||'').slice(0,20),died:String(fd.get('died')||'').slice(0,20),living:fd.get('living')==='on',note:String(fd.get('note')||'').slice(0,2000)});}
-    btn.textContent=photo?'Uploading photo…':'Saving…';
-    const r=await withCode(code=>apiPost({action:'add',code,devId,doc,photo}));if(!r.ok)throw r;
+    let audio=null;if(t==='story'&&f._voice){audio=await blobToB64(f._voice.blob);audio={b64:audio,mime:f._voice.mime};}
+    btn.textContent=audio?'Uploading voice memory…':photo?'Uploading photo…':'Saving…';
+    const r=await withCode(code=>apiPost({action:'add',code,devId,doc,photo,audio}));if(!r.ok)throw r;
     await refreshContribs();sfx.chime();const m2=$('#fmsg');if(m2)m2.textContent='Saved — thank you!';
-  }catch(err){btn.disabled=false;btn.textContent='Try again';if(msg)msg.textContent=err==='cancel'?'':err==='badphoto'?'That photo couldn\'t be read. Try a different one.':'That didn\'t save. Check your internet connection and try again.';}});
+  }catch(err){btn.disabled=false;btn.textContent='Try again';if(msg)msg.textContent=err==='cancel'?'':err==='badphoto'?'That photo couldn\'t be read. Try a different one.':(err==='locked'||err?.error==='locked')?LOCKED_MSG:'That didn\'t save. Check your internet connection and try again.';}});
 
 function openLb(u,a,c){$('#lbImg').src=u;$('#lbImg').alt=a||'';$('#lbCap').textContent=c||'';$('#lb').classList.add('on');}
 const closeLb=()=>$('#lb').classList.remove('on');$('#lb').onclick=closeLb;addEventListener('keydown',e=>{if(e.key==='Escape')closeLb();});
@@ -79,7 +83,7 @@ function renderHelp(){
 $('#asks').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,btn=f.querySelector('button'),msg=f.querySelector('.amsg'),text=String(new FormData(f).get('text')||'').trim();if(!text)return;
   btn.disabled=true;btn.textContent='Saving…';
   try{const fr=String(new FormData(f).get('from')||'').trim().slice(0,60);if(fr){myName=fr;store.set('myname',fr);}const r=await withCode(code=>apiPost({action:'add',code,devId,doc:{from:fr,type:'answer',q:f.dataset.ask,pid:f.dataset.pid,text:text.slice(0,4000)}}));if(!r.ok)throw r;await refreshContribs();}
-  catch(err){btn.disabled=false;btn.textContent='Try again';msg.textContent=err==='cancel'?'':'That didn\'t save. Check your internet connection and try again.';}});
+  catch(err){btn.disabled=false;btn.textContent='Try again';msg.textContent=err==='cancel'?'':err==='locked'?LOCKED_MSG:'That didn\'t save. Check your internet connection and try again.';}});
 const goPerson=(id,form)=>{location.hash='tree';setTimeout(()=>{select(id,1);tFocus(id);if(form)setTimeout(()=>openForm(form),500);else $('#panel').scrollIntoView({behavior:RM?'auto':'smooth'});},120);};
 $('#asks').addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();goPerson(g.dataset.go);}});
 $('#wanted').addEventListener('click',e=>{const b=e.target.closest('[data-want]');if(b)goPerson(b.dataset.want,'photo');});

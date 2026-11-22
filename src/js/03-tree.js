@@ -98,7 +98,7 @@ function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contr
     return `<button class="mstar" data-c="${esc(c.id)}" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;--dl:-${(h%40)/10}s" aria-label="A memory about ${esc(byId[c.pid].n)}"><svg viewBox="-10 -10 20 20"><path d="M0-9L2 -2L9 0L2 2L0 9L-2 2L-9 0L-2-2Z"/></svg></button>`;}).join('');}
 $('#celest').addEventListener('click',e=>{const b=e.target.closest('.mstar');if(!b)return;const c=contribs.find(x=>x.id===b.dataset.c);if(!c)return;
   const r=$('#tstage').getBoundingClientRect(),q=b.getBoundingClientRect(),p=byId[c.pid];
-  showNote(`<div class="mem">${c.type==='photo'&&c.asset?`<img src="${esc(assetUrl(c.asset))}" alt="">`:''}${c.type==='answer'&&ASKQ[c.q]?`<div class="mq">${esc(ASKQ[c.q])}</div>`:''}<p>${esc((c.text||'A photo').slice(0,260))}${(c.text||'').length>260?'…':''}</p>
+  showNote(`<div class="mem">${c.type==='photo'&&c.asset?`<img src="${esc(assetUrl(c.asset))}" alt="">`:''}${c.audio?`<button type="button" class="vplay" data-audio="${esc(c.audio)}">▶ Play voice memory</button>`:''}${c.type==='answer'&&ASKQ[c.q]?`<div class="mq">${esc(ASKQ[c.q])}</div>`:''}<p>${esc((c.text||(c.audio?'A voice memory':'A photo')).slice(0,260))}${(c.text||'').length>260?'…':''}</p>
     <div class="mby">From ${esc(whoOf(c))}${c.at?' · '+new Date(c.at).toLocaleDateString():''}</div><button class="pri" data-see="${esc(c.pid)}">See ${esc(p.s.split(' ')[0])} on the tree</button></div>`,q.left-r.left+q.width/2,q.bottom-r.top);
   $('#mnote [data-see]').onclick=ev=>{const id=ev.currentTarget.dataset.see;$('#mnote').hidden=true;select(id);tFocus(id);};});
 function taperPath(b,w0,w1){const n=16,L=[],R=[];

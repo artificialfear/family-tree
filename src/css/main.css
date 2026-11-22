@@ -165,3 +165,9 @@ button.share{display:flex;align-items:center;justify-content:center;gap:8px;widt
  #poster .pf img{width:calc(var(--ps,1)*84px);height:calc(var(--ps,1)*84px)}
  #poster .pf div{max-width:40ch}
 }
+.voice{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.voice .rec{background:var(--bg);border:1px dashed var(--pine);color:var(--pine)}
+.voice .rtime{font-size:14px;color:var(--mute);flex:1 1 160px}
+.voice audio{width:100%;height:40px}
+.vplay{display:inline-flex;align-items:center;gap:6px;margin:4px 0 6px;min-height:40px;padding:6px 14px;border-radius:999px;background:var(--pine);color:var(--bg);border-color:var(--pine)}
+#mnote .vplay{background:#e8b48a;color:#1f2a40;border-color:#e8b48a}
