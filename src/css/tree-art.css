@@ -235,7 +235,10 @@ footer{height:80px}
 .stage.ts-parch .leaf .halo{fill:#f4e8cb;stroke:#4b3020;stroke-width:2}
 .stage.ts-parch .leaf .glow{display:none}
 .stage.ts-parch .leaf .ini{fill:#efe0bd}.stage.ts-parch .leaf .init{fill:#4b3020}
-.stage.ts-parch .scroll .sbody{fill:#f3e7c8;stroke:#6b4a2a;stroke-width:1.3}
-.stage.ts-parch .scroll .stail{fill:#d8c194;stroke:#6b4a2a;stroke-width:1.1}
+.stage.tp .scroll .sbody{fill:#f3e7c8;stroke:#6b4a2a;stroke-width:1.3}
+.stage.tp .scroll .stail{fill:#d8c194;stroke:#6b4a2a;stroke-width:1.1}
 .stage.ts-parch .leaf .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
 #tworld.tgrow .leaf .scroll{animation:fadeup .7s ease both;animation-delay:calc(var(--d) + 280ms)}
+.stage.tp .leaf .lname,.stage.night.tp .leaf .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
+.stage.tp .leaf .halo,.stage.night.tp .leaf .halo{fill:#f4e8cb;stroke:#4b3020;stroke-width:2}
+.stage.ts-ink.tp{--bk:#4b3020}
