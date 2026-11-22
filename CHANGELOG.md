@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-21 — Smoother tree growth on phones
+- The leaves no longer flash while the tree grows on Android phones. The canopy is now painted in one smooth sweep as the tree grows.
+
 ## 2026-11-21 — No more jump after the tree grows
 - The leaves no longer blink or shift sideways once the tree has finished growing.
 - Name scrolls that were nudged apart no longer slide into place after they appear.

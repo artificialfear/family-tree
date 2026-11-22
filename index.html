@@ -1107,14 +1107,28 @@ function bakeArt(art,html){
 const GROWT=2600;let GROWR=1400,growR=99999;
 const growEase=u=>1-(1-u)*(1-u);                      // fast at first, gentle at the tips
 function growDelay(x,y){const f=Math.min(1,Math.hypot(x-915,y-1300)/GROWR);return Math.round(GROWT*(1-Math.sqrt(1-f)));}
-function growTree(onDone){const st=$('#tstage');tw.classList.remove('pre');
-  // the painted canopy is one picture: reveal it with the same growing circle as the branches, so the full tree grows in one go
-  const im=$('#tbackimg'),clip=r=>{if(!im)return;if(r==null){im.style.clipPath='';return;}const cx=915-parseFloat(im.style.left||0),cy=1300-parseFloat(im.style.top||0);im.style.clipPath=`circle(${r.toFixed(1)}px at ${cx.toFixed(1)}px ${cy.toFixed(1)}px)`;};
-  clip(0);let started=0;
-  const go=()=>{if(started++)return;clip(0);st.classList.add('growing');tw.classList.add('tgrow');const t0=performance.now();
-  (function f(now){const u=Math.min(1,(now-t0)/GROWT);growR=u<1?GROWR*growEase(u):99999;const c=document.getElementById('growc');if(c)c.setAttribute('r',growR.toFixed(1));clip(u<1?growR:null);
-    if(u<1)requestAnimationFrame(f);else{setTimeout(()=>{st.classList.remove('intro','growing');onDone&&onDone();},500);setTimeout(()=>tw.classList.remove('tgrow'),1600);}})(t0);};
-  lastBake.then(go);setTimeout(go,1200);}
+function growTree(onDone){const st=$('#tstage');
+  // The painted canopy is one big picture. Re-clipping that picture every frame makes phones re-paint it and flicker,
+  // so during the grow it is copied once onto a canvas and the widening circle is painted there instead.
+  const im=$('#tbackimg');let cv=null,ctx=null,bmp=null,sx=1,cx=0,cy=0;
+  const prep=async()=>{try{if(!im||!im.classList.contains('on')||!im.src)return;
+    try{await im.decode();}catch(e){}
+    const w=parseFloat(im.style.width),h=parseFloat(im.style.height),nw=im.naturalWidth,nh=im.naturalHeight;if(!w||!nw)return;
+    const k=Math.min(1,(innerWidth<700?1400:2400)/nw),cw=Math.round(nw*k),ch=Math.round(nh*k);
+    try{bmp=window.createImageBitmap?await createImageBitmap(im,{resizeWidth:cw,resizeHeight:ch}):im;}catch(e){bmp=im;}
+    cv=document.createElement('canvas');cv.id='tgrowcv';cv.width=cw;cv.height=ch;
+    Object.assign(cv.style,{position:'absolute',left:im.style.left,top:im.style.top,width:w+'px',height:h+'px',pointerEvents:'none'});
+    ctx=cv.getContext('2d');sx=cw/w;cx=(915-parseFloat(im.style.left))*sx;cy=(1300-parseFloat(im.style.top))*sx;
+    im.parentNode.insertBefore(cv,im);im.style.visibility='hidden';}finally{preparing=0;}};
+  const paint=r=>{if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);if(r<=0)return;ctx.save();ctx.beginPath();ctx.arc(cx,cy,r*sx,0,Math.PI*2);ctx.clip();ctx.drawImage(bmp,0,0,cv.width,cv.height);ctx.restore();};
+  const done=()=>{if(im)im.style.visibility='';if(cv){cv.remove();cv=null;}if(bmp&&bmp.close)bmp.close();};
+  let started=0,preparing=0;
+  const go=()=>{if(started++)return;if(im)im.style.visibility='hidden';paint(0);st.classList.add('growing');tw.classList.add('tgrow');tw.classList.remove('pre');const t0=performance.now();
+  (function f(now){const u=Math.min(1,(now-t0)/GROWT);growR=u<1?GROWR*growEase(u):99999;const c=document.getElementById('growc');if(c)c.setAttribute('r',growR.toFixed(1));
+    if(u<1){if(!ctx&&im&&im.classList.contains('on')&&!preparing){preparing=1;prep();}paint(growR);requestAnimationFrame(f);}else{done();setTimeout(()=>{st.classList.remove('intro','growing');onDone&&onDone();},500);setTimeout(()=>tw.classList.remove('tgrow'),1600);}})(t0);};
+  const ready=lastBake.then(()=>{preparing=1;return prep();});
+  ready.then(()=>setTimeout(go,0),()=>go());setTimeout(go,2200);}
+
 function scrollLabel(nm,r,fs,dx=0){const w=Math.max(50,nm.length*fs*.46+24),h=fs*1.6,y0=r+6,y1=y0+h,ym=(y0+y1)/2,L=-w/2,R=w/2,f=n=>n.toFixed(1);
   return `${dx?`<g transform="translate(${dx.toFixed(1)} 0)">`:''}<g class="scroll"><path class="stail" d="M${f(L+10)} ${f(y0+6)}H${f(L-16)}L${f(L-8)} ${f(ym+6)}L${f(L-16)} ${f(y1+6)}H${f(L+10)}Z"/><path class="stail" d="M${f(R-10)} ${f(y0+6)}H${f(R+16)}L${f(R+8)} ${f(ym+6)}L${f(R+16)} ${f(y1+6)}H${f(R-10)}Z"/>`+
    `<path class="sbody" d="M${f(L)} ${f(y0)}Q0 ${f(y0-5)} ${f(R)} ${f(y0)}L${f(R)} ${f(y1)}Q0 ${f(y1-5)} ${f(L)} ${f(y1)}Z"/><text class="lname" y="${f(ym+fs*.34)}" font-size="${fs}">${esc(nm)}</text></g>${dx?'</g>':''}`;}
