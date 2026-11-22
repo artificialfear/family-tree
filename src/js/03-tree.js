@@ -52,7 +52,7 @@ let PRINT=false,SKYPREF=SKYQ||store.get('sky')||'auto',SKY='night',NIGHT=true;
 function autoSky(){const d=new Date(),h=d.getHours()+d.getMinutes()/60;return h>=7.5&&h<17?'day':((h>=17&&h<18.75)||(h>=6&&h<7.5))?'dusk':'night';}
 const skyNow=()=>SKYPREF==='auto'?autoSky():SKYPREF;
 SKY=skyNow();NIGHT=true;
-$('#tstage').classList.add('ts-'+TSTYLE);if(new URLSearchParams(location.search).get('tree')==='painted'||TSTYLE==='parch')$('#tstage').classList.add('tp');
+$('#tstage').classList.add('ts-'+TSTYLE);if(((new URLSearchParams(location.search).get('tree')||'painted')==='painted'&&TSTYLE==='ink')||TSTYLE==='parch')$('#tstage').classList.add('tp');
 /* moon phase for today's date (0 = new moon, .5 = full) */
 function moonPhase(d){const syn=29.530588853,ref=Date.UTC(2000,0,6,18,14);let p=((d-ref)/864e5/syn)%1;return p<0?p+1:p;}
 function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wax?(k>0?0:1):(k>0?1:0),rx=Math.abs(k)*R;
@@ -94,18 +94,33 @@ setTimeout(shoot,15000+Math.random()*15000);
 /* memory stars: every memory, photo or answer someone adds lights a star */
 function hsh(t){let h=2166136261;for(const c of String(t)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
 function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]);
-  box.innerHTML=list.map(c=>{const h=hsh(c.id),h2=hsh(c.id+'y');let x=4+(h%9200)/100,y=13+(h2%3700)/100;if(x<58&&y<17)y+=10;if(x>78&&y<30)x-=24;
-    return `<button class="mstar" data-c="${esc(c.id)}" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;--dl:-${(h%40)/10}s" aria-label="A memory about ${esc(byId[c.pid].n)}"><svg viewBox="-10 -10 20 20"><path d="M0-9L2 -2L9 0L2 2L0 9L-2 2L-9 0L-2-2Z"/></svg></button>`;}).join('');}
-$('#celest').addEventListener('click',e=>{const b=e.target.closest('.mstar');if(!b)return;const c=contribs.find(x=>x.id===b.dataset.c);if(!c)return;
+  const star=`<path d="M0-9L2 -2L9 0L2 2L0 9L-2 2L-9 0L-2-2Z"/>`;
+  // beside the person: try spots around their photo that miss every face and name label
+  const inTree=TSTYLE==='ink'&&tw.querySelector('.leaf'),taken=[];let sky='',tree='';
+  const obst=inTree?Object.values(TP).flatMap(v=>[[v.x,v.y,v.r+10],[v.x,v.y+v.r+22,Math.max(36,v.r*.9)]]):[];
+  const free=(x,y)=>obst.every(([ox,oy,or])=>Math.hypot(x-ox,y-oy)>or+12)&&taken.every(([tx,ty])=>Math.hypot(x-tx,y-ty)>30);
+  const ANG=[-50,-130,-90,-20,-160,-70,-110,10,190,30,150];
+  list.forEach(c=>{const h=hsh(c.id),v=inTree&&TP[c.pid];let spot=null;
+    if(v)for(const d of [v.r+26,v.r+46,v.r+66]){for(const a of ANG){const x=v.x+Math.cos(a*Math.PI/180)*d,y=v.y+Math.sin(a*Math.PI/180)*d;if(free(x,y)){spot=[x,y];break;}}if(spot)break;}
+    const lab=`A memory about ${esc(byId[c.pid].n)}`;
+    if(spot){taken.push(spot);tree+=`<g class="mstar tmstar" data-c="${esc(c.id)}" tabindex="0" role="button" aria-label="${lab}" transform="translate(${spot[0].toFixed(1)} ${spot[1].toFixed(1)})"><g class="mss"><circle r="18" fill="transparent"/><g class="msp" style="--dl:-${(h%40)/10}s">${star}</g></g></g>`;return;}
+    const h2=hsh(c.id+'y');let x=4+(h%9200)/100,y=13+(h2%3700)/100;if(x<58&&y<17)y+=10;if(x>78&&y<30)x-=24;
+    sky+=`<button class="mstar" data-c="${esc(c.id)}" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;--dl:-${(h%40)/10}s" aria-label="${lab}"><svg viewBox="-10 -10 20 20">${star}</svg></button>`;});
+  box.innerHTML=sky;let g=tw.querySelector('#tmstars');if(!g&&tw.querySelector('.leaf')){g=document.createElementNS('http://www.w3.org/2000/svg','g');g.id='tmstars';tw.appendChild(g);}if(g)g.innerHTML=tree;msScale();}
+// stars keep a readable size however far you zoom out
+function msScale(){const k=Math.min(2.4,Math.max(1,.62/tv.k));tw.style.setProperty('--msk',k.toFixed(3));}
+function openMem(b){const c=contribs.find(x=>x.id===b.dataset.c);if(!c)return;
   const r=$('#tstage').getBoundingClientRect(),q=b.getBoundingClientRect(),p=byId[c.pid];
   showNote(`<div class="mem">${c.type==='photo'&&c.asset?`<img src="${esc(assetUrl(c.asset))}" alt="">`:''}${c.audio?`<button type="button" class="vplay" data-audio="${esc(c.audio)}">▶ Play voice memory</button>`:''}${c.type==='answer'&&ASKQ[c.q]?`<div class="mq">${esc(ASKQ[c.q])}</div>`:''}<p>${esc((c.text||(c.audio?'A voice memory':'A photo')).slice(0,260))}${(c.text||'').length>260?'…':''}</p>
     <div class="mby">From ${esc(whoOf(c))}${c.at?' · '+new Date(c.at).toLocaleDateString():''}</div><button class="pri" data-see="${esc(c.pid)}">See ${esc(p.s.split(' ')[0])} on the tree</button></div>`,q.left-r.left+q.width/2,q.bottom-r.top);
-  $('#mnote [data-see]').onclick=ev=>{const id=ev.currentTarget.dataset.see;$('#mnote').hidden=true;select(id);tFocus(id);};});
+  $('#mnote [data-see]').onclick=ev=>{const id=ev.currentTarget.dataset.see;$('#mnote').hidden=true;select(id);tFocus(id);};}
+$('#celest').addEventListener('click',e=>{const b=e.target.closest('.mstar');if(b)openMem(b);});
 function taperPath(b,w0,w1){const n=16,L=[],R=[];
   for(let i=0;i<=n;i++){const t=i/n,u=1-t,x=u*u*b.x1+2*u*t*b.cx+t*t*b.x2,y=u*u*b.y1+2*u*t*b.cy+t*t*b.y2,dx=2*u*(b.cx-b.x1)+2*t*(b.x2-b.cx),dy=2*u*(b.cy-b.y1)+2*t*(b.y2-b.cy),l=Math.hypot(dx,dy)||1,w=(w0+(w1-w0)*Math.pow(t,.8))/2,nx=-dy/l*w,ny=dx/l*w;
     L.push(`${(x+nx).toFixed(1)} ${(y+ny).toFixed(1)}`);R.push(`${(x-nx).toFixed(1)} ${(y-ny).toFixed(1)}`);}
   return 'M'+L.join('L')+'L'+R.reverse().join('L')+'Z';}
-const TREEQ=new URLSearchParams(location.search).get('tree');
+const TREEQ=new URLSearchParams(location.search).get('tree')||'painted';
+const SCROLLS=TSTYLE==='parch'||(TSTYLE==='ink'&&TREEQ==='painted');
 function painted(vals,dl,rnd,f,BX){
     // aged-paper illustration: one broad painted trunk, a dense dome of hand-painted leaves, roots spreading over the paper
     const bark='#4b3020',barkL='#7a5537';
@@ -118,7 +133,7 @@ function painted(vals,dl,rnd,f,BX){
     const inC=(x,y)=>disc.some(([cx,cy,r])=>(x-cx)*(x-cx)+(y-cy)*(y-cy)<r*r);
     const LF='M0 0Q11 -9 26 0Q11 9 0 0Z',G=['#244f2e','#2f6a3a','#3e7d46','#55914f','#77a960','#2d6e5a','#4a8a6b'];
     let back='',front='';const xs0=TB.x0-40,xs1=TB.x1+40,ys0=TB.y0-60;
-    for(let i=0;i<9000;i++){const x=xs0+rnd()*(xs1-xs0),y=ys0+rnd()*(1100-ys0);if(!inC(x,y)||rnd()<.3)continue;
+    for(let i=0;i<9000;i++){const x=xs0+rnd()*(xs1-xs0),y=ys0+rnd()*(1100-ys0);if(!inC(x,y)||rnd()<.5)continue;
       const a=rnd()*360,sc=1+rnd()*.9,c=G[Math.floor(rnd()*G.length)],lit=rnd()<.35;
       const leaf=`<g transform="translate(${f(x)} ${f(y)}) rotate(${a.toFixed(0)}) scale(${sc.toFixed(2)})"><path d="${LF}" fill="${c}"/>${lit?`<path d="M2 0Q11 -7 24 0Z" fill="#a9c98a" opacity=".35"/>`:''}<path d="M1 0L22 0" stroke="#1d3a22" stroke-width=".6" opacity=".55"/></g>`;
       back+=leaf;}
@@ -130,7 +145,7 @@ function painted(vals,dl,rnd,f,BX){
     let bk='';for(let i=0;i<9;i++){const ox=-52+i*13+(rnd()-.5)*6;bk+=`<path d="M${f(BX+ox*.55)} ${T0+20} C${f(BX+ox*.8)} ${T0+140} ${f(BX+ox)} ${T1-120} ${f(BX+ox*1.5)} ${T1+10}" fill="none" stroke="${i%3?'#2a1a10':'#9a7350'}" stroke-width="${i%3?1.4:1}" opacity=".55"/>`;}
     bk+=`<ellipse cx="${BX+14}" cy="${T0+190}" rx="9" ry="14" fill="#24160c" opacity=".7"/>`;
     const brs=TBR.map(b=>{const w1=b.w>=20?b.w*.62:Math.max(1.6,b.w*.45);return `<path class="br t" d="${taperPath(b,b.w*1.15,w1)}"/>`;}).join('');
-    return {pdefs,back,lv,trunk:`<path d="${trunk}" fill="url(#trunkg)"/>${bk}`,brs,T1};}
+    return {pdefs,back,lv,trunk:`<path d="${trunk}" fill="${PRINT?'#4b3020':'url(#trunkg)'}"/>${bk}`,brs,T1};}
 const LEAFP='M0 0Q9 -8 20 0Q9 8 0 0Z';
 function treeArt(st,dl){if(st==='classic')return null;
   let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647,f=n=>n.toFixed(1);
@@ -140,7 +155,7 @@ function treeArt(st,dl){if(st==='classic')return null;
    <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="9"/><feColorMatrix values="0 0 0 0 .23  0 0 0 0 .16  0 0 0 0 .1  0 0 0 .07 0"/></filter>`;
   const vals=Object.values(TP),top=vals.filter(v=>['ggp','gp','aunt','asp','kid','ksp'].includes(v.t));
   const BX=915,base=1262;
-  const PAINT=st==='parch'||TREEQ==='painted';const PT=PAINT?painted(vals,dl,rnd,f,BX):null;
+  const PAINT=st==='parch'||(st==='ink'&&TREEQ==='painted');const PT=PAINT?painted(vals,dl,rnd,f,BX):null;
   // branches: tapered
   const brs=TBR.map(b=>{const w1=b.w>=20?b.w*.62:Math.max(1.4,b.w*.38);return `<path class="br t" d="${taperPath(b,b.w*(st==='ink'?.9:1.05),w1)}"/>`;}).join('');
   // roots
@@ -239,8 +254,8 @@ function growDelay(x,y){const f=Math.min(1,Math.hypot(x-915,y-1300)/GROWR);retur
 function growTree(onDone){const st=$('#tstage');tw.classList.remove('pre');tw.classList.add('tgrow');const t0=performance.now();
   (function f(now){const u=Math.min(1,(now-t0)/GROWT);growR=u<1?GROWR*growEase(u):99999;const c=document.getElementById('growc');if(c)c.setAttribute('r',growR.toFixed(1));
     if(u<1)requestAnimationFrame(f);else{setTimeout(()=>{st.classList.remove('intro');onDone&&onDone();},500);setTimeout(()=>tw.classList.remove('tgrow'),1600);}})(t0);}
-function scrollLabel(nm,r,fs){const w=Math.max(50,nm.length*fs*.46+24),h=fs*1.6,y0=r+6,y1=y0+h,ym=(y0+y1)/2,L=-w/2,R=w/2,f=n=>n.toFixed(1);
-  return `<g class="scroll"><path class="stail" d="M${f(L+10)} ${f(y0+6)}H${f(L-16)}L${f(L-8)} ${f(ym+6)}L${f(L-16)} ${f(y1+6)}H${f(L+10)}Z"/><path class="stail" d="M${f(R-10)} ${f(y0+6)}H${f(R+16)}L${f(R+8)} ${f(ym+6)}L${f(R+16)} ${f(y1+6)}H${f(R-10)}Z"/>`+
+function scrollLabel(nm,r,fs,dx=0){const w=Math.max(50,nm.length*fs*.46+24),h=fs*1.6,y0=r+6,y1=y0+h,ym=(y0+y1)/2,L=-w/2,R=w/2,f=n=>n.toFixed(1);
+  return `<g class="scroll"${dx?` transform="translate(${dx.toFixed(1)} 0)"`:''}><path class="stail" d="M${f(L+10)} ${f(y0+6)}H${f(L-16)}L${f(L-8)} ${f(ym+6)}L${f(L-16)} ${f(y1+6)}H${f(L+10)}Z"/><path class="stail" d="M${f(R-10)} ${f(y0+6)}H${f(R+16)}L${f(R+8)} ${f(ym+6)}L${f(R+16)} ${f(y1+6)}H${f(R-10)}Z"/>`+
    `<path class="sbody" d="M${f(L)} ${f(y0)}Q0 ${f(y0-5)} ${f(R)} ${f(y0)}L${f(R)} ${f(y1)}Q0 ${f(y1-5)} ${f(L)} ${f(y1)}Z"/><text class="lname" y="${f(ym+fs*.34)}" font-size="${fs}">${esc(nm)}</text></g>`;}
 function drawLeafTree(grow){
   const L=tLayout();TP=L.pos;TBR=L.br;
@@ -255,17 +270,23 @@ function drawLeafTree(grow){
   const brs=TBR.map(b=>`<path class="br" d="${b.d}" style="stroke-width:${b.w}px"/>`).join('');
   let defs='';
   const big=document.body.classList.contains('big'),BIGT={gk:1.15,aunt:1.18,asp:1.18,kid:1.2,ksp:1.2,ggp:1.15,gp:1.1,par:1.05,son:1,ssp:1};
+  // scroll labels: measure, then push overlapping neighbours apart sideways
+  const LDX={};if(SCROLLS){const bx=Object.entries(TP).map(([id,v])=>{const p=byId[id],fs=FS[v.t]*(big?BIGT[v.t]||1:1),nm=p.s.length>22?p.s.slice(0,21)+'…':p.s,w=Math.max(50,nm.length*fs*.46+24)+30,h=fs*1.6;return {id,x:v.x,y0:v.y+v.r+6,y1:v.y+v.r+6+h,w,dx:0};});
+    for(let it=0;it<30;it++){let any=0;for(let i=0;i<bx.length;i++)for(let j=i+1;j<bx.length;j++){const a=bx[i],b=bx[j];if(a.y1<=b.y0||b.y1<=a.y0)continue;
+      const ax=a.x+a.dx,bxx=b.x+b.dx,ov=(a.w+b.w)/2+4-Math.abs(ax-bxx);if(ov<=0)continue;const sg=ax<=bxx?1:-1;a.dx-=sg*ov/2;b.dx+=sg*ov/2;any=1;}if(!any)break;}
+    bx.forEach(b=>{if(b.dx)LDX[b.id]=b.dx;});}
   const leaves=Object.entries(TP).map(([id,v])=>{const p=byId[id],ph=photo[id],r=v.r,fs=+(FS[v.t]*(big?BIGT[v.t]||1:1)).toFixed(1);
     if(ph)defs+=`<clipPath id="tc-${id}"><circle r="${r}"/></clipPath>`;
     const nm=p.s.length>22?p.s.slice(0,21)+'…':p.s;
     const face=ph?`<image href="${esc(ph)}" x="${-r}" y="${-r}" width="${2*r}" height="${2*r}" clip-path="url(#tc-${id})" preserveAspectRatio="xMidYMid slice"/>`:`<circle class="ini" r="${r}"/><text class="init" y="${(r*.32).toFixed(1)}" font-size="${(r*.78).toFixed(1)}">${esc(initials(p.s))}</text>`;
-    return `<g class="leaf${id===sel?' sel':''}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(p.n)}" transform="translate(${v.x.toFixed(1)},${v.y.toFixed(1)})"><g class="lin" style="--d:${dl(v.y,v.x)}ms"><circle class="glow" r="${r+3}"/><circle class="halo" r="${r+5}"/>${face}<circle class="ring" r="${r+1.5}" style="stroke:var(--${p.c})"/>${(TSTYLE==='parch'||TREEQ==='painted')?scrollLabel(nm,r,fs):`<text class="lname" y="${r+fs+6}" font-size="${fs}">${esc(nm)}</text>`}</g></g>`;}).join('');
+    return `<g class="leaf${id===sel?' sel':''}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(p.n)}" transform="translate(${v.x.toFixed(1)},${v.y.toFixed(1)})"><g class="lin" style="--d:${dl(v.y,v.x)}ms"><circle class="glow" r="${r+3}"/><circle class="halo" r="${r+5}"/>${face}<circle class="ring" r="${r+1.5}" style="stroke:var(--${p.c})"/>${SCROLLS?scrollLabel(nm,r,fs,LDX[id]||0):`<text class="lname" y="${r+fs+6}" font-size="${fs}">${esc(nm)}</text>`}</g></g>`;}).join('');
   const art=treeArt(TSTYLE,dl);
-  if(art&&PRINT){$('#tdefs').innerHTML=art.defs+defs;tw.innerHTML=`<g class="bake">${art.under+art.ground}</g>`+art.brs+art.over+leaves;bakeArt(art,false);}
+  if(art&&PRINT){$('#tdefs').innerHTML=art.defs+defs;tw.innerHTML=`<g class="bake">${art.under+art.ground}</g>`+(art.rootsUnder||'')+art.brs+art.over+leaves;bakeArt(art,false);}
   else if(art){$('#tdefs').innerHTML=art.defs+defs+`<clipPath id="growclip" clipPathUnits="userSpaceOnUse"><circle id="growc" cx="915" cy="1300" r="${growR.toFixed(1)}"/></clipPath>`;
     tw.innerHTML=(art.planet||'')+`<g class="growg" clip-path="url(#growclip)">${(art.rootsUnder||'')+art.brs+art.over}</g>`+leaves;bakeArt(art,true);}
   else{$('#tdefs').innerHTML=defs;tw.innerHTML=ground+brs+deco+leaves;}
   if(grow){tw.classList.add('tgrow');setTimeout(()=>tw.classList.remove('tgrow'),3400);}
+  renderMemStars();
   if(storyFocus)tw.querySelectorAll('.leaf').forEach(c=>c.classList.toggle('dim',!storyFocus.includes(c.dataset.id)));
 }
 /* stage size is cached so dragging never forces the browser to re-measure the page */
@@ -282,7 +303,7 @@ function sunLight(){if(SKY!=='day')return;const st=SKYEL||(SKYEL=$('#tstage .sky
   st.style.setProperty('--sunup',up.toFixed(3));st.style.setProperty('--suny',(sunY/H*100).toFixed(1)+'%');}
 const WL=[];const wl=()=>WL.length?WL:(WL.push($('#tback'),$('#tfront')),WL);
 function tApply(anim){tClamp();sunLight();const T=`translate(${tv.x}px,${tv.y}px) scale(${tv.k})`;wl().forEach(e=>{if(e){e.classList.toggle('nomo',!anim);e.style.transform=T;}});
-  const z=tsz();tw.classList.toggle('nomo',!anim);tw.style.transform=`translate(${tv.x+z.w*.4}px,${tv.y+z.h*.4}px) scale(${tv.k})`;tsvg.style.transform='';G=null;$('#tstage').classList.remove('moving');}
+  const z=tsz();tw.classList.toggle('nomo',!anim);tw.style.transform=`translate(${tv.x+z.w*.4}px,${tv.y+z.h*.4}px) scale(${tv.k})`;tsvg.style.transform='';G=null;$('#tstage').classList.remove('moving');msScale();}
 /* while a finger is dragging or pinching, move the already-drawn picture instead of redrawing the tree every frame */
 let G=null,gRaf=0;
 function gBegin(){if(G)return;G={...tv};$('#tstage').classList.add('moving');}
@@ -312,11 +333,11 @@ function tZoom(f,cx,cy,fast){tTouched=1;hidePop();const r=tsz();cx??=r.w/2;cy??=
    if(pts.size===2&&pinch){const [a,b]=[...pts.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),r=pinchR||(pinchR=$('#tstage').getBoundingClientRect());tZoom(d/pinch,(a[0]+b[0])/2-r.left,(a[1]+b[1])/2-r.top,true);pinch=d;moved=99;return;}
    const dx=e.clientX-last[0],dy=e.clientY-last[1];moved+=Math.abs(dx)+Math.abs(dy);last=[e.clientX,e.clientY];if(moved<4)return;tv.x+=dx;tv.y+=dy;tTouched=1;gBegin();gFrame();});
  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(pts.size===1){last=[...pts.values()][0].slice();moved=99;}if(!pts.size){tsvg.classList.remove('drag');gEnd();}
-   if(e.type==='pointerup'&&moved<6){const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);if(e.pointerType!=='mouse'){showPop(c.dataset.id);popT=setTimeout(hidePop,2200);}}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
+   if(e.type==='pointerup'&&moved<6){const ms=document.elementFromPoint(e.clientX,e.clientY)?.closest('.tmstar');if(ms){openMem(ms);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);if(e.pointerType!=='mouse'){showPop(c.dataset.id);popT=setTimeout(hidePop,2200);}}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
  tsvg.addEventListener('pointerup',up);tsvg.addEventListener('pointercancel',up);
  tsvg.addEventListener('wheel',e=>{e.preventDefault();const r=$('#tstage').getBoundingClientRect();tZoom(e.deltaY<0?1.12:1/1.12,e.clientX-r.left,e.clientY-r.top);},{passive:false});
  tsvg.addEventListener('dblclick',e=>{const r=$('#tstage').getBoundingClientRect();tZoom(1.8,e.clientX-r.left,e.clientY-r.top);});
- tsvg.addEventListener('keydown',e=>{const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
+ tsvg.addEventListener('keydown',e=>{const ms=e.target.closest?.('.tmstar');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
 $('#tzin').onclick=()=>tZoom(1.3);$('#tzout').onclick=()=>tZoom(1/1.3);$('#tfit').onclick=()=>{tTouched=1;tFit();};
 $('#q').addEventListener('change',e=>{const v=e.target.value.toLowerCase().trim();const p=P.find(p=>p.n.toLowerCase()===v)||P.find(p=>p.n.toLowerCase().includes(v));if(p){select(p.id);tFocus(p.id);}});
 

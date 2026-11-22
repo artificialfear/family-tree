@@ -28,6 +28,12 @@ A Thanksgiving 2026 gift for Mat's mom, Renee. Interactive illustrated family tr
 - `node tests/backend.test.js` — Code.gs with Apps Script mocks (incl. CacheService, computeDigest, Drive parents).
 - `python3 tests/page_test.py` — builds `mock.html` against a fake backend and runs Playwright (Chrome with fake mic for voice recording). Doesn't touch index.html.
 
+## Tree art
+- Default look (2026-11-21): the **painted tree** on the original sky and planet — dense hand-painted leaf canopy (baked into the background picture), a broad shaded trunk that meets the planet, and names on small paper scroll banners. `painted()` in `03-tree.js` builds it; `?tree=classic` brings back the older ink-line tree; `?style=parch` is a parchment-paper variant Mat tried (not used).
+- Leaf density: canopy loop skips 50% of candidate spots (`rnd()<.5`) — Mat asked for it thinner than the first mockup so memory stars show.
+- Scroll labels that would overlap are nudged sideways (`LDX` in `drawLeafTree`).
+- Memory stars sit inside the tree beside the person each memory is about (`#tmstars`, placed around the photo avoiding faces and labels), and grow when zoomed out (`--msk`) so they stay visible. If no free spot exists, the star falls back to the sky.
+
 ## Decisions Mat made
 - Public site (GitHub Pages) so relatives need no account; family passcode (not per-post approval) for adding memories; noindex tags so search engines skip it.
 - Grandkids and minors: photos + first names only, no birth years. Jacob (Jeff & David's son) added 2026-11-21 as a cousin. Other great-grandkids of Johnny & Annie Mae (Lilly(H), Madison, Lydia(H)) stay off for now.

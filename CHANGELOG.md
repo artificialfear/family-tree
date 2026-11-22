@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-21 — New painted tree
+- The tree is now a full, hand-painted tree with a thick canopy of leaves and a sturdy trunk planted on the planet. The sky, moon, planet and hometown roots are unchanged.
+- Names sit on small paper scrolls; neighbouring names no longer run into each other.
+- Memory stars are bigger and brighter, and each one now twinkles in the leaves right beside the person the memory is about. Tap a star to read it.
+- The printable poster uses the new tree too.
+
 ## 2026-11-21 — "For Mom"
 - The dedication now reads "For Mom" everywhere: the welcome screen, the intro line, the poster, the last story chapter, and the note hidden in the moon and sun.
 
