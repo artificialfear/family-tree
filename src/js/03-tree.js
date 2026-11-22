@@ -502,7 +502,7 @@ function tApply(anim){tClamp();sunLight();endGlide();if(SW){clearTimeout(SW);SW=
   // jump to the new view while hidden, and fade back in once it has been drawn
   if(anim&&moved&&!RM&&z.w<700){const st=$('#tstage');st.classList.add('tswap');
     SW=setTimeout(()=>{SW=0;wl().forEach(e=>{if(e){e.classList.add('nomo');e.style.transform=T;}});tw.classList.add('nomo');setTW(tv,z);tsvg.style.transform='';msScale();
-      requestAnimationFrame(()=>requestAnimationFrame(()=>st.classList.remove('tswap')));},200);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>st.classList.remove('tswap'),140)));},200);
     G=null;st.classList.remove('moving');return;}
   $('#tstage').classList.remove('tswap');wl().forEach(e=>{if(e){e.classList.toggle('nomo',!anim);e.style.transform=T;}});
   if(anim&&moved&&!RM&&glideOK(tv,was,z)){

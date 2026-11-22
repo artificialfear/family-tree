@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-22 — Calmer tree on phones
+- On phones, story chapters now change their highlighting while the tree is faded out, and the pulsing glows on faces and the twinkling memory stars inside the tree hold still, so the phone isn't constantly redrawing the whole tree.
+- The theater sign is drawn on its own layer so it no longer flickers when things change behind it.
+
 ## 2026-11-22 — Story steps on phones, smaller sign
 - On phones, moving between story chapters now fades the tree out and back in at its new spot instead of sliding, which stops the flickering "double picture".
 - The theater sign is smaller on phones, leaving more room for the tree.

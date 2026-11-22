@@ -379,3 +379,8 @@ body.stagemode #tstage .hint{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 2
 @media(prefers-reduced-motion:no-preference){#tback,#tfront{transition:transform .9s cubic-bezier(.4,0,.2,1),opacity .28s ease}#tback.nomo,#tfront.nomo{transition:opacity .28s ease}}
 #tstage.tswap #tsvg,#tstage.tswap #tback,#tstage.tswap #tfront{opacity:0;transition:opacity .18s ease}
 @media(max-width:699px){.theme-stage #marquee{width:64%}}
+/* phones: keep the big tree picture still so the phone isn't redrawing it constantly */
+@media(max-width:699px){#tworld .leaf,#tworld .br,#tworld .deco{transition:none!important}#tmstars .msp{animation:none!important;transform:scale(1.6)}
+  #tworld .leaf.spot .lin,#tworld .leaf.spot .glow{animation:none!important}}
+/* the sign is its own layer so changes behind it never make it repaint */
+#marquee .mqsign,#marquee .mqnew{will-change:transform;transform:translateZ(0)}
