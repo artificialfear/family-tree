@@ -22,22 +22,24 @@ function clearSpots(){spotT.forEach(clearTimeout);spotT=[];tw.querySelectorAll('
 function runSpots(s){clearSpots();const spans=[...$('#cap').querySelectorAll('.mn')];
   if(RM){spans.forEach(x=>x.classList.add('lit'));return;}
   (s.f||[]).forEach(id=>{const lf=tw.querySelector(`.leaf[data-id="${CSS.escape(id)}"]`);lf&&lf.classList.add('wait');});
-  const seen=new Set();let t=900;
+  const seen=new Set();let t=250;
   spans.forEach(x=>{const id=x.dataset.id;spotT.push(setTimeout(()=>{x.classList.add('lit');spotlight(id);},t));seen.add(id);t+=650;});
   const rest=(s.f||[]).filter(id=>!seen.has(id));
   if(rest.length)spotT.push(setTimeout(()=>rest.forEach(spotlight),t+150));}
 function startStory(){location.hash='tree';tTouched=1;si=0;tw.classList.add('story');requestAnimationFrame(()=>{$('#tstage').scrollIntoView({behavior:RM?'auto':'smooth',block:innerWidth<600?'start':'nearest'});showStep();});}
+let stepT=0;
 function showStep(){
   const s=STORY[si];storyFocus=s.f.length?s.f:null;
-  tw.querySelectorAll('.leaf').forEach(c=>c.classList.toggle('dim',!!storyFocus&&!storyFocus.includes(c.dataset.id)));
   const pics=(s.img?`<img src="${s.img}" alt="Jack Graham in Navy uniform">`:'')+s.f.filter(id=>photo[id]).slice(0,s.img?3:4).map(id=>`<img src="${esc(photo[id])}" alt="${esc(byId[id].n)}">`).join('');
   const last=si===STORY.length-1;
   $('#cap').innerHTML=`<div class="dots">${STORY.map((_,i)=>`<i class="${i<=si?'on':''}"></i>`).join('')}</div>${s.y?`<div class="yr">${esc(s.y)}</div>`:''}<h3>${esc(s.h)}</h3>${pics?`<div class="ph">${pics}</div>`:''}<p>${markNames(s.t,MN[si])}</p>
    <div class="ctl">${si>0?'<button id="sPrev">Back</button>':''}${last?'<button class="pri" id="sEnd">Explore the tree</button>':'<button class="pri" id="sNext">Next</button>'}<button id="sAuto" aria-pressed="${!!auto}">${auto?'Pause':'Auto-play'}</button>${last?'':'<button id="sEnd">Skip</button>'}<span class="step">${si+1} of ${STORY.length}</span></div>`;
   const cap=$('#cap');cap.classList.remove('on');void cap.offsetWidth;cap.classList.add('on');
-  if(s.f.length)select(s.f[s.f.length===1?0:Math.min(1,s.f.length-1)],1);
-  requestAnimationFrame(()=>tFrame(s.f));
-  runSpots(s);
+  // move first; change the tree's highlighting only once the move has finished, so phones don't have to
+  // redraw the whole tree while it is sliding (that made the picture stutter and jump)
+  clearTimeout(stepT);clearSpots();requestAnimationFrame(()=>tFrame(s.f));
+  stepT=setTimeout(()=>{if(STORY[si]!==s)return;tw.querySelectorAll('.leaf').forEach(c=>c.classList.toggle('dim',!!storyFocus&&!storyFocus.includes(c.dataset.id)));
+    if(s.f.length)select(s.f[s.f.length===1?0:Math.min(1,s.f.length-1)],1);runSpots(s);},RM?0:960);
   cap.querySelectorAll('.mn').forEach(x=>{const go=()=>{x.classList.add('lit');spotlight(x.dataset.id);select(x.dataset.id,1);};
     x.addEventListener('mouseenter',()=>spotlight(x.dataset.id));x.onclick=go;x.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
   sfx.page();
@@ -47,7 +49,7 @@ function showStep(){
   $('#sAuto').onclick=()=>{if(auto){clearInterval(auto);auto=null;}else{auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}showStep();};
 }
 function resetAuto(){if(auto){clearInterval(auto);auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}}
-function endStory(){clearInterval(auto);auto=null;si=-1;setTimeout(showHint,900);clearSpots();storyFocus=null;tw.classList.remove('story');tw.querySelectorAll('.leaf.dim').forEach(c=>c.classList.remove('dim'));$('#cap').classList.remove('on');select('renee',1);setTimeout(()=>tFit(true),50);}
+function endStory(){clearTimeout(stepT);clearInterval(auto);auto=null;si=-1;setTimeout(showHint,900);clearSpots();storyFocus=null;tw.classList.remove('story');tw.querySelectorAll('.leaf.dim').forEach(c=>c.classList.remove('dim'));$('#cap').classList.remove('on');select('renee',1);setTimeout(()=>tFit(true),50);}
 addEventListener('keydown',e=>{if(si<0)return;if(e.key==='ArrowRight'&&si<STORY.length-1){si++;resetAuto();showStep();}else if(e.key==='ArrowLeft'&&si>0){si--;resetAuto();showStep();}else if(e.key==='Escape')endStory();});
 $('#storyBtn').onclick=$('#tStory').onclick=()=>{sfx.ctx();startMusic();startStory();};
 /* ---------- full screen tree ---------- */

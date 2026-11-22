@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Smoother story on phones
+- Moving between story chapters now glides the tree as one picture instead of redrawing it frame by frame, so the leaves and faces move together without stuttering or jumping. The highlighting of each chapter's people now happens once the move has finished.
+
 ## 2026-11-22 — Family photos on the opening card
 - The slowly scrolling family photos are back on the opening screen, now inside the card only, softly faded so the words stay easy to read. The curtains around it stay clean.
 

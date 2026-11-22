@@ -486,11 +486,31 @@ function sunLight(){if(SKY!=='day')return;const st=SKYEL||(SKYEL=$('#tstage .sky
   const up=Math.max(0,Math.min(1,(hz-sunY+sz*.15)/(sz*1.6)));
   st.style.setProperty('--sunup',up.toFixed(3));st.style.setProperty('--suny',(sunY/H*100).toFixed(1)+'%');}
 const WL=[];const wl=()=>WL.length?WL:(WL.push($('#tback'),$('#tfront')),WL);
-function tApply(anim){tClamp();sunLight();const T=`translate(${tv.x}px,${tv.y}px) scale(${tv.k})`;wl().forEach(e=>{if(e){e.classList.toggle('nomo',!anim);e.style.transform=T;}});
-  const z=tsz();tw.classList.toggle('nomo',!anim);tw.style.transform=`translate(${tv.x+z.w*.4}px,${tv.y+z.h*.4}px) scale(${tv.k})`;tsvg.style.transform='';G=null;$('#tstage').classList.remove('moving');msScale();}
+/* Animated moves (story steps, Fit, focus) glide the already-drawn picture on the graphics card instead of
+   redrawing the whole tree every frame, which stuttered on phones. The tree is drawn once at one end of the
+   move and the picture slides between the two views; the plain redraw is only used if the picture can't cover the screen. */
+let AP=null,AT=0;
+const setTW=(v,z)=>{tw.style.transform=`translate(${v.x+z.w*.4}px,${v.y+z.h*.4}px) scale(${v.k})`;};
+function glideOK(R,D,z){const s=D.k/R.k,tx=D.x-R.x*s,ty=D.y-R.y*s,ok=(tx,ty,s)=>tx-s*.4*z.w<=1&&tx+s*1.4*z.w>=z.w-1&&ty-s*.4*z.h<=1&&ty+s*1.4*z.h>=z.h-1;
+  return ok(tx,ty,s)&&ok(tx/2,ty/2,(1+s)/2)&&s<2.2&&s>.45;}
+function endGlide(){if(!AT)return;clearTimeout(AT);AT=0;tsvg.classList.remove('tglide');tsvg.style.transform='';if(AP)setTW(AP,tsz());}
+function tApply(anim){tClamp();sunLight();endGlide();const T=`translate(${tv.x}px,${tv.y}px) scale(${tv.k})`;wl().forEach(e=>{if(e){e.classList.toggle('nomo',!anim);e.style.transform=T;}});
+  const z=tsz(),was=AP;AP={...tv};
+  const moved=was&&(Math.abs(was.x-tv.x)>.5||Math.abs(was.y-tv.y)>.5||Math.abs(was.k-tv.k)>1e-4);
+  if(anim&&moved&&!RM&&glideOK(tv,was,z)){
+    // draw at the new view, start the picture where the old view was, then slide it home
+    tw.classList.add('nomo');setTW(tv,z);const sc=was.k/tv.k;tsvg.classList.remove('tglide');
+    tsvg.style.transform=`translate(${was.x-tv.x*sc}px,${was.y-tv.y*sc}px) scale(${sc})`;void tsvg.getBoundingClientRect();
+    tsvg.classList.add('tglide');tsvg.style.transform='';AT=setTimeout(()=>{AT=0;tsvg.classList.remove('tglide');},950);}
+  else if(anim&&moved&&!RM&&glideOK(was,tv,z)){
+    // keep the old drawing, slide it to the new view, then redraw there once at the end
+    tw.classList.add('nomo');setTW(was,z);const sc=tv.k/was.k;tsvg.classList.add('tglide');
+    tsvg.style.transform=`translate(${tv.x-was.x*sc}px,${tv.y-was.y*sc}px) scale(${sc})`;AT=setTimeout(()=>{AT=0;tsvg.classList.remove('tglide');tsvg.style.transform='';setTW(tv,z);},950);}
+  else{tw.classList.toggle('nomo',!anim);setTW(tv,z);tsvg.style.transform='';}
+  G=null;$('#tstage').classList.remove('moving');msScale();}
 /* while a finger is dragging or pinching, move the already-drawn picture instead of redrawing the tree every frame */
 let G=null,gRaf=0;
-function gBegin(){if(G)return;G={...tv};$('#tstage').classList.add('moving');}
+function gBegin(){if(G)return;endGlide();G={...tv};$('#tstage').classList.add('moving');}
 function gApply(){tClamp();if(!G){tApply(false);return;}let s=tv.k/G.k;
   // before the moving picture runs out of pre-drawn edge (or gets too blurry), redraw it at the new spot and carry on
   {const z=tsz(),dx=tv.x-G.x*s,dy=tv.y-G.y*s;if(Math.abs(dx)>z.w*.3||Math.abs(dy)>z.h*.3||s>1.6||s<.65){tApply(false);gBegin();s=1;}}

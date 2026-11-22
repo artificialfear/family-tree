@@ -559,6 +559,7 @@ body.stagemode #tstage>.tools{top:auto;bottom:calc(var(--apron,24px) + 10px);jus
 body.stagemode .prog{top:auto;bottom:calc(100% + 6px)}
 body.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 20px)}
 body.stagemode #tstage .hint{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 24px)}
+#tsvg.tglide{transition:transform .9s cubic-bezier(.4,0,.2,1)}
 </style>
 </head>
 <body>
@@ -1459,11 +1460,31 @@ function sunLight(){if(SKY!=='day')return;const st=SKYEL||(SKYEL=$('#tstage .sky
   const up=Math.max(0,Math.min(1,(hz-sunY+sz*.15)/(sz*1.6)));
   st.style.setProperty('--sunup',up.toFixed(3));st.style.setProperty('--suny',(sunY/H*100).toFixed(1)+'%');}
 const WL=[];const wl=()=>WL.length?WL:(WL.push($('#tback'),$('#tfront')),WL);
-function tApply(anim){tClamp();sunLight();const T=`translate(${tv.x}px,${tv.y}px) scale(${tv.k})`;wl().forEach(e=>{if(e){e.classList.toggle('nomo',!anim);e.style.transform=T;}});
-  const z=tsz();tw.classList.toggle('nomo',!anim);tw.style.transform=`translate(${tv.x+z.w*.4}px,${tv.y+z.h*.4}px) scale(${tv.k})`;tsvg.style.transform='';G=null;$('#tstage').classList.remove('moving');msScale();}
+/* Animated moves (story steps, Fit, focus) glide the already-drawn picture on the graphics card instead of
+   redrawing the whole tree every frame, which stuttered on phones. The tree is drawn once at one end of the
+   move and the picture slides between the two views; the plain redraw is only used if the picture can't cover the screen. */
+let AP=null,AT=0;
+const setTW=(v,z)=>{tw.style.transform=`translate(${v.x+z.w*.4}px,${v.y+z.h*.4}px) scale(${v.k})`;};
+function glideOK(R,D,z){const s=D.k/R.k,tx=D.x-R.x*s,ty=D.y-R.y*s,ok=(tx,ty,s)=>tx-s*.4*z.w<=1&&tx+s*1.4*z.w>=z.w-1&&ty-s*.4*z.h<=1&&ty+s*1.4*z.h>=z.h-1;
+  return ok(tx,ty,s)&&ok(tx/2,ty/2,(1+s)/2)&&s<2.2&&s>.45;}
+function endGlide(){if(!AT)return;clearTimeout(AT);AT=0;tsvg.classList.remove('tglide');tsvg.style.transform='';if(AP)setTW(AP,tsz());}
+function tApply(anim){tClamp();sunLight();endGlide();const T=`translate(${tv.x}px,${tv.y}px) scale(${tv.k})`;wl().forEach(e=>{if(e){e.classList.toggle('nomo',!anim);e.style.transform=T;}});
+  const z=tsz(),was=AP;AP={...tv};
+  const moved=was&&(Math.abs(was.x-tv.x)>.5||Math.abs(was.y-tv.y)>.5||Math.abs(was.k-tv.k)>1e-4);
+  if(anim&&moved&&!RM&&glideOK(tv,was,z)){
+    // draw at the new view, start the picture where the old view was, then slide it home
+    tw.classList.add('nomo');setTW(tv,z);const sc=was.k/tv.k;tsvg.classList.remove('tglide');
+    tsvg.style.transform=`translate(${was.x-tv.x*sc}px,${was.y-tv.y*sc}px) scale(${sc})`;void tsvg.getBoundingClientRect();
+    tsvg.classList.add('tglide');tsvg.style.transform='';AT=setTimeout(()=>{AT=0;tsvg.classList.remove('tglide');},950);}
+  else if(anim&&moved&&!RM&&glideOK(was,tv,z)){
+    // keep the old drawing, slide it to the new view, then redraw there once at the end
+    tw.classList.add('nomo');setTW(was,z);const sc=tv.k/was.k;tsvg.classList.add('tglide');
+    tsvg.style.transform=`translate(${tv.x-was.x*sc}px,${tv.y-was.y*sc}px) scale(${sc})`;AT=setTimeout(()=>{AT=0;tsvg.classList.remove('tglide');tsvg.style.transform='';setTW(tv,z);},950);}
+  else{tw.classList.toggle('nomo',!anim);setTW(tv,z);tsvg.style.transform='';}
+  G=null;$('#tstage').classList.remove('moving');msScale();}
 /* while a finger is dragging or pinching, move the already-drawn picture instead of redrawing the tree every frame */
 let G=null,gRaf=0;
-function gBegin(){if(G)return;G={...tv};$('#tstage').classList.add('moving');}
+function gBegin(){if(G)return;endGlide();G={...tv};$('#tstage').classList.add('moving');}
 function gApply(){tClamp();if(!G){tApply(false);return;}let s=tv.k/G.k;
   // before the moving picture runs out of pre-drawn edge (or gets too blurry), redraw it at the new spot and carry on
   {const z=tsz(),dx=tv.x-G.x*s,dy=tv.y-G.y*s;if(Math.abs(dx)>z.w*.3||Math.abs(dy)>z.h*.3||s>1.6||s<.65){tApply(false);gBegin();s=1;}}
@@ -1687,22 +1708,24 @@ function clearSpots(){spotT.forEach(clearTimeout);spotT=[];tw.querySelectorAll('
 function runSpots(s){clearSpots();const spans=[...$('#cap').querySelectorAll('.mn')];
   if(RM){spans.forEach(x=>x.classList.add('lit'));return;}
   (s.f||[]).forEach(id=>{const lf=tw.querySelector(`.leaf[data-id="${CSS.escape(id)}"]`);lf&&lf.classList.add('wait');});
-  const seen=new Set();let t=900;
+  const seen=new Set();let t=250;
   spans.forEach(x=>{const id=x.dataset.id;spotT.push(setTimeout(()=>{x.classList.add('lit');spotlight(id);},t));seen.add(id);t+=650;});
   const rest=(s.f||[]).filter(id=>!seen.has(id));
   if(rest.length)spotT.push(setTimeout(()=>rest.forEach(spotlight),t+150));}
 function startStory(){location.hash='tree';tTouched=1;si=0;tw.classList.add('story');requestAnimationFrame(()=>{$('#tstage').scrollIntoView({behavior:RM?'auto':'smooth',block:innerWidth<600?'start':'nearest'});showStep();});}
+let stepT=0;
 function showStep(){
   const s=STORY[si];storyFocus=s.f.length?s.f:null;
-  tw.querySelectorAll('.leaf').forEach(c=>c.classList.toggle('dim',!!storyFocus&&!storyFocus.includes(c.dataset.id)));
   const pics=(s.img?`<img src="${s.img}" alt="Jack Graham in Navy uniform">`:'')+s.f.filter(id=>photo[id]).slice(0,s.img?3:4).map(id=>`<img src="${esc(photo[id])}" alt="${esc(byId[id].n)}">`).join('');
   const last=si===STORY.length-1;
   $('#cap').innerHTML=`<div class="dots">${STORY.map((_,i)=>`<i class="${i<=si?'on':''}"></i>`).join('')}</div>${s.y?`<div class="yr">${esc(s.y)}</div>`:''}<h3>${esc(s.h)}</h3>${pics?`<div class="ph">${pics}</div>`:''}<p>${markNames(s.t,MN[si])}</p>
    <div class="ctl">${si>0?'<button id="sPrev">Back</button>':''}${last?'<button class="pri" id="sEnd">Explore the tree</button>':'<button class="pri" id="sNext">Next</button>'}<button id="sAuto" aria-pressed="${!!auto}">${auto?'Pause':'Auto-play'}</button>${last?'':'<button id="sEnd">Skip</button>'}<span class="step">${si+1} of ${STORY.length}</span></div>`;
   const cap=$('#cap');cap.classList.remove('on');void cap.offsetWidth;cap.classList.add('on');
-  if(s.f.length)select(s.f[s.f.length===1?0:Math.min(1,s.f.length-1)],1);
-  requestAnimationFrame(()=>tFrame(s.f));
-  runSpots(s);
+  // move first; change the tree's highlighting only once the move has finished, so phones don't have to
+  // redraw the whole tree while it is sliding (that made the picture stutter and jump)
+  clearTimeout(stepT);clearSpots();requestAnimationFrame(()=>tFrame(s.f));
+  stepT=setTimeout(()=>{if(STORY[si]!==s)return;tw.querySelectorAll('.leaf').forEach(c=>c.classList.toggle('dim',!!storyFocus&&!storyFocus.includes(c.dataset.id)));
+    if(s.f.length)select(s.f[s.f.length===1?0:Math.min(1,s.f.length-1)],1);runSpots(s);},RM?0:960);
   cap.querySelectorAll('.mn').forEach(x=>{const go=()=>{x.classList.add('lit');spotlight(x.dataset.id);select(x.dataset.id,1);};
     x.addEventListener('mouseenter',()=>spotlight(x.dataset.id));x.onclick=go;x.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
   sfx.page();
@@ -1712,7 +1735,7 @@ function showStep(){
   $('#sAuto').onclick=()=>{if(auto){clearInterval(auto);auto=null;}else{auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}showStep();};
 }
 function resetAuto(){if(auto){clearInterval(auto);auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}}
-function endStory(){clearInterval(auto);auto=null;si=-1;setTimeout(showHint,900);clearSpots();storyFocus=null;tw.classList.remove('story');tw.querySelectorAll('.leaf.dim').forEach(c=>c.classList.remove('dim'));$('#cap').classList.remove('on');select('renee',1);setTimeout(()=>tFit(true),50);}
+function endStory(){clearTimeout(stepT);clearInterval(auto);auto=null;si=-1;setTimeout(showHint,900);clearSpots();storyFocus=null;tw.classList.remove('story');tw.querySelectorAll('.leaf.dim').forEach(c=>c.classList.remove('dim'));$('#cap').classList.remove('on');select('renee',1);setTimeout(()=>tFit(true),50);}
 addEventListener('keydown',e=>{if(si<0)return;if(e.key==='ArrowRight'&&si<STORY.length-1){si++;resetAuto();showStep();}else if(e.key==='ArrowLeft'&&si>0){si--;resetAuto();showStep();}else if(e.key==='Escape')endStory();});
 $('#storyBtn').onclick=$('#tStory').onclick=()=>{sfx.ctx();startMusic();startStory();};
 /* ---------- full screen tree ---------- */

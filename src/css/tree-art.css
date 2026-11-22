@@ -375,3 +375,4 @@ body.stagemode #tstage>.tools{top:auto;bottom:calc(var(--apron,24px) + 10px);jus
 body.stagemode .prog{top:auto;bottom:calc(100% + 6px)}
 body.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 20px)}
 body.stagemode #tstage .hint{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 24px)}
+#tsvg.tglide{transition:transform .9s cubic-bezier(.4,0,.2,1)}
