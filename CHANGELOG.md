@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-21 — Tree grows in full
+- When the tree first appears, the full painted canopy now grows out together with the branches, instead of a bare tree appearing first and the leaves filling in afterwards.
+
 ## 2026-11-21 — New painted tree
 - The tree is now a full, hand-painted tree with a thick canopy of leaves and a sturdy trunk planted on the planet. The sky, moon, planet and hometown roots are unchanged.
 - Names sit on small paper scrolls; neighbouring names no longer run into each other.

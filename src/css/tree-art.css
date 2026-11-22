@@ -255,3 +255,5 @@ footer{height:80px}
 @media(prefers-reduced-motion:reduce){#tmstars .msp{animation:none}}
 #poster .scroll .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
 #poster #tmstars{display:none}
+#tstage.intro.growing #tback{opacity:1}
+#tstage.growing #tbackimg{transition:none;animation:none}

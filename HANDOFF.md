@@ -32,6 +32,7 @@ A Thanksgiving 2026 gift for Mat's mom, Renee. Interactive illustrated family tr
 - Default look (2026-11-21): the **painted tree** on the original sky and planet — dense hand-painted leaf canopy (baked into the background picture), a broad shaded trunk that meets the planet, and names on small paper scroll banners. `painted()` in `03-tree.js` builds it; `?tree=classic` brings back the older ink-line tree; `?style=parch` is a parchment-paper variant Mat tried (not used).
 - Leaf density: canopy loop skips 50% of candidate spots (`rnd()<.5`) — Mat asked for it thinner than the first mockup so memory stars show.
 - Scroll labels that would overlap are nudged sideways (`LDX` in `drawLeafTree`).
+- Grow animation: the baked canopy picture (`#tbackimg`) is revealed with a CSS `clip-path` circle that tracks the same radius as the SVG grow clip (`growTree`), and `#tback` stays visible during `.intro.growing`. Growth waits for the bake (`lastBake`, max 1.2 s).
 - Memory stars sit inside the tree beside the person each memory is about (`#tmstars`, placed around the photo avoiding faces and labels), and grow when zoomed out (`--msk`) so they stay visible. If no free spot exists, the star falls back to the sky.
 
 ## Decisions Mat made

@@ -251,9 +251,14 @@ function bakeArt(art,html){
 const GROWT=2600;let GROWR=1400,growR=99999;
 const growEase=u=>1-(1-u)*(1-u);                      // fast at first, gentle at the tips
 function growDelay(x,y){const f=Math.min(1,Math.hypot(x-915,y-1300)/GROWR);return Math.round(GROWT*(1-Math.sqrt(1-f)));}
-function growTree(onDone){const st=$('#tstage');tw.classList.remove('pre');tw.classList.add('tgrow');const t0=performance.now();
-  (function f(now){const u=Math.min(1,(now-t0)/GROWT);growR=u<1?GROWR*growEase(u):99999;const c=document.getElementById('growc');if(c)c.setAttribute('r',growR.toFixed(1));
-    if(u<1)requestAnimationFrame(f);else{setTimeout(()=>{st.classList.remove('intro');onDone&&onDone();},500);setTimeout(()=>tw.classList.remove('tgrow'),1600);}})(t0);}
+function growTree(onDone){const st=$('#tstage');tw.classList.remove('pre');
+  // the painted canopy is one picture: reveal it with the same growing circle as the branches, so the full tree grows in one go
+  const im=$('#tbackimg'),clip=r=>{if(!im)return;if(r==null){im.style.clipPath='';return;}const cx=915-parseFloat(im.style.left||0),cy=1300-parseFloat(im.style.top||0);im.style.clipPath=`circle(${r.toFixed(1)}px at ${cx.toFixed(1)}px ${cy.toFixed(1)}px)`;};
+  clip(0);let started=0;
+  const go=()=>{if(started++)return;clip(0);st.classList.add('growing');tw.classList.add('tgrow');const t0=performance.now();
+  (function f(now){const u=Math.min(1,(now-t0)/GROWT);growR=u<1?GROWR*growEase(u):99999;const c=document.getElementById('growc');if(c)c.setAttribute('r',growR.toFixed(1));clip(u<1?growR:null);
+    if(u<1)requestAnimationFrame(f);else{setTimeout(()=>{st.classList.remove('intro','growing');onDone&&onDone();},500);setTimeout(()=>tw.classList.remove('tgrow'),1600);}})(t0);};
+  lastBake.then(go);setTimeout(go,1200);}
 function scrollLabel(nm,r,fs,dx=0){const w=Math.max(50,nm.length*fs*.46+24),h=fs*1.6,y0=r+6,y1=y0+h,ym=(y0+y1)/2,L=-w/2,R=w/2,f=n=>n.toFixed(1);
   return `<g class="scroll"${dx?` transform="translate(${dx.toFixed(1)} 0)"`:''}><path class="stail" d="M${f(L+10)} ${f(y0+6)}H${f(L-16)}L${f(L-8)} ${f(ym+6)}L${f(L-16)} ${f(y1+6)}H${f(L+10)}Z"/><path class="stail" d="M${f(R-10)} ${f(y0+6)}H${f(R+16)}L${f(R+8)} ${f(ym+6)}L${f(R+16)} ${f(y1+6)}H${f(R-10)}Z"/>`+
    `<path class="sbody" d="M${f(L)} ${f(y0)}Q0 ${f(y0-5)} ${f(R)} ${f(y0)}L${f(R)} ${f(y1)}Q0 ${f(y1-5)} ${f(L)} ${f(y1)}Z"/><text class="lname" y="${f(ym+fs*.34)}" font-size="${fs}">${esc(nm)}</text></g>`;}
