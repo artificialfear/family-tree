@@ -74,8 +74,45 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
  st.prepend(sky);sky.after(back);st.querySelector('svg').after(front);front.after(cel);st.appendChild(note);
  if(STAGE){st.classList.add('theme-stage');const bd=document.createElement('div');bd.className='sbackdrop';sky.appendChild(bd);
    const pr=document.createElement('div');pr.id='proscen';pr.setAttribute('aria-hidden','true');cel.after(pr);
-   const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;bd.innerHTML=stageBackdrop(r.width,r.height);pr.innerHTML=stageFrame(r.width,r.height);};
-   draw();let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(draw,120);}).observe(st);}}
+   $('#moonBtn').innerHTML=faceSVG('moon');$('#sunBtn').innerHTML=faceSVG('sun');$('#sunBtn').setAttribute('aria-label','The setting sun: a note for Mom');
+   const mq=document.createElement('div');mq.id='marquee';mq.innerHTML=marqueeSVG();pr.after(mq);
+   mq.addEventListener('click',e=>{const g=e.target.closest('#tnew');if(g)openNewest(g);});
+   mq.addEventListener('keydown',e=>{const g=e.target.closest('#tnew');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openNewest(g);}});
+   const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;const tb=st.querySelector('.tools');$('#marquee').style.top=((tb?tb.getBoundingClientRect().bottom-r.top:54)+(r.width<700?4:2))+'px';bd.innerHTML=stageBackdrop(r.width,r.height);pr.innerHTML=stageFrame(r.width,r.height);};
+   draw();let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(()=>{draw();if(!tTouched)tStart();},120);}).observe(st);}}
+/* the moon and sun as friendly faces, gold-rimmed like an old stage sign (original drawings) */
+function faceSVG(kind){const sun=kind==='sun';let rays='';
+  if(sun)for(let i=0;i<16;i++){const a=i*22.5,l=i%2?58:66;rays+=`<path transform="rotate(${a})" d="M-7 -40Q0 ${-l-6} 7 -40Z" fill="url(#fr${kind})" stroke="#8f5f1b" stroke-width="1.2"/>`;}
+  return `<svg viewBox="-70 -70 140 140" aria-hidden="true"><defs><radialGradient id="ff${kind}" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="${sun?'#fff1a8':'#fff6c8'}"/><stop offset=".6" stop-color="${sun?'#f7c84a':'#f2d26a'}"/><stop offset="1" stop-color="${sun?'#d98a1f':'#c99a2e'}"/></radialGradient>
+   <linearGradient id="fr${kind}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#e09a2a"/></linearGradient></defs>${rays}
+   <circle r="46" fill="#8f5f1b"/><circle r="43" fill="#e8b84f"/><circle r="39" fill="url(#ff${kind})" stroke="#9c6a1e" stroke-width="1.5"/>
+   ${sun?'':'<g fill="#c99a2e" opacity=".35"><circle cx="-22" cy="-20" r="5"/><circle cx="24" cy="18" r="4"/><circle cx="-26" cy="16" r="3"/><circle cx="12" cy="-28" r="3"/></g>'}
+   <ellipse cx="-18" cy="10" rx="8" ry="5" fill="#f08a7a" opacity=".55"/><ellipse cx="18" cy="10" rx="8" ry="5" fill="#f08a7a" opacity=".55"/>
+   <path d="M-23 -9Q-15 -15 -7 -9" fill="none" stroke="#6b3d10" stroke-width="2.6" stroke-linecap="round"/>
+   ${sun?'<path d="M7 -9Q15 -15 23 -9" fill="none" stroke="#6b3d10" stroke-width="2.6" stroke-linecap="round"/>':'<ellipse cx="15" cy="-8" rx="6" ry="7" fill="#fff"/><circle cx="16" cy="-7" r="3.6" fill="#3a6fb8"/><circle cx="16.6" cy="-7.4" r="1.6" fill="#10203a"/><path d="M8 -14Q15 -19 23 -13" fill="none" stroke="#6b3d10" stroke-width="2" stroke-linecap="round"/>'}
+   <path d="M-12 14Q0 25 12 14" fill="none" stroke="#6b3d10" stroke-width="2.8" stroke-linecap="round"/>
+   <path d="M-3 -2Q-6 6 -1 8" fill="none" stroke="#a8712a" stroke-width="1.8" stroke-linecap="round"/></svg>`;}
+/* the family name as a lit marquee sign, fixed at the top of the stage */
+function marqueeSVG(){const f=n=>n.toFixed(1);let bulbs='';
+  const edge=[];for(let t=0;t<=1.0001;t+=1/26){const x=30+460*t;edge.push([x,46-Math.sin(Math.PI*t)*22]);}
+  edge.forEach(([x,y])=>bulbs+=`<circle cx="${f(x)}" cy="${f(y)}" r="3.4"/>`);
+  for(let x=30;x<=490;x+=460/26)bulbs+=`<circle cx="${f(x)}" cy="148" r="3.4"/>`;
+  for(let y=60;y<140;y+=14)bulbs+=`<circle cx="20" cy="${y}" r="3.4"/><circle cx="500" cy="${y}" r="3.4"/>`;
+  let rays='';for(let i=0;i<14;i++){const a=(-90+(i-6.5)*13)*Math.PI/180;rays+=`<path d="M260 176L${f(260+Math.cos(a-.08)*320)} ${f(176+Math.sin(a-.08)*320)}L${f(260+Math.cos(a+.08)*320)} ${f(176+Math.sin(a+.08)*320)}Z"/>`;}
+  const panel='M18 52Q260 2 502 52L506 156L14 156Z';
+  return `<svg class="mqsign" viewBox="0 0 520 170" role="img" aria-label="The Graham and Harper Family">
+   <defs><linearGradient id="mqg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a6"/><stop offset=".5" stop-color="#e0ae45"/><stop offset="1" stop-color="#9a6a1e"/></linearGradient>
+   <linearGradient id="mqb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b58c4"/><stop offset="1" stop-color="#16307f"/></linearGradient><clipPath id="mqc"><path d="M30 56Q260 12 490 56L492 144L28 144Z"/></clipPath></defs>
+   <path d="${panel}" fill="url(#mqg)" stroke="#6b4410" stroke-width="2"/>
+   <g transform="translate(14 54)"><circle r="16" fill="url(#mqg)" stroke="#6b4410" stroke-width="1.5"/><path d="M0 0m-9 0a9 9 0 1 1 9 9a5 5 0 1 1 -5 -5" fill="none" stroke="#7a5214" stroke-width="2.2"/></g>
+   <g transform="translate(506 54) scale(-1 1)"><circle r="16" fill="url(#mqg)" stroke="#6b4410" stroke-width="1.5"/><path d="M0 0m-9 0a9 9 0 1 1 9 9a5 5 0 1 1 -5 -5" fill="none" stroke="#7a5214" stroke-width="2.2"/></g>
+   <path d="M30 56Q260 12 490 56L492 144L28 144Z" fill="url(#mqb)" stroke="#f5e6c0" stroke-width="2"/>
+   <g clip-path="url(#mqc)" fill="#5a86e6" opacity=".22">${rays}</g>
+   <text x="260" y="58" text-anchor="middle" class="mqsmall">THE</text>
+   <text x="260" y="104" text-anchor="middle" class="mqbig">GRAHAM &amp; HARPER</text>
+   <g transform="translate(260 124)"><path d="M-62 -13H62L70 0L62 13H-62L-70 0Z" fill="#b3262c" stroke="#f5e6c0" stroke-width="1.6"/><text y="6" text-anchor="middle" class="mqplaque">FAMILY</text></g>
+   <g class="mqbulbs">${bulbs}</g></svg>
+   <svg class="mqnew" viewBox="-300 -20 600 40"><g id="tnew" class="tnew" role="button" tabindex="0"><rect class="tnbg" x="-200" y="-17" width="400" height="32" rx="16"/><text class="tntext" text-anchor="middle" y="5"></text></g></svg>`;}
 /* ---------- toy-theater scenery (theme=stage): drawn to the screen size, redrawn only on resize ---------- */
 function star6(x,y,r){let d='';for(let i=0;i<12;i++){const a=(i*30-90)*Math.PI/180,rr=i%2?r*.45:r;d+=(i?'L':'M')+(x+Math.cos(a)*rr).toFixed(1)+' '+(y+Math.sin(a)*rr).toFixed(1);}return d+'Z';}
 function stageBackdrop(W,H){const ph=W<700;let sd=11;const r=()=>(sd=(sd*16807)%2147483647)/2147483647,f=n=>n.toFixed(1);
@@ -84,12 +121,12 @@ function stageBackdrop(W,H){const ph=W<700;let sd=11;const r=()=>(sd=(sd*16807)%
   const row=(y,sc,cls)=>{let x=-40,d='M-60 0L-60 '+f(y);while(x<W+60){const w=(ph?60:90)*sc*(.75+r()*.6),h=w*(.42+r()*.18);d+=`Q${f(x+w*.05)} ${f(y+h)} ${f(x+w*.5)} ${f(y+h*.95)}Q${f(x+w*.95)} ${f(y+h)} ${f(x+w)} ${f(y)}`;x+=w;}return `<path class="${cls}" d="${d}L${f(W+60)} 0Z"/>`;};
   back=row(top+(ph?8:14),1.25,'sc2');front=row(top,1,'sc1');
   let stars='';const n=ph?5:9;for(let i=0;i<n;i++){const x=W*(.06+.88*(i+.5)/n)+(r()-.5)*W*.05;if(Math.abs(x-W/2)<W*(ph?.14:.2))continue;const len=top+(ph?20:30)+r()*(ph?60:H*.16),rs=(ph?9:13)*(.8+r()*.5);
-    stars+=`<line x1="${f(x)}" y1="${f(top-6)}" x2="${f(x)}" y2="${f(len-rs)}" class="sstr"/><path class="sgold" d="${star6(x,len,rs)}"/><path class="sglint" d="${star6(x-rs*.12,len-rs*.12,rs*.42)}"/>`;}
+    stars+=`<line x1="${f(x)}" y1="0" x2="${f(x)}" y2="${f(len-rs)}" class="sstr"/><path class="sgold" d="${star6(x,len,rs)}"/><path class="sglint" d="${star6(x-rs*.12,len-rs*.12,rs*.42)}"/>`;}
   return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
    <linearGradient id="sgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient></defs>${back}${front}${stars}</svg>`;}
 // how much of each edge the stage frame covers, so Fit keeps the family inside it
 function stageDims(W,H){const ph=W<700,vh=ph?22:Math.max(30,Math.min(56,H*.05)),n=Math.max(3,Math.round(W/(ph?150:250))),sw=W/n,dr=Math.min(sw*.16,ph?20:36),
-  cw=ph?16:Math.max(26,Math.min(78,W*.045)),ah=ph?12:Math.max(16,Math.min(30,H*.028));return {ph,vh,n,sw,dr,cw,ah,top:vh+dr*1.9+10,side:cw*1.3,bot:ah+8};}
+  cw=ph?16:Math.max(26,Math.min(78,W*.045)),ah=ph?12:Math.max(16,Math.min(30,H*.028));return {ph,vh,n,sw,dr,cw,ah,top:vh+dr*1.9+10,side:cw*1.3,bot:ah+(ph?14:34)};}
 function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah}=stageDims(W,H);
   // valance: green swags behind, red swags in front, gold fringe, crescents where they meet
   let green='',red='',fringe='',orn='';
@@ -407,7 +444,7 @@ function drawLeafTree(grow){
       n.d=`M${n.x1.toFixed(1)} ${n.y1.toFixed(1)}Q${n.cx.toFixed(1)} ${n.cy.toFixed(1)} ${n.x2.toFixed(1)} ${n.y2.toFixed(1)}`;return n;});}
   const xs=[],ys=[];Object.values(TP).forEach(v=>{xs.push(v.x-v.r-70,v.x+v.r+70);ys.push(v.y-v.r-8,v.y+v.r+34);});TBR.forEach(b=>{xs.push(b.x1,b.x2);ys.push(b.y1,b.y2);});
   TB={x0:Math.min(...xs),y0:Math.min(...ys),x1:Math.max(...xs),y1:Math.max(...ys)};
-  SKYG=null;if(TSTYLE==='ink'&&SCROLLS&&!PRINT){const ct=Math.min(...Object.values(TP).filter(v=>v.y<1060).map(v=>v.y-v.r-95));SKYG={ct,by:ct-135};TB.y0=Math.min(TB.y0,SKYG.by-52);}
+  SKYG=null;if(TSTYLE==='ink'&&SCROLLS&&!PRINT&&!STAGE){const ct=Math.min(...Object.values(TP).filter(v=>v.y<1060).map(v=>v.y-v.r-95));SKYG={ct,by:ct-135};TB.y0=Math.min(TB.y0,SKYG.by-52);}
   GROWR=Math.max(...Object.values(TP).map(v=>Math.hypot(v.x-915,v.y-1300)+v.r))+60;
   const dl=(y,x=915)=>growDelay(x,y);
   let deco='',seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
@@ -458,9 +495,11 @@ function gEnd(){if(gRaf){cancelAnimationFrame(gRaf);gRaf=0;}if(G)tApply(false);}
 function tBox(ids){const vs=(ids&&ids.length?ids:Object.keys(TP)).map(id=>TP[id]).filter(Boolean);if(!vs.length)return TB;
   return {x0:Math.min(...vs.map(v=>v.x-v.r-60)),x1:Math.max(...vs.map(v=>v.x+v.r+60)),y0:Math.min(...vs.map(v=>v.y-v.r-10)),y1:Math.max(...vs.map(v=>v.y+v.r+34))};}
 function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!r.width)return;
-  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top):60,avail=r.height-capH-top-8-(SD?SD.bot:0),b=(ids&&ids.length)?tBox(ids):TB,w=b.x1-b.x0,h=b.y1-b.y0;
+  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?m.getBoundingClientRect().bottom-r.top+10:0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot:0),b=(ids&&ids.length)?tBox(ids):TB,w=b.x1-b.x0,h=b.y1-b.y0;
   const k=Math.max(.12,Math.min((r.width-36-(SD?SD.side*2:0))/w,avail/h,ids&&ids.length===1?1.5:1.2));
-  tv.k=k;tv.x=r.width/2-(b.x0+b.x1)/2*k;tv.y=top+avail/2-(b.y0+b.y1)/2*k;tApply(anim);}
+  tv.k=k;tv.x=r.width/2-(b.x0+b.x1)/2*k;tv.y=top+avail/2-(b.y0+b.y1)/2*k;
+  // tall phone screens: sit the tree just under the sign instead of leaving a gap above it
+  if(SD&&SD.ph&&!(ids&&ids.length===1))tv.y=Math.min(tv.y,top+12-TB.y0*k);tApply(anim);}
 // the setting sun sits right behind the trunk whenever the view is framed (first load, Fit); panning leaves it where it is
 function sunToTrunk(jump){const st=SKYEL||(SKYEL=$('#tstage .sky')),W=$('#tstage').getBoundingClientRect().width;if(!st||!W)return;
   if(jump)st.style.transition='none';st.style.setProperty('--sunx',Math.max(8,Math.min(92,(tv.x+915*tv.k)/W*100)).toFixed(2)+'%');if(jump){void st.offsetWidth;st.style.transition='';}}

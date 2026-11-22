@@ -307,7 +307,19 @@ footer{height:80px}
 .theme-stage .sky .stars i{border-radius:0;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%)}
 /* gold-rimmed sun and moon, each with a crescent behind */
 .theme-stage .sky .sunset{box-shadow:0 0 0 5px #8f5f1b,0 0 0 9px #e2b552,0 0 0 12px #8f5f1b,0 0 60px 18px rgba(255,190,110,.55)}
-.theme-stage #celest .moon{box-shadow:0 0 0 4px #8f5f1b,0 0 0 8px #e2b552,0 0 0 10px #8f5f1b}
-.theme-stage #celest .moon::before{content:"";position:absolute;inset:-26%;border-radius:50%;z-index:-1;background:radial-gradient(circle at 66% 50%,transparent 0 47%,#e2b552 48%,#b98530 60%,#8f5f1b 66%,transparent 67%)}
 .theme-stage #tworld .br.t{stroke:#1a0d05;stroke-width:1.6}
 .theme-stage .tools{top:calc(10px + 0px)}
+#marquee{display:none}
+.theme-stage #marquee{display:block;position:absolute;left:50%;transform:translateX(-50%);width:min(520px,86%);z-index:3;pointer-events:none}
+#marquee svg{display:block;position:relative;left:auto;top:auto;width:100%;height:auto;transform:none;will-change:auto}
+#marquee .mqsign{filter:drop-shadow(0 6px 8px rgba(8,4,20,.55))}
+#marquee .mqbig{font-family:Rockwell,"Roboto Slab","Clarendon",Georgia,serif;font-weight:800;font-size:46px;fill:#fff3dc;stroke:#0c1a4a;stroke-width:5;paint-order:stroke;letter-spacing:1px}
+#marquee .mqsmall{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#e0404a;letter-spacing:4px;stroke:#0c1a4a;stroke-width:3;paint-order:stroke}
+#marquee .mqplaque{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#fff3dc;letter-spacing:4px}
+#marquee .mqbulbs{fill:#fffbe8;filter:drop-shadow(0 0 3px rgba(255,236,170,.95))}
+#marquee .mqnew{width:100%;margin-top:4px}#marquee #tnew{pointer-events:auto}
+/* sun and moon faces */
+.theme-stage #celest .moon,.theme-stage #celest .sun{width:clamp(70px,9vw,130px);height:auto;aspect-ratio:1;border-radius:50%;background:none;animation:none;filter:drop-shadow(0 0 22px rgba(255,214,120,.45));top:24%;right:7%}
+.theme-stage #celest .sun::before,.theme-stage #celest .sun::after{display:none}
+.theme-stage #celest .sun svg{width:100%;height:100%;display:block}
+@media(max-width:600px){.theme-stage #celest .moon,.theme-stage #celest .sun{top:104px;right:6%;width:56px}}
