@@ -258,3 +258,21 @@ footer{height:80px}
 #poster #tmstars{display:none}
 #tstage.intro.growing #tback{opacity:1}
 #tstage.growing #tbackimg{transition:none;animation:none}
+/* sky above the tree */
+#tsky .sbody{fill:#f3e7c8;stroke:#6b4a2a;stroke-width:1.6}#tsky .stail{fill:#d8c194;stroke:#6b4a2a;stroke-width:1.4}
+#tsky .ttitle{font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600;font-size:38px;fill:#3a2516;letter-spacing:.3px}
+#tsky .tbanner{filter:drop-shadow(0 3px 6px rgba(20,10,30,.35))}
+.tnew{cursor:pointer;transition:opacity .45s}.tnew.fade{opacity:0}
+.tnew .tnbg{fill:rgba(22,16,36,.55);stroke:rgba(255,236,200,.25);stroke-width:1}
+.tnew .tntext{font-family:Spectral,Georgia,serif;font-style:italic;font-size:19px;fill:#fbefd6}
+.tnew:focus-visible .tnbg,.tconst:focus-visible .cl{stroke:var(--gold);stroke-width:2.5}
+.tconst{cursor:pointer}.tconst .cl{fill:none;stroke:rgba(255,240,210,.32);stroke-width:1.3;stroke-dasharray:3 4}
+.tconst .cs{fill:#fff6dc;filter:drop-shadow(0 0 3px rgba(255,236,190,.9))}.tconst .cs.big{fill:#fffaf0}
+.tconst .cs.tw{animation:ctw 3.6s ease-in-out infinite;animation-delay:var(--dl)}@keyframes ctw{0%,100%{opacity:1}50%{opacity:.35}}
+.tconst:hover .cl{stroke:rgba(255,240,210,.6)}
+.stage.moving .tconst .cs.tw{animation-play-state:paused}
+#tworld.pre #tsky{opacity:0;transition:none}#tworld.tgrow #tsky{animation:fadeup 1s ease both;animation-delay:1.9s}
+#tworld.story #tsky{opacity:.3;transition:opacity .6s}
+#mnote .cnote .g1{font-family:Spectral,Georgia,serif;font-style:italic;font-size:1.15rem;margin-bottom:.3rem}#mnote .cnote p{margin:.2rem 0 .6rem}
+@media(prefers-reduced-motion:reduce){.tconst .cs.tw{animation:none}}
+#tnew:focus,#tconst:focus{outline:none}

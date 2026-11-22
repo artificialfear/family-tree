@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-22 — In the sky: title banner, newest memory, family constellation
+- A large paper banner above the tree reads "The Graham & Harper Family".
+- Just under it, a small line shows the newest memories as they're shared ("Pam shared a memory about Ed · 2 hours ago"), changing every few seconds. Tap it to read the memory. Before anyone has posted, it invites people to tap a face and share one.
+- A faint heart of stars sits in the sky beside the banner: the family constellation. Tap it to read how Ed and Renee joined the two families, with a button to start the whole story.
+
 ## 2026-11-22 — Leaves on twigs
 - Every leaf now grows from a twig or branch, in little sprigs, so no leaves float loose in the sky. The canopy is just as full as before.
 
