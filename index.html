@@ -862,13 +862,13 @@ function tLayout(){
   {const row=[];['chris','mat','jon','dustin'].forEach(id=>{if(!byId[id])return;row.push([id,0]);const w=byId[id].sp;if(w&&byId[w]&&byId[w].g===0)row.push([w,1]);});
    // the sons and their wives stand along the curve of the planet (radius 2200, top at y 1272)
    const ground=x=>1272+2200-Math.sqrt(2200*2200-(x-BX)*(x-BX));
-   let x=0;const xs=row.map(([id,isSp],i)=>{if(i>0)x+=isSp?150:165;return x;});const off=BX-x/2,y=1295;
+   let x=0;const xs=row.map(([id,isSp],i)=>{if(i>0)x+=isSp?190:215;return x;});const off=BX-x/2,y=1295;
    row.forEach(([id,isSp],i)=>{const px=xs[i]+off,py=ground(px)+23;put(id,px,py,isSp?'ssp':'son');
      if(isSp){const h=pos[row[i-1][0]],dx=px-h.x,dy=py-h.y,l=Math.hypot(dx,dy);B(h.x+dx/l*RAD.son,h.y+dy/l*RAD.son,(h.x+px)/2,(h.y+py)/2-6,px-dx/l*RAD.ssp,py-dy/l*RAD.ssp,4);}});
    // grandchildren stand on the lawn below their parents
    row.filter(r=>!r[1]).forEach(([id])=>{const a=pos[id],w=byId[id].sp&&pos[byId[id].sp],cx=w?(a.x+w.x)/2:a.x,sy=w?(a.y+w.y)/2:a.y+RAD.son,gy=ground(cx)+168;
      const ks=P.filter(k=>k.g<0&&k.par.includes(id)&&!pos[k.id]).sort((p,q)=>p.ord-q.ord),n=ks.length;
-     ks.forEach((k,j)=>{const kx=cx+(j-(n-1)/2)*88;put(k.id,kx,gy,'gk');B(cx,sy,cx,gy-52,kx,gy-RAD.gk,3.5);});});}
+     ks.forEach((k,j)=>{const kx=cx+(j-(n-1)/2)*112;put(k.id,kx,gy,'gk');B(cx,sy,cx,gy-52,kx,gy-RAD.gk,3.5);});});}
   put('ed',800,872,'par');put('renee',1030,872,'par');B(F.x,F.y,872,896,800+RAD.par,872,12);B(F.x,F.y,958,896,1030-RAD.par,872,12);
   B(F.x-8,F.y,800,775,GN.x,GN.y,26);B(F.x+8,F.y,1030,775,HN.x,HN.y,26);  // limbs
   put('jack',560,616,'gp');put('margaret',740,600,'gp');put('johnny',1090,600,'gp');put('annie',1270,616,'gp');
@@ -1134,6 +1134,18 @@ function scrollLabel(nm,r,fs,dx=0){const w=Math.max(50,nm.length*fs*.46+24),h=fs
    `<path class="sbody" d="M${f(L)} ${f(y0)}Q0 ${f(y0-5)} ${f(R)} ${f(y0)}L${f(R)} ${f(y1)}Q0 ${f(y1-5)} ${f(L)} ${f(y1)}Z"/><text class="lname" y="${f(ym+fs*.34)}" font-size="${fs}">${esc(nm)}</text></g>${dx?'</g>':''}`;}
 function drawLeafTree(grow){
   const L=tLayout();TP=L.pos;TBR=L.br;
+  const big=document.body.classList.contains('big'),BIGT={gk:1.15,aunt:1.18,asp:1.18,kid:1.2,ksp:1.2,ggp:1.15,gp:1.1,par:1.05,son:1,ssp:1};
+  // name scrolls: where two would overlap, slide both people (photo and scroll together) apart, and let their branches follow
+  if(SCROLLS){const bx=Object.entries(TP).map(([id,v])=>{const p=byId[id],fs=FS[v.t]*(big?BIGT[v.t]||1:1),nm=p.s.length>22?p.s.slice(0,21)+'…':p.s,w=Math.max(50,nm.length*fs*.46+24)+30,h=fs*1.6;return {id,x:v.x,dx:0,bx:[[v.y+v.r+6,v.y+v.r+6+h,w],[v.y-v.r-4,v.y+v.r+4,2*v.r+8]]};});
+    // each person is a photo box and a scroll box that move together; any overlap pushes the two people apart sideways
+    const ovl=(a,b)=>{let m=0;for(const [ay0,ay1,aw] of a.bx)for(const [by0,by1,bw] of b.bx){if(ay1<=by0||by1<=ay0)continue;const o=(aw+bw)/2+6-Math.abs(a.x+a.dx-b.x-b.dx);if(o>m)m=o;}return m;};
+    for(let it=0;it<60;it++){let any=0;for(let i=0;i<bx.length;i++)for(let j=i+1;j<bx.length;j++){const a=bx[i],b=bx[j],ov=ovl(a,b);if(ov<=0)continue;
+      const sg=(a.x+a.dx)<=(b.x+b.dx)?1:-1;a.dx-=sg*ov/2;b.dx+=sg*ov/2;any=1;}if(!any)break;}
+    const old={};Object.entries(TP).forEach(([id,v])=>old[id]={x:v.x,y:v.y,r:v.r});
+    bx.forEach(b=>{if(b.dx)TP[b.id]={...TP[b.id],x:TP[b.id].x+b.dx};});
+    const shiftAt=(x,y)=>{let best=0,bd=1e9;for(const id in old){const o=old[id],d=Math.hypot(x-o.x,y-o.y);if(d<=o.r+6&&d<bd){bd=d;best=TP[id].x-o.x;}}return best;};
+    TBR=TBR.map(b=>{const d1=shiftAt(b.x1,b.y1),d2=shiftAt(b.x2,b.y2);if(!d1&&!d2)return b;const n={...b,x1:b.x1+d1,x2:b.x2+d2,cx:b.cx+(d1+d2)/2};
+      n.d=`M${n.x1.toFixed(1)} ${n.y1.toFixed(1)}Q${n.cx.toFixed(1)} ${n.cy.toFixed(1)} ${n.x2.toFixed(1)} ${n.y2.toFixed(1)}`;return n;});}
   const xs=[],ys=[];Object.values(TP).forEach(v=>{xs.push(v.x-v.r-70,v.x+v.r+70);ys.push(v.y-v.r-8,v.y+v.r+34);});TBR.forEach(b=>{xs.push(b.x1,b.x2);ys.push(b.y1,b.y2);});
   TB={x0:Math.min(...xs),y0:Math.min(...ys),x1:Math.max(...xs),y1:Math.max(...ys)};
   GROWR=Math.max(...Object.values(TP).map(v=>Math.hypot(v.x-915,v.y-1300)+v.r))+60;
@@ -1144,12 +1156,7 @@ function drawLeafTree(grow){
   const gb=Math.max(1410,TB.y1+30),ground=`<path class="ground" d="M${TB.x0} 1380 Q915 1205 ${TB.x1} 1380 L${TB.x1} ${gb} L${TB.x0} ${gb}Z"/>`;
   const brs=TBR.map(b=>`<path class="br" d="${b.d}" style="stroke-width:${b.w}px"/>`).join('');
   let defs='';
-  const big=document.body.classList.contains('big'),BIGT={gk:1.15,aunt:1.18,asp:1.18,kid:1.2,ksp:1.2,ggp:1.15,gp:1.1,par:1.05,son:1,ssp:1};
-  // scroll labels: measure, then push overlapping neighbours apart sideways
-  const LDX={};if(SCROLLS){const bx=Object.entries(TP).map(([id,v])=>{const p=byId[id],fs=FS[v.t]*(big?BIGT[v.t]||1:1),nm=p.s.length>22?p.s.slice(0,21)+'…':p.s,w=Math.max(50,nm.length*fs*.46+24)+30,h=fs*1.6;return {id,x:v.x,y0:v.y+v.r+6,y1:v.y+v.r+6+h,w,dx:0};});
-    for(let it=0;it<30;it++){let any=0;for(let i=0;i<bx.length;i++)for(let j=i+1;j<bx.length;j++){const a=bx[i],b=bx[j];if(a.y1<=b.y0||b.y1<=a.y0)continue;
-      const ax=a.x+a.dx,bxx=b.x+b.dx,ov=(a.w+b.w)/2+4-Math.abs(ax-bxx);if(ov<=0)continue;const sg=ax<=bxx?1:-1;a.dx-=sg*ov/2;b.dx+=sg*ov/2;any=1;}if(!any)break;}
-    bx.forEach(b=>{if(b.dx)LDX[b.id]=b.dx;});}
+  const LDX={};
   const leaves=Object.entries(TP).map(([id,v])=>{const p=byId[id],ph=photo[id],r=v.r,fs=+(FS[v.t]*(big?BIGT[v.t]||1:1)).toFixed(1);
     if(ph)defs+=`<clipPath id="tc-${id}"><circle r="${r}"/></clipPath>`;
     const nm=p.s.length>22?p.s.slice(0,21)+'…':p.s;

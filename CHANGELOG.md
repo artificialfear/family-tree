@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-22 — Names centered under every photo
+- Every name scroll now sits centered under its photo. Where two people were crowded, both the photo and the name move apart together, and their branches follow.
+- More room along the planet for the brothers, their wives and the grandchildren, so their names no longer crowd each other.
+
 ## 2026-11-21 — Smoother tree growth on phones
 - The leaves no longer flash while the tree grows on Android phones. The canopy is now painted in one smooth sweep as the tree grows.
 
