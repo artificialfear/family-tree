@@ -171,6 +171,38 @@ function treeArt(st,dl){if(st==='classic')return null;
     const pdefs=!PRINT?`<radialGradient id="pfill" gradientUnits="userSpaceOnUse" cx="915" cy="1272" r="1500"><stop offset="0" stop-color="${PL.a}"/><stop offset=".35" stop-color="${PL.b}"/><stop offset="1" stop-color="${PL.c}"/></radialGradient>
      <clipPath id="pclip"><circle cx="915" cy="${1272+2200}" r="2200"/></clipPath><radialGradient id="atmo"><stop offset=".975" stop-color="${PL.atmo}" stop-opacity="0"/><stop offset=".99" stop-color="${PL.atmo}" stop-opacity="${NIGHT?.28:.45}"/><stop offset="1" stop-color="${PL.atmo}" stop-opacity="0"/></radialGradient>`:'';
     return {defs:defs+pdefs,planet,rootsUnder:ROOTS,under,ground,bg:PRINT?['#f7efdd','#ecdfc2']:null,roots:`<g class="art">${roots}</g>`,brs:`<g class="art">${tint}</g>${brs}<g class="art">${grain}</g>`,over:lv};}
+
+  if(st==='parch'){
+    // aged-paper illustration: one broad painted trunk, a dense dome of hand-painted leaves, roots spreading over the paper
+    const ink='#3a2516',bark='#4b3020',barkL='#7a5537';
+    const pdefs=`<filter id="ppaint" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="5"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter>
+      <linearGradient id="trunkg" x1="0" x2="1"><stop offset="0" stop-color="#2e1d12"/><stop offset=".35" stop-color="${bark}"/><stop offset=".62" stop-color="${barkL}"/><stop offset="1" stop-color="#2b1a10"/></linearGradient>
+      <radialGradient id="pshade"><stop offset="0" stop-color="#3a2414" stop-opacity=".35"/><stop offset="1" stop-color="#3a2414" stop-opacity="0"/></radialGradient>`;
+    // canopy area: discs around everyone above the trunk fork, and along the upper branches
+    const disc=[];vals.filter(v=>v.y<1060).forEach(v=>disc.push([v.x,v.y,v.r+95]));
+    TBR.filter(b=>Math.max(b.y1,b.y2)<1080).forEach(b=>{for(let t=.2;t<=1;t+=.2){const [x,y]=qpt(b,t);disc.push([x,y,b.w>=20?120:95]);}});
+    const inC=(x,y)=>disc.some(([cx,cy,r])=>(x-cx)*(x-cx)+(y-cy)*(y-cy)<r*r);
+    const LF='M0 0Q11 -9 26 0Q11 9 0 0Z',G=['#244f2e','#2f6a3a','#3e7d46','#55914f','#77a960','#2d6e5a','#4a8a6b'];
+    let back='',front='';const xs0=TB.x0-40,xs1=TB.x1+40,ys0=TB.y0-60;
+    for(let i=0;i<9000;i++){const x=xs0+rnd()*(xs1-xs0),y=ys0+rnd()*(1100-ys0);if(!inC(x,y)||rnd()<.3)continue;
+      const a=rnd()*360,sc=1+rnd()*.9,c=G[Math.floor(rnd()*G.length)],lit=rnd()<.35;
+      const leaf=`<g transform="translate(${f(x)} ${f(y)}) rotate(${a.toFixed(0)}) scale(${sc.toFixed(2)})"><path d="${LF}" fill="${c}"/>${lit?`<path d="M2 0Q11 -7 24 0Z" fill="#a9c98a" opacity=".35"/>`:''}<path d="M1 0L22 0" stroke="#1d3a22" stroke-width=".6" opacity=".55"/></g>`;
+      back+=leaf;}
+    // a few leaves overlap the branches in front, so the limbs sit inside the foliage
+    let lv='';TBR.forEach(b=>{if(b.w<3||Math.max(b.y1,b.y2)>1080)return;const n=b.w>=20?7:b.w>=8?4:2;for(let i=0;i<n;i++){const t=.15+rnd()*.8,[x,y]=qpt(b,t),a=Math.atan2(b.y2-b.y1,b.x2-b.x1)*180/Math.PI+(rnd()<.5?60:-60)+(rnd()-.5)*40,sc=.9+rnd()*.7;
+      lv+=`<g class="deco" style="--d:${dl(y,x)+150}ms" transform="translate(${f(x)} ${f(y)}) rotate(${a.toFixed(0)}) scale(${sc.toFixed(2)}) translate(4 0)"><path d="${LF}" fill="${G[Math.floor(rnd()*G.length)]}"/><path d="M1 0L22 0" stroke="#1d3a22" stroke-width=".6" opacity=".55"/></g>`;}});
+    // the trunk: wide and flared at the base, narrowing up to Ed and Renee
+    const T0=905,T1=1272;const trunk=`M${BX-34} ${T0} C${BX-40} ${T0+120} ${BX-62} ${T1-150} ${BX-78} ${T1-40} C${BX-96} ${T1} ${BX-150} ${T1+18} ${BX-190} ${T1+30} L${BX+190} ${T1+30} C${BX+150} ${T1+18} ${BX+96} ${T1} ${BX+78} ${T1-40} C${BX+62} ${T1-150} ${BX+40} ${T0+120} ${BX+34} ${T0} Z`;
+    let bk='';for(let i=0;i<9;i++){const ox=-52+i*13+(rnd()-.5)*6;bk+=`<path d="M${f(BX+ox*.55)} ${T0+20} C${f(BX+ox*.8)} ${T0+140} ${f(BX+ox)} ${T1-120} ${f(BX+ox*1.5)} ${T1+10}" fill="none" stroke="${i%3?'#2a1a10':'#9a7350'}" stroke-width="${i%3?1.4:1}" opacity=".55"/>`;}
+    bk+=`<ellipse cx="${BX+14}" cy="${T0+190}" rx="9" ry="14" fill="#24160c" opacity=".7"/>`;
+    // roots: wide, wandering, tapering over the paper
+    let rts='';[-1,1].forEach(sg=>[[260,1300,34],[430,1338,22],[560,1300,16],[170,1360,18],[640,1360,10],[360,1405,12]].forEach(([dx,y,w],i)=>{
+      const b={x1:BX+sg*(90+i*8),y1:T1+14,cx:BX+sg*dx*.45,cy:y+(rnd()-.4)*40,x2:BX+sg*dx,y2:y+20};rts+=`<path class="root" d="${taperPath(b,w,1)}"/>`;
+      for(let j=0;j<3;j++){const [qx,qy]=qpt(b,.45+j*.18),c={x1:qx,y1:qy,cx:qx+sg*30,cy:qy+28,x2:qx+sg*(50+rnd()*60),y2:qy+40+rnd()*50};rts+=`<path class="root" d="${taperPath(c,Math.max(2,w*.3),.5)}"/>`;}}));
+    const under=`<ellipse cx="${BX}" cy="${T1+40}" rx="720" ry="70" fill="url(#pshade)"/><g filter="url(#ppaint)">${back}</g>`;
+    const rootsUnder=`<g class="art">${rts}<path d="${trunk}" fill="url(#trunkg)"/>${bk}</g>`;
+    const brs=TBR.map(b=>{const w1=b.w>=20?b.w*.62:Math.max(1.6,b.w*.45);return `<path class="br t" d="${taperPath(b,b.w*1.15,w1)}"/>`;}).join('');
+    return {defs:defs+pdefs,under,ground:'',rootsUnder,roots:'',brs,over:lv};}
   if(st==='paper'){
     const layers=[['#5f9a63',58,10],['#7fb46f',44,0],['#a3cc84',30,-8]];let canopy='';
     layers.forEach(([c,pad,dy],li)=>{let g='';top.forEach(v=>{g+=`<circle cx="${f(v.x)}" cy="${f(v.y+dy)}" r="${f(v.r+pad)}"/>`;});TBR.filter(b=>b.w>=8&&b.w<20).forEach(b=>{[.45,.75].forEach(t=>{const [x,y]=qpt(b,t);g+=`<circle cx="${f(x)}" cy="${f(y+dy)}" r="${pad+6}"/>`;});});
@@ -202,6 +234,9 @@ function growDelay(x,y){const f=Math.min(1,Math.hypot(x-915,y-1300)/GROWR);retur
 function growTree(onDone){const st=$('#tstage');tw.classList.remove('pre');tw.classList.add('tgrow');const t0=performance.now();
   (function f(now){const u=Math.min(1,(now-t0)/GROWT);growR=u<1?GROWR*growEase(u):99999;const c=document.getElementById('growc');if(c)c.setAttribute('r',growR.toFixed(1));
     if(u<1)requestAnimationFrame(f);else{setTimeout(()=>{st.classList.remove('intro');onDone&&onDone();},500);setTimeout(()=>tw.classList.remove('tgrow'),1600);}})(t0);}
+function scrollLabel(nm,r,fs){const w=Math.max(50,nm.length*fs*.46+24),h=fs*1.6,y0=r+6,y1=y0+h,ym=(y0+y1)/2,L=-w/2,R=w/2,f=n=>n.toFixed(1);
+  return `<g class="scroll"><path class="stail" d="M${f(L+10)} ${f(y0+6)}H${f(L-16)}L${f(L-8)} ${f(ym+6)}L${f(L-16)} ${f(y1+6)}H${f(L+10)}Z"/><path class="stail" d="M${f(R-10)} ${f(y0+6)}H${f(R+16)}L${f(R+8)} ${f(ym+6)}L${f(R+16)} ${f(y1+6)}H${f(R-10)}Z"/>`+
+   `<path class="sbody" d="M${f(L)} ${f(y0)}Q0 ${f(y0-5)} ${f(R)} ${f(y0)}L${f(R)} ${f(y1)}Q0 ${f(y1-5)} ${f(L)} ${f(y1)}Z"/><text class="lname" y="${f(ym+fs*.34)}" font-size="${fs}">${esc(nm)}</text></g>`;}
 function drawLeafTree(grow){
   const L=tLayout();TP=L.pos;TBR=L.br;
   const xs=[],ys=[];Object.values(TP).forEach(v=>{xs.push(v.x-v.r-70,v.x+v.r+70);ys.push(v.y-v.r-8,v.y+v.r+34);});TBR.forEach(b=>{xs.push(b.x1,b.x2);ys.push(b.y1,b.y2);});
@@ -219,7 +254,7 @@ function drawLeafTree(grow){
     if(ph)defs+=`<clipPath id="tc-${id}"><circle r="${r}"/></clipPath>`;
     const nm=p.s.length>22?p.s.slice(0,21)+'…':p.s;
     const face=ph?`<image href="${esc(ph)}" x="${-r}" y="${-r}" width="${2*r}" height="${2*r}" clip-path="url(#tc-${id})" preserveAspectRatio="xMidYMid slice"/>`:`<circle class="ini" r="${r}"/><text class="init" y="${(r*.32).toFixed(1)}" font-size="${(r*.78).toFixed(1)}">${esc(initials(p.s))}</text>`;
-    return `<g class="leaf${id===sel?' sel':''}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(p.n)}" transform="translate(${v.x.toFixed(1)},${v.y.toFixed(1)})"><g class="lin" style="--d:${dl(v.y,v.x)}ms"><circle class="glow" r="${r+3}"/><circle class="halo" r="${r+5}"/>${face}<circle class="ring" r="${r+1.5}" style="stroke:var(--${p.c})"/><text class="lname" y="${r+fs+6}" font-size="${fs}">${esc(nm)}</text></g></g>`;}).join('');
+    return `<g class="leaf${id===sel?' sel':''}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(p.n)}" transform="translate(${v.x.toFixed(1)},${v.y.toFixed(1)})"><g class="lin" style="--d:${dl(v.y,v.x)}ms"><circle class="glow" r="${r+3}"/><circle class="halo" r="${r+5}"/>${face}<circle class="ring" r="${r+1.5}" style="stroke:var(--${p.c})"/>${TSTYLE==='parch'?scrollLabel(nm,r,fs):`<text class="lname" y="${r+fs+6}" font-size="${fs}">${esc(nm)}</text>`}</g></g>`;}).join('');
   const art=treeArt(TSTYLE,dl);
   if(art&&PRINT){$('#tdefs').innerHTML=art.defs+defs;tw.innerHTML=`<g class="bake">${art.under+art.ground}</g>`+art.brs+art.over+leaves;bakeArt(art,false);}
   else if(art){$('#tdefs').innerHTML=art.defs+defs+`<clipPath id="growclip" clipPathUnits="userSpaceOnUse"><circle id="growc" cx="915" cy="1300" r="${growR.toFixed(1)}"/></clipPath>`;
