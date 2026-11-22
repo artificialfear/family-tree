@@ -77,7 +77,7 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
    const mq=document.createElement('div');mq.id='marquee';mq.innerHTML=marqueeSVG();pr.after(mq);
    mq.addEventListener('click',e=>{const g=e.target.closest('#tnew');if(g)openNewest(g);});
    mq.addEventListener('keydown',e=>{const g=e.target.closest('#tnew');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openNewest(g);}});
-   const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;const tb=st.querySelector('.tools'),D=stageDims(r.width,r.height);$('#marquee').style.top=(r.width<700?4:6)+'px';if(r.width<700){const mb=$('#marquee').getBoundingClientRect().bottom-r.top;st.style.setProperty('--mqb',mb+'px');}st.style.setProperty('--apron',D.ah+'px');if(tb)st.style.setProperty('--tbh',tb.offsetHeight+'px');bd.innerHTML=stageBackdrop(r.width,r.height);pr.innerHTML=stageFrame(r.width,r.height);};
+   const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;const tb=st.querySelector('.tools'),D=stageDims(r.width,r.height);$('#marquee').style.top=(r.width<700?4:6)+'px';if(r.width<700){const mb=$('#marquee').getBoundingClientRect().bottom-r.top;st.style.setProperty('--mqb',mb+'px');}st.style.setProperty('--apron',D.ah+'px');if(tb)st.style.setProperty('--tbh',tb.offsetHeight+'px');bd.innerHTML=stageBackdrop(r.width,r.height,$('#marquee').getBoundingClientRect().bottom-r.top);pr.innerHTML=stageFrame(r.width,r.height);};
    draw();let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(()=>{draw();if(!tTouched)tStart();},120);}).observe(st);}}
 /* the moon and sun as friendly faces, gold-rimmed like an old stage sign (original drawings) */
 function faceSVG(kind){const sun=kind==='sun';let rays='';
@@ -114,12 +114,18 @@ function marqueeSVG(){const f=n=>n.toFixed(1);let bulbs='';
    <svg class="mqnew" viewBox="-300 -20 600 40"><g id="tnew" class="tnew" role="button" tabindex="0"><rect class="tnbg" x="-200" y="-17" width="400" height="32" rx="16"/><text class="tntext" text-anchor="middle" y="5"></text></g></svg>`;}
 /* ---------- toy-theater scenery (theme=stage): drawn to the screen size, redrawn only on resize ---------- */
 function star6(x,y,r){let d='';for(let i=0;i<12;i++){const a=(i*30-90)*Math.PI/180,rr=i%2?r*.45:r;d+=(i?'L':'M')+(x+Math.cos(a)*rr).toFixed(1)+' '+(y+Math.sin(a)*rr).toFixed(1);}return d+'Z';}
-function stageBackdrop(W,H){const ph=W<700;let sd=11;const r=()=>(sd=(sd*16807)%2147483647)/2147483647,f=n=>n.toFixed(1);
+function stageBackdrop(W,H,mqb=200){const ph=W<700;let sd=11;const r=()=>(sd=(sd*16807)%2147483647)/2147483647,f=n=>n.toFixed(1);
   // two rows of flat cut-out clouds hanging from the top, then gold stars on strings
   const top=stageDims(W,H).top-(ph?4:10);let back='',front='';
   const row=(y,sc,cls)=>{let x=-40,d='M-60 0L-60 '+f(y);while(x<W+60){const w=(ph?60:90)*sc*(.75+r()*.6),h=w*(.42+r()*.18);d+=`Q${f(x+w*.05)} ${f(y+h)} ${f(x+w*.5)} ${f(y+h*.95)}Q${f(x+w*.95)} ${f(y+h)} ${f(x+w)} ${f(y)}`;x+=w;}return `<path class="${cls}" d="${d}L${f(W+60)} 0Z"/>`;};
   back=row(top+(ph?8:14),1.25,'sc2');front=row(top,1,'sc1');
-  let stars='';const n=ph?5:9;for(let i=0;i<n;i++){const x=W*(.06+.88*(i+.5)/n)+(r()-.5)*W*.05;if(Math.abs(x-W/2)<W*(ph?.14:.2))continue;const len=top+(ph?20:30)+r()*(ph?60:H*.16),rs=(ph?9:13)*(.8+r()*.5);
+  // gold stars on strings, hanging from behind the valance at different drops and sizes.
+  // They hang in the open sky: beside the tree on wide screens, in the gap under the sign on phones.
+  let stars='';const n=ph?12:24,base=ph?9:13;for(let i=0;i<n;i++){const x=W*(.04+.92*(i+.5)/n)+(r()-.5)*W*(ph?.03:.025),dx=Math.abs(x-W/2)/W,rs=base*(.55+r()*1.15);let len;
+    if(ph){if(dx>.44||x>W*.74)continue;len=mqb+6+rs+r()*26;}
+    else if(dx<.21)continue;
+    else if(dx<.31)len=top+20+r()*Math.max(10,mqb-top-30);
+    else len=top+(ph?16:24)+Math.pow(r(),1.4)*H*.46;
     stars+=`<line x1="${f(x)}" y1="0" x2="${f(x)}" y2="${f(len-rs)}" class="sstr"/><path class="sgold" d="${star6(x,len,rs)}"/><path class="sglint" d="${star6(x-rs*.12,len-rs*.12,rs*.42)}"/>`;}
   return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
    <linearGradient id="sgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient></defs>${back}${front}${stars}</svg>`;}

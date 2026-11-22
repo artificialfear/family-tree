@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — More hanging stars
+- About twice as many gold stars now hang from the curtain, in different sizes and at different drops, filling the open sky beside the tree (and the gap under the sign on phones) without covering any faces.
+
 ## 2026-11-22 — Sign at the top, buttons at the bottom
 - The marquee sign and the newest-memory line now sit at the very top of the stage, hanging over the curtain.
 - The buttons moved to a row along the stage edge at the bottom; the Program menu opens upward.
