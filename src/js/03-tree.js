@@ -97,9 +97,7 @@ function hsh(t){let h=2166136261;for(const c of String(t)){h^=c.charCodeAt(0);h=
 /* ---------- in the sky above the tree: title banner, newest memory, family constellation ---------- */
 let SKYG=null;const SHOWCONST=false; // G and H constellations: switched off for now (Mat, 2026-11-22); set true to bring them back
 function skyMarkup(){if(!SKYG)return '';const f=n=>n.toFixed(1),X=915,by=SKYG.by,bw=700,bh=70,L=X-bw/2,R=X+bw/2,y0=by-bh/2,y1=by+bh/2,ym=by;
-  const tail=(sg)=>{const e=sg<0?L:R,o=sg*1;return `<path class="stail" d="M${f(e-o*24)} ${f(y0+12)}H${f(e+o*44)}L${f(e+o*30)} ${f(ym+12)}L${f(e+o*44)} ${f(y1+12)}H${f(e-o*24)}Z"/>`;};
-  const banner=`<g class="tbanner">${tail(-1)}${tail(1)}<path class="sbody" d="M${f(L)} ${f(y0)}Q${X} ${f(y0-16)} ${f(R)} ${f(y0)}L${f(R)} ${f(y1)}Q${X} ${f(y1-16)} ${f(L)} ${f(y1)}Z"/>
-    <text class="ttitle" x="${X}" y="${f(ym+12)}" text-anchor="middle">The Graham &amp; Harper Family</text></g>`;
+  const banner=wornScroll(L,R,y0,y1,4242,16,'tbanner')+`<text class="ttitle" x="${X}" y="${f(ym+12)}" text-anchor="middle">The Graham &amp; Harper Family</text></g>`;
   const newest=`<g id="tnew" class="tnew" role="button" tabindex="0" transform="translate(${X} ${f(y1+34)})"><rect class="tnbg" x="-200" y="-19" width="400" height="34" rx="17"/><text class="tntext" text-anchor="middle" y="5"></text></g>`;
   // the family constellations: a G on one side of the banner and an H on the other
   const letter=(segs,cx,cy,cs,id,lab)=>{const P=segs.map(sg=>sg.map(([a,b])=>[cx+a*cs,cy+b*cs]));const d=P.map(sg=>sg.map((p,i)=>(i?'L':'M')+f(p[0])+' '+f(p[1])).join('')).join('');
@@ -325,9 +323,24 @@ function growTree(onDone){const st=$('#tstage');
   const ready=lastBake.then(()=>{preparing=1;return prep();});
   ready.then(()=>setTimeout(go,0),()=>go());setTimeout(go,2200);}
 
+// worn paper scroll: rough, slightly torn edges (fixed per name), aged colouring, curled ribbon ends
+function roughEdge(x0,x1,y,arch,seed,amp,inw){const n=Math.max(4,Math.round(Math.abs(x1-x0)/7)),pts=[];let h=seed;
+  for(let i=0;i<=n;i++){h=Math.imul(h^(h>>>13),1597334677)>>>0;const t=i/n,x=x0+(x1-x0)*t,j=((h%1000)/1000-.5)*2*amp,nick=(h%97)<6?amp*1.8:0;
+    pts.push([x,y-arch*4*t*(1-t)+j+nick*inw]);}return pts;}
+function wornScroll(L,R,y0,y1,seed,arch,cls){const f=n=>n.toFixed(1),ym=(y0+y1)/2,h=y1-y0,a=Math.max(.6,h*.045);
+  const top=roughEdge(L,R,y0,arch,seed,a,1),bot=roughEdge(R,L,y1,arch,seed^0x9e37,a,-1);
+  const rs=[[R+a*.6,y0+h*.3],[R-a*.4,ym+h*.05],[R+a*.5,y1-h*.28]],ls=[[L-a*.5,y1-h*.3],[L+a*.4,ym-h*.04],[L-a*.6,y0+h*.28]];
+  const d='M'+top.map(p=>f(p[0])+' '+f(p[1])).join('L')+'L'+rs.map(p=>f(p[0])+' '+f(p[1])).join('L')+'L'+bot.map(p=>f(p[0])+' '+f(p[1])).join('L')+'L'+ls.map(p=>f(p[0])+' '+f(p[1])).join('L')+'Z';
+  const tl=Math.min(22,h*.72),dp=h*.24;
+  const tail=sg=>{const e=sg<0?L:R;return `<path class="stail" d="M${f(e-sg*12)} ${f(y0+dp)}L${f(e+sg*tl)} ${f(y0+dp-1)}L${f(e+sg*(tl-h*.3))} ${f(ym+dp)}L${f(e+sg*(tl+1))} ${f(y1+dp+1)}L${f(e-sg*12)} ${f(y1+dp)}Z"/>`+
+    `<path class="sfold" d="M${f(e)} ${f(y1-1)}L${f(e+sg*Math.min(10,tl*.45))} ${f(y1+dp)}L${f(e)} ${f(y1+dp)}Z"/>`;};
+  let st='';let hh=seed;for(let i=0;i<2;i++){hh=Math.imul(hh^(hh>>>15),2246822519)>>>0;if(hh%3===0)continue;const sx=L+(R-L)*(.15+(hh%700)/1000),sy=y0+h*(.3+((hh>>>10)%40)/100);st+=`<ellipse class="sstain" cx="${f(sx)}" cy="${f(sy)}" rx="${f(h*.55)}" ry="${f(h*.22)}"/>`;}
+  return `<g class="${cls}">${tail(-1)}${tail(1)}<path class="sshadow" d="${d}" transform="translate(0 ${f(Math.max(1.5,h*.05))})"/><path class="sbody" d="${d}"/>${st}<path class="sburn" d="${d}"/>`;}
 function scrollLabel(nm,r,fs,dx=0){const w=Math.max(50,nm.length*fs*.46+24),h=fs*1.6,y0=r+6,y1=y0+h,ym=(y0+y1)/2,L=-w/2,R=w/2,f=n=>n.toFixed(1);
-  return `${dx?`<g transform="translate(${dx.toFixed(1)} 0)">`:''}<g class="scroll"><path class="stail" d="M${f(L+10)} ${f(y0+6)}H${f(L-16)}L${f(L-8)} ${f(ym+6)}L${f(L-16)} ${f(y1+6)}H${f(L+10)}Z"/><path class="stail" d="M${f(R-10)} ${f(y0+6)}H${f(R+16)}L${f(R+8)} ${f(ym+6)}L${f(R+16)} ${f(y1+6)}H${f(R-10)}Z"/>`+
-   `<path class="sbody" d="M${f(L)} ${f(y0)}Q0 ${f(y0-5)} ${f(R)} ${f(y0)}L${f(R)} ${f(y1)}Q0 ${f(y1-5)} ${f(L)} ${f(y1)}Z"/><text class="lname" y="${f(ym+fs*.34)}" font-size="${fs}">${esc(nm)}</text></g>${dx?'</g>':''}`;}
+  return `${dx?`<g transform="translate(${dx.toFixed(1)} 0)">`:''}${wornScroll(L,R,y0,y1,hsh(nm)||7,5,'scroll')}<text class="lname" y="${f(ym+fs*.34)}" font-size="${fs}">${esc(nm)}</text></g>${dx?'</g>':''}`;}
+const SCROLLDEFS=`<linearGradient id="scrollG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4e6c4"/><stop offset=".55" stop-color="#ead7ab"/><stop offset="1" stop-color="#d7bd8a"/></linearGradient>
+  <radialGradient id="scrollBurn" cx=".5" cy=".45" r=".62"><stop offset=".55" stop-color="#7a4f24" stop-opacity="0"/><stop offset=".86" stop-color="#7a4f24" stop-opacity=".22"/><stop offset="1" stop-color="#5a3414" stop-opacity=".55"/></radialGradient>
+  <linearGradient id="scrollT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dcc396"/><stop offset="1" stop-color="#b8975f"/></linearGradient>`;
 function drawLeafTree(grow){
   const L=tLayout();TP=L.pos;TBR=L.br;
   const big=document.body.classList.contains('big'),BIGT={gk:1.15,aunt:1.18,asp:1.18,kid:1.2,ksp:1.2,ggp:1.15,gp:1.1,par:1.05,son:1,ssp:1};
@@ -352,7 +365,7 @@ function drawLeafTree(grow){
       deco+=`<ellipse class="deco" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(13*s).toFixed(1)}" ry="${(6*s).toFixed(1)}" transform="rotate(${ang.toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)}) translate(${(14*s).toFixed(1)} 0)" style="--d:${dl(y,x)+150}ms"/>`;}});
   const gb=Math.max(1410,TB.y1+30),ground=`<path class="ground" d="M${TB.x0} 1380 Q915 1205 ${TB.x1} 1380 L${TB.x1} ${gb} L${TB.x0} ${gb}Z"/>`;
   const brs=TBR.map(b=>`<path class="br" d="${b.d}" style="stroke-width:${b.w}px"/>`).join('');
-  let defs='';
+  let defs=SCROLLS?SCROLLDEFS:'';
   const LDX={};
   const leaves=Object.entries(TP).map(([id,v])=>{const p=byId[id],ph=photo[id],r=v.r,fs=+(FS[v.t]*(big?BIGT[v.t]||1:1)).toFixed(1);
     if(ph)defs+=`<clipPath id="tc-${id}"><circle r="${r}"/></clipPath>`;

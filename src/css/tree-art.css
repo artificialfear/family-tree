@@ -236,8 +236,14 @@ footer{height:80px}
 .stage.ts-parch .leaf .halo{fill:#f4e8cb;stroke:#4b3020;stroke-width:2}
 .stage.ts-parch .leaf .glow{display:none}
 .stage.ts-parch .leaf .ini{fill:#efe0bd}.stage.ts-parch .leaf .init{fill:#4b3020}
-.stage.tp .scroll .sbody,#poster .scroll .sbody{fill:#f3e7c8;stroke:#6b4a2a;stroke-width:1.3}
-.stage.tp .scroll .stail,#poster .scroll .stail{fill:#d8c194;stroke:#6b4a2a;stroke-width:1.1}
+.stage.tp .scroll .sbody,#poster .scroll .sbody,#tsky .sbody{fill:#ecdab0;fill:url(#scrollG);stroke:rgba(92,58,28,.55);stroke-width:.8}
+.stage.tp .scroll .stail,#poster .scroll .stail,#tsky .stail{fill:#bf9d66;fill:url(#scrollT);stroke:rgba(92,58,28,.55);stroke-width:.8}
+.scroll path,#tsky path{stroke-dasharray:none;stroke-dashoffset:0;animation:none;stroke-linejoin:round}
+.scroll .sfold,#tsky .sfold{fill:#6e4a26;opacity:.4;stroke:none}
+.scroll .sshadow,#tsky .sshadow{fill:#24140a;opacity:.28;stroke:none}
+.scroll .sburn,#tsky .sburn{fill:url(#scrollBurn);stroke:none;pointer-events:none}
+.scroll .sstain,#tsky .sstain{fill:#8a5f30;opacity:.08}
+#poster .scroll .sburn,#poster .scroll .sshadow{display:none}
 .stage.ts-parch .leaf .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
 #tworld.tgrow .leaf .scroll{animation:fadeup .7s ease both;animation-delay:calc(var(--d) + 280ms)}
 .stage.tp .leaf .lname,.stage.night.tp .leaf .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
@@ -259,7 +265,6 @@ footer{height:80px}
 #tstage.intro.growing #tback{opacity:1}
 #tstage.growing #tbackimg{transition:none;animation:none}
 /* sky above the tree */
-#tsky .sbody{fill:#f3e7c8;stroke:#6b4a2a;stroke-width:1.6}#tsky .stail{fill:#d8c194;stroke:#6b4a2a;stroke-width:1.4}
 #tsky .ttitle{font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600;font-size:38px;fill:#3a2516;letter-spacing:.3px}
 #tsky .tbanner{filter:drop-shadow(0 3px 6px rgba(20,10,30,.35))}
 .tnew{cursor:pointer;transition:opacity .45s}.tnew.fade{opacity:0}

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-22 — Worn paper name scrolls
+- Name scrolls and the family banner now look like old, worn paper: slightly rough, torn edges, aged colouring that darkens toward the edges, a faint stain here and there, and shaded ribbon ends that fold behind.
+- Fixed the dotted outline that showed around the scrolls when zoomed in.
+
 ## 2026-11-22 — Constellations off, banner raised
 - The G and H constellations beside the banner are hidden for now.
 - The family banner and the newest-memory line sit higher in the sky, with clear space between them and the top of the tree.
