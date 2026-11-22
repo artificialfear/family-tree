@@ -335,11 +335,16 @@ footer{height:80px}
 .cover.curtain .cpanel.r{right:0;transform-origin:100% 50%;box-shadow:inset 18px 0 30px rgba(20,0,2,.55),inset 0 0 60px rgba(30,0,4,.6)}
 .cover.curtain .cframe{display:block;position:absolute;inset:0;z-index:1;pointer-events:none;filter:drop-shadow(0 4px 6px rgba(10,5,2,.55));transition:opacity .6s ease 1.4s}
 .cover.curtain .cframe svg{position:absolute;left:0;top:0}
-.cover.curtain .drift{display:none}.cover.curtain .specks{z-index:1}
+.cover.curtain .specks{z-index:1}
+.cover.curtain .coverIn{overflow:hidden;isolation:isolate}
+.cover.curtain .coverIn>*:not(.drift){position:relative;z-index:1}
+.cover.curtain .coverIn>.drift{position:absolute;inset:0;z-index:0;padding:10px 0;gap:10px;border-radius:inherit;
+  -webkit-mask-image:radial-gradient(75% 70% at 50% 50%,rgba(0,0,0,.35) 0%,#000 100%);mask-image:radial-gradient(75% 70% at 50% 50%,rgba(0,0,0,.35) 0%,#000 100%)}
+.cover.curtain .coverIn>.drift img{opacity:.22;border-radius:8px}
 .cover.curtain .veil{z-index:1;background:radial-gradient(60% 55% at 50% 50%,rgba(40,6,12,.75) 0%,rgba(40,6,12,.35) 60%,rgba(40,6,12,0) 100%)}
 .cover.curtain .coverIn{z-index:2;background:rgba(22,12,30,.8);border:2px solid #d9a441;border-radius:18px;padding:26px 30px 30px;max-width:min(640px,92vw);box-shadow:0 0 0 6px rgba(20,8,4,.35),0 18px 40px rgba(0,0,0,.5)}
 .cover.curtain p{color:#f1e4cc}.cover.curtain .ghost{border-color:#d9a441;color:#fbefd6}.cover.curtain .gold{color:#3a1a08}
-.cover.curtain .drift img{opacity:.12}
+
 /* opening: the card and photos fade, then the curtains gather to the sides */
 .cover.opening .coverIn,.cover.opening .drift,.cover.opening .specks,.cover.opening .veil{opacity:0;transition:opacity .4s ease;pointer-events:none}
 .cover.open .cpanel.l,.cover.open .cpanel.r{transform:scaleX(.06);opacity:0}

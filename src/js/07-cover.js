@@ -28,6 +28,8 @@ function segsOf(d){const out=[];let x=0,y=0;const re=/([MVH])\s*(-?[\d.]+)(?:\s+
 const rgb=c=>{const m=c.match(/[\d.]+/g)||[0,0,0];return m.slice(0,3).map(Number);};
 // stage theme: the opening screen is the closed curtain; the tree is already drawn full-screen behind it
 if(STAGE&&getComputedStyle(cover).display!=='none'){cover.classList.add('curtain');
+  // the drifting family photos scroll inside the card only, not across the curtains
+  const ci=cover.querySelector('.coverIn'),dr=$('#drift');if(ci&&dr)ci.prepend(dr);
   cover.insertAdjacentHTML('afterbegin','<div class="cpanel l" aria-hidden="true"></div><div class="cpanel r" aria-hidden="true"></div><div class="cframe" aria-hidden="true"></div>');
   const fr=cover.querySelector('.cframe'),drawFr=()=>{fr.innerHTML=stageFrame(innerWidth,innerHeight).replace(/\b(prg|pgg|pgl)\b/g,'c$1');};let lw=0,lh=0;const redraw=()=>{if(innerWidth===lw&&innerHeight===lh)return;lw=innerWidth;lh=innerHeight;drawFr();};redraw();addEventListener('resize',redraw);
   document.body.classList.add('tfull');$('#tFull').textContent='✕ Exit full screen';$('#tFull').setAttribute('aria-pressed',true);}

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Family photos on the opening card
+- The slowly scrolling family photos are back on the opening screen, now inside the card only, softly faded so the words stay easy to read. The curtains around it stay clean.
+
 ## 2026-11-22 — More hanging stars
 - About twice as many gold stars now hang from the curtain, in different sizes and at different drops, filling the open sky beside the tree (and the gap under the sign on phones) without covering any faces.
 
