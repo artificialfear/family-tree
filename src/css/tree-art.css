@@ -321,7 +321,7 @@ footer{height:80px}
 .theme-stage #celest .moon{box-shadow:0 0 0 4px #8f5f1b,0 0 0 8px #e2b552,0 0 0 10px #8f5f1b;top:24%;right:8%}
 .theme-stage #celest .moon::before{content:"";position:absolute;inset:-26%;border-radius:50%;z-index:-1;background:radial-gradient(circle at 66% 50%,transparent 0 47%,#e2b552 48%,#b98530 60%,#8f5f1b 66%,transparent 67%)}
 .theme-stage #celest .sun{top:26%;right:10%}
-@media(max-width:600px){.theme-stage #celest .moon{top:64px;right:9%;width:40px}.theme-stage #celest .sun{top:62px;right:10%}}
+@media(max-width:600px){.theme-stage #celest .moon{top:calc(var(--mqb,240px) + 8px);right:9%;width:44px}.theme-stage #celest .sun{top:calc(var(--mqb,240px) + 8px);right:10%}}
 
 /* ---------- opening screen as a closed stage curtain (stage theme) ---------- */
 .cover.curtain{background:none;overflow:hidden}
@@ -365,3 +365,8 @@ body.tfull .view.sheet{position:fixed;left:max(10px,3vw);right:max(10px,3vw);top
 .view:not(.sheet) .shclose{display:none}
 @media(prefers-reduced-motion:reduce){body.tfull .view.sheet{animation:none}}
 .view.sheet .treewrap{grid-template-columns:minmax(0,1fr)}.view.sheet #stage{height:calc(100vh - 190px);height:calc(100dvh - 190px)}
+/* stage theme: sign at the very top, buttons along the stage edge */
+body.stagemode #tstage>.tools{top:auto;bottom:calc(var(--apron,24px) + 10px);justify-content:center;z-index:4}
+body.stagemode .prog{top:auto;bottom:calc(100% + 6px)}
+body.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 20px)}
+body.stagemode #tstage .hint{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 24px)}

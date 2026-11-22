@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-22 — Sign at the top, buttons at the bottom
+- The marquee sign and the newest-memory line now sit at the very top of the stage, hanging over the curtain.
+- The buttons moved to a row along the stage edge at the bottom; the Program menu opens upward.
+- The whole family now fits between the sign and the buttons when the tree opens or you press Fit.
+
 ## 2026-11-22 — Smoother curtain opening
 - The curtains no longer jump or bounce before they open. They now wait for the screen to finish going full screen, and the curtain frame no longer changes shape as the phone's bars slide away.
 
