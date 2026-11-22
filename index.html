@@ -1094,7 +1094,7 @@ function stageBackdrop(W,H,mqb=200){const ph=W<700;let sd=11;const r=()=>(sd=(sd
   back=row(top+(ph?8:14),1.25,'sc2');front=row(top,1,'sc1');
   // gold stars on strings, hanging from behind the valance at different drops and sizes.
   // They hang in the open sky: beside the tree on wide screens, in the gap under the sign on phones.
-  let stars='';const n=ph?12:24,base=ph?9:13;for(let i=0;i<n;i++){const x=W*(.04+.92*(i+.5)/n)+(r()-.5)*W*(ph?.03:.025),dx=Math.abs(x-W/2)/W,rs=base*(.55+r()*1.15);let len;
+  let stars='';const n=ph?8:24,base=ph?6:13;for(let i=0;i<n;i++){const x=W*(.04+.92*(i+.5)/n)+(r()-.5)*W*(ph?.03:.025),dx=Math.abs(x-W/2)/W,rs=base*(ph?.6+r()*.8:.55+r()*1.15);let len;
     if(ph){if(dx>.44||x>W*.74)continue;len=mqb+6+rs+r()*26;}
     else if(dx<.21)continue;
     else if(dx<.31)len=top+20+r()*Math.max(10,mqb-top-30);
