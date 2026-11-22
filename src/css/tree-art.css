@@ -24,8 +24,8 @@
 #tstage:has(#tworld.story) #tback{opacity:.45}#tstage:has(#tworld.morph) #tback{opacity:0}
 #tbackimg{position:absolute;max-width:none;opacity:0;transition:opacity .6s;transform-origin:50% 100%}
 #tbackimg.on{opacity:1}
-@media(hover:hover) and (pointer:fine){#tbackimg.on{animation:sway 11s ease-in-out infinite alternate}}
-@keyframes sway{0%{transform:rotate(-.35deg) translateX(-3px)}100%{transform:rotate(.35deg) translateX(3px)}}
+@media(hover:hover) and (pointer:fine){#tbackimg.on{animation:sway 22s ease-in-out infinite}}
+@keyframes sway{0%,100%{transform:none}25%{transform:rotate(-.35deg) translateX(-3px)}75%{transform:rotate(.35deg) translateX(3px)}}
 .stage.sky-day{background:linear-gradient(180deg,#232a52 0%,#45406f 24%,#8a4f7c 46%,#d0687a 64%,#f28d5f 80%,#ffc27a 92%,#ffdca0 100%)}
 @property --sunup{syntax:'<number>';inherits:true;initial-value:.6}
 .sky{--sunup:.6;transition:--sunup .9s cubic-bezier(.4,0,.2,1)}

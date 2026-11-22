@@ -33,6 +33,8 @@ A Thanksgiving 2026 gift for Mat's mom, Renee. Interactive illustrated family tr
 - Leaf density: canopy loop skips 50% of candidate spots (`rnd()<.5`) — Mat asked for it thinner than the first mockup so memory stars show.
 - Scroll labels that would overlap are nudged sideways (`LDX` in `drawLeafTree`).
 - Grow animation: the baked canopy picture (`#tbackimg`) is revealed with a CSS `clip-path` circle that tracks the same radius as the SVG grow clip (`growTree`), and `#tback` stays visible during `.intro.growing`. Growth waits for the bake (`lastBake`, max 1.2 s).
+- `bakeArt` skips re-baking when the same canopy picture is already showing, and shares an in-flight bake (`bakePend`); the canopy SVG takes over a second to rasterize, so re-draws after memories load used to hide and re-show it (and restart the sway). Sway keyframes start and end at rest.
+- Scroll-label sideways nudges sit on a wrapper `<g>` so the fade-up animation's transform can't cancel them.
 - Memory stars sit inside the tree beside the person each memory is about (`#tmstars`, placed around the photo avoiding faces and labels), and grow when zoomed out (`--msk`) so they stay visible. If no free spot exists, the star falls back to the sky.
 
 ## Decisions Mat made

@@ -234,17 +234,20 @@ function treeArt(st,dl){if(st==='classic')return null;
     return {defs,under,ground,roots:`<g class="art">${roots}</g>`,brs:`<g filter="url(#pshadow)">${brs}</g>`,over:`<g filter="url(#pshadow)">${lv}</g>`};}
   return null;}
 // painted textures are expensive to redraw while zooming: paint them once into a picture
-const bakeCache={};
+const bakeCache={},bakePend={};let curBake=null;
 let lastBake=Promise.resolve();
 function bakeArt(art,html){
   const x0=TB.x0-500,y0=TB.y0-320,w=TB.x1-TB.x0+1000,h=Math.max(1410,TB.y1+30)+520-y0,sc=Math.min(.8,(innerWidth<700?2200:3400)/w),W=Math.round(w*sc),H=Math.round(h*sc);
   const bg=art.bg;
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x0} ${y0} ${w} ${h}" width="${W}" height="${H}"><defs>${art.defs}${bg?`<radialGradient id="bgg" cx="50%" cy="42%" r="62%"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></radialGradient>`:''}</defs>${bg?`<rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="url(#bgg)"/>`:''}${art.under}${art.ground}</svg>`;
-  const put=u=>{if(html){const im=$('#tbackimg');im.src=u;Object.assign(im.style,{left:x0+'px',top:y0+'px',width:w+'px',height:h+'px'});im.classList.add('on');return;}
+  const put=u=>{if(!u)return;if(html){if(curBake!==svg)return;const im=$('#tbackimg');im.src=u;Object.assign(im.style,{left:x0+'px',top:y0+'px',width:w+'px',height:h+'px'});im.classList.add('on');return;}
     const cur=tw.querySelector('.bake');if(cur)cur.outerHTML=`<image class="art bake-img" href="${u}" x="${x0}" y="${y0}" width="${w}" height="${h}" preserveAspectRatio="none"/>`;};
-  if(html)$('#tbackimg').classList.remove('on');
+  // same picture already showing: leave it alone (no fade, no restarted sway)
+  if(html&&curBake===svg&&$('#tbackimg').classList.contains('on'))return lastBake=Promise.resolve();
+  if(html){curBake=svg;$('#tbackimg').classList.remove('on');}
   if(bakeCache[svg]){put(bakeCache[svg]);return lastBake=Promise.resolve();}
-  return lastBake=new Promise(res=>{const img=new Image();img.onload=()=>{try{const c=document.createElement('canvas');c.width=W;c.height=H;c.getContext('2d').drawImage(img,0,0,W,H);
+  if(bakePend[svg])return lastBake=bakePend[svg].then(()=>{if(!html||curBake===svg)put(bakeCache[svg]);});
+  return lastBake=bakePend[svg]=new Promise(res=>{const img=new Image();img.onload=()=>{try{const c=document.createElement('canvas');c.width=W;c.height=H;c.getContext('2d').drawImage(img,0,0,W,H);
       if(bg){const u=c.toDataURL('image/jpeg',.86);bakeCache[svg]=u;put(u);res();}else c.toBlob(b=>{if(b){const u=URL.createObjectURL(b);bakeCache[svg]=u;put(u);}res();},'image/png');}catch(e){res();}};
     img.onerror=()=>res();img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);});}
 /* ---------- growing the tree from the ground up ---------- */
@@ -260,8 +263,8 @@ function growTree(onDone){const st=$('#tstage');tw.classList.remove('pre');
     if(u<1)requestAnimationFrame(f);else{setTimeout(()=>{st.classList.remove('intro','growing');onDone&&onDone();},500);setTimeout(()=>tw.classList.remove('tgrow'),1600);}})(t0);};
   lastBake.then(go);setTimeout(go,1200);}
 function scrollLabel(nm,r,fs,dx=0){const w=Math.max(50,nm.length*fs*.46+24),h=fs*1.6,y0=r+6,y1=y0+h,ym=(y0+y1)/2,L=-w/2,R=w/2,f=n=>n.toFixed(1);
-  return `<g class="scroll"${dx?` transform="translate(${dx.toFixed(1)} 0)"`:''}><path class="stail" d="M${f(L+10)} ${f(y0+6)}H${f(L-16)}L${f(L-8)} ${f(ym+6)}L${f(L-16)} ${f(y1+6)}H${f(L+10)}Z"/><path class="stail" d="M${f(R-10)} ${f(y0+6)}H${f(R+16)}L${f(R+8)} ${f(ym+6)}L${f(R+16)} ${f(y1+6)}H${f(R-10)}Z"/>`+
-   `<path class="sbody" d="M${f(L)} ${f(y0)}Q0 ${f(y0-5)} ${f(R)} ${f(y0)}L${f(R)} ${f(y1)}Q0 ${f(y1-5)} ${f(L)} ${f(y1)}Z"/><text class="lname" y="${f(ym+fs*.34)}" font-size="${fs}">${esc(nm)}</text></g>`;}
+  return `${dx?`<g transform="translate(${dx.toFixed(1)} 0)">`:''}<g class="scroll"><path class="stail" d="M${f(L+10)} ${f(y0+6)}H${f(L-16)}L${f(L-8)} ${f(ym+6)}L${f(L-16)} ${f(y1+6)}H${f(L+10)}Z"/><path class="stail" d="M${f(R-10)} ${f(y0+6)}H${f(R+16)}L${f(R+8)} ${f(ym+6)}L${f(R+16)} ${f(y1+6)}H${f(R-10)}Z"/>`+
+   `<path class="sbody" d="M${f(L)} ${f(y0)}Q0 ${f(y0-5)} ${f(R)} ${f(y0)}L${f(R)} ${f(y1)}Q0 ${f(y1-5)} ${f(L)} ${f(y1)}Z"/><text class="lname" y="${f(ym+fs*.34)}" font-size="${fs}">${esc(nm)}</text></g>${dx?'</g>':''}`;}
 function drawLeafTree(grow){
   const L=tLayout();TP=L.pos;TBR=L.br;
   const xs=[],ys=[];Object.values(TP).forEach(v=>{xs.push(v.x-v.r-70,v.x+v.r+70);ys.push(v.y-v.r-8,v.y+v.r+34);});TBR.forEach(b=>{xs.push(b.x1,b.x2);ys.push(b.y1,b.y2);});

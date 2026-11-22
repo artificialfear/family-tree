@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-21 — No more jump after the tree grows
+- The leaves no longer blink or shift sideways once the tree has finished growing.
+- Name scrolls that were nudged apart no longer slide into place after they appear.
+
 ## 2026-11-21 — Tree grows in full
 - When the tree first appears, the full painted canopy now grows out together with the branches, instead of a bare tree appearing first and the leaves filling in afterwards.
 
