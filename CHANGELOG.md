@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-22 — Constellations off, banner raised
+- The G and H constellations beside the banner are hidden for now.
+- The family banner and the newest-memory line sit higher in the sky, with clear space between them and the top of the tree.
+
 ## 2026-11-22 — In the sky: title banner, newest memory, family constellation
 - A large paper banner above the tree reads "The Graham & Harper Family".
 - Just under it, a small line shows the newest memories as they're shared ("Pam shared a memory about Ed · 2 hours ago"), changing every few seconds. Tap it to read the memory. Before anyone has posted, it invites people to tap a face and share one.

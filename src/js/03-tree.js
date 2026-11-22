@@ -95,7 +95,7 @@ setTimeout(shoot,15000+Math.random()*15000);
 function hsh(t){let h=2166136261;for(const c of String(t)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
 
 /* ---------- in the sky above the tree: title banner, newest memory, family constellation ---------- */
-let SKYG=null;
+let SKYG=null;const SHOWCONST=false; // G and H constellations: switched off for now (Mat, 2026-11-22); set true to bring them back
 function skyMarkup(){if(!SKYG)return '';const f=n=>n.toFixed(1),X=915,by=SKYG.by,bw=700,bh=70,L=X-bw/2,R=X+bw/2,y0=by-bh/2,y1=by+bh/2,ym=by;
   const tail=(sg)=>{const e=sg<0?L:R,o=sg*1;return `<path class="stail" d="M${f(e-o*24)} ${f(y0+12)}H${f(e+o*44)}L${f(e+o*30)} ${f(ym+12)}L${f(e+o*44)} ${f(y1+12)}H${f(e-o*24)}Z"/>`;};
   const banner=`<g class="tbanner">${tail(-1)}${tail(1)}<path class="sbody" d="M${f(L)} ${f(y0)}Q${X} ${f(y0-16)} ${f(R)} ${f(y0)}L${f(R)} ${f(y1)}Q${X} ${f(y1-16)} ${f(L)} ${f(y1)}Z"/>
@@ -109,7 +109,7 @@ function skyMarkup(){if(!SKYG)return '';const f=n=>n.toFixed(1),X=915,by=SKYG.by
   const G=[[[.72,-.5],[.42,-.7],[.05,-.72],[-.3,-.55],[-.5,-.2],[-.5,.2],[-.3,.55],[.05,.72],[.42,.7],[.72,.45],[.74,.1],[.38,.1]]];
   const Hh=[[[-.46,-.72],[-.46,-.36],[-.46,0],[-.46,.36],[-.46,.72]],[[.46,-.72],[.46,-.36],[.46,0],[.46,.36],[.46,.72]],[[-.46,0],[0,0],[.46,0]]];
   const con=letter(G,L-150,by+14,78,'tconstG','The Graham constellation')+letter(Hh,R+150,by+14,78,'tconstH','The Harper constellation');
-  return `<g id="tsky">${con}${banner}${newest}</g>`;}
+  return `<g id="tsky">${SHOWCONST?con:''}${banner}${newest}</g>`;}
 const ago=t=>{const s=(Date.now()-t)/1000;if(s<90)return 'just now';const m=s/60;if(m<60)return Math.round(m)+' minutes ago';const h=m/60;if(h<24)return Math.round(h)+(Math.round(h)===1?' hour ago':' hours ago');const d=h/24;if(d<7)return Math.round(d)+(Math.round(d)===1?' day ago':' days ago');
   return new Date(t).toLocaleDateString(undefined,{month:'short',day:'numeric'});};
 let newIdx=0,newT=null;
@@ -344,7 +344,7 @@ function drawLeafTree(grow){
       n.d=`M${n.x1.toFixed(1)} ${n.y1.toFixed(1)}Q${n.cx.toFixed(1)} ${n.cy.toFixed(1)} ${n.x2.toFixed(1)} ${n.y2.toFixed(1)}`;return n;});}
   const xs=[],ys=[];Object.values(TP).forEach(v=>{xs.push(v.x-v.r-70,v.x+v.r+70);ys.push(v.y-v.r-8,v.y+v.r+34);});TBR.forEach(b=>{xs.push(b.x1,b.x2);ys.push(b.y1,b.y2);});
   TB={x0:Math.min(...xs),y0:Math.min(...ys),x1:Math.max(...xs),y1:Math.max(...ys)};
-  SKYG=null;if(TSTYLE==='ink'&&SCROLLS&&!PRINT){const ct=Math.min(...Object.values(TP).filter(v=>v.y<1060).map(v=>v.y-v.r-95));SKYG={ct,by:ct-58};TB.y0=Math.min(TB.y0,SKYG.by-52);}
+  SKYG=null;if(TSTYLE==='ink'&&SCROLLS&&!PRINT){const ct=Math.min(...Object.values(TP).filter(v=>v.y<1060).map(v=>v.y-v.r-95));SKYG={ct,by:ct-135};TB.y0=Math.min(TB.y0,SKYG.by-52);}
   GROWR=Math.max(...Object.values(TP).map(v=>Math.hypot(v.x-915,v.y-1300)+v.r))+60;
   const dl=(y,x=915)=>growDelay(x,y);
   let deco='',seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
