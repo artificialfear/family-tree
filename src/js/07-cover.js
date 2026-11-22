@@ -26,7 +26,19 @@ const SRCSEG=[[110,148,110,92],[110,92,60,40],[110,92,160,40],[110,110,40,88],[1
 function segsOf(d){const out=[];let x=0,y=0;const re=/([MVH])\s*(-?[\d.]+)(?:\s+(-?[\d.]+))?/g;let m;
   while((m=re.exec(d))){if(m[1]==='M'){x=+m[2];y=+m[3];}else if(m[1]==='V'){out.push([x,y,x,+m[2]]);y=+m[2];}else{out.push([x,y,+m[2],y]);x=+m[2];}}return out;}
 const rgb=c=>{const m=c.match(/[\d.]+/g)||[0,0,0];return m.slice(0,3).map(Number);};
-function closeCover(story){
+// stage theme: the opening screen is the closed curtain; the tree is already drawn full-screen behind it
+if(STAGE&&getComputedStyle(cover).display!=='none'){cover.classList.add('curtain');
+  cover.insertAdjacentHTML('afterbegin','<div class="cpanel l" aria-hidden="true"></div><div class="cpanel r" aria-hidden="true"></div><div class="cframe" aria-hidden="true"></div>');
+  const fr=cover.querySelector('.cframe'),drawFr=()=>{fr.innerHTML=stageFrame(innerWidth,innerHeight);};drawFr();addEventListener('resize',drawFr);
+  document.body.classList.add('tfull');$('#tFull').textContent='✕ Exit full screen';$('#tFull').setAttribute('aria-pressed',true);}
+function openCurtain(story){if(cover.classList.contains('opening'))return;cover.classList.add('opening');location.hash='tree';
+  // full screen first (the tree refits to the new size behind the curtain), then part the curtains
+  let pr=null;const d=document.documentElement,rq=d.requestFullscreen||d.webkitRequestFullscreen;try{const p=rq&&rq.call(d);if(p&&p.then)pr=p.then(()=>new Promise(r=>setTimeout(r,180)),()=>{});}catch(e){}
+  let went=0;const go=()=>{if(went++)return;lastBake.then(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      cover.classList.add('open');const T=RM?300:1900;
+      setTimeout(()=>{cover.style.display='none';if(story)startStory();else setTimeout(showHint,300);},T);})));};
+  setTimeout(()=>{if(pr){pr.then(go);setTimeout(go,900);}else go();},RM?0:420);}
+function closeCover(story){if(cover.classList.contains('curtain'))return openCurtain(story);
   const leaf=$('#leaf'),lr=leaf.getBoundingClientRect(),vb=leaf.viewBox.baseVal,sc=lr.width/vb.width;
   const from=SRCSEG.map(([a,b,c,d])=>[lr.left+(a-vb.x)*sc,lr.top+(b-vb.y)*sc,lr.left+(c-vb.x)*sc,lr.top+(d-vb.y)*sc]);
   cover.classList.add('morphing','out');setTimeout(()=>cover.style.display='none',900);

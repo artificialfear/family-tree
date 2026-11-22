@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-22 — Opening curtain
+- The opening screen is now a closed red stage curtain, with the dedication, title, faces and both buttons on a gold-edged card in front.
+- The tree is already standing behind the curtain. Choosing either button pulls the curtains open to reveal it — no more growing animation, so it opens smoothly on phones.
+
 ## 2026-11-22 — The stage
 - The tree now stands on a little theater stage: red curtains with gold fringe, a painted backdrop with cut-out clouds and gold stars on strings, footlights along the bottom, gold-rimmed sun and moon, and engraved shading on the trunk and planet.
 - The family name is a lit marquee sign fixed at the top, with the newest memories just under it.
