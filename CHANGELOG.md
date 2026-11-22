@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Livelier hanging stars on phones
+- On phones the hanging stars now drop to clearly different lengths, from just under the curtain to just above the tree, and a few are noticeably bigger. The tree sits a little lower to make room.
+
 ## 2026-11-22 — Toolbar steps aside during the story
 - While the story plays, the bottom buttons are hidden and the story card moves down to the stage edge, giving the tree more room. Skip or "Explore the tree" brings them back.
 

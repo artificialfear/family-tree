@@ -121,8 +121,9 @@ function stageBackdrop(W,H,mqb=200){const ph=W<700;let sd=11;const r=()=>(sd=(sd
   back=row(top+(ph?8:14),1.25,'sc2');front=row(top,1,'sc1');
   // gold stars on strings, hanging from behind the valance at different drops and sizes.
   // They hang in the open sky: beside the tree on wide screens, in the gap under the sign on phones.
-  let stars='';const n=ph?8:24,base=ph?6:13;for(let i=0;i<n;i++){const x=W*(.04+.92*(i+.5)/n)+(r()-.5)*W*(ph?.03:.025),dx=Math.abs(x-W/2)/W,rs=base*(ph?.6+r()*.8:.55+r()*1.15);let len;
-    if(ph){if(dx>.44||x>W*.74)continue;len=mqb+6+rs+r()*26;}
+  let stars='';const n=ph?8:24,base=ph?6:13;for(let i=0;i<n;i++){const x=W*(.04+.92*(i+.5)/n)+(r()-.5)*W*(ph?.03:.025),dx=Math.abs(x-W/2)/W,rs=base*(ph?(i%3===1?1.5+r()*.5:.6+r()*.7):.55+r()*1.15);let len;
+    if(ph){if(dx>.44||x>W*.74)continue;const PD=[.1,.95,.45,.75,0,.6,1,.3];const d=PD[i%PD.length];
+      len=(dx>.32?top+14+d*(mqb+80-top):mqb+8+d*82)+rs;}
     else if(dx<.21)continue;
     else if(dx<.31)len=top+20+r()*Math.max(10,mqb-top-30);
     else len=top+(ph?16:24)+Math.pow(r(),1.4)*H*.46;
@@ -528,7 +529,7 @@ function gEnd(){if(gRaf){cancelAnimationFrame(gRaf);gRaf=0;}if(G)tApply(false);}
 function tBox(ids){const vs=(ids&&ids.length?ids:Object.keys(TP)).map(id=>TP[id]).filter(Boolean);if(!vs.length)return TB;
   return {x0:Math.min(...vs.map(v=>v.x-v.r-60)),x1:Math.max(...vs.map(v=>v.x+v.r+60)),y0:Math.min(...vs.map(v=>v.y-v.r-10)),y1:Math.max(...vs.map(v=>v.y+v.r+34))};}
 function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!r.width)return;
-  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?m.getBoundingClientRect().bottom-r.top+(SD.ph?62:10):0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot+((st=>st?st.offsetHeight+10:0)($('#tstage>.tools'))):0),b=(ids&&ids.length)?tBox(ids):TB,w=b.x1-b.x0,h=b.y1-b.y0;
+  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?m.getBoundingClientRect().bottom-r.top+(SD.ph?104:10):0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot+((st=>st?st.offsetHeight+10:0)($('#tstage>.tools'))):0),b=(ids&&ids.length)?tBox(ids):TB,w=b.x1-b.x0,h=b.y1-b.y0;
   const k=Math.max(.12,Math.min((r.width-36-(SD?SD.side*2:0))/w,avail/h,ids&&ids.length===1?1.5:1.2));
   tv.k=k;tv.x=r.width/2-(b.x0+b.x1)/2*k;tv.y=top+avail/2-(b.y0+b.y1)/2*k;
   // tall phone screens: sit the tree just under the sign instead of leaving a gap above it
