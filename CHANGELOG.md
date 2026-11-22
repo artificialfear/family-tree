@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-21 — Voice memories and safer posting
+- Record a voice memory (up to 2 minutes) when sharing a story; typing is optional when there's a recording. Music pauses while recording and fades down during playback.
+- Voice memories play from the person's card and from memory stars on the tree.
+- Photo uploads are back — the option to add a photo was hidden after the move to GitHub.
+- After too many wrong passcodes, adding is paused for 15 minutes.
+- Posts can only be removed from the phone or computer that added them; the code that identifies a device is no longer visible in the shared data.
+- Behind the scenes: the page is now built from separate source files.
+
 ## 2026-11-21 — Moved to GitHub Pages
 - The tree now opens for anyone with the link — no account or sign-in.
 - Shared memories, photos and answers are saved to Mat's Google Sheet. Adding something asks for the family passcode once per device.
