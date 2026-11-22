@@ -29,12 +29,17 @@ const rgb=c=>{const m=c.match(/[\d.]+/g)||[0,0,0];return m.slice(0,3).map(Number
 // stage theme: the opening screen is the closed curtain; the tree is already drawn full-screen behind it
 if(STAGE&&getComputedStyle(cover).display!=='none'){cover.classList.add('curtain');
   cover.insertAdjacentHTML('afterbegin','<div class="cpanel l" aria-hidden="true"></div><div class="cpanel r" aria-hidden="true"></div><div class="cframe" aria-hidden="true"></div>');
-  const fr=cover.querySelector('.cframe'),drawFr=()=>{fr.innerHTML=stageFrame(innerWidth,innerHeight).replace(/\b(prg|pgg|pgl)\b/g,'c$1');};drawFr();addEventListener('resize',drawFr);
+  const fr=cover.querySelector('.cframe'),drawFr=()=>{fr.innerHTML=stageFrame(innerWidth,innerHeight).replace(/\b(prg|pgg|pgl)\b/g,'c$1');};let lw=0,lh=0;const redraw=()=>{if(innerWidth===lw&&innerHeight===lh)return;lw=innerWidth;lh=innerHeight;drawFr();};redraw();addEventListener('resize',redraw);
   document.body.classList.add('tfull');$('#tFull').textContent='✕ Exit full screen';$('#tFull').setAttribute('aria-pressed',true);}
 function openCurtain(story){if(cover.classList.contains('opening'))return;cover.classList.add('opening');location.hash='tree';
   // full screen first (the tree refits to the new size behind the curtain), then part the curtains
   let pr=null;const d=document.documentElement,rq=d.requestFullscreen||d.webkitRequestFullscreen;try{const p=rq&&rq.call(d);if(p&&p.then)pr=p.then(()=>new Promise(r=>setTimeout(r,180)),()=>{});}catch(e){}
-  let went=0;const go=()=>{if(went++)return;lastBake.then(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  // entering full screen resizes the window (bars slide away on phones); wait until the size has settled
+  // and the stage behind has been redrawn for it, so nothing jumps while the curtains part
+  const settled=()=>new Promise(res=>{let w=innerWidth,h=innerHeight,still=0,t0=performance.now();(function chk(now){
+      if(innerWidth!==w||innerHeight!==h){w=innerWidth;h=innerHeight;still=now;}
+      if(now-still>320&&now-t0>200||now-t0>1600)res();else requestAnimationFrame(chk);})(t0);});
+  let went=0;const go=()=>{if(went++)return;Promise.all([lastBake,settled()]).then(()=>{if(!tTouched)tStart();}).then(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{
       cover.classList.add('open');const T=RM?300:1900;
       setTimeout(()=>{cover.style.display='none';if(story)startStory();else setTimeout(showHint,300);},T);})));};
   setTimeout(()=>{if(pr){pr.then(go);setTimeout(go,900);}else go();},RM?0:420);}

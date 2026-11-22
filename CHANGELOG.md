@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Smoother curtain opening
+- The curtains no longer jump or bounce before they open. They now wait for the screen to finish going full screen, and the curtain frame no longer changes shape as the phone's bars slide away.
+
 ## 2026-11-22 — Everything on stage
 - The tree now stays full screen; there's no way to accidentally leave the stage.
 - A "Program" menu at the top opens the Chart, Map, Timeline and Sources, and a "Can you help?" button opens the family questions. Each opens as a page over the stage; "Back to the tree" (or Escape) closes it.
