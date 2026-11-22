@@ -281,3 +281,33 @@ footer{height:80px}
 #mnote .cnote .g1{font-family:Spectral,Georgia,serif;font-style:italic;font-size:1.15rem;margin-bottom:.3rem}#mnote .cnote p{margin:.2rem 0 .6rem}
 @media(prefers-reduced-motion:reduce){.tconst .cs.tw{animation:none}}
 #tnew:focus,.tconst:focus{outline:none}
+
+/* ---------- toy-theater stage theme (?theme=stage) ---------- */
+#proscen{display:none}
+.theme-stage #proscen{display:block;position:absolute;inset:0;pointer-events:none;z-index:3;filter:drop-shadow(0 4px 6px rgba(10,5,2,.55))}
+#proscen svg,.sbackdrop svg{position:absolute;left:0;top:0;display:block}
+.theme-stage .sbackdrop{position:absolute;inset:0;pointer-events:none}
+.sbackdrop .sc1{fill:url(#scg);stroke:#0d1b4a;stroke-width:2;filter:drop-shadow(0 6px 5px rgba(5,8,25,.45))}
+.sbackdrop .sc2{fill:#132a6c;stroke:#0a1640;stroke-width:1.5;opacity:.9}
+.sbackdrop .sstr{stroke:rgba(240,220,170,.45);stroke-width:1}
+.sbackdrop .sgold{fill:url(#sgg);stroke:#6b4410;stroke-width:1.2;filter:drop-shadow(0 0 6px rgba(255,214,120,.55))}
+.sbackdrop .sglint{fill:#fff6d8;opacity:.55}
+.sky-day .sbackdrop .sc1{fill:#3a3f86;stroke:#1c1f4e}.sky-day .sbackdrop .sc2{fill:#2a2c66}
+#proscen .pband{fill:#14215a}#proscen .pgold,#proscen .pcres{fill:url(#pgl)}#proscen .pcut{fill:#14215a}
+#proscen .pred{fill:url(#prg);stroke:#3d070c;stroke-width:1.5}#proscen .pgrn{fill:url(#pgg);stroke:#0b2e20;stroke-width:1.2}
+#proscen .pfold{fill:none;stroke:rgba(40,4,8,.45);stroke-width:2}
+#proscen .pfr{fill:none;stroke:#e2b552;stroke-width:6;stroke-dasharray:1.2 2.6}
+#proscen .ptie{fill:#d9a441}#proscen .ptas{fill:#c98f2f}
+#proscen .papron{fill:#2a160b}#proscen .plight{fill:#ffe3a0;filter:drop-shadow(0 -4px 8px rgba(255,214,140,.9))}
+/* painted backdrop: paper grain and an aged vignette over the sky only (faces stay clean) */
+.theme-stage .sky::after{content:"";position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(120% 95% at 50% 55%,rgba(0,0,0,0) 55%,rgba(60,30,10,.42) 100%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .42 0 0 0 0 .25 0 0 0 .2 0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)'/%3E%3C/svg%3E")}
+.theme-stage.sky-night{background:linear-gradient(180deg,#0a1440 0%,#13266b 40%,#1d3a8a 72%,#2a3f7a 100%)}
+.theme-stage .sky .stars i{border-radius:0;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%)}
+/* gold-rimmed sun and moon, each with a crescent behind */
+.theme-stage .sky .sunset{box-shadow:0 0 0 5px #8f5f1b,0 0 0 9px #e2b552,0 0 0 12px #8f5f1b,0 0 60px 18px rgba(255,190,110,.55)}
+.theme-stage #celest .moon{box-shadow:0 0 0 4px #8f5f1b,0 0 0 8px #e2b552,0 0 0 10px #8f5f1b}
+.theme-stage #celest .moon::before{content:"";position:absolute;inset:-26%;border-radius:50%;z-index:-1;background:radial-gradient(circle at 66% 50%,transparent 0 47%,#e2b552 48%,#b98530 60%,#8f5f1b 66%,transparent 67%)}
+.theme-stage #tworld .br.t{stroke:#1a0d05;stroke-width:1.6}
+.theme-stage .tools{top:calc(10px + 0px)}

@@ -48,6 +48,8 @@ function qpt(b,t){const u=1-t;return [u*u*b.x1+2*u*t*b.cx+t*t*b.x2,u*u*b.y1+2*u*
 const TSTYLE=(new URLSearchParams(location.search).get('style'))||'ink';
 const PL_NAMES={covington:'Covington, GA',newborn:'Newborn, GA',greenville:'Meriwether County, GA',collegepark:'College Park, GA',upson:'Upson County, GA',louisville:'Louisville, KY',durham:'Durham, NC',orange:'Orange County, NC'};
 const SKYQ=new URLSearchParams(location.search).get('sky');
+// 'stage' = toy-theater look (painted backdrop, curtains, engraved tree); mockup behind ?theme=stage
+const THEME=new URLSearchParams(location.search).get('theme')||'classic',STAGE=THEME==='stage';
 let PRINT=false,SKYPREF=SKYQ||store.get('sky')||'auto',SKY='night',NIGHT=true;
 function autoSky(){const d=new Date(),h=d.getHours()+d.getMinutes()/60;return h>=7.5&&h<17?'day':((h>=17&&h<18.75)||(h>=6&&h<7.5))?'dusk':'night';}
 const skyNow=()=>SKYPREF==='auto'?autoSky():SKYPREF;
@@ -69,7 +71,50 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
  front.innerHTML=ff;
  const cel=document.createElement('div');cel.id='celest';cel.innerHTML=`<button class="moon" id="moonBtn" aria-label="A note for Mom">${moonSVG(moonPhase(Date.now()))}</button><button class="sun" id="sunBtn" aria-label="The evening star: a note for Mom"></button><div id="mstars"></div>`;
  const note=document.createElement('div');note.id='mnote';note.setAttribute('role','dialog');note.hidden=true;
- st.prepend(sky);sky.after(back);st.querySelector('svg').after(front);front.after(cel);st.appendChild(note);}
+ st.prepend(sky);sky.after(back);st.querySelector('svg').after(front);front.after(cel);st.appendChild(note);
+ if(STAGE){st.classList.add('theme-stage');const bd=document.createElement('div');bd.className='sbackdrop';sky.appendChild(bd);
+   const pr=document.createElement('div');pr.id='proscen';pr.setAttribute('aria-hidden','true');cel.after(pr);
+   const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;bd.innerHTML=stageBackdrop(r.width,r.height);pr.innerHTML=stageFrame(r.width,r.height);};
+   draw();let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(draw,120);}).observe(st);}}
+/* ---------- toy-theater scenery (theme=stage): drawn to the screen size, redrawn only on resize ---------- */
+function star6(x,y,r){let d='';for(let i=0;i<12;i++){const a=(i*30-90)*Math.PI/180,rr=i%2?r*.45:r;d+=(i?'L':'M')+(x+Math.cos(a)*rr).toFixed(1)+' '+(y+Math.sin(a)*rr).toFixed(1);}return d+'Z';}
+function stageBackdrop(W,H){const ph=W<700;let sd=11;const r=()=>(sd=(sd*16807)%2147483647)/2147483647,f=n=>n.toFixed(1);
+  // two rows of flat cut-out clouds hanging from the top, then gold stars on strings
+  const top=stageDims(W,H).top-(ph?4:10);let back='',front='';
+  const row=(y,sc,cls)=>{let x=-40,d='M-60 0L-60 '+f(y);while(x<W+60){const w=(ph?60:90)*sc*(.75+r()*.6),h=w*(.42+r()*.18);d+=`Q${f(x+w*.05)} ${f(y+h)} ${f(x+w*.5)} ${f(y+h*.95)}Q${f(x+w*.95)} ${f(y+h)} ${f(x+w)} ${f(y)}`;x+=w;}return `<path class="${cls}" d="${d}L${f(W+60)} 0Z"/>`;};
+  back=row(top+(ph?8:14),1.25,'sc2');front=row(top,1,'sc1');
+  let stars='';const n=ph?5:9;for(let i=0;i<n;i++){const x=W*(.06+.88*(i+.5)/n)+(r()-.5)*W*.05;if(Math.abs(x-W/2)<W*(ph?.14:.2))continue;const len=top+(ph?20:30)+r()*(ph?60:H*.16),rs=(ph?9:13)*(.8+r()*.5);
+    stars+=`<line x1="${f(x)}" y1="${f(top-6)}" x2="${f(x)}" y2="${f(len-rs)}" class="sstr"/><path class="sgold" d="${star6(x,len,rs)}"/><path class="sglint" d="${star6(x-rs*.12,len-rs*.12,rs*.42)}"/>`;}
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
+   <linearGradient id="sgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient></defs>${back}${front}${stars}</svg>`;}
+// how much of each edge the stage frame covers, so Fit keeps the family inside it
+function stageDims(W,H){const ph=W<700,vh=ph?22:Math.max(30,Math.min(56,H*.05)),n=Math.max(3,Math.round(W/(ph?150:250))),sw=W/n,dr=Math.min(sw*.16,ph?20:36),
+  cw=ph?16:Math.max(26,Math.min(78,W*.045)),ah=ph?12:Math.max(16,Math.min(30,H*.028));return {ph,vh,n,sw,dr,cw,ah,top:vh+dr*1.9+10,side:cw*1.3,bot:ah+8};}
+function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah}=stageDims(W,H);
+  // valance: green swags behind, red swags in front, gold fringe, crescents where they meet
+  let green='',red='',fringe='',orn='';
+  for(let i=-1;i<=n;i++){const x=i*sw,gx=x+sw/2;
+    green+=`<path class="pgrn" d="M${f(gx-sw*.55)} ${f(vh-4)}Q${f(gx)} ${f(vh+dr*1.25)} ${f(gx+sw*.55)} ${f(vh-4)}L${f(gx+sw*.55)} ${f(vh-10)}Q${f(gx)} ${f(vh+dr*.7)} ${f(gx-sw*.55)} ${f(vh-10)}Z"/>`;
+    if(i<0||i>=n)continue;
+    red+=`<path class="pred" d="M${f(x)} ${f(vh-6)}Q${f(x+sw/2)} ${f(vh+dr*1.9)} ${f(x+sw)} ${f(vh-6)}Z"/>`+
+      [.35,.62].map(k=>`<path class="pfold" d="M${f(x+sw*.12)} ${f(vh)}Q${f(x+sw/2)} ${f(vh+dr*1.9*k)} ${f(x+sw*.88)} ${f(vh)}"/>`).join('');
+    fringe+=`<path class="pfr" d="M${f(x+2)} ${f(vh-4)}Q${f(x+sw/2)} ${f(vh+dr*1.9-2)} ${f(x+sw-2)} ${f(vh-4)}"/>`;
+    const cr=ph?9:Math.min(22,vh*.42);orn+=`<g transform="translate(${f(x)} ${f(vh+2)})"><circle r="${f(cr)}" class="pcres"/><circle cx="${f(cr*.42)}" cy="${f(-cr*.2)}" r="${f(cr*.82)}" class="pcut"/></g>`;}
+  const band=`<rect x="0" y="0" width="${W}" height="${f(vh)}" class="pband"/><rect x="0" y="${f(vh-5)}" width="${W}" height="3" class="pgold"/>`;
+  // tied-back side curtains
+  const ty=H*.58;
+  const side=sg=>{const e=sg<0?0:W,o=-sg;const pts=`M${e} 0L${f(e+o*cw*1.25)} 0Q${f(e+o*cw*.6)} ${f(ty*.6)} ${f(e+o*cw*.45)} ${f(ty)}Q${f(e+o*cw*1.4)} ${f(ty+(H-ty)*.55)} ${f(e+o*cw*1.1)} ${H}L${e} ${H}Z`;
+    let folds='';for(let k=1;k<4;k++){const fx=e+o*cw*k*.27;folds+=`<path class="pfold" d="M${f(fx)} 0Q${f(e+o*cw*k*.13)} ${f(ty*.6)} ${f(e+o*cw*k*.11)} ${f(ty)}Q${f(e+o*cw*k*.33)} ${f(ty+(H-ty)*.5)} ${f(e+o*cw*k*.28)} ${H}"/>`;}
+    const tx=e+o*cw*.45;return `<path class="pred" d="${pts}"/>${folds}<path class="ptie" d="M${f(e)} ${f(ty-5)}L${f(tx+o*4)} ${f(ty-5)}L${f(tx+o*4)} ${f(ty+5)}L${f(e)} ${f(ty+5)}Z"/><circle cx="${f(tx+o*4)}" cy="${f(ty)}" r="${ph?4:6}" class="pgold"/><path class="ptas" d="M${f(tx+o*4)} ${f(ty+4)}l-${ph?4:7} ${ph?14:24}h${ph?8:14}Z"/>`;};
+  // stage apron with footlights
+  let lights='';for(let x=W*.12;x<W*.9;x+=ph?70:120)lights+=`<ellipse cx="${f(x)}" cy="${f(H-ah)}" rx="${ph?10:16}" ry="${ph?3:5}" class="plight"/>`;
+  const apron=`<rect x="0" y="${f(H-ah)}" width="${W}" height="${f(ah)}" class="papron"/><rect x="0" y="${f(H-ah)}" width="${W}" height="2.5" class="pgold"/>${lights}`;
+  const corner=sg=>{const x=sg<0?cw*.9:W-cw*.9,y=vh+(ph?14:26),rr=ph?11:20;return `<g transform="translate(${f(x)} ${f(y)})"><circle r="${rr}" class="pcres"/><circle cx="${f(-sg*rr*.4)}" cy="${f(-rr*.15)}" r="${f(rr*.8)}" class="pcut"/></g>`;};
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="prg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b3262c"/><stop offset="1" stop-color="#6d1018"/></linearGradient>
+   <linearGradient id="pgg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f8a67"/><stop offset="1" stop-color="#14523b"/></linearGradient>
+   <linearGradient id="pgl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset=".5" stop-color="#d9a441"/><stop offset="1" stop-color="#8f5f1b"/></linearGradient></defs>
+   ${side(-1)}${side(1)}${band}${green}${red}${fringe}${orn}${corner(-1)}${corner(1)}${apron}</svg>`;}
+
 function applySky(redraw){SKY=skyNow();NIGHT=true;const st=$('#tstage');['day','dusk','night'].forEach(m=>st.classList.toggle('sky-'+m,SKY===m));st.classList.toggle('night',NIGHT);
   const b=$('#tSky');if(b){const IC={auto:'<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"/></svg>',
    day:'<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 17a6 6 0 0 1 12 0Z" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 20h20M12 5v3M4.6 9.6l2 2M19.4 9.6l-2 2"/></g></svg>',
@@ -156,15 +201,18 @@ function painted(vals,dl,rnd,f,BX){
     const bark='#4b3020',barkL='#7a5537';
     const pdefs=`<filter id="ppaint" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="5"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter>
       <linearGradient id="trunkg" x1="0" x2="1"><stop offset="0" stop-color="#2e1d12"/><stop offset=".35" stop-color="${bark}"/><stop offset=".62" stop-color="${barkL}"/><stop offset="1" stop-color="#2b1a10"/></linearGradient>
-      <radialGradient id="pshade"><stop offset="0" stop-color="#3a2414" stop-opacity=".35"/><stop offset="1" stop-color="#3a2414" stop-opacity="0"/></radialGradient>`;
+      <radialGradient id="pshade"><stop offset="0" stop-color="#3a2414" stop-opacity=".35"/><stop offset="1" stop-color="#3a2414" stop-opacity="0"/></radialGradient>${STAGE?`<pattern id="hatchA" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(32)"><line x1="0" y1="0" x2="0" y2="7" stroke="#1a0d05" stroke-width="1.3"/></pattern>
+      <pattern id="hatchB" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-38)"><line x1="0" y1="0" x2="0" y2="9" stroke="#1a0d05" stroke-width="1.1"/></pattern>
+      <linearGradient id="hshade" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset=".3" stop-color="#fff" stop-opacity=".15"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset=".85" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity="1"/></linearGradient>
+      <mask id="hmask" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#hshade)"/></mask>`:''}`;
     // canopy area: discs around everyone above the trunk fork, and along the upper branches
     const disc=[];vals.filter(v=>v.y<1060).forEach(v=>disc.push([v.x,v.y,v.r+95]));
     TBR.filter(b=>Math.max(b.y1,b.y2)<1080).forEach(b=>{for(let t=.2;t<=1;t+=.2){const [x,y]=qpt(b,t);disc.push([x,y,b.w>=20?120:95]);}});
     const inC=(x,y)=>disc.some(([cx,cy,r])=>(x-cx)*(x-cx)+(y-cy)*(y-cy)<r*r);
     const LF='M0 0Q11 -9 26 0Q11 9 0 0Z',G=['#244f2e','#2f6a3a','#3e7d46','#55914f','#77a960','#2d6e5a','#4a8a6b'];
     let back='',front='';const xs0=TB.x0-40,xs1=TB.x1+40,ys0=TB.y0-60;
-    const leafAt=(x,y,a,sc)=>{const c=G[Math.floor(rnd()*G.length)],lit=rnd()<.35;
-      return `<g transform="translate(${f(x)} ${f(y)}) rotate(${a.toFixed(0)}) scale(${sc.toFixed(2)})"><path d="${LF}" fill="${c}"/>${lit?`<path d="M2 0Q11 -7 24 0Z" fill="#a9c98a" opacity=".35"/>`:''}<path d="M1 0L22 0" stroke="#1d3a22" stroke-width=".6" opacity=".55"/></g>`;};
+    const leafAt=(x,y,a,sc)=>{const c=G[Math.floor(rnd()*G.length)],lit=rnd()<.35,ink=STAGE?' stroke="#16301c" stroke-width=".8" stroke-opacity=".75"':'';
+      return `<g transform="translate(${f(x)} ${f(y)}) rotate(${a.toFixed(0)}) scale(${sc.toFixed(2)})"><path d="${LF}" fill="${c}"${ink}/>${lit?`<path d="M2 0Q11 -7 24 0Z" fill="#a9c98a" opacity=".35"/>`:''}<path d="M1 0L22 0" stroke="#1d3a22" stroke-width=".6" opacity=".55"/></g>`;};
     if(LEAFQ!=='twig'){
     for(let i=0;i<9000;i++){const x=xs0+rnd()*(xs1-xs0),y=ys0+rnd()*(1100-ys0);if(!inC(x,y)||rnd()<.5)continue;
       back+=leafAt(x,y,rnd()*360,1+rnd()*.9);}
@@ -192,7 +240,7 @@ function painted(vals,dl,rnd,f,BX){
     let bk='';for(let i=0;i<9;i++){const ox=-52+i*13+(rnd()-.5)*6;bk+=`<path d="M${f(BX+ox*.55)} ${T0+20} C${f(BX+ox*.8)} ${T0+140} ${f(BX+ox)} ${T1-120} ${f(BX+ox*1.5)} ${T1+10}" fill="none" stroke="${i%3?'#2a1a10':'#9a7350'}" stroke-width="${i%3?1.4:1}" opacity=".55"/>`;}
     bk+=`<ellipse cx="${BX+14}" cy="${T0+190}" rx="9" ry="14" fill="#24160c" opacity=".7"/>`;
     const brs=TBR.map(b=>{const w1=b.w>=20?b.w*.62:Math.max(1.6,b.w*.45);return `<path class="br t" d="${taperPath(b,b.w*1.15,w1)}"/>`;}).join('');
-    return {pdefs,back,lv,trunk:`<path d="${trunk}" fill="${PRINT?'#4b3020':'url(#trunkg)'}"/>${bk}`,brs,T1};}
+    return {pdefs,back,lv,trunk:`<path d="${trunk}" fill="${PRINT?'#4b3020':'url(#trunkg)'}"/>${bk}${STAGE&&!PRINT?`<g mask="url(#hmask)" opacity=".55"><path d="${trunk}" fill="url(#hatchA)"/><path d="${trunk}" fill="url(#hatchB)" opacity=".6"/></g><path d="${trunk}" fill="none" stroke="#1a0d05" stroke-width="2.4"/>`:''}`,brs,T1};}
 const LEAFP='M0 0Q9 -8 20 0Q9 8 0 0Z';
 function treeArt(st,dl){if(st==='classic')return null;
   let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647,f=n=>n.toFixed(1);
@@ -245,7 +293,7 @@ function treeArt(st,dl){if(st==='classic')return null;
       let rings='';RINGS.forEach(([yr,rr],i)=>{const a=(i%2?1:-1)*(12+i*2.2)*Math.PI/180,lx=BXc+Math.sin(a)*rr,ly=BYc+Math.cos(a)*rr;
         rings+=`<circle cx="${BXc}" cy="${BYc}" r="${rr}" fill="none" stroke="${K.line}" stroke-width="1.3" stroke-dasharray="${i%3?'2 7':'10 6'}" opacity=".16"/><text x="${f(lx)}" y="${f(ly+5)}" class="ringyr" transform="rotate(${f(-a*180/Math.PI)} ${f(lx)} ${f(ly)})">${yr}</text>`;});
       rings=`<g clip-path="url(#pclip)">${rings}</g>`;
-      planet=`<g class="art planet"><circle cx="${cx}" cy="${cy}" r="${R+34}" fill="url(#atmo)"/><circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#pfill)"/>${rings}<g fill="${PL.dot}" opacity=".35">${dots}</g><circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${K.line}" stroke-width="1.6" opacity=".8"/><g stroke="${K.line}" stroke-width="1.1" fill="none" stroke-linecap="round" opacity=".8">${tf}</g></g>`;
+      planet=`<g class="art planet"><circle cx="${cx}" cy="${cy}" r="${R+34}" fill="url(#atmo)"/><circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#pfill)"/>${rings}<g fill="${PL.dot}" opacity=".35">${dots}</g>${STAGE?`<g clip-path="url(#pclip)" opacity=".22"><circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#phatch)" mask="url(#prim)"/></g>`:''}<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${STAGE?'#0c1a10':K.line}" stroke-width="${STAGE?3:1.6}" opacity=".8"/><g stroke="${K.line}" stroke-width="1.1" fill="none" stroke-linecap="round" opacity=".8">${tf}</g></g>`;
       ground='';
       // roots that lead to the places the family came from
       const PINS=[['orange',200,1580,'1911'],['durham',330,1655,'1930'],['louisville',455,1570,'1932'],['greenville',590,1650,'1956'],['collegepark',730,1575,''],['covington',915,1690,'1982'],['newborn',1120,1580,''],['upson',1300,1650,'1940']];
@@ -258,7 +306,9 @@ function treeArt(st,dl){if(st==='classic')return null;
       ROOTS=`<g class="art roots">${rts}</g>${pins}`;}
     under=(!PRINT?'':`<rect class="art" x="${X0-400}" y="${TB.y0-300}" width="${X1-X0+800}" height="${gb-TB.y0+600}" filter="url(#grain)"/>`)+`<g class="art" filter="url(#wc)">${wash}</g>`;
     const pdefs=!PRINT?`<radialGradient id="pfill" gradientUnits="userSpaceOnUse" cx="915" cy="1272" r="1500"><stop offset="0" stop-color="${PL.a}"/><stop offset=".35" stop-color="${PL.b}"/><stop offset="1" stop-color="${PL.c}"/></radialGradient>
-     <clipPath id="pclip"><circle cx="915" cy="${1272+2200}" r="2200"/></clipPath><radialGradient id="atmo"><stop offset=".975" stop-color="${PL.atmo}" stop-opacity="0"/><stop offset=".99" stop-color="${PL.atmo}" stop-opacity="${NIGHT?.28:.45}"/><stop offset="1" stop-color="${PL.atmo}" stop-opacity="0"/></radialGradient>`:'';
+     <clipPath id="pclip"><circle cx="915" cy="${1272+2200}" r="2200"/></clipPath><radialGradient id="atmo"><stop offset=".975" stop-color="${PL.atmo}" stop-opacity="0"/><stop offset=".99" stop-color="${PL.atmo}" stop-opacity="${NIGHT?.28:.45}"/><stop offset="1" stop-color="${PL.atmo}" stop-opacity="0"/></radialGradient>${STAGE?`<pattern id="phatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-24)"><line x1="0" y1="0" x2="0" y2="8" stroke="#06100a" stroke-width="1.4"/></pattern>
+      <radialGradient id="primg" gradientUnits="userSpaceOnUse" cx="915" cy="${1272+2200}" r="2200"><stop offset=".86" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></radialGradient>
+      <mask id="prim" maskUnits="userSpaceOnUse" x="-3000" y="0" width="8000" height="8000"><rect x="-3000" y="0" width="8000" height="8000" fill="url(#primg)"/></mask>`:''}`:'';
     if(PT){const pu=(PRINT?under.replace(/<g class="art" filter="url\(#wc\)">[\s\S]*$/,''):'')+`<g filter="url(#ppaint)">${PT.back}</g>`;
       return {defs:defs+pdefs+PT.pdefs,planet,rootsUnder:ROOTS+`<g class="art">${PT.trunk}</g>`,under:pu,ground,bg:PRINT?['#f7efdd','#ecdfc2']:null,roots:'',brs:PT.brs,over:PT.lv};}
     return {defs:defs+pdefs,planet,rootsUnder:ROOTS,under,ground,bg:PRINT?['#f7efdd','#ecdfc2']:null,roots:`<g class="art">${roots}</g>`,brs:`<g class="art">${tint}</g>${brs}<g class="art">${grain}</g>`,over:lv};}
@@ -408,8 +458,8 @@ function gEnd(){if(gRaf){cancelAnimationFrame(gRaf);gRaf=0;}if(G)tApply(false);}
 function tBox(ids){const vs=(ids&&ids.length?ids:Object.keys(TP)).map(id=>TP[id]).filter(Boolean);if(!vs.length)return TB;
   return {x0:Math.min(...vs.map(v=>v.x-v.r-60)),x1:Math.max(...vs.map(v=>v.x+v.r+60)),y0:Math.min(...vs.map(v=>v.y-v.r-10)),y1:Math.max(...vs.map(v=>v.y+v.r+34))};}
 function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!r.width)return;
-  const cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=60,avail=r.height-capH-top-8,b=(ids&&ids.length)?tBox(ids):TB,w=b.x1-b.x0,h=b.y1-b.y0;
-  const k=Math.max(.12,Math.min((r.width-36)/w,avail/h,ids&&ids.length===1?1.5:1.2));
+  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top):60,avail=r.height-capH-top-8-(SD?SD.bot:0),b=(ids&&ids.length)?tBox(ids):TB,w=b.x1-b.x0,h=b.y1-b.y0;
+  const k=Math.max(.12,Math.min((r.width-36-(SD?SD.side*2:0))/w,avail/h,ids&&ids.length===1?1.5:1.2));
   tv.k=k;tv.x=r.width/2-(b.x0+b.x1)/2*k;tv.y=top+avail/2-(b.y0+b.y1)/2*k;tApply(anim);}
 // the setting sun sits right behind the trunk whenever the view is framed (first load, Fit); panning leaves it where it is
 function sunToTrunk(jump){const st=SKYEL||(SKYEL=$('#tstage .sky')),W=$('#tstage').getBoundingClientRect().width;if(!st||!W)return;
