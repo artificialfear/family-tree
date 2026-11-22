@@ -67,7 +67,7 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
  const front=document.createElement('div');front.id='tfront';front.className='wlayer';let ff='';
  for(let i=0;i<12;i++){const x=330+r()*1180,y=1110+r()*170;ff+=`<i style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;--t:${(6+r()*6).toFixed(1)}s;--p:${(2.5+r()*2.5).toFixed(1)}s;--dl:-${(r()*8).toFixed(1)}s;--dx:${(r()*60-30).toFixed(0)}px;--dy:${(-20-r()*40).toFixed(0)}px"></i>`;}
  front.innerHTML=ff;
- const cel=document.createElement('div');cel.id='celest';cel.innerHTML=`<button class="moon" id="moonBtn" aria-label="A note for Renee">${moonSVG(moonPhase(Date.now()))}</button><button class="sun" id="sunBtn" aria-label="The evening star: a note for Renee"></button><div id="mstars"></div>`;
+ const cel=document.createElement('div');cel.id='celest';cel.innerHTML=`<button class="moon" id="moonBtn" aria-label="A note for Mom">${moonSVG(moonPhase(Date.now()))}</button><button class="sun" id="sunBtn" aria-label="The evening star: a note for Mom"></button><div id="mstars"></div>`;
  const note=document.createElement('div');note.id='mnote';note.setAttribute('role','dialog');note.hidden=true;
  st.prepend(sky);sky.after(back);st.querySelector('svg').after(front);front.after(cel);st.appendChild(note);}
 function applySky(redraw){SKY=skyNow();NIGHT=true;const st=$('#tstage');['day','dusk','night'].forEach(m=>st.classList.toggle('sky-'+m,SKY===m));st.classList.toggle('night',NIGHT);
@@ -78,12 +78,12 @@ function applySky(redraw){SKY=skyNow();NIGHT=true;const st=$('#tstage');['day','
   if(redraw&&tw.childElementCount){const k={...tv};drawLeafTree(false);tv=k;tApply(false);}}
 applySky(false);
 setInterval(()=>{if(SKYPREF==='auto'&&autoSky()!==SKY)applySky(true);},5*60*1000);
-/* a note for Renee, hidden in the moon (and the sun) */
+/* a note for Mom, hidden in the moon (and the sun) */
 function showNote(html,x,y){$('#mnote').classList.remove('placenote');const n=$('#mnote'),r=$('#tstage').getBoundingClientRect();n.innerHTML=html+'<button class="nx" aria-label="Close">✕</button>';n.hidden=false;
   const w=Math.min(320,r.width-24);n.style.width=w+'px';n.style.left=Math.max(12,Math.min(r.width-w-12,x-w/2))+'px';{const h=n.offsetHeight;let t=y+18;if(t+h>r.height-12)t=y-h-44;n.style.top=Math.max(64,Math.min(r.height-h-12,t))+'px';}
   n.classList.remove('on');void n.offsetWidth;n.classList.add('on');n.querySelector('.nx').onclick=()=>{n.hidden=true;placeKey=null;placePinned=false;};}
 function giftNote(e){const r=$('#tstage').getBoundingClientRect(),b=e.currentTarget.getBoundingClientRect();
-  showNote(`<div class="gift"><div class="g1">For Renee</div><div class="g2">Thanksgiving 2026</div><p>Every name on this tree is part of your story. With love from Mat.</p></div>`,b.left-r.left+b.width/2,b.bottom-r.top);}
+  showNote(`<div class="gift"><div class="g1">For Mom</div><div class="g2">Thanksgiving 2026</div><p>Every name on this tree is part of your story. With love from Mat.</p></div>`,b.left-r.left+b.width/2,b.bottom-r.top);}
 $('#moonBtn').onclick=giftNote;$('#sunBtn').onclick=giftNote;
 document.addEventListener('pointerdown',e=>{const n=$('#mnote');if(!n.hidden&&!n.contains(e.target)&&!e.target.closest('#celest button')&&!e.target.closest('.rootpin')){n.hidden=true;placeKey=null;placePinned=false;}});
 /* shooting stars, once every minute or two */

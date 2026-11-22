@@ -419,7 +419,7 @@ footer{height:80px}
       <path pathLength="1" d="M110 148V92M110 92C110 70 80 60 60 40M110 92C110 70 140 60 160 40M110 110C95 100 70 100 40 88M110 110C125 100 150 100 180 88M60 40C55 30 45 24 30 20M60 40C62 28 70 18 80 10M160 40C165 30 175 24 190 20M160 40C158 28 150 18 140 10"/>
       <circle cx="30" cy="20" r="5" style="animation-delay:1.6s"/><circle cx="80" cy="10" r="5" style="animation-delay:1.8s"/><circle cx="140" cy="10" r="5" style="animation-delay:2s"/><circle cx="190" cy="20" r="5" style="animation-delay:2.2s"/><circle cx="40" cy="88" r="5" style="animation-delay:1.4s"/><circle cx="180" cy="88" r="5" style="animation-delay:1.5s"/></g><g id="faces"></g>
     </svg>
-    <div class="ded">For Renee — Thanksgiving 2026</div>
+    <div class="ded">For Mom — Thanksgiving 2026</div>
     <h1>The Graham &amp; Harper Family</h1>
     <p>Four generations, from North Carolina, Kentucky and Upson County down to Newborn — and a story about how they found each other.</p>
     <div class="go"><button class="gold" id="begin">Begin the story</button><button class="ghost" id="skip">Explore the tree</button></div>
@@ -428,7 +428,7 @@ footer{height:80px}
 
 <header class="band">
   <h1>The Graham &amp; Harper Family</h1>
-  <p><span class="dedic">For Renee — Thanksgiving 2026.</span> Click anyone to see what we know, how sure we are, and to add what you remember.</p>
+  <p><span class="dedic">For Mom — Thanksgiving 2026.</span> Click anyone to see what we know, how sure we are, and to add what you remember.</p>
   <div class="hdrbtns"><button class="gold" id="storyBtn">▶ Play the story</button><button id="bigBtn" aria-pressed="false">Aa Larger text</button><span class="mus"><button id="mPlay" aria-label="Play music">♪ Music</button><input type="range" id="mVol" min="0" max="1" step="0.05" value="0.6" aria-label="Music volume"><span class="lbl" id="mLbl"></span></span></div>
   <nav class="tabs" id="tabs">
     <a href="#tree" data-v="tree">Tree</a><a href="#help" data-v="help">Can you help?</a><a href="#chart" data-v="chart">Chart</a><a href="#places" data-v="places">Map</a><a href="#timeline" data-v="timeline">Timeline</a><a href="#sources" data-v="sources">Sources</a>
@@ -679,7 +679,7 @@ const STORY=[
  {y:'1982',h:'Ed and Renee',t:'In 1982, Ed Graham married Renee Harper, and the two families became one. They made their home in Covington, Georgia.',f:['ed','renee']},
  {y:'',h:'Four sons',t:'Ed and Renee raised four boys: Chris, Mat, Jon and Dustin. Then the family grew again: Chris married Amanda, Mat married Emily, and Jon married Jessica. And a new generation began: Lydia, Chris and Amanda’s daughter; Lilly and Maddie, Jon and Jessica’s girls; and Dustin Jr.',f:['ed','renee','chris','mat','jon','dustin','amanda','emily','jessica','lydia','lilly','maddie','dustinjr']},
  {y:'',h:'A houseful of cousins',t:'Around them grew a crowd of cousins. On the Graham side: Amber and Steven; Brandon, Jeremy and Michael — Brandon in Navy uniform like his grandfather Jack; Andrew; and Alissa and Malik. On the Harper side: Ashley, Shelby and Kayla; John John, Chasity, Amber, Ashley and Shannon; and Jacob.',f:['brandon','amber','ashley','kayla','stevenn','jeremy','shelby','johnjohn','chasity','amberl','ashleyl','shannon','michael','andrew','alissa','malik','jacob']},
- {y:'',h:'For Renee',t:'Ed was remembered as a good man who treasured his sons and grandchildren. Johnny loved to dance and loved his family. This tree holds what the records say — and it is waiting for everything you remember.',f:['renee']}
+ {y:'',h:'For Mom',t:'Ed was remembered as a good man who treasured his sons and grandchildren. Johnny loved to dance and loved his family. This tree holds what the records say — and it is waiting for everything you remember.',f:['renee']}
 ];
 
 /* ---------- shared helpers and state ---------- */
@@ -888,7 +888,7 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
  const front=document.createElement('div');front.id='tfront';front.className='wlayer';let ff='';
  for(let i=0;i<12;i++){const x=330+r()*1180,y=1110+r()*170;ff+=`<i style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;--t:${(6+r()*6).toFixed(1)}s;--p:${(2.5+r()*2.5).toFixed(1)}s;--dl:-${(r()*8).toFixed(1)}s;--dx:${(r()*60-30).toFixed(0)}px;--dy:${(-20-r()*40).toFixed(0)}px"></i>`;}
  front.innerHTML=ff;
- const cel=document.createElement('div');cel.id='celest';cel.innerHTML=`<button class="moon" id="moonBtn" aria-label="A note for Renee">${moonSVG(moonPhase(Date.now()))}</button><button class="sun" id="sunBtn" aria-label="The evening star: a note for Renee"></button><div id="mstars"></div>`;
+ const cel=document.createElement('div');cel.id='celest';cel.innerHTML=`<button class="moon" id="moonBtn" aria-label="A note for Mom">${moonSVG(moonPhase(Date.now()))}</button><button class="sun" id="sunBtn" aria-label="The evening star: a note for Mom"></button><div id="mstars"></div>`;
  const note=document.createElement('div');note.id='mnote';note.setAttribute('role','dialog');note.hidden=true;
  st.prepend(sky);sky.after(back);st.querySelector('svg').after(front);front.after(cel);st.appendChild(note);}
 function applySky(redraw){SKY=skyNow();NIGHT=true;const st=$('#tstage');['day','dusk','night'].forEach(m=>st.classList.toggle('sky-'+m,SKY===m));st.classList.toggle('night',NIGHT);
@@ -899,12 +899,12 @@ function applySky(redraw){SKY=skyNow();NIGHT=true;const st=$('#tstage');['day','
   if(redraw&&tw.childElementCount){const k={...tv};drawLeafTree(false);tv=k;tApply(false);}}
 applySky(false);
 setInterval(()=>{if(SKYPREF==='auto'&&autoSky()!==SKY)applySky(true);},5*60*1000);
-/* a note for Renee, hidden in the moon (and the sun) */
+/* a note for Mom, hidden in the moon (and the sun) */
 function showNote(html,x,y){$('#mnote').classList.remove('placenote');const n=$('#mnote'),r=$('#tstage').getBoundingClientRect();n.innerHTML=html+'<button class="nx" aria-label="Close">✕</button>';n.hidden=false;
   const w=Math.min(320,r.width-24);n.style.width=w+'px';n.style.left=Math.max(12,Math.min(r.width-w-12,x-w/2))+'px';{const h=n.offsetHeight;let t=y+18;if(t+h>r.height-12)t=y-h-44;n.style.top=Math.max(64,Math.min(r.height-h-12,t))+'px';}
   n.classList.remove('on');void n.offsetWidth;n.classList.add('on');n.querySelector('.nx').onclick=()=>{n.hidden=true;placeKey=null;placePinned=false;};}
 function giftNote(e){const r=$('#tstage').getBoundingClientRect(),b=e.currentTarget.getBoundingClientRect();
-  showNote(`<div class="gift"><div class="g1">For Renee</div><div class="g2">Thanksgiving 2026</div><p>Every name on this tree is part of your story. With love from Mat.</p></div>`,b.left-r.left+b.width/2,b.bottom-r.top);}
+  showNote(`<div class="gift"><div class="g1">For Mom</div><div class="g2">Thanksgiving 2026</div><p>Every name on this tree is part of your story. With love from Mat.</p></div>`,b.left-r.left+b.width/2,b.bottom-r.top);}
 $('#moonBtn').onclick=giftNote;$('#sunBtn').onclick=giftNote;
 document.addEventListener('pointerdown',e=>{const n=$('#mnote');if(!n.hidden&&!n.contains(e.target)&&!e.target.closest('#celest button')&&!e.target.closest('.rootpin')){n.hidden=true;placeKey=null;placePinned=false;}});
 /* shooting stars, once every minute or two */
@@ -1207,7 +1207,7 @@ async function buildPoster(){const k={...tv};PRINT=true;NIGHT=false;drawLeafTree
   const w=c.querySelector('g');w.removeAttribute('style');w.setAttribute('class','');
   c.querySelectorAll('.leaf').forEach(l=>{l.classList.remove('dim','sel','spot','wait');l.removeAttribute('tabindex');});
   const b=TB,pad=30;c.setAttribute('viewBox',`${b.x0-pad} ${b.y0-pad} ${b.x1-b.x0+2*pad} ${b.y1-b.y0+2*pad}`);c.setAttribute('preserveAspectRatio','xMidYMid meet');
-  const el=$('#poster');el.className='ts-'+TSTYLE;el.innerHTML=`<div><div class="pt">The Graham &amp; Harper Family</div><div class="pd">For Renee — Thanksgiving 2026</div></div>`;
+  const el=$('#poster');el.className='ts-'+TSTYLE;el.innerHTML=`<div><div class="pt">The Graham &amp; Harper Family</div><div class="pd">For Mom — Thanksgiving 2026</div></div>`;
   el.appendChild(c);el.insertAdjacentHTML('beforeend',`<div class="pf"><img src="photos/qr.png" alt=""><div>Point your phone's camera at this code to explore the tree, play the story, and add your own memories and photos.</div></div>`);}
 $('#posterBtn').onclick=async()=>{await buildPoster();setTimeout(()=>{try{print();}catch(e){}},300);};
 /* sound effects removed — every call below is a no-op */

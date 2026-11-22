@@ -104,7 +104,7 @@ async function buildPoster(){const k={...tv};PRINT=true;NIGHT=false;drawLeafTree
   const w=c.querySelector('g');w.removeAttribute('style');w.setAttribute('class','');
   c.querySelectorAll('.leaf').forEach(l=>{l.classList.remove('dim','sel','spot','wait');l.removeAttribute('tabindex');});
   const b=TB,pad=30;c.setAttribute('viewBox',`${b.x0-pad} ${b.y0-pad} ${b.x1-b.x0+2*pad} ${b.y1-b.y0+2*pad}`);c.setAttribute('preserveAspectRatio','xMidYMid meet');
-  const el=$('#poster');el.className='ts-'+TSTYLE;el.innerHTML=`<div><div class="pt">The Graham &amp; Harper Family</div><div class="pd">For Renee — Thanksgiving 2026</div></div>`;
+  const el=$('#poster');el.className='ts-'+TSTYLE;el.innerHTML=`<div><div class="pt">The Graham &amp; Harper Family</div><div class="pd">For Mom — Thanksgiving 2026</div></div>`;
   el.appendChild(c);el.insertAdjacentHTML('beforeend',`<div class="pf"><img src="photos/qr.png" alt=""><div>Point your phone's camera at this code to explore the tree, play the story, and add your own memories and photos.</div></div>`);}
 $('#posterBtn').onclick=async()=>{await buildPoster();setTimeout(()=>{try{print();}catch(e){}},300);};
 /* sound effects removed — every call below is a no-op */

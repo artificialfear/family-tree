@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-21 — "For Mom"
+- The dedication now reads "For Mom" everywhere: the welcome screen, the intro line, the poster, the last story chapter, and the note hidden in the moon and sun.
+
 ## 2026-11-21 — New background music
 - New background song. It starts right away (no silent gap), plays its opening once, then loops smoothly without the ending fade-out.
 

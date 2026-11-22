@@ -145,6 +145,6 @@ const STORY=[
  {y:'1982',h:'Ed and Renee',t:'In 1982, Ed Graham married Renee Harper, and the two families became one. They made their home in Covington, Georgia.',f:['ed','renee']},
  {y:'',h:'Four sons',t:'Ed and Renee raised four boys: Chris, Mat, Jon and Dustin. Then the family grew again: Chris married Amanda, Mat married Emily, and Jon married Jessica. And a new generation began: Lydia, Chris and Amanda’s daughter; Lilly and Maddie, Jon and Jessica’s girls; and Dustin Jr.',f:['ed','renee','chris','mat','jon','dustin','amanda','emily','jessica','lydia','lilly','maddie','dustinjr']},
  {y:'',h:'A houseful of cousins',t:'Around them grew a crowd of cousins. On the Graham side: Amber and Steven; Brandon, Jeremy and Michael — Brandon in Navy uniform like his grandfather Jack; Andrew; and Alissa and Malik. On the Harper side: Ashley, Shelby and Kayla; John John, Chasity, Amber, Ashley and Shannon; and Jacob.',f:['brandon','amber','ashley','kayla','stevenn','jeremy','shelby','johnjohn','chasity','amberl','ashleyl','shannon','michael','andrew','alissa','malik','jacob']},
- {y:'',h:'For Renee',t:'Ed was remembered as a good man who treasured his sons and grandchildren. Johnny loved to dance and loved his family. This tree holds what the records say — and it is waiting for everything you remember.',f:['renee']}
+ {y:'',h:'For Mom',t:'Ed was remembered as a good man who treasured his sons and grandchildren. Johnny loved to dance and loved his family. This tree holds what the records say — and it is waiting for everything you remember.',f:['renee']}
 ];
 
