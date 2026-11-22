@@ -346,3 +346,22 @@ footer{height:80px}
 .cover.open .cframe{opacity:0}
 .cover.curtain.open{pointer-events:none}
 @media(prefers-reduced-motion:reduce){.cover.curtain .cpanel{transition:opacity .3s}.cover.open .cpanel.l,.cover.open .cpanel.r{transform:none}.cover.curtain .cframe{transition:opacity .3s}}
+
+/* ---------- stage theme: Program menu, and sections as pages over the stage ---------- */
+.progwrap{position:relative;display:inline-block;pointer-events:auto}
+.progwrap[hidden],#tHelp[hidden]{display:none}
+.prog{position:absolute;top:calc(100% + 6px);left:0;min-width:190px;display:flex;flex-direction:column;padding:8px;border-radius:14px;z-index:6;
+  background:#f6ead0;border:2px solid #d9a441;box-shadow:0 0 0 4px rgba(20,8,4,.25),0 14px 30px rgba(0,0,0,.45)}
+.prog[hidden]{display:none}
+.prog a{padding:11px 14px;border-radius:9px;color:#3a1a08;text-decoration:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600;font-size:19px}
+.prog a:hover,.prog a:focus-visible{background:#ead6a6}
+#tHelp{background:#f3d9a0;color:#3a1a08;border-color:#d9a441}
+body.stagemode>header.band{display:none}
+body.tfull .view.sheet{position:fixed;left:max(10px,3vw);right:max(10px,3vw);top:max(14px,4vh);bottom:0;z-index:29;margin:0;overflow:auto;-webkit-overflow-scrolling:touch;
+  border-radius:20px 20px 0 0;border:2px solid #d9a441;border-bottom:0;background:var(--bg);box-shadow:0 0 0 100vmax rgba(8,4,16,.55),0 -10px 40px rgba(0,0,0,.4);
+  animation:sheetup .38s cubic-bezier(.2,.8,.2,1)}
+@keyframes sheetup{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.view.sheet .shclose{position:sticky;top:0;float:right;margin:-4px -4px 8px 12px;z-index:3;background:#f3d9a0;color:#3a1a08;border-color:#d9a441;font-size:16px}
+.view:not(.sheet) .shclose{display:none}
+@media(prefers-reduced-motion:reduce){body.tfull .view.sheet{animation:none}}
+.view.sheet .treewrap{grid-template-columns:minmax(0,1fr)}.view.sheet #stage{height:calc(100vh - 190px);height:calc(100dvh - 190px)}

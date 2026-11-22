@@ -530,6 +530,25 @@ footer{height:80px}
 .cover.open .cframe{opacity:0}
 .cover.curtain.open{pointer-events:none}
 @media(prefers-reduced-motion:reduce){.cover.curtain .cpanel{transition:opacity .3s}.cover.open .cpanel.l,.cover.open .cpanel.r{transform:none}.cover.curtain .cframe{transition:opacity .3s}}
+
+/* ---------- stage theme: Program menu, and sections as pages over the stage ---------- */
+.progwrap{position:relative;display:inline-block;pointer-events:auto}
+.progwrap[hidden],#tHelp[hidden]{display:none}
+.prog{position:absolute;top:calc(100% + 6px);left:0;min-width:190px;display:flex;flex-direction:column;padding:8px;border-radius:14px;z-index:6;
+  background:#f6ead0;border:2px solid #d9a441;box-shadow:0 0 0 4px rgba(20,8,4,.25),0 14px 30px rgba(0,0,0,.45)}
+.prog[hidden]{display:none}
+.prog a{padding:11px 14px;border-radius:9px;color:#3a1a08;text-decoration:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600;font-size:19px}
+.prog a:hover,.prog a:focus-visible{background:#ead6a6}
+#tHelp{background:#f3d9a0;color:#3a1a08;border-color:#d9a441}
+body.stagemode>header.band{display:none}
+body.tfull .view.sheet{position:fixed;left:max(10px,3vw);right:max(10px,3vw);top:max(14px,4vh);bottom:0;z-index:29;margin:0;overflow:auto;-webkit-overflow-scrolling:touch;
+  border-radius:20px 20px 0 0;border:2px solid #d9a441;border-bottom:0;background:var(--bg);box-shadow:0 0 0 100vmax rgba(8,4,16,.55),0 -10px 40px rgba(0,0,0,.4);
+  animation:sheetup .38s cubic-bezier(.2,.8,.2,1)}
+@keyframes sheetup{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+.view.sheet .shclose{position:sticky;top:0;float:right;margin:-4px -4px 8px 12px;z-index:3;background:#f3d9a0;color:#3a1a08;border-color:#d9a441;font-size:16px}
+.view:not(.sheet) .shclose{display:none}
+@media(prefers-reduced-motion:reduce){body.tfull .view.sheet{animation:none}}
+.view.sheet .treewrap{grid-template-columns:minmax(0,1fr)}.view.sheet #stage{height:calc(100vh - 190px);height:calc(100dvh - 190px)}
 </style>
 </head>
 <body>
@@ -573,6 +592,8 @@ footer{height:80px}
         <button class="sq" id="tzout" aria-label="Zoom out" hidden>−</button>
         <button id="tfit">Fit</button>
         <button id="tFull" aria-pressed="false">⤢ Full screen</button>
+        <button id="tHelp" hidden>Can you help?</button>
+        <span class="progwrap" hidden><button id="tProg" aria-haspopup="true" aria-expanded="false">Program ▾</button><span class="prog" id="prog" role="menu" hidden><a role="menuitem" href="#chart">Chart</a><a role="menuitem" href="#places">Map</a><a role="menuitem" href="#timeline">Timeline</a><a role="menuitem" href="#sources">Sources</a></span></span>
         <button class="sq" id="tMusic" aria-label="Play music">♪</button>
         <button class="sq" id="tBig" aria-pressed="false" aria-label="Larger text" hidden>Aa</button>
         <button class="sq" id="tSky" aria-label="Sky">◐</button>
@@ -1681,7 +1702,7 @@ $('#storyBtn').onclick=$('#tStory').onclick=()=>{sfx.ctx();startMusic();startSto
 /* ---------- full screen tree ---------- */
 const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
 function refit(){setTimeout(()=>{if(si>=0&&storyFocus)tFrame(storyFocus);else tFit();},80);}
-function setFull(on,quiet){const b=document.body;if(on===b.classList.contains('tfull'))return null;let pr=null;
+function setFull(on,quiet){const b=document.body;if(STAGE&&!on)return null;if(on===b.classList.contains('tfull'))return null;let pr=null;
   b.classList.toggle('tfull',on);b.classList.remove('pdrawer');hidePop();
   $('#tFull').textContent=on?'✕ Exit full screen':'⤢ Full screen';$('#tFull').setAttribute('aria-pressed',on);
   if(on){if(location.hash!=='#tree')location.hash='tree';const d=document.documentElement,rq=d.requestFullscreen||d.webkitRequestFullscreen;try{const p=rq&&rq.call(d);if(p&&p.then)pr=p.then(()=>new Promise(r=>setTimeout(r,140)),()=>{});}catch(e){}}
@@ -1690,7 +1711,7 @@ function setFull(on,quiet){const b=document.body;if(on===b.classList.contains('t
 $('#tFull').onclick=()=>{tTouched=1;setFull(!document.body.classList.contains('tfull'));};
 
 ['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>{if(!fsEl()&&document.body.classList.contains('tfull'))setFull(false);else refit();}));
-addEventListener('keydown',e=>{if(e.key!=='Escape'||!document.body.classList.contains('tfull')||$('#lb').classList.contains('on')||si>=0)return;
+addEventListener('keydown',e=>{if(STAGE&&e.key==='Escape'&&document.body.classList.contains('sheeton')&&!$('#lb').classList.contains('on')){if(document.body.classList.contains('pdrawer'))document.body.classList.remove('pdrawer');else location.hash='tree';return;}if(e.key!=='Escape'||!document.body.classList.contains('tfull')||$('#lb').classList.contains('on')||si>=0)return;
   if(document.body.classList.contains('pdrawer'))document.body.classList.remove('pdrawer');else setFull(false);},true);
 addEventListener('hashchange',()=>{if(location.hash&&location.hash!=='#tree')setFull(false);});
 
@@ -1725,7 +1746,7 @@ const rgb=c=>{const m=c.match(/[\d.]+/g)||[0,0,0];return m.slice(0,3).map(Number
 // stage theme: the opening screen is the closed curtain; the tree is already drawn full-screen behind it
 if(STAGE&&getComputedStyle(cover).display!=='none'){cover.classList.add('curtain');
   cover.insertAdjacentHTML('afterbegin','<div class="cpanel l" aria-hidden="true"></div><div class="cpanel r" aria-hidden="true"></div><div class="cframe" aria-hidden="true"></div>');
-  const fr=cover.querySelector('.cframe'),drawFr=()=>{fr.innerHTML=stageFrame(innerWidth,innerHeight);};drawFr();addEventListener('resize',drawFr);
+  const fr=cover.querySelector('.cframe'),drawFr=()=>{fr.innerHTML=stageFrame(innerWidth,innerHeight).replace(/\b(prg|pgg|pgl)\b/g,'c$1');};drawFr();addEventListener('resize',drawFr);
   document.body.classList.add('tfull');$('#tFull').textContent='✕ Exit full screen';$('#tFull').setAttribute('aria-pressed',true);}
 function openCurtain(story){if(cover.classList.contains('opening'))return;cover.classList.add('opening');location.hash='tree';
   // full screen first (the tree refits to the new size behind the curtain), then part the curtains
@@ -1825,7 +1846,10 @@ function drawTimeline(){
 /* ---------- views ---------- */
 let fitted=0;
 function route(){const h=location.hash.slice(1),v=['tree','help','chart','places','timeline','sources'].includes(h)?h:'tree';
-  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
+  // stage theme: the tree stays on stage and every other section opens as a page over it
+  if(STAGE){document.querySelectorAll('.view').forEach(s=>{const me=s.id==='v-'+v;s.classList.toggle('on',s.id==='v-tree'||me);s.classList.toggle('sheet',me&&v!=='tree');});
+    document.body.classList.toggle('sheeton',v!=='tree');if(v!=='tree'){const sh=$('#v-'+v);sh.scrollTop=0;if(!sh.querySelector('.shclose'))sh.insertAdjacentHTML('afterbegin','<button class="shclose" aria-label="Back to the tree">✕ Back to the tree</button>');}}
+  else document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
   document.querySelectorAll('#tabs a').forEach(a=>a.setAttribute('aria-current',a.dataset.v===v));
   hidePop();if(v!=='tree'&&si>=0)endStory();
   if(v==='tree'||v==='chart'){const wrap=$(`#v-${v} .treewrap`);if($('#panel').parentNode!==wrap)wrap.appendChild($('#panel'));}
@@ -1839,6 +1863,15 @@ new ResizeObserver(()=>{if(!$('#v-tree').classList.contains('on')||G)return;if(s
 function refresh(){build();drawTree(false);apply(false);drawLeafTree(false);renderPanel(false);drawTimeline();drawMap();}
 refresh();route();
 
+
+/* stage theme: Program menu and Can you help? in the stage toolbar */
+if(STAGE){document.body.classList.add('stagemode');$('#tFull').hidden=true;$('#tHelp').hidden=false;$('.progwrap').hidden=false;
+  const pb=$('#tProg'),pm=$('#prog'),shut=()=>{pm.hidden=true;pb.setAttribute('aria-expanded','false');};
+  pb.onclick=e=>{e.stopPropagation();const o=pm.hidden;pm.hidden=!o;pb.setAttribute('aria-expanded',String(o));};
+  pm.addEventListener('click',()=>shut());document.addEventListener('pointerdown',e=>{if(!e.target.closest('.progwrap'))shut();});
+  $('#tHelp').onclick=()=>{location.hash='help';};
+  document.addEventListener('click',e=>{if(e.target.closest('.shclose'))location.hash='tree';});
+  if(location.hash&&location.hash!=='#tree')document.body.classList.add('tfull');}
 /* ---------- shared family additions (Google Sheet via Apps Script) ---------- */
 const API="https://script.google.com/macros/s/AKfycbzD4Jhho5n9FtifLnANFA3JmElnLuGW0fuMA_bOSh94HwK9atmtwfymyIzEPhrip8hU/exec";
 function assetUrl(id){id=String(id||'');return id.startsWith('photos/')?id:'https://drive.google.com/thumbnail?id='+encodeURIComponent(id)+'&sz=w1600';}

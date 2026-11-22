@@ -51,7 +51,10 @@ function drawTimeline(){
 /* ---------- views ---------- */
 let fitted=0;
 function route(){const h=location.hash.slice(1),v=['tree','help','chart','places','timeline','sources'].includes(h)?h:'tree';
-  document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
+  // stage theme: the tree stays on stage and every other section opens as a page over it
+  if(STAGE){document.querySelectorAll('.view').forEach(s=>{const me=s.id==='v-'+v;s.classList.toggle('on',s.id==='v-tree'||me);s.classList.toggle('sheet',me&&v!=='tree');});
+    document.body.classList.toggle('sheeton',v!=='tree');if(v!=='tree'){const sh=$('#v-'+v);sh.scrollTop=0;if(!sh.querySelector('.shclose'))sh.insertAdjacentHTML('afterbegin','<button class="shclose" aria-label="Back to the tree">✕ Back to the tree</button>');}}
+  else document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
   document.querySelectorAll('#tabs a').forEach(a=>a.setAttribute('aria-current',a.dataset.v===v));
   hidePop();if(v!=='tree'&&si>=0)endStory();
   if(v==='tree'||v==='chart'){const wrap=$(`#v-${v} .treewrap`);if($('#panel').parentNode!==wrap)wrap.appendChild($('#panel'));}
@@ -65,3 +68,12 @@ new ResizeObserver(()=>{if(!$('#v-tree').classList.contains('on')||G)return;if(s
 function refresh(){build();drawTree(false);apply(false);drawLeafTree(false);renderPanel(false);drawTimeline();drawMap();}
 refresh();route();
 
+
+/* stage theme: Program menu and Can you help? in the stage toolbar */
+if(STAGE){document.body.classList.add('stagemode');$('#tFull').hidden=true;$('#tHelp').hidden=false;$('.progwrap').hidden=false;
+  const pb=$('#tProg'),pm=$('#prog'),shut=()=>{pm.hidden=true;pb.setAttribute('aria-expanded','false');};
+  pb.onclick=e=>{e.stopPropagation();const o=pm.hidden;pm.hidden=!o;pb.setAttribute('aria-expanded',String(o));};
+  pm.addEventListener('click',()=>shut());document.addEventListener('pointerdown',e=>{if(!e.target.closest('.progwrap'))shut();});
+  $('#tHelp').onclick=()=>{location.hash='help';};
+  document.addEventListener('click',e=>{if(e.target.closest('.shclose'))location.hash='tree';});
+  if(location.hash&&location.hash!=='#tree')document.body.classList.add('tfull');}

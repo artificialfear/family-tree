@@ -29,7 +29,7 @@ const rgb=c=>{const m=c.match(/[\d.]+/g)||[0,0,0];return m.slice(0,3).map(Number
 // stage theme: the opening screen is the closed curtain; the tree is already drawn full-screen behind it
 if(STAGE&&getComputedStyle(cover).display!=='none'){cover.classList.add('curtain');
   cover.insertAdjacentHTML('afterbegin','<div class="cpanel l" aria-hidden="true"></div><div class="cpanel r" aria-hidden="true"></div><div class="cframe" aria-hidden="true"></div>');
-  const fr=cover.querySelector('.cframe'),drawFr=()=>{fr.innerHTML=stageFrame(innerWidth,innerHeight);};drawFr();addEventListener('resize',drawFr);
+  const fr=cover.querySelector('.cframe'),drawFr=()=>{fr.innerHTML=stageFrame(innerWidth,innerHeight).replace(/\b(prg|pgg|pgl)\b/g,'c$1');};drawFr();addEventListener('resize',drawFr);
   document.body.classList.add('tfull');$('#tFull').textContent='✕ Exit full screen';$('#tFull').setAttribute('aria-pressed',true);}
 function openCurtain(story){if(cover.classList.contains('opening'))return;cover.classList.add('opening');location.hash='tree';
   // full screen first (the tree refits to the new size behind the curtain), then part the curtains

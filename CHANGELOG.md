@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-22 — Everything on stage
+- The tree now stays full screen; there's no way to accidentally leave the stage.
+- A "Program" menu at the top opens the Chart, Map, Timeline and Sources, and a "Can you help?" button opens the family questions. Each opens as a page over the stage; "Back to the tree" (or Escape) closes it.
+
 ## 2026-11-22 — Opening curtain
 - The opening screen is now a closed red stage curtain, with the dedication, title, faces and both buttons on a gold-edged card in front.
 - The tree is already standing behind the curtain. Choosing either button pulls the curtains open to reveal it — no more growing animation, so it opens smoothly on phones.

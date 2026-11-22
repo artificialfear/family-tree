@@ -53,7 +53,7 @@ $('#storyBtn').onclick=$('#tStory').onclick=()=>{sfx.ctx();startMusic();startSto
 /* ---------- full screen tree ---------- */
 const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
 function refit(){setTimeout(()=>{if(si>=0&&storyFocus)tFrame(storyFocus);else tFit();},80);}
-function setFull(on,quiet){const b=document.body;if(on===b.classList.contains('tfull'))return null;let pr=null;
+function setFull(on,quiet){const b=document.body;if(STAGE&&!on)return null;if(on===b.classList.contains('tfull'))return null;let pr=null;
   b.classList.toggle('tfull',on);b.classList.remove('pdrawer');hidePop();
   $('#tFull').textContent=on?'✕ Exit full screen':'⤢ Full screen';$('#tFull').setAttribute('aria-pressed',on);
   if(on){if(location.hash!=='#tree')location.hash='tree';const d=document.documentElement,rq=d.requestFullscreen||d.webkitRequestFullscreen;try{const p=rq&&rq.call(d);if(p&&p.then)pr=p.then(()=>new Promise(r=>setTimeout(r,140)),()=>{});}catch(e){}}
@@ -62,7 +62,7 @@ function setFull(on,quiet){const b=document.body;if(on===b.classList.contains('t
 $('#tFull').onclick=()=>{tTouched=1;setFull(!document.body.classList.contains('tfull'));};
 
 ['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,()=>{if(!fsEl()&&document.body.classList.contains('tfull'))setFull(false);else refit();}));
-addEventListener('keydown',e=>{if(e.key!=='Escape'||!document.body.classList.contains('tfull')||$('#lb').classList.contains('on')||si>=0)return;
+addEventListener('keydown',e=>{if(STAGE&&e.key==='Escape'&&document.body.classList.contains('sheeton')&&!$('#lb').classList.contains('on')){if(document.body.classList.contains('pdrawer'))document.body.classList.remove('pdrawer');else location.hash='tree';return;}if(e.key!=='Escape'||!document.body.classList.contains('tfull')||$('#lb').classList.contains('on')||si>=0)return;
   if(document.body.classList.contains('pdrawer'))document.body.classList.remove('pdrawer');else setFull(false);},true);
 addEventListener('hashchange',()=>{if(location.hash&&location.hash!=='#tree')setFull(false);});
 
