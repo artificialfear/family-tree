@@ -559,7 +559,10 @@ body.stagemode #tstage>.tools{top:auto;bottom:calc(var(--apron,24px) + 10px);jus
 body.stagemode .prog{top:auto;bottom:calc(100% + 6px)}
 body.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 20px)}
 body.stagemode #tstage .hint{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 24px)}
-#tsvg.tglide{transition:transform .9s cubic-bezier(.4,0,.2,1)}
+#tsvg{transition:opacity .28s ease}#tsvg.tglide{transition:transform .9s cubic-bezier(.4,0,.2,1),opacity .28s ease}
+@media(prefers-reduced-motion:no-preference){#tback,#tfront{transition:transform .9s cubic-bezier(.4,0,.2,1),opacity .28s ease}#tback.nomo,#tfront.nomo{transition:opacity .28s ease}}
+#tstage.tswap #tsvg,#tstage.tswap #tback,#tstage.tswap #tfront{opacity:0;transition:opacity .18s ease}
+@media(max-width:699px){.theme-stage #marquee{width:64%}}
 </style>
 </head>
 <body>
@@ -1468,9 +1471,17 @@ const setTW=(v,z)=>{tw.style.transform=`translate(${v.x+z.w*.4}px,${v.y+z.h*.4}p
 function glideOK(R,D,z){const s=D.k/R.k,tx=D.x-R.x*s,ty=D.y-R.y*s,ok=(tx,ty,s)=>tx-s*.4*z.w<=1&&tx+s*1.4*z.w>=z.w-1&&ty-s*.4*z.h<=1&&ty+s*1.4*z.h>=z.h-1;
   return ok(tx,ty,s)&&ok(tx/2,ty/2,(1+s)/2)&&s<2.2&&s>.45;}
 function endGlide(){if(!AT)return;clearTimeout(AT);AT=0;tsvg.classList.remove('tglide');tsvg.style.transform='';if(AP)setTW(AP,tsz());}
-function tApply(anim){tClamp();sunLight();endGlide();const T=`translate(${tv.x}px,${tv.y}px) scale(${tv.k})`;wl().forEach(e=>{if(e){e.classList.toggle('nomo',!anim);e.style.transform=T;}});
+let SW=0;
+function tApply(anim){tClamp();sunLight();endGlide();if(SW){clearTimeout(SW);SW=0;}const T=`translate(${tv.x}px,${tv.y}px) scale(${tv.k})`;
   const z=tsz(),was=AP;AP={...tv};
   const moved=was&&(Math.abs(was.x-tv.x)>.5||Math.abs(was.y-tv.y)>.5||Math.abs(was.k-tv.k)>1e-4);
+  // phones: sliding a picture this big makes Android show stale copies of it while it redraws, so fade out,
+  // jump to the new view while hidden, and fade back in once it has been drawn
+  if(anim&&moved&&!RM&&z.w<700){const st=$('#tstage');st.classList.add('tswap');
+    SW=setTimeout(()=>{SW=0;wl().forEach(e=>{if(e){e.classList.add('nomo');e.style.transform=T;}});tw.classList.add('nomo');setTW(tv,z);tsvg.style.transform='';msScale();
+      requestAnimationFrame(()=>requestAnimationFrame(()=>st.classList.remove('tswap')));},200);
+    G=null;st.classList.remove('moving');return;}
+  $('#tstage').classList.remove('tswap');wl().forEach(e=>{if(e){e.classList.toggle('nomo',!anim);e.style.transform=T;}});
   if(anim&&moved&&!RM&&glideOK(tv,was,z)){
     // draw at the new view, start the picture where the old view was, then slide it home
     tw.classList.add('nomo');setTW(tv,z);const sc=was.k/tv.k;tsvg.classList.remove('tglide');
@@ -1735,7 +1746,7 @@ function showStep(){
   $('#sAuto').onclick=()=>{if(auto){clearInterval(auto);auto=null;}else{auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}showStep();};
 }
 function resetAuto(){if(auto){clearInterval(auto);auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}}
-function endStory(){clearTimeout(stepT);clearInterval(auto);auto=null;si=-1;setTimeout(showHint,900);clearSpots();storyFocus=null;tw.classList.remove('story');tw.querySelectorAll('.leaf.dim').forEach(c=>c.classList.remove('dim'));$('#cap').classList.remove('on');select('renee',1);setTimeout(()=>tFit(true),50);}
+function endStory(){clearTimeout(stepT);clearInterval(auto);auto=null;si=-1;setTimeout(showHint,900);clearSpots();storyFocus=null;tw.classList.remove('story');tw.querySelectorAll('.leaf.dim').forEach(c=>c.classList.remove('dim'));$('#cap').classList.remove('on');select('renee',1);setTimeout(()=>innerWidth<600?tFrame(TCORE):tFit(true),50);}
 addEventListener('keydown',e=>{if(si<0)return;if(e.key==='ArrowRight'&&si<STORY.length-1){si++;resetAuto();showStep();}else if(e.key==='ArrowLeft'&&si>0){si--;resetAuto();showStep();}else if(e.key==='Escape')endStory();});
 $('#storyBtn').onclick=$('#tStory').onclick=()=>{sfx.ctx();startMusic();startStory();};
 /* ---------- full screen tree ---------- */

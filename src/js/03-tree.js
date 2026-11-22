@@ -494,9 +494,17 @@ const setTW=(v,z)=>{tw.style.transform=`translate(${v.x+z.w*.4}px,${v.y+z.h*.4}p
 function glideOK(R,D,z){const s=D.k/R.k,tx=D.x-R.x*s,ty=D.y-R.y*s,ok=(tx,ty,s)=>tx-s*.4*z.w<=1&&tx+s*1.4*z.w>=z.w-1&&ty-s*.4*z.h<=1&&ty+s*1.4*z.h>=z.h-1;
   return ok(tx,ty,s)&&ok(tx/2,ty/2,(1+s)/2)&&s<2.2&&s>.45;}
 function endGlide(){if(!AT)return;clearTimeout(AT);AT=0;tsvg.classList.remove('tglide');tsvg.style.transform='';if(AP)setTW(AP,tsz());}
-function tApply(anim){tClamp();sunLight();endGlide();const T=`translate(${tv.x}px,${tv.y}px) scale(${tv.k})`;wl().forEach(e=>{if(e){e.classList.toggle('nomo',!anim);e.style.transform=T;}});
+let SW=0;
+function tApply(anim){tClamp();sunLight();endGlide();if(SW){clearTimeout(SW);SW=0;}const T=`translate(${tv.x}px,${tv.y}px) scale(${tv.k})`;
   const z=tsz(),was=AP;AP={...tv};
   const moved=was&&(Math.abs(was.x-tv.x)>.5||Math.abs(was.y-tv.y)>.5||Math.abs(was.k-tv.k)>1e-4);
+  // phones: sliding a picture this big makes Android show stale copies of it while it redraws, so fade out,
+  // jump to the new view while hidden, and fade back in once it has been drawn
+  if(anim&&moved&&!RM&&z.w<700){const st=$('#tstage');st.classList.add('tswap');
+    SW=setTimeout(()=>{SW=0;wl().forEach(e=>{if(e){e.classList.add('nomo');e.style.transform=T;}});tw.classList.add('nomo');setTW(tv,z);tsvg.style.transform='';msScale();
+      requestAnimationFrame(()=>requestAnimationFrame(()=>st.classList.remove('tswap')));},200);
+    G=null;st.classList.remove('moving');return;}
+  $('#tstage').classList.remove('tswap');wl().forEach(e=>{if(e){e.classList.toggle('nomo',!anim);e.style.transform=T;}});
   if(anim&&moved&&!RM&&glideOK(tv,was,z)){
     // draw at the new view, start the picture where the old view was, then slide it home
     tw.classList.add('nomo');setTW(tv,z);const sc=was.k/tv.k;tsvg.classList.remove('tglide');

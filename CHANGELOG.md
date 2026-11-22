@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-22 — Story steps on phones, smaller sign
+- On phones, moving between story chapters now fades the tree out and back in at its new spot instead of sliding, which stops the flickering "double picture".
+- The theater sign is smaller on phones, leaving more room for the tree.
+- Ending the story on a phone returns to the usual close-up of the family instead of the whole tree.
+
 ## 2026-11-22 — Smoother story on phones
 - Moving between story chapters now glides the tree as one picture instead of redrawing it frame by frame, so the leaves and faces move together without stuttering or jumping. The highlighting of each chapter's people now happens once the move has finished.
 
