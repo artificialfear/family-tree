@@ -119,7 +119,7 @@ function taperPath(b,w0,w1){const n=16,L=[],R=[];
   for(let i=0;i<=n;i++){const t=i/n,u=1-t,x=u*u*b.x1+2*u*t*b.cx+t*t*b.x2,y=u*u*b.y1+2*u*t*b.cy+t*t*b.y2,dx=2*u*(b.cx-b.x1)+2*t*(b.x2-b.cx),dy=2*u*(b.cy-b.y1)+2*t*(b.y2-b.cy),l=Math.hypot(dx,dy)||1,w=(w0+(w1-w0)*Math.pow(t,.8))/2,nx=-dy/l*w,ny=dx/l*w;
     L.push(`${(x+nx).toFixed(1)} ${(y+ny).toFixed(1)}`);R.push(`${(x-nx).toFixed(1)} ${(y-ny).toFixed(1)}`);}
   return 'M'+L.join('L')+'L'+R.reverse().join('L')+'Z';}
-const LEAFQ=new URLSearchParams(location.search).get('leaves');const TREEQ=new URLSearchParams(location.search).get('tree')||'painted';
+const LEAFQ=new URLSearchParams(location.search).get('leaves')||'twig';const TREEQ=new URLSearchParams(location.search).get('tree')||'painted';
 const SCROLLS=TSTYLE==='parch'||(TSTYLE==='ink'&&TREEQ==='painted');
 function painted(vals,dl,rnd,f,BX){
     // aged-paper illustration: one broad painted trunk, a dense dome of hand-painted leaves, roots spreading over the paper

@@ -973,7 +973,7 @@ function taperPath(b,w0,w1){const n=16,L=[],R=[];
   for(let i=0;i<=n;i++){const t=i/n,u=1-t,x=u*u*b.x1+2*u*t*b.cx+t*t*b.x2,y=u*u*b.y1+2*u*t*b.cy+t*t*b.y2,dx=2*u*(b.cx-b.x1)+2*t*(b.x2-b.cx),dy=2*u*(b.cy-b.y1)+2*t*(b.y2-b.cy),l=Math.hypot(dx,dy)||1,w=(w0+(w1-w0)*Math.pow(t,.8))/2,nx=-dy/l*w,ny=dx/l*w;
     L.push(`${(x+nx).toFixed(1)} ${(y+ny).toFixed(1)}`);R.push(`${(x-nx).toFixed(1)} ${(y-ny).toFixed(1)}`);}
   return 'M'+L.join('L')+'L'+R.reverse().join('L')+'Z';}
-const TREEQ=new URLSearchParams(location.search).get('tree')||'painted';
+const LEAFQ=new URLSearchParams(location.search).get('leaves')||'twig';const TREEQ=new URLSearchParams(location.search).get('tree')||'painted';
 const SCROLLS=TSTYLE==='parch'||(TSTYLE==='ink'&&TREEQ==='painted');
 function painted(vals,dl,rnd,f,BX){
     // aged-paper illustration: one broad painted trunk, a dense dome of hand-painted leaves, roots spreading over the paper
@@ -987,10 +987,27 @@ function painted(vals,dl,rnd,f,BX){
     const inC=(x,y)=>disc.some(([cx,cy,r])=>(x-cx)*(x-cx)+(y-cy)*(y-cy)<r*r);
     const LF='M0 0Q11 -9 26 0Q11 9 0 0Z',G=['#244f2e','#2f6a3a','#3e7d46','#55914f','#77a960','#2d6e5a','#4a8a6b'];
     let back='',front='';const xs0=TB.x0-40,xs1=TB.x1+40,ys0=TB.y0-60;
+    const leafAt=(x,y,a,sc)=>{const c=G[Math.floor(rnd()*G.length)],lit=rnd()<.35;
+      return `<g transform="translate(${f(x)} ${f(y)}) rotate(${a.toFixed(0)}) scale(${sc.toFixed(2)})"><path d="${LF}" fill="${c}"/>${lit?`<path d="M2 0Q11 -7 24 0Z" fill="#a9c98a" opacity=".35"/>`:''}<path d="M1 0L22 0" stroke="#1d3a22" stroke-width=".6" opacity=".55"/></g>`;};
+    if(LEAFQ!=='twig'){
     for(let i=0;i<9000;i++){const x=xs0+rnd()*(xs1-xs0),y=ys0+rnd()*(1100-ys0);if(!inC(x,y)||rnd()<.5)continue;
-      const a=rnd()*360,sc=1+rnd()*.9,c=G[Math.floor(rnd()*G.length)],lit=rnd()<.35;
-      const leaf=`<g transform="translate(${f(x)} ${f(y)}) rotate(${a.toFixed(0)}) scale(${sc.toFixed(2)})"><path d="${LF}" fill="${c}"/>${lit?`<path d="M2 0Q11 -7 24 0Z" fill="#a9c98a" opacity=".35"/>`:''}<path d="M1 0L22 0" stroke="#1d3a22" stroke-width=".6" opacity=".55"/></g>`;
-      back+=leaf;}
+      back+=leafAt(x,y,rnd()*360,1+rnd()*.9);}
+    }else{
+    // every leaf grows from a twig, and every twig grows from a branch (or from behind a photo at a branch tip)
+    const D=Math.PI/180,tw=[];
+    const sprout=(x,y,ang,len,w,depth)=>{const a=ang*D,x2=x+Math.cos(a)*len,y2=y+Math.sin(a)*len;if(!inC(x2,y2)||y2>1090)return;
+      const bend=(rnd()-.5)*.5,t={x1:x,y1:y,cx:(x+x2)/2+Math.cos(a+Math.PI/2)*len*bend,cy:(y+y2)/2+Math.sin(a+Math.PI/2)*len*bend,x2,y2,w,ang,len};tw.push(t);
+      if(depth>0){const n=1+(rnd()<.6?1:0);for(let k=0;k<n;k++){const [qx,qy]=qpt(t,.35+rnd()*.4);sprout(qx,qy,ang+(k%2?1:-1)*(28+rnd()*30),len*(.5+rnd()*.25),Math.max(.9,w*.6),depth-1);}}};
+    TBR.forEach(b=>{if(Math.max(b.y1,b.y2)>1080||b.w<2)return;const L=Math.hypot(b.x2-b.x1,b.y2-b.y1),ba=Math.atan2(b.y2-b.y1,b.x2-b.x1)/D;let side=rnd()<.5?1:-1;
+      for(let s=20+rnd()*16;s<L-6;s+=36+rnd()*22){const [x,y]=qpt(b,s/L);side=-side;sprout(x,y,ba+side*(35+rnd()*40),55+rnd()*65,Math.min(3.2,b.w*.3+.9),1);}});
+    vals.filter(v=>v.y<1060).forEach(v=>{const n=4+Math.round(v.r/16);for(let k=0;k<n;k++){const a=k*360/n+rnd()*30;sprout(v.x+Math.cos(a*D)*v.r*.5,v.y+Math.sin(a*D)*v.r*.5,a,v.r*.5+45+rnd()*55,1.8,1);}});
+    let twg='',lvs='';
+    tw.forEach(t=>{twg+=`<path d="M${f(t.x1)} ${f(t.y1)}Q${f(t.cx)} ${f(t.cy)} ${f(t.x2)} ${f(t.y2)}" fill="none" stroke="#53361f" stroke-width="${t.w.toFixed(1)}" stroke-linecap="round"/>`;
+      let side=1;for(let d=7+rnd()*6;d<t.len;d+=12+rnd()*7){const [x,y]=qpt(t,d/t.len);side=-side;if(rnd()<.2)continue;lvs+=leafAt(x,y,t.ang+side*(30+rnd()*35),.85+rnd()*.7);}
+      lvs+=leafAt(t.x2,t.y2,t.ang+(rnd()-.5)*30,1+rnd()*.5);});
+    TBR.forEach(b=>{if(Math.max(b.y1,b.y2)>1080||b.w>=14)return;const L=Math.hypot(b.x2-b.x1,b.y2-b.y1),ba=Math.atan2(b.y2-b.y1,b.x2-b.x1)/D;let side=1;
+      for(let d=12;d<L;d+=20+rnd()*12){const [x,y]=qpt(b,d/L);side=-side;lvs+=leafAt(x,y,ba+side*(40+rnd()*35),.85+rnd()*.6);}});
+    back=twg+lvs;}
     // a few leaves overlap the branches in front, so the limbs sit inside the foliage
     let lv='';TBR.forEach(b=>{if(b.w<3||Math.max(b.y1,b.y2)>1080)return;const n=b.w>=20?7:b.w>=8?4:2;for(let i=0;i<n;i++){const t=.15+rnd()*.8,[x,y]=qpt(b,t),a=Math.atan2(b.y2-b.y1,b.x2-b.x1)*180/Math.PI+(rnd()<.5?60:-60)+(rnd()-.5)*40,sc=.9+rnd()*.7;
       lv+=`<g class="deco" style="--d:${dl(y,x)+150}ms" transform="translate(${f(x)} ${f(y)}) rotate(${a.toFixed(0)}) scale(${sc.toFixed(2)}) translate(4 0)"><path d="${LF}" fill="${G[Math.floor(rnd()*G.length)]}"/><path d="M1 0L22 0" stroke="#1d3a22" stroke-width=".6" opacity=".55"/></g>`;}});

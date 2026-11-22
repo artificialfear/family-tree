@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Leaves on twigs
+- Every leaf now grows from a twig or branch, in little sprigs, so no leaves float loose in the sky. The canopy is just as full as before.
+
 ## 2026-11-22 — Sun behind the trunk
 - The setting sun now sits right behind the trunk when the tree first opens and whenever you press Fit, on any screen size.
 
