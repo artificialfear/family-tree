@@ -450,7 +450,7 @@ footer{height:80px}
 .tnew .tnbg{fill:rgba(22,16,36,.55);stroke:rgba(255,236,200,.25);stroke-width:1}
 .tnew .tntext{font-family:Spectral,Georgia,serif;font-style:italic;font-size:19px;fill:#fbefd6}
 .tnew:focus-visible .tnbg,.tconst:focus-visible .cl{stroke:var(--gold);stroke-width:2.5}
-.tconst{cursor:pointer}.tconst .cl{fill:none;stroke:rgba(255,240,210,.32);stroke-width:1.3;stroke-dasharray:3 4}
+.tconst{cursor:pointer}.tconst .cl{fill:none;stroke:rgba(255,240,210,.42);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
 .tconst .cs{fill:#fff6dc;filter:drop-shadow(0 0 3px rgba(255,236,190,.9))}.tconst .cs.big{fill:#fffaf0}
 .tconst .cs.tw{animation:ctw 3.6s ease-in-out infinite;animation-delay:var(--dl)}@keyframes ctw{0%,100%{opacity:1}50%{opacity:.35}}
 .tconst:hover .cl{stroke:rgba(255,240,210,.6)}
@@ -459,7 +459,7 @@ footer{height:80px}
 #tworld.story #tsky{opacity:.3;transition:opacity .6s}
 #mnote .cnote .g1{font-family:Spectral,Georgia,serif;font-style:italic;font-size:1.15rem;margin-bottom:.3rem}#mnote .cnote p{margin:.2rem 0 .6rem}
 @media(prefers-reduced-motion:reduce){.tconst .cs.tw{animation:none}}
-#tnew:focus,#tconst:focus{outline:none}
+#tnew:focus,.tconst:focus{outline:none}
 </style>
 </head>
 <body>
@@ -973,11 +973,14 @@ function skyMarkup(){if(!SKYG)return '';const f=n=>n.toFixed(1),X=915,by=SKYG.by
   const banner=`<g class="tbanner">${tail(-1)}${tail(1)}<path class="sbody" d="M${f(L)} ${f(y0)}Q${X} ${f(y0-16)} ${f(R)} ${f(y0)}L${f(R)} ${f(y1)}Q${X} ${f(y1-16)} ${f(L)} ${f(y1)}Z"/>
     <text class="ttitle" x="${X}" y="${f(ym+12)}" text-anchor="middle">The Graham &amp; Harper Family</text></g>`;
   const newest=`<g id="tnew" class="tnew" role="button" tabindex="0" transform="translate(${X} ${f(y1+34)})"><rect class="tnbg" x="-200" y="-19" width="400" height="34" rx="17"/><text class="tntext" text-anchor="middle" y="5"></text></g>`;
-  // a faint heart of stars in the sky beside the banner: the two families joined
-  const H=[[0,-.32],[-.38,-.72],[-.8,-.62],[-.9,-.16],[-.52,.3],[0,.74],[.52,.3],[.9,-.16],[.8,-.62],[.38,-.72]],cs=62,cx=L-150,cy=by+28;
-  const pts=H.map(([a,b])=>[cx+a*cs,cy+b*cs]),line=pts.map((p,i)=>(i?'L':'M')+f(p[0])+' '+f(p[1])).join('')+'Z';
-  const stars=pts.map((p,i)=>`<circle class="cs${i===2||i===8?' big':''}${i%3===1?' tw':''}" cx="${f(p[0])}" cy="${f(p[1])}" r="${i===2||i===8?4.4:i===5?3.6:2.8}" style="--dl:-${i*0.7}s"/>`).join('');
-  const con=`<g id="tconst" class="tconst" role="button" tabindex="0" aria-label="The family constellation"><circle cx="${f(cx)}" cy="${f(cy)}" r="${cs+22}" fill="transparent"/><path class="cl" d="${line}"/>${stars}</g>`;
+  // the family constellations: a G on one side of the banner and an H on the other
+  const letter=(segs,cx,cy,cs,id,lab)=>{const P=segs.map(sg=>sg.map(([a,b])=>[cx+a*cs,cy+b*cs]));const d=P.map(sg=>sg.map((p,i)=>(i?'L':'M')+f(p[0])+' '+f(p[1])).join('')).join('');
+    const seen=new Set(),st=[];P.flat().forEach(p=>{const k=f(p[0])+','+f(p[1]);if(!seen.has(k)){seen.add(k);st.push(p);}});
+    const stars=st.map((p,i)=>`<circle class="cs${i===0?' big':''}${i%3===1?' tw':''}" cx="${f(p[0])}" cy="${f(p[1])}" r="${i===0?5:i%2?3.4:4}" style="--dl:-${i*0.7}s"/>`).join('');
+    return `<g id="${id}" class="tconst" role="button" tabindex="0" aria-label="${lab}"><circle cx="${f(cx)}" cy="${f(cy)}" r="${cs+26}" fill="transparent"/><path class="cl" d="${d}"/>${stars}</g>`;};
+  const G=[[[.72,-.5],[.42,-.7],[.05,-.72],[-.3,-.55],[-.5,-.2],[-.5,.2],[-.3,.55],[.05,.72],[.42,.7],[.72,.45],[.74,.1],[.38,.1]]];
+  const Hh=[[[-.46,-.72],[-.46,-.36],[-.46,0],[-.46,.36],[-.46,.72]],[[.46,-.72],[.46,-.36],[.46,0],[.46,.36],[.46,.72]],[[-.46,0],[0,0],[.46,0]]];
+  const con=letter(G,L-150,by+14,78,'tconstG','The Graham constellation')+letter(Hh,R+150,by+14,78,'tconstH','The Harper constellation');
   return `<g id="tsky">${con}${banner}${newest}</g>`;}
 const ago=t=>{const s=(Date.now()-t)/1000;if(s<90)return 'just now';const m=s/60;if(m<60)return Math.round(m)+' minutes ago';const h=m/60;if(h<24)return Math.round(h)+(Math.round(h)===1?' hour ago':' hours ago');const d=h/24;if(d<7)return Math.round(d)+(Math.round(d)===1?' day ago':' days ago');
   return new Date(t).toLocaleDateString(undefined,{month:'short',day:'numeric'});};
@@ -992,7 +995,7 @@ function renderNewest(){const g=document.getElementById('tnew');if(!g)return;con
   show();clearInterval(newT);if(list.length>1)newT=setInterval(()=>{if(document.hidden||$('#tstage').classList.contains('moving'))return;newIdx++;show();},9000);}
 function openNewest(g){if(g.dataset.c)openMem(g);}
 function openConst(g){const b=g.getBoundingClientRect(),r=$('#tstage').getBoundingClientRect(),ch=STORY.find(c=>c.h==='Ed and Renee')||STORY[0];
-  showNote(`<div class="cnote"><div class="g1">The family constellation</div><p><b>${esc(ch.y?ch.y+' · ':'')}${esc(ch.h)}.</b> ${esc(ch.t)}</p><button class="pri" data-story>Read the whole story</button></div>`,b.left-r.left+b.width/2,b.bottom-r.top);
+  showNote(`<div class="cnote"><div class="g1">The ${g.id==='tconstH'?'Harper':'Graham'} stars</div><p><b>${esc(ch.y?ch.y+' · ':'')}${esc(ch.h)}.</b> ${esc(ch.t)}</p><button class="pri" data-story>Read the whole story</button></div>`,b.left-r.left+b.width/2,b.bottom-r.top);
   const sb=$('#mnote [data-story]');if(sb)sb.onclick=()=>{$('#mnote').hidden=true;startStory();};}
 function renderMemStars(){renderNewest();const box=$('#mstars');if(!box)return;const list=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]);
   const star=`<path d="M0-9L2 -2L9 0L2 2L0 9L-2 2L-9 0L-2-2Z"/>`;
@@ -1284,11 +1287,11 @@ function tZoom(f,cx,cy,fast){tTouched=1;hidePop();const r=tsz();cx??=r.w/2;cy??=
    if(pts.size===2&&pinch){const [a,b]=[...pts.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),r=pinchR||(pinchR=$('#tstage').getBoundingClientRect());tZoom(d/pinch,(a[0]+b[0])/2-r.left,(a[1]+b[1])/2-r.top,true);pinch=d;moved=99;return;}
    const dx=e.clientX-last[0],dy=e.clientY-last[1];moved+=Math.abs(dx)+Math.abs(dy);last=[e.clientX,e.clientY];if(moved<4)return;tv.x+=dx;tv.y+=dy;tTouched=1;gBegin();gFrame();});
  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(pts.size===1){last=[...pts.values()][0].slice();moved=99;}if(!pts.size){tsvg.classList.remove('drag');gEnd();}
-   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar');if(ms){openMem(ms);return;}const tn=hit?.closest('#tnew');if(tn){openNewest(tn);return;}const tc=hit?.closest('#tconst');if(tc){openConst(tc);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);if(e.pointerType!=='mouse'){showPop(c.dataset.id);popT=setTimeout(hidePop,2200);}}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
+   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar');if(ms){openMem(ms);return;}const tn=hit?.closest('#tnew');if(tn){openNewest(tn);return;}const tc=hit?.closest('.tconst');if(tc){openConst(tc);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);if(e.pointerType!=='mouse'){showPop(c.dataset.id);popT=setTimeout(hidePop,2200);}}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
  tsvg.addEventListener('pointerup',up);tsvg.addEventListener('pointercancel',up);
  tsvg.addEventListener('wheel',e=>{e.preventDefault();const r=$('#tstage').getBoundingClientRect();tZoom(e.deltaY<0?1.12:1/1.12,e.clientX-r.left,e.clientY-r.top);},{passive:false});
  tsvg.addEventListener('dblclick',e=>{const r=$('#tstage').getBoundingClientRect();tZoom(1.8,e.clientX-r.left,e.clientY-r.top);});
- tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const tn=e.target.closest?.('#tnew'),tc=e.target.closest?.('#tconst');if(tn||tc){e.preventDefault();tn?openNewest(tn):openConst(tc);return;}}const ms=e.target.closest?.('.tmstar');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
+ tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const tn=e.target.closest?.('#tnew'),tc=e.target.closest?.('.tconst');if(tn||tc){e.preventDefault();tn?openNewest(tn):openConst(tc);return;}}const ms=e.target.closest?.('.tmstar');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
 $('#tzin').onclick=()=>tZoom(1.3);$('#tzout').onclick=()=>tZoom(1/1.3);$('#tfit').onclick=()=>{tTouched=1;tFit();};
 $('#q').addEventListener('change',e=>{const v=e.target.value.toLowerCase().trim();const p=P.find(p=>p.n.toLowerCase()===v)||P.find(p=>p.n.toLowerCase().includes(v));if(p){select(p.id);tFocus(p.id);}});
 
