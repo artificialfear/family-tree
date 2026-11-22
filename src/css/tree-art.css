@@ -384,3 +384,6 @@ body.stagemode #tstage .hint{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 2
   #tworld .leaf.spot .lin,#tworld .leaf.spot .glow{animation:none!important}}
 /* the sign is its own layer so changes behind it never make it repaint */
 #marquee .mqsign,#marquee .mqnew{will-change:transform;transform:translateZ(0)}
+/* during the story the toolbar steps aside; the story card's Skip / Explore the tree brings it back */
+body.storyon.stagemode #tstage>.tools{display:none}
+body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}

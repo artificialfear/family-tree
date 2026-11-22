@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Toolbar steps aside during the story
+- While the story plays, the bottom buttons are hidden and the story card moves down to the stage edge, giving the tree more room. Skip or "Explore the tree" brings them back.
+
 ## 2026-11-22 — Story flicker found and fixed
 - The flash during the story was the hidden person-info panel briefly sliding across the screen each time a new chapter picked a person. It now stays hidden.
 

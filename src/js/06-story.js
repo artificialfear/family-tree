@@ -27,7 +27,7 @@ function runSpots(s){clearSpots();const spans=[...$('#cap').querySelectorAll('.m
   spans.forEach(x=>{const id=x.dataset.id;spotT.push(setTimeout(()=>{x.classList.add('lit');spotlight(id);},t));seen.add(id);t+=650;});
   const rest=(s.f||[]).filter(id=>!seen.has(id));
   if(rest.length)spotT.push(setTimeout(()=>rest.forEach(spotlight),t+150));}
-function startStory(){location.hash='tree';tTouched=1;si=0;tw.classList.add('story');requestAnimationFrame(()=>{$('#tstage').scrollIntoView({behavior:RM?'auto':'smooth',block:innerWidth<600?'start':'nearest'});showStep();});}
+function startStory(){location.hash='tree';tTouched=1;si=0;tw.classList.add('story');document.body.classList.add('storyon');requestAnimationFrame(()=>{$('#tstage').scrollIntoView({behavior:RM?'auto':'smooth',block:innerWidth<600?'start':'nearest'});showStep();});}
 let stepT=0;const PHONE=()=>$('#tstage').clientWidth<700;
 function showStep(){
   const s=STORY[si];storyFocus=s.f.length?s.f:null;
@@ -51,7 +51,7 @@ function showStep(){
   $('#sAuto').onclick=()=>{if(auto){clearInterval(auto);auto=null;}else{auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}showStep();};
 }
 function resetAuto(){if(auto){clearInterval(auto);auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}}
-function endStory(){clearTimeout(stepT);clearInterval(auto);auto=null;si=-1;setTimeout(showHint,900);clearSpots();storyFocus=null;tw.classList.remove('story');tw.querySelectorAll('.leaf.dim').forEach(c=>c.classList.remove('dim'));$('#cap').classList.remove('on');select('renee',1);setTimeout(()=>innerWidth<600?tFrame(TCORE):tFit(true),50);}
+function endStory(){document.body.classList.remove('storyon');clearTimeout(stepT);clearInterval(auto);auto=null;si=-1;setTimeout(showHint,900);clearSpots();storyFocus=null;tw.classList.remove('story');tw.querySelectorAll('.leaf.dim').forEach(c=>c.classList.remove('dim'));$('#cap').classList.remove('on');select('renee',1);setTimeout(()=>innerWidth<600?tFrame(TCORE):tFit(true),50);}
 addEventListener('keydown',e=>{if(si<0)return;if(e.key==='ArrowRight'&&si<STORY.length-1){si++;resetAuto();showStep();}else if(e.key==='ArrowLeft'&&si>0){si--;resetAuto();showStep();}else if(e.key==='Escape')endStory();});
 $('#storyBtn').onclick=$('#tStory').onclick=()=>{sfx.ctx();startMusic();startStory();};
 /* ---------- full screen tree ---------- */
