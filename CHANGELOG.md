@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-22 — The stage
+- The tree now stands on a little theater stage: red curtains with gold fringe, a painted backdrop with cut-out clouds and gold stars on strings, footlights along the bottom, gold-rimmed sun and moon, and engraved shading on the trunk and planet.
+- The family name is a lit marquee sign fixed at the top, with the newest memories just under it.
+- The tree always opens at night. The sky button still switches to sunset during a visit.
+- Simpler controls: the search box, zoom buttons and larger-text button are gone (pinch or scroll to zoom).
+
 ## 2026-11-22 — Worn paper name scrolls
 - Name scrolls and the family banner now look like old, worn paper: slightly rough, torn edges, aged colouring that darkens toward the edges, a faint stain here and there, and shaded ribbon ends that fold behind.
 - Fixed the dotted outline that showed around the scrolls when zoomed in.

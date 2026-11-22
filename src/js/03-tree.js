@@ -49,8 +49,8 @@ const TSTYLE=(new URLSearchParams(location.search).get('style'))||'ink';
 const PL_NAMES={covington:'Covington, GA',newborn:'Newborn, GA',greenville:'Meriwether County, GA',collegepark:'College Park, GA',upson:'Upson County, GA',louisville:'Louisville, KY',durham:'Durham, NC',orange:'Orange County, NC'};
 const SKYQ=new URLSearchParams(location.search).get('sky');
 // 'stage' = toy-theater look (painted backdrop, curtains, engraved tree); mockup behind ?theme=stage
-const THEME=new URLSearchParams(location.search).get('theme')||'classic',STAGE=THEME==='stage';
-let PRINT=false,SKYPREF=SKYQ||store.get('sky')||'auto',SKY='night',NIGHT=true;
+const THEME=new URLSearchParams(location.search).get('theme')||'stage',STAGE=THEME==='stage';
+let PRINT=false,SKYPREF=SKYQ||'night',SKY='night',NIGHT=true;
 function autoSky(){const d=new Date(),h=d.getHours()+d.getMinutes()/60;return h>=7.5&&h<17?'day':((h>=17&&h<18.75)||(h>=6&&h<7.5))?'dusk':'night';}
 const skyNow=()=>SKYPREF==='auto'?autoSky():SKYPREF;
 SKY=skyNow();NIGHT=true;
@@ -74,7 +74,6 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
  st.prepend(sky);sky.after(back);st.querySelector('svg').after(front);front.after(cel);st.appendChild(note);
  if(STAGE){st.classList.add('theme-stage');const bd=document.createElement('div');bd.className='sbackdrop';sky.appendChild(bd);
    const pr=document.createElement('div');pr.id='proscen';pr.setAttribute('aria-hidden','true');cel.after(pr);
-   $('#moonBtn').innerHTML=faceSVG('moon');$('#sunBtn').innerHTML=faceSVG('sun');$('#sunBtn').setAttribute('aria-label','The setting sun: a note for Mom');
    const mq=document.createElement('div');mq.id='marquee';mq.innerHTML=marqueeSVG();pr.after(mq);
    mq.addEventListener('click',e=>{const g=e.target.closest('#tnew');if(g)openNewest(g);});
    mq.addEventListener('keydown',e=>{const g=e.target.closest('#tnew');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openNewest(g);}});
@@ -109,7 +108,7 @@ function marqueeSVG(){const f=n=>n.toFixed(1);let bulbs='';
    <path d="M30 56Q260 12 490 56L492 144L28 144Z" fill="url(#mqb)" stroke="#f5e6c0" stroke-width="2"/>
    <g clip-path="url(#mqc)" fill="#5a86e6" opacity=".22">${rays}</g>
    <text x="260" y="58" text-anchor="middle" class="mqsmall">THE</text>
-   <text x="260" y="104" text-anchor="middle" class="mqbig">GRAHAM &amp; HARPER</text>
+   <text x="260" y="102" text-anchor="middle" class="mqbig" textLength="384" lengthAdjust="spacingAndGlyphs">GRAHAM &amp; HARPER</text>
    <g transform="translate(260 124)"><path d="M-62 -13H62L70 0L62 13H-62L-70 0Z" fill="#b3262c" stroke="#f5e6c0" stroke-width="1.6"/><text y="6" text-anchor="middle" class="mqplaque">FAMILY</text></g>
    <g class="mqbulbs">${bulbs}</g></svg>
    <svg class="mqnew" viewBox="-300 -20 600 40"><g id="tnew" class="tnew" role="button" tabindex="0"><rect class="tnbg" x="-200" y="-17" width="400" height="32" rx="16"/><text class="tntext" text-anchor="middle" y="5"></text></g></svg>`;}
