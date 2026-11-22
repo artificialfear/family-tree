@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-21 — New background music
+- New background song. It starts right away (no silent gap), plays its opening once, then loops smoothly without the ending fade-out.
+
 ## 2026-11-21 — Voice memories and safer posting
 - Record a voice memory (up to 2 minutes) when sharing a story; typing is optional when there's a recording. Music pauses while recording and fades down during playback.
 - Voice memories play from the person's card and from memory stars on the tree.

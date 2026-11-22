@@ -1213,7 +1213,7 @@ $('#posterBtn').onclick=async()=>{await buildPoster();setTimeout(()=>{try{print(
 /* sound effects removed — every call below is a no-op */
 const sfx={chime(){},page(){},bloom(){},ctx(){}};
 /* ---------- music (Web Audio, gapless loop) ---------- */
-const LOOP_SAMPLES=4780696,LOOP_RATE=44100;   // exact loop length of music.mp3
+const LOOP_START=803636,LOOP_END=4914827,LOOP_RATE=44100;   // music.mp3: intro plays once, then loops START..END (samples after the first sound)
 let trackUrl=null,trackName='',mctx=null,mgain=null,msrc=null,mbuf=null,mbufUrl=null,mState='stopped',mLoading=null;
 const vol=()=>+$('#mVol').value;
 function musicUi(){const b=$('#mPlay'),t=$('#tMusic');if(!trackUrl){b.textContent='♪ Music coming soon';b.disabled=t.disabled=true;$('#mVol').style.display='none';$('#mLbl').textContent='';return;}
@@ -1237,10 +1237,10 @@ async function startMusic(){
     // find where the music actually starts in the decoded buffer (decoders can add a few silent samples)
     const d=buf.getChannelData(0);let i0=0;while(i0<d.length&&Math.abs(d[i0])<1e-4)i0++;
     const ours=trackUrl==='music.mp3';
-    const ls=ours?i0/buf.sampleRate:0,le=ours?Math.min(buf.duration,ls+LOOP_SAMPLES/LOOP_RATE):buf.duration;
+    const st=i0/buf.sampleRate,ls=ours?st+LOOP_START/LOOP_RATE:0,le=ours?Math.min(buf.duration,st+LOOP_END/LOOP_RATE):buf.duration;
     msrc=mctx.createBufferSource();msrc.buffer=buf;msrc.loop=true;msrc.loopStart=ls;msrc.loopEnd=le;msrc.connect(mgain);
     mgain.gain.cancelScheduledValues(mctx.currentTime);mgain.gain.setValueAtTime(0,mctx.currentTime);
-    msrc.start(0,ls);mState='playing';fadeTo(vol(),4);
+    msrc.start(0,ours?st:0);mState='playing';fadeTo(vol(),4);
   }catch(e){mState='stopped';}
   mLoading=null;musicUi();
 }

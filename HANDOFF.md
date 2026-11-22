@@ -11,7 +11,7 @@ A Thanksgiving 2026 gift for Mat's mom, Renee. Interactive illustrated family tr
   - `src/mapdata.json` — map shapes (fills `__MAP__`). `src/api.txt` — Apps Script `/exec` URL (fills `__API__`; empty = memories off).
 - `python3 build.py` rebuilds `index.html`. Run it after every change and commit the result. `--api URL --out FILE` builds a variant (tests use this).
 - `photos/` — portraits (`p-<id>.jpg`), gallery photos, `drift/` cover photos, `qr.png` (points at the live site).
-- `music.mp3` — gapless background loop (loop length is hard-coded in the page: 4,780,696 samples @ 44.1 kHz).
+- `music.mp3` — background music (new track 2026-11-21, leading silence trimmed, fade-out ending removed). Plays an 18.2 s intro once, then loops samples 803,636–4,914,827 (93.2 s) counted from the first sound; `LOOP_START`/`LOOP_END` in `src/js/05-music.js`. The song has no exact repeat, so the loop point was chosen where harmony and texture match (≈18.6 s ↔ 111.8 s in the original) and a 2 s equal-power crossfade is baked into the file before the loop end, plus 2 s of post-loop audio as a safety tail.
 - The old claude.ai artifact copy is retired; GitHub is the only source.
 
 ## Shared memories backend
