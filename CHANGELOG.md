@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Paper-cut sun
+- At sunset the sun is now a gold paper-cut sun with pointed rays, hanging on two strings from behind the curtain — a matching prop to the paper moon. Tap it for the note for Mom.
+
 ## 2026-11-22 — Velvet pennant title
 - The title now hangs as a purple velvet pennant from a gold rod — gold lettering, a scatter of tiny stars, a zigzag hem with gold tassels — matching the curtains.
 

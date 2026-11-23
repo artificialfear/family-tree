@@ -320,8 +320,10 @@ footer{height:80px}
 #marquee .mqnew{width:100%;margin-top:4px}#marquee #tnew{pointer-events:auto}
 .theme-stage #celest .moon{top:24%;right:8%;width:clamp(90px,9.5vw,140px);border-radius:0;overflow:visible;filter:drop-shadow(0 0 16px rgba(255,214,120,.35))}
 .theme-stage #celest .moon svg{overflow:visible}
-.theme-stage #celest .sun{top:26%;right:10%}
-@media(max-width:600px){.theme-stage #celest .moon{top:calc(var(--mqb,240px) + 14px);right:9%;width:58px}.theme-stage #celest .sun{top:calc(var(--mqb,240px) + 8px);right:10%}}
+.theme-stage #celest .sun{top:22%;right:8%;width:clamp(90px,9.5vw,140px);height:auto;aspect-ratio:1;background:none;animation:none;overflow:visible;filter:drop-shadow(0 0 18px rgba(255,200,110,.45))}
+.theme-stage #celest .sun::before,.theme-stage #celest .sun::after{display:none}
+.theme-stage #celest .sun svg{width:100%;height:100%;display:block;overflow:visible}
+@media(max-width:600px){.theme-stage #celest .moon{top:calc(var(--mqb,240px) + 14px);right:9%;width:58px}.theme-stage #celest .sun{top:calc(var(--mqb,240px) + 18px);right:9%;width:62px}}
 
 /* ---------- opening screen as a closed stage curtain (stage theme) ---------- */
 .cover.curtain{background:none;overflow:hidden}
@@ -399,3 +401,4 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .cpurple .cover.curtain .cpanel{box-shadow:inset 0 0 60px rgba(10,0,30,.6)}
 .cpurple .cover.curtain .veil{background:radial-gradient(60% 55% at 50% 50%,rgba(16,6,40,.75) 0%,rgba(16,6,40,.35) 60%,rgba(16,6,40,0) 100%)}
 #marquee .mqsign{overflow:visible}
+.theme-stage .sky .sunset{display:none!important}
