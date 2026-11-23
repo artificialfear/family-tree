@@ -1,13 +1,9 @@
 /* ---------- tree art styles ---------- */
 #tworld .br.t,#poster .br.t{fill:var(--bk,var(--bark));stroke:none}
 #tworld .root,#poster .root{fill:var(--bk,var(--bark))}
-.stage.ts-water{--bk:#7a5c3e;background:radial-gradient(120% 70% at 50% 25%,#fbf6ea 0%,#f3ead8 60%,#eadfc8 100%)}
-.ts-water .leaf .halo{fill:#fffaf0}.ts-water .leaf .lname{fill:#3b3024;stroke:#f7f0e1}
 .ts-ink{--bk:#3b2a1a}.stage.ts-ink,#poster.ts-ink{background:#ecdfc2}
 .ts-ink .leaf .halo{fill:#fbf5e6;stroke:#3b2a1a;stroke-width:1.2}.ts-ink .leaf .lname{fill:#2e2114;stroke:#f3e9d2;font-style:italic}
 .ts-ink .leaf .ini{fill:#efe4c9}.ts-ink .leaf .init{fill:#3b2a1a}
-.stage.ts-paper{--bk:#8a6340;background:linear-gradient(#dcebf2 0%,#eef4ef 55%,#f4f1e6 100%)}
-.ts-paper .leaf .halo{fill:#fff;filter:url(#pshadow)}.ts-paper .leaf .lname{fill:#22301f;stroke:#fff;font-family:"Work Sans",sans-serif;font-weight:600}
 #tworld.story .art,#tworld.story .root{opacity:.45}#tworld.morph .art,#tworld.morph .root{opacity:0}
 .art,.root{transition:opacity .45s}
 /* dragging the tree should never select text */
@@ -158,13 +154,11 @@
 .pop span{display:inline-block;margin-top:8px;background:var(--bg);color:var(--ink);padding:4px 12px;border-radius:999px;font:600 15px Spectral,serif;box-shadow:0 4px 14px rgba(0,0,0,.15)}
 @media(max-width:600px){.pop img{width:132px;height:132px}}
 @keyframes facein{to{opacity:1;transform:none}}
-.cover.morphing .leaf .branches{opacity:0}
 .specks{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .specks i{position:absolute;bottom:-12px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px rgba(243,217,184,.6);animation:speckrise var(--t) linear infinite;animation-delay:var(--dl)}
 @keyframes speckrise{0%{transform:translate(0,0);opacity:0}10%{opacity:var(--o)}50%{transform:translate(var(--sx),-55vh)}90%{opacity:var(--o)}100%{transform:translate(calc(var(--sx)*-.4),-112vh);opacity:0}}
 #world.morph .edge,#world.morph .card{opacity:0}
 #world.growc .card .in{animation:pop .6s cubic-bezier(.2,.8,.3,1.2) both;animation-delay:calc(var(--d)*.45)}
-.morphfx{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:35;pointer-events:none;transition:opacity .45s ease;overflow:visible}
 .cover .ded{font-family:Spectral,serif;font-style:italic;color:var(--gold);font-size:clamp(20px,3vw,28px)}
 .cover p{max-width:46ch;margin:0 auto 26px;color:#cfe0d4}
 .cover .go{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
@@ -228,23 +222,14 @@ footer{height:80px}
 @media(prefers-reduced-motion:reduce){#tworld .leaf.spot .lin,#tworld .leaf.spot .glow{animation:none!important}body.tfull #panel{transition:none}.leaf .fz,.pop{transition:none!important}.drift .track{animation:none!important}.specks{display:none}.leaf .face{animation:none;opacity:1;transform:none}.grow .card .in,.grow .edge,.leaf path,.cap.on,.cover.out,aside.panel.fresh{animation:none!important;stroke-dashoffset:0}.cover.out{display:none}}
 
 /* ---------- parchment style (?style=parch) ---------- */
-.stage.ts-parch{--bk:#4b3020;background:
-  radial-gradient(130% 95% at 50% 45%,rgba(0,0,0,0) 55%,rgba(92,58,24,.38) 100%),
-  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .24 0 0 0 0 .12 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E"),
-  radial-gradient(90% 70% at 50% 42%,#f3e6c8 0%,#e9d6ae 55%,#d6b985 100%)}
-.stage.ts-parch .wlayer{display:block;position:absolute;left:0;top:0;width:1px;height:1px;transform-origin:0 0;pointer-events:none}
-.stage.ts-parch .leaf .halo{fill:#f4e8cb;stroke:#4b3020;stroke-width:2}
-.stage.ts-parch .leaf .glow{display:none}
-.stage.ts-parch .leaf .ini{fill:#efe0bd}.stage.ts-parch .leaf .init{fill:#4b3020}
-.stage.tp .scroll .sbody,#poster .scroll .sbody,#tsky .sbody{fill:#ecdab0;fill:url(#scrollG);stroke:rgba(92,58,28,.55);stroke-width:.8}
-.stage.tp .scroll .stail,#poster .scroll .stail,#tsky .stail{fill:#bf9d66;fill:url(#scrollT);stroke:rgba(92,58,28,.55);stroke-width:.8}
-.scroll path,#tsky path{stroke-dasharray:none;stroke-dashoffset:0;animation:none;stroke-linejoin:round}
-.scroll .sfold,#tsky .sfold{fill:#6e4a26;opacity:.4;stroke:none}
-.scroll .sshadow,#tsky .sshadow{fill:#24140a;opacity:.28;stroke:none}
-.scroll .sburn,#tsky .sburn{fill:url(#scrollBurn);stroke:none;pointer-events:none}
-.scroll .sstain,#tsky .sstain{fill:#8a5f30;opacity:.08}
+.stage.tp .scroll .sbody,#poster .scroll .sbody{fill:#ecdab0;fill:url(#scrollG);stroke:rgba(92,58,28,.55);stroke-width:.8}
+.stage.tp .scroll .stail,#poster .scroll .stail{fill:#bf9d66;fill:url(#scrollT);stroke:rgba(92,58,28,.55);stroke-width:.8}
+.scroll path{stroke-dasharray:none;stroke-dashoffset:0;animation:none;stroke-linejoin:round}
+.scroll .sfold{fill:#6e4a26;opacity:.4;stroke:none}
+.scroll .sshadow{fill:#24140a;opacity:.28;stroke:none}
+.scroll .sburn{fill:url(#scrollBurn);stroke:none;pointer-events:none}
+.scroll .sstain{fill:#8a5f30;opacity:.08}
 #poster .scroll .sburn,#poster .scroll .sshadow{display:none}
-.stage.ts-parch .leaf .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
 #tworld.tgrow .leaf .scroll{animation:fadeup .7s ease both;animation-delay:calc(var(--d) + 280ms)}
 .stage.tp .leaf .lname,.stage.night.tp .leaf .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
 .stage.tp .leaf .halo,.stage.night.tp .leaf .halo{fill:#f4e8cb;stroke:#4b3020;stroke-width:2}
@@ -265,22 +250,12 @@ footer{height:80px}
 #tstage.intro.growing #tback{opacity:1}
 #tstage.growing #tbackimg{transition:none;animation:none}
 /* sky above the tree */
-#tsky .ttitle{font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600;font-size:38px;fill:#3a2516;letter-spacing:.3px}
-#tsky .tbanner{filter:drop-shadow(0 3px 6px rgba(20,10,30,.35))}
 .tnew{cursor:pointer;transition:opacity .45s}.tnew.fade{opacity:0}
 .tnew .tnbg{fill:rgba(22,16,36,.55);stroke:rgba(255,236,200,.25);stroke-width:1}
 .tnew .tntext{font-family:Spectral,Georgia,serif;font-style:italic;font-size:19px;fill:#fbefd6}
-.tnew:focus-visible .tnbg,.tconst:focus-visible .cl{stroke:var(--gold);stroke-width:2.5}
-.tconst{cursor:pointer}.tconst .cl{fill:none;stroke:rgba(255,240,210,.42);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
-.tconst .cs{fill:#fff6dc;filter:drop-shadow(0 0 3px rgba(255,236,190,.9))}.tconst .cs.big{fill:#fffaf0}
-.tconst .cs.tw{animation:ctw 3.6s ease-in-out infinite;animation-delay:var(--dl)}@keyframes ctw{0%,100%{opacity:1}50%{opacity:.35}}
-.tconst:hover .cl{stroke:rgba(255,240,210,.6)}
-.stage.moving .tconst .cs.tw{animation-play-state:paused}
-#tworld.pre #tsky{opacity:0;transition:none}#tworld.tgrow #tsky{animation:fadeup 1s ease both;animation-delay:1.9s}
-#tworld.story #tsky{opacity:.3;transition:opacity .6s}
+.tnew:focus-visible .tnbg{stroke:var(--gold);stroke-width:2.5}
 #mnote .cnote .g1{font-family:Spectral,Georgia,serif;font-style:italic;font-size:1.15rem;margin-bottom:.3rem}#mnote .cnote p{margin:.2rem 0 .6rem}
-@media(prefers-reduced-motion:reduce){.tconst .cs.tw{animation:none}}
-#tnew:focus,.tconst:focus{outline:none}
+#tnew:focus{outline:none}
 
 /* ---------- toy-theater stage theme (?theme=stage) ---------- */
 #proscen{display:none}
@@ -432,3 +407,10 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .theme-stage.hoisted .sbackdrop .hstar,.theme-stage.hoisted .sbackdrop .hcloud,.theme-stage.hoisted #celest .moon,.theme-stage.hoisted #celest .sun{transform:translateY(-110vh)}
 .theme-stage.lowering.sky-night .sbackdrop .hstar,.theme-stage.lowering.sky-day .sbackdrop .hcloud{transition-delay:calc(.6s + var(--i)*110ms)}
 .theme-stage.lowering.sky-night #celest .moon,.theme-stage.lowering.sky-day #celest .sun{transition-delay:.9s,.9s}
+/* phones: a slimmer story card so more of the tree shows; long chapters scroll inside the card */
+@media(max-width:600px){body.stagemode #tstage .cap{padding:12px 14px 10px;left:8px;right:8px}
+  body.stagemode .cap .yr{font-size:22px}body.stagemode .cap h3{font-size:19px;margin:2px 0 6px}
+  body.stagemode .cap .ph{margin:0 0 6px;gap:6px}body.stagemode .cap .ph img{width:44px;height:44px;border-width:2px}
+  body.stagemode .cap p{font-size:15px;line-height:1.45;margin:0 0 10px;max-height:22vh;overflow:auto;-webkit-overflow-scrolling:touch}
+  body.stagemode .cap .ctl{gap:6px}body.stagemode .cap .ctl button{min-height:40px;padding:6px 13px;font-size:15px}
+  body.stagemode .cap .step{font-size:13px}body.stagemode .cap .dots{margin-bottom:4px}}

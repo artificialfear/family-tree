@@ -186,13 +186,9 @@ body.tfull:not(.pdrawer) aside.panel.fresh{animation:none}
 /* ---------- tree art styles ---------- */
 #tworld .br.t,#poster .br.t{fill:var(--bk,var(--bark));stroke:none}
 #tworld .root,#poster .root{fill:var(--bk,var(--bark))}
-.stage.ts-water{--bk:#7a5c3e;background:radial-gradient(120% 70% at 50% 25%,#fbf6ea 0%,#f3ead8 60%,#eadfc8 100%)}
-.ts-water .leaf .halo{fill:#fffaf0}.ts-water .leaf .lname{fill:#3b3024;stroke:#f7f0e1}
 .ts-ink{--bk:#3b2a1a}.stage.ts-ink,#poster.ts-ink{background:#ecdfc2}
 .ts-ink .leaf .halo{fill:#fbf5e6;stroke:#3b2a1a;stroke-width:1.2}.ts-ink .leaf .lname{fill:#2e2114;stroke:#f3e9d2;font-style:italic}
 .ts-ink .leaf .ini{fill:#efe4c9}.ts-ink .leaf .init{fill:#3b2a1a}
-.stage.ts-paper{--bk:#8a6340;background:linear-gradient(#dcebf2 0%,#eef4ef 55%,#f4f1e6 100%)}
-.ts-paper .leaf .halo{fill:#fff;filter:url(#pshadow)}.ts-paper .leaf .lname{fill:#22301f;stroke:#fff;font-family:"Work Sans",sans-serif;font-weight:600}
 #tworld.story .art,#tworld.story .root{opacity:.45}#tworld.morph .art,#tworld.morph .root{opacity:0}
 .art,.root{transition:opacity .45s}
 /* dragging the tree should never select text */
@@ -343,13 +339,11 @@ body.tfull:not(.pdrawer) aside.panel.fresh{animation:none}
 .pop span{display:inline-block;margin-top:8px;background:var(--bg);color:var(--ink);padding:4px 12px;border-radius:999px;font:600 15px Spectral,serif;box-shadow:0 4px 14px rgba(0,0,0,.15)}
 @media(max-width:600px){.pop img{width:132px;height:132px}}
 @keyframes facein{to{opacity:1;transform:none}}
-.cover.morphing .leaf .branches{opacity:0}
 .specks{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .specks i{position:absolute;bottom:-12px;border-radius:50%;background:var(--gold);box-shadow:0 0 6px rgba(243,217,184,.6);animation:speckrise var(--t) linear infinite;animation-delay:var(--dl)}
 @keyframes speckrise{0%{transform:translate(0,0);opacity:0}10%{opacity:var(--o)}50%{transform:translate(var(--sx),-55vh)}90%{opacity:var(--o)}100%{transform:translate(calc(var(--sx)*-.4),-112vh);opacity:0}}
 #world.morph .edge,#world.morph .card{opacity:0}
 #world.growc .card .in{animation:pop .6s cubic-bezier(.2,.8,.3,1.2) both;animation-delay:calc(var(--d)*.45)}
-.morphfx{position:fixed;left:0;top:0;width:100vw;height:100vh;z-index:35;pointer-events:none;transition:opacity .45s ease;overflow:visible}
 .cover .ded{font-family:Spectral,serif;font-style:italic;color:var(--gold);font-size:clamp(20px,3vw,28px)}
 .cover p{max-width:46ch;margin:0 auto 26px;color:#cfe0d4}
 .cover .go{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
@@ -413,23 +407,14 @@ footer{height:80px}
 @media(prefers-reduced-motion:reduce){#tworld .leaf.spot .lin,#tworld .leaf.spot .glow{animation:none!important}body.tfull #panel{transition:none}.leaf .fz,.pop{transition:none!important}.drift .track{animation:none!important}.specks{display:none}.leaf .face{animation:none;opacity:1;transform:none}.grow .card .in,.grow .edge,.leaf path,.cap.on,.cover.out,aside.panel.fresh{animation:none!important;stroke-dashoffset:0}.cover.out{display:none}}
 
 /* ---------- parchment style (?style=parch) ---------- */
-.stage.ts-parch{--bk:#4b3020;background:
-  radial-gradient(130% 95% at 50% 45%,rgba(0,0,0,0) 55%,rgba(92,58,24,.38) 100%),
-  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .24 0 0 0 0 .12 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E"),
-  radial-gradient(90% 70% at 50% 42%,#f3e6c8 0%,#e9d6ae 55%,#d6b985 100%)}
-.stage.ts-parch .wlayer{display:block;position:absolute;left:0;top:0;width:1px;height:1px;transform-origin:0 0;pointer-events:none}
-.stage.ts-parch .leaf .halo{fill:#f4e8cb;stroke:#4b3020;stroke-width:2}
-.stage.ts-parch .leaf .glow{display:none}
-.stage.ts-parch .leaf .ini{fill:#efe0bd}.stage.ts-parch .leaf .init{fill:#4b3020}
-.stage.tp .scroll .sbody,#poster .scroll .sbody,#tsky .sbody{fill:#ecdab0;fill:url(#scrollG);stroke:rgba(92,58,28,.55);stroke-width:.8}
-.stage.tp .scroll .stail,#poster .scroll .stail,#tsky .stail{fill:#bf9d66;fill:url(#scrollT);stroke:rgba(92,58,28,.55);stroke-width:.8}
-.scroll path,#tsky path{stroke-dasharray:none;stroke-dashoffset:0;animation:none;stroke-linejoin:round}
-.scroll .sfold,#tsky .sfold{fill:#6e4a26;opacity:.4;stroke:none}
-.scroll .sshadow,#tsky .sshadow{fill:#24140a;opacity:.28;stroke:none}
-.scroll .sburn,#tsky .sburn{fill:url(#scrollBurn);stroke:none;pointer-events:none}
-.scroll .sstain,#tsky .sstain{fill:#8a5f30;opacity:.08}
+.stage.tp .scroll .sbody,#poster .scroll .sbody{fill:#ecdab0;fill:url(#scrollG);stroke:rgba(92,58,28,.55);stroke-width:.8}
+.stage.tp .scroll .stail,#poster .scroll .stail{fill:#bf9d66;fill:url(#scrollT);stroke:rgba(92,58,28,.55);stroke-width:.8}
+.scroll path{stroke-dasharray:none;stroke-dashoffset:0;animation:none;stroke-linejoin:round}
+.scroll .sfold{fill:#6e4a26;opacity:.4;stroke:none}
+.scroll .sshadow{fill:#24140a;opacity:.28;stroke:none}
+.scroll .sburn{fill:url(#scrollBurn);stroke:none;pointer-events:none}
+.scroll .sstain{fill:#8a5f30;opacity:.08}
 #poster .scroll .sburn,#poster .scroll .sshadow{display:none}
-.stage.ts-parch .leaf .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
 #tworld.tgrow .leaf .scroll{animation:fadeup .7s ease both;animation-delay:calc(var(--d) + 280ms)}
 .stage.tp .leaf .lname,.stage.night.tp .leaf .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
 .stage.tp .leaf .halo,.stage.night.tp .leaf .halo{fill:#f4e8cb;stroke:#4b3020;stroke-width:2}
@@ -450,22 +435,12 @@ footer{height:80px}
 #tstage.intro.growing #tback{opacity:1}
 #tstage.growing #tbackimg{transition:none;animation:none}
 /* sky above the tree */
-#tsky .ttitle{font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600;font-size:38px;fill:#3a2516;letter-spacing:.3px}
-#tsky .tbanner{filter:drop-shadow(0 3px 6px rgba(20,10,30,.35))}
 .tnew{cursor:pointer;transition:opacity .45s}.tnew.fade{opacity:0}
 .tnew .tnbg{fill:rgba(22,16,36,.55);stroke:rgba(255,236,200,.25);stroke-width:1}
 .tnew .tntext{font-family:Spectral,Georgia,serif;font-style:italic;font-size:19px;fill:#fbefd6}
-.tnew:focus-visible .tnbg,.tconst:focus-visible .cl{stroke:var(--gold);stroke-width:2.5}
-.tconst{cursor:pointer}.tconst .cl{fill:none;stroke:rgba(255,240,210,.42);stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
-.tconst .cs{fill:#fff6dc;filter:drop-shadow(0 0 3px rgba(255,236,190,.9))}.tconst .cs.big{fill:#fffaf0}
-.tconst .cs.tw{animation:ctw 3.6s ease-in-out infinite;animation-delay:var(--dl)}@keyframes ctw{0%,100%{opacity:1}50%{opacity:.35}}
-.tconst:hover .cl{stroke:rgba(255,240,210,.6)}
-.stage.moving .tconst .cs.tw{animation-play-state:paused}
-#tworld.pre #tsky{opacity:0;transition:none}#tworld.tgrow #tsky{animation:fadeup 1s ease both;animation-delay:1.9s}
-#tworld.story #tsky{opacity:.3;transition:opacity .6s}
+.tnew:focus-visible .tnbg{stroke:var(--gold);stroke-width:2.5}
 #mnote .cnote .g1{font-family:Spectral,Georgia,serif;font-style:italic;font-size:1.15rem;margin-bottom:.3rem}#mnote .cnote p{margin:.2rem 0 .6rem}
-@media(prefers-reduced-motion:reduce){.tconst .cs.tw{animation:none}}
-#tnew:focus,.tconst:focus{outline:none}
+#tnew:focus{outline:none}
 
 /* ---------- toy-theater stage theme (?theme=stage) ---------- */
 #proscen{display:none}
@@ -617,6 +592,13 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .theme-stage.hoisted .sbackdrop .hstar,.theme-stage.hoisted .sbackdrop .hcloud,.theme-stage.hoisted #celest .moon,.theme-stage.hoisted #celest .sun{transform:translateY(-110vh)}
 .theme-stage.lowering.sky-night .sbackdrop .hstar,.theme-stage.lowering.sky-day .sbackdrop .hcloud{transition-delay:calc(.6s + var(--i)*110ms)}
 .theme-stage.lowering.sky-night #celest .moon,.theme-stage.lowering.sky-day #celest .sun{transition-delay:.9s,.9s}
+/* phones: a slimmer story card so more of the tree shows; long chapters scroll inside the card */
+@media(max-width:600px){body.stagemode #tstage .cap{padding:12px 14px 10px;left:8px;right:8px}
+  body.stagemode .cap .yr{font-size:22px}body.stagemode .cap h3{font-size:19px;margin:2px 0 6px}
+  body.stagemode .cap .ph{margin:0 0 6px;gap:6px}body.stagemode .cap .ph img{width:44px;height:44px;border-width:2px}
+  body.stagemode .cap p{font-size:15px;line-height:1.45;margin:0 0 10px;max-height:22vh;overflow:auto;-webkit-overflow-scrolling:touch}
+  body.stagemode .cap .ctl{gap:6px}body.stagemode .cap .ctl button{min-height:40px;padding:6px 13px;font-size:15px}
+  body.stagemode .cap .step{font-size:13px}body.stagemode .cap .dots{margin-bottom:4px}}
 </style>
 </head>
 <body>
@@ -1076,17 +1058,17 @@ function tLayout(){
   return {pos,br};
 }
 function qpt(b,t){const u=1-t;return [u*u*b.x1+2*u*t*b.cx+t*t*b.x2,u*u*b.y1+2*u*t*b.cy+t*t*b.y2];}
-const TSTYLE=(new URLSearchParams(location.search).get('style'))||'ink';
+const TSTYLE='ink';
 const PL_NAMES={covington:'Covington, GA',newborn:'Newborn, GA',greenville:'Meriwether County, GA',collegepark:'College Park, GA',upson:'Upson County, GA',louisville:'Louisville, KY',durham:'Durham, NC',orange:'Orange County, NC'};
 const SKYQ=new URLSearchParams(location.search).get('sky');
 // 'stage' = toy-theater look (painted backdrop, curtains, engraved tree); mockup behind ?theme=stage
-const PURP=new URLSearchParams(location.search).get('curtain')!=='red';if(PURP)document.documentElement.classList.add('cpurple');
-const THEME=new URLSearchParams(location.search).get('theme')||'stage',STAGE=THEME==='stage';
+const PURP=true;document.documentElement.classList.add('cpurple');
+const STAGE=true;
 let PRINT=false,SKYPREF=SKYQ||'night',SKY='night',NIGHT=true;
 function autoSky(){const d=new Date(),h=d.getHours()+d.getMinutes()/60;return h>=7.5&&h<17?'day':((h>=17&&h<18.75)||(h>=6&&h<7.5))?'dusk':'night';}
 const skyNow=()=>SKYPREF==='auto'?autoSky():SKYPREF;
 SKY=skyNow();NIGHT=true;
-$('#tstage').classList.add('ts-'+TSTYLE);if(((new URLSearchParams(location.search).get('tree')||'painted')==='painted'&&TSTYLE==='ink')||TSTYLE==='parch')$('#tstage').classList.add('tp');
+$('#tstage').classList.add('ts-ink','tp');
 /* moon phase for today's date (0 = new moon, .5 = full) */
 function moonPhase(d){const syn=29.530588853,ref=Date.UTC(2000,0,6,18,14);let p=((d-ref)/864e5/syn)%1;return p<0?p+1:p;}
 function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wax?(k>0?0:1):(k>0?1:0),rx=Math.abs(k)*R;
@@ -1113,18 +1095,6 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
    const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;const tb=st.querySelector('.tools'),D=stageDims(r.width,r.height);$('#marquee').style.top=(r.width<700?4:6)+'px';if(r.width<700){const mb=$('#marquee').getBoundingClientRect().bottom-r.top;st.style.setProperty('--mqb',mb+'px');}st.style.setProperty('--apron',D.ah+'px');if(tb)st.style.setProperty('--tbh',tb.offsetHeight+'px');bd.innerHTML=stageBackdrop(r.width,r.height,$('#marquee').getBoundingClientRect().bottom-r.top);pr.innerHTML=stageFrame(r.width,r.height);};
    draw();let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(()=>{draw();if(!tTouched)tStart();},120);}).observe(st);}}
 /* the moon and sun as friendly faces, gold-rimmed like an old stage sign (original drawings) */
-function faceSVG(kind){const sun=kind==='sun';let rays='';
-  if(sun)for(let i=0;i<16;i++){const a=i*22.5,l=i%2?58:66;rays+=`<path transform="rotate(${a})" d="M-7 -40Q0 ${-l-6} 7 -40Z" fill="url(#fr${kind})" stroke="#8f5f1b" stroke-width="1.2"/>`;}
-  return `<svg viewBox="-70 -70 140 140" aria-hidden="true"><defs><radialGradient id="ff${kind}" cx="40%" cy="35%" r="70%"><stop offset="0" stop-color="${sun?'#fff1a8':'#fff6c8'}"/><stop offset=".6" stop-color="${sun?'#f7c84a':'#f2d26a'}"/><stop offset="1" stop-color="${sun?'#d98a1f':'#c99a2e'}"/></radialGradient>
-   <linearGradient id="fr${kind}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#e09a2a"/></linearGradient></defs>${rays}
-   <circle r="46" fill="#8f5f1b"/><circle r="43" fill="#e8b84f"/><circle r="39" fill="url(#ff${kind})" stroke="#9c6a1e" stroke-width="1.5"/>
-   ${sun?'':'<g fill="#c99a2e" opacity=".35"><circle cx="-22" cy="-20" r="5"/><circle cx="24" cy="18" r="4"/><circle cx="-26" cy="16" r="3"/><circle cx="12" cy="-28" r="3"/></g>'}
-   <ellipse cx="-18" cy="10" rx="8" ry="5" fill="#f08a7a" opacity=".55"/><ellipse cx="18" cy="10" rx="8" ry="5" fill="#f08a7a" opacity=".55"/>
-   <path d="M-23 -9Q-15 -15 -7 -9" fill="none" stroke="#6b3d10" stroke-width="2.6" stroke-linecap="round"/>
-   ${sun?'<path d="M7 -9Q15 -15 23 -9" fill="none" stroke="#6b3d10" stroke-width="2.6" stroke-linecap="round"/>':'<ellipse cx="15" cy="-8" rx="6" ry="7" fill="#fff"/><circle cx="16" cy="-7" r="3.6" fill="#3a6fb8"/><circle cx="16.6" cy="-7.4" r="1.6" fill="#10203a"/><path d="M8 -14Q15 -19 23 -13" fill="none" stroke="#6b3d10" stroke-width="2" stroke-linecap="round"/>'}
-   <path d="M-12 14Q0 25 12 14" fill="none" stroke="#6b3d10" stroke-width="2.8" stroke-linecap="round"/>
-   <path d="M-3 -2Q-6 6 -1 8" fill="none" stroke="#a8712a" stroke-width="1.8" stroke-linecap="round"/></svg>`;}
-/* the family name as a lit marquee sign, fixed at the top of the stage */
 function marqueeSVG(){
   // the family name on a purple velvet pennant hung from a gold rod, with gold tassels (Mat's pick, design B)
   return `<svg class="mqsign" viewBox="0 0 520 190" role="img" aria-label="The Graham and Harper Family" style="overflow:visible">
@@ -1207,8 +1177,8 @@ function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah}=stageDims
   let lights='';for(let x=W*.12;x<W*.9;x+=ph?70:120)lights+=`<ellipse cx="${f(x)}" cy="${f(H-ah)}" rx="${ph?10:16}" ry="${ph?3:5}" class="plight"/>`;
   const apron=`<rect x="0" y="${f(H-ah)}" width="${W}" height="${f(ah)}" class="papron"/><rect x="0" y="${f(H-ah)}" width="${W}" height="2.5" class="pgold"/>${lights}`;
   const corner=sg=>{const x=sg<0?cw*.9:W-cw*.9,y=vh+(ph?14:26),rr=ph?11:20;return `<g transform="translate(${f(x)} ${f(y)})"><circle r="${rr}" class="pcres"/><circle cx="${f(-sg*rr*.4)}" cy="${f(-rr*.15)}" r="${f(rr*.8)}" class="pcut"/></g>`;};
-  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="prg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${PURP?'#6b3aa0':'#b3262c'}"/><stop offset="1" stop-color="${PURP?'#2b1150':'#6d1018'}"/></linearGradient>
-   <linearGradient id="pgg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${PURP?'#2c3f98':'#2f8a67'}"/><stop offset="1" stop-color="${PURP?'#141d5a':'#14523b'}"/></linearGradient>
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="prg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b3aa0"/><stop offset="1" stop-color="#2b1150"/></linearGradient>
+   <linearGradient id="pgg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c3f98"/><stop offset="1" stop-color="#141d5a"/></linearGradient>
    ${PURP?`<pattern id="pstp" width="54" height="70" patternUnits="userSpaceOnUse"><path d="${star6(12,14,4.2)}" fill="#e9c46a" opacity=".85"/><path d="${star6(40,48,2.6)}" fill="#f3dc95" opacity=".7"/><circle cx="34" cy="16" r="1.2" fill="#fff3c8" opacity=".7"/><circle cx="8" cy="52" r="1" fill="#fff3c8" opacity=".6"/><g transform="translate(26 33)"><circle r="5" fill="#e9c46a" opacity=".85"/><circle cx="2.2" cy="-1.2" r="4.3" fill="#3d1a68"/></g></pattern>`:''}
    <linearGradient id="pgl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset=".5" stop-color="#d9a441"/><stop offset="1" stop-color="#8f5f1b"/></linearGradient></defs>
    ${side(-1)}${side(1)}${band}${green}${red}${PURP?(red.match(/<path class="pred"[^>]*>/g)||[]).join('').replace(/class="pred"/g,'fill="url(#pstp)"'):''}${fringe}${orn}${corner(-1)}${corner(1)}${apron}</svg>`;}
@@ -1238,19 +1208,7 @@ setTimeout(shoot,15000+Math.random()*15000);
 function hsh(t){let h=2166136261;for(const c of String(t)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
 
 /* ---------- in the sky above the tree: title banner, newest memory, family constellation ---------- */
-let SKYG=null;const SHOWCONST=false; // G and H constellations: switched off for now (Mat, 2026-11-22); set true to bring them back
-function skyMarkup(){if(!SKYG)return '';const f=n=>n.toFixed(1),X=915,by=SKYG.by,bw=700,bh=70,L=X-bw/2,R=X+bw/2,y0=by-bh/2,y1=by+bh/2,ym=by;
-  const banner=wornScroll(L,R,y0,y1,4242,16,'tbanner')+`<text class="ttitle" x="${X}" y="${f(ym+12)}" text-anchor="middle">The Graham &amp; Harper Family</text></g>`;
-  const newest=`<g id="tnew" class="tnew" role="button" tabindex="0" transform="translate(${X} ${f(y1+34)})"><rect class="tnbg" x="-200" y="-19" width="400" height="34" rx="17"/><text class="tntext" text-anchor="middle" y="5"></text></g>`;
-  // the family constellations: a G on one side of the banner and an H on the other
-  const letter=(segs,cx,cy,cs,id,lab)=>{const P=segs.map(sg=>sg.map(([a,b])=>[cx+a*cs,cy+b*cs]));const d=P.map(sg=>sg.map((p,i)=>(i?'L':'M')+f(p[0])+' '+f(p[1])).join('')).join('');
-    const seen=new Set(),st=[];P.flat().forEach(p=>{const k=f(p[0])+','+f(p[1]);if(!seen.has(k)){seen.add(k);st.push(p);}});
-    const stars=st.map((p,i)=>`<circle class="cs${i===0?' big':''}${i%3===1?' tw':''}" cx="${f(p[0])}" cy="${f(p[1])}" r="${i===0?5:i%2?3.4:4}" style="--dl:-${i*0.7}s"/>`).join('');
-    return `<g id="${id}" class="tconst" role="button" tabindex="0" aria-label="${lab}"><circle cx="${f(cx)}" cy="${f(cy)}" r="${cs+26}" fill="transparent"/><path class="cl" d="${d}"/>${stars}</g>`;};
-  const G=[[[.72,-.5],[.42,-.7],[.05,-.72],[-.3,-.55],[-.5,-.2],[-.5,.2],[-.3,.55],[.05,.72],[.42,.7],[.72,.45],[.74,.1],[.38,.1]]];
-  const Hh=[[[-.46,-.72],[-.46,-.36],[-.46,0],[-.46,.36],[-.46,.72]],[[.46,-.72],[.46,-.36],[.46,0],[.46,.36],[.46,.72]],[[-.46,0],[0,0],[.46,0]]];
-  const con=letter(G,L-150,by+14,78,'tconstG','The Graham constellation')+letter(Hh,R+150,by+14,78,'tconstH','The Harper constellation');
-  return `<g id="tsky">${SHOWCONST?con:''}${banner}${newest}</g>`;}
+let SKYG=null;
 const ago=t=>{const s=(Date.now()-t)/1000;if(s<90)return 'just now';const m=s/60;if(m<60)return Math.round(m)+' minutes ago';const h=m/60;if(h<24)return Math.round(h)+(Math.round(h)===1?' hour ago':' hours ago');const d=h/24;if(d<7)return Math.round(d)+(Math.round(d)===1?' day ago':' days ago');
   return new Date(t).toLocaleDateString(undefined,{month:'short',day:'numeric'});};
 let newIdx=0,newT=null;
@@ -1263,9 +1221,6 @@ function renderNewest(){const g=document.getElementById('tnew');if(!g)return;con
       let w=400;try{w=t.getComputedTextLength()+44;}catch(e){}bg.setAttribute('x',(-w/2).toFixed(1));bg.setAttribute('width',w.toFixed(1));g.classList.remove('fade');},g.dataset.c===undefined?0:450);};
   show();clearInterval(newT);if(list.length>1)newT=setInterval(()=>{if(document.hidden||$('#tstage').classList.contains('moving'))return;newIdx++;show();},9000);}
 function openNewest(g){if(g.dataset.c)openMem(g);}
-function openConst(g){const b=g.getBoundingClientRect(),r=$('#tstage').getBoundingClientRect(),ch=STORY.find(c=>c.h==='Ed and Renee')||STORY[0];
-  showNote(`<div class="cnote"><div class="g1">The ${g.id==='tconstH'?'Harper':'Graham'} stars</div><p><b>${esc(ch.y?ch.y+' · ':'')}${esc(ch.h)}.</b> ${esc(ch.t)}</p><button class="pri" data-story>Read the whole story</button></div>`,b.left-r.left+b.width/2,b.bottom-r.top);
-  const sb=$('#mnote [data-story]');if(sb)sb.onclick=()=>{$('#mnote').hidden=true;startStory();};}
 function renderMemStars(){renderNewest();const box=$('#mstars');if(!box)return;const list=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]);
   const star=`<path d="M0-9L2 -2L9 0L2 2L0 9L-2 2L-9 0L-2-2Z"/>`;
   // beside the person: try spots around their photo that miss every face and name label
@@ -1292,8 +1247,8 @@ function taperPath(b,w0,w1){const n=16,L=[],R=[];
   for(let i=0;i<=n;i++){const t=i/n,u=1-t,x=u*u*b.x1+2*u*t*b.cx+t*t*b.x2,y=u*u*b.y1+2*u*t*b.cy+t*t*b.y2,dx=2*u*(b.cx-b.x1)+2*t*(b.x2-b.cx),dy=2*u*(b.cy-b.y1)+2*t*(b.y2-b.cy),l=Math.hypot(dx,dy)||1,w=(w0+(w1-w0)*Math.pow(t,.8))/2,nx=-dy/l*w,ny=dx/l*w;
     L.push(`${(x+nx).toFixed(1)} ${(y+ny).toFixed(1)}`);R.push(`${(x-nx).toFixed(1)} ${(y-ny).toFixed(1)}`);}
   return 'M'+L.join('L')+'L'+R.reverse().join('L')+'Z';}
-const LEAFQ=new URLSearchParams(location.search).get('leaves')||'twig';const TREEQ=new URLSearchParams(location.search).get('tree')||'painted';
-const SCROLLS=TSTYLE==='parch'||(TSTYLE==='ink'&&TREEQ==='painted');
+
+const SCROLLS=true;
 function painted(vals,dl,rnd,f,BX){
     // aged-paper illustration: one broad painted trunk, a dense dome of hand-painted leaves, roots spreading over the paper
     const bark='#4b3020',barkL='#7a5537';
@@ -1311,10 +1266,6 @@ function painted(vals,dl,rnd,f,BX){
     let back='',front='';const xs0=TB.x0-40,xs1=TB.x1+40,ys0=TB.y0-60;
     const leafAt=(x,y,a,sc)=>{const c=G[Math.floor(rnd()*G.length)],lit=rnd()<.35,ink=STAGE?' stroke="#16301c" stroke-width=".8" stroke-opacity=".75"':'';
       return `<g transform="translate(${f(x)} ${f(y)}) rotate(${a.toFixed(0)}) scale(${sc.toFixed(2)})"><path d="${LF}" fill="${c}"${ink}/>${lit?`<path d="M2 0Q11 -7 24 0Z" fill="#a9c98a" opacity=".35"/>`:''}<path d="M1 0L22 0" stroke="#1d3a22" stroke-width=".6" opacity=".55"/></g>`;};
-    if(LEAFQ!=='twig'){
-    for(let i=0;i<9000;i++){const x=xs0+rnd()*(xs1-xs0),y=ys0+rnd()*(1100-ys0);if(!inC(x,y)||rnd()<.5)continue;
-      back+=leafAt(x,y,rnd()*360,1+rnd()*.9);}
-    }else{
     // every leaf grows from a twig, and every twig grows from a branch (or from behind a photo at a branch tip)
     const D=Math.PI/180,tw=[];
     const sprout=(x,y,ang,len,w,depth)=>{const a=ang*D,x2=x+Math.cos(a)*len,y2=y+Math.sin(a)*len;if(!inC(x2,y2)||y2>1090)return;
@@ -1329,7 +1280,7 @@ function painted(vals,dl,rnd,f,BX){
       lvs+=leafAt(t.x2,t.y2,t.ang+(rnd()-.5)*30,1+rnd()*.5);});
     TBR.forEach(b=>{if(Math.max(b.y1,b.y2)>1080||b.w>=14)return;const L=Math.hypot(b.x2-b.x1,b.y2-b.y1),ba=Math.atan2(b.y2-b.y1,b.x2-b.x1)/D;let side=1;
       for(let d=12;d<L;d+=20+rnd()*12){const [x,y]=qpt(b,d/L);side=-side;lvs+=leafAt(x,y,ba+side*(40+rnd()*35),.85+rnd()*.6);}});
-    back=twg+lvs;}
+    back=twg+lvs;
     // a few leaves overlap the branches in front, so the limbs sit inside the foliage
     let lv='';TBR.forEach(b=>{if(b.w<3||Math.max(b.y1,b.y2)>1080)return;const n=b.w>=20?7:b.w>=8?4:2;for(let i=0;i<n;i++){const t=.15+rnd()*.8,[x,y]=qpt(b,t),a=Math.atan2(b.y2-b.y1,b.x2-b.x1)*180/Math.PI+(rnd()<.5?60:-60)+(rnd()-.5)*40,sc=.9+rnd()*.7;
       lv+=`<g class="deco" style="--d:${dl(y,x)+150}ms" transform="translate(${f(x)} ${f(y)}) rotate(${a.toFixed(0)}) scale(${sc.toFixed(2)}) translate(4 0)"><path d="${LF}" fill="${G[Math.floor(rnd()*G.length)]}"/><path d="M1 0L22 0" stroke="#1d3a22" stroke-width=".6" opacity=".55"/></g>`;}});
@@ -1340,7 +1291,7 @@ function painted(vals,dl,rnd,f,BX){
     const brs=TBR.map(b=>{const w1=b.w>=20?b.w*.62:Math.max(1.6,b.w*.45);return `<path class="br t" d="${taperPath(b,b.w*1.15,w1)}"/>`;}).join('');
     return {pdefs,back,lv,trunk:`<path d="${trunk}" fill="${PRINT?'#4b3020':'url(#trunkg)'}"/>${bk}${STAGE&&!PRINT?`<g mask="url(#hmask)" opacity=".55"><path d="${trunk}" fill="url(#hatchA)"/><path d="${trunk}" fill="url(#hatchB)" opacity=".6"/></g><path d="${trunk}" fill="none" stroke="#1a0d05" stroke-width="2.4"/>`:''}`,brs,T1};}
 const LEAFP='M0 0Q9 -8 20 0Q9 8 0 0Z';
-function treeArt(st,dl){if(st==='classic')return null;
+function treeArt(st,dl){
   let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647,f=n=>n.toFixed(1);
   const defs=`<filter id="wc" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="3" seed="4"/><feDisplacementMap in="SourceGraphic" scale="18"/><feGaussianBlur stdDeviation="2.2"/></filter>
    <filter id="wcb"><feTurbulence type="fractalNoise" baseFrequency=".08" numOctaves="2" seed="2"/><feDisplacementMap in="SourceGraphic" scale="4"/></filter>
@@ -1348,24 +1299,13 @@ function treeArt(st,dl){if(st==='classic')return null;
    <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="9"/><feColorMatrix values="0 0 0 0 .23  0 0 0 0 .16  0 0 0 0 .1  0 0 0 .07 0"/></filter>`;
   const vals=Object.values(TP),top=vals.filter(v=>['ggp','gp','aunt','asp','kid','ksp'].includes(v.t));
   const BX=915,base=1262;
-  const PAINT=st==='parch'||(st==='ink'&&TREEQ==='painted');const PT=PAINT?painted(vals,dl,rnd,f,BX):null;
+  const PT=painted(vals,dl,rnd,f,BX);
   // branches: tapered
   const brs=TBR.map(b=>{const w1=b.w>=20?b.w*.62:Math.max(1.4,b.w*.38);return `<path class="br t" d="${taperPath(b,b.w*(st==='ink'?.9:1.05),w1)}"/>`;}).join('');
   // roots
   let roots='';[-1,1].forEach(sg=>[[150,1342,13],[250,1372,9],[78,1376,7]].forEach(([dx,y,w])=>{const b={x1:BX+sg*8,y1:base,cx:BX+sg*dx*.35,cy:y-10,x2:BX+sg*dx,y2:y};roots+=`<path class="root" d="${taperPath(b,w*2,1)}"/>`;}));
   const gb=Math.max(1410,TB.y1+30)+200,X0=TB.x0-400,X1=TB.x1+400;
   let under='',over='',ground='',extra='';
-  if(st==='water'){
-    // soft painted canopy behind each family cluster
-    let blobs='';const greens=['#9cc59a','#b5d3a3','#7fb28a','#c7dcae'];
-    top.forEach(v=>{for(let k=0;k<3;k++){const a=rnd()*6.28,d=rnd()*30;blobs+=`<circle cx="${f(v.x+Math.cos(a)*d)}" cy="${f(v.y+Math.sin(a)*d-8)}" r="${f(v.r+38+rnd()*34)}" fill="${greens[(k+Math.floor(rnd()*4))%4]}" opacity=".32"/>`;}});
-    TBR.filter(b=>b.w>=8&&b.w<20).forEach(b=>{for(let k=0;k<3;k++){const [x,y]=qpt(b,.35+k*.22);blobs+=`<circle cx="${f(x)}" cy="${f(y)}" r="${f(34+rnd()*26)}" fill="${greens[k%4]}" opacity=".26"/>`;}});
-    under=`<g class="art" filter="url(#wc)">${blobs}</g>`;
-    ground=`<g class="art" filter="url(#wc)"><path d="M${X0} 1384 Q915 1200 ${X1} 1384 L${X1} ${gb} L${X0} ${gb}Z" fill="#b9d39f" opacity=".75"/><path d="M${X0+120} 1400 Q915 1260 ${X1-120} 1400 L${X1-120} ${gb} L${X0+120} ${gb}Z" fill="#9fc48c" opacity=".45"/></g>`;
-    let lv='';const lg=['#6fa36d','#8dbb78','#5d9466','#a6c98a'];TBR.forEach(b=>{if(b.w<3)return;const n=b.w>=20?6:b.w>=8?4:2;for(let i=0;i<n;i++){const t=.25+rnd()*.7,[x,y]=qpt(b,t),ang=Math.atan2(b.y2-b.y1,b.x2-b.x1)*180/Math.PI+(rnd()<.5?55:-55)+(rnd()-.5)*30,s=.8+rnd()*.7;
-      lv+=`<path class="deco" d="${LEAFP}" fill="${lg[Math.floor(rnd()*4)]}" style="--d:${dl(y,x)+150}ms" transform="translate(${f(x)} ${f(y)}) rotate(${ang.toFixed(0)}) scale(${s.toFixed(2)}) translate(6 0)" opacity=".85"/>`;}});
-    over=`<g filter="url(#wcb)">${lv}</g>`;
-    return {defs,under,ground,roots:`<g class="art" filter="url(#wcb)">${roots}</g>`,brs:`<g filter="url(#wcb)">${brs}</g>`,over};}
   if(st==='ink'){
     const K=NIGHT?{grain:'#e7d3a8',grainO:.35,tint:'#c9a46a',tintO:.22,lf:'#8fae7a',lfO:.5,ink:'#d9c49a',hill:'#1e3a2b',hillO:.95,hill2:'#29503a',line:'#cdb88c',wash:['#3f7a5c','#4f8a63','#356b55'],washO:.34}
       :{grain:'#f3e9d2',grainO:.55,tint:'#b08b5c',tintO:.35,lf:'#a8b47e',lfO:.55,ink:'#3b2a1a',hill:'#b7c98f',hillO:.42,hill2:null,line:'#3b2a1a',wash:PRINT?['#a9c79a','#c3d8a8','#98bd94']:['#8fbf86','#a9cf95','#7cb07c'],washO:PRINT?.24:.3};
@@ -1411,23 +1351,7 @@ function treeArt(st,dl){if(st==='classic')return null;
       return {defs:defs+pdefs+PT.pdefs,planet,rootsUnder:ROOTS+`<g class="art">${PT.trunk}</g>`,under:pu,ground,bg:PRINT?['#f7efdd','#ecdfc2']:null,roots:'',brs:PT.brs,over:PT.lv};}
     return {defs:defs+pdefs,planet,rootsUnder:ROOTS,under,ground,bg:PRINT?['#f7efdd','#ecdfc2']:null,roots:`<g class="art">${roots}</g>`,brs:`<g class="art">${tint}</g>${brs}<g class="art">${grain}</g>`,over:lv};}
 
-  if(st==='parch'){const {pdefs,back,lv,trunk,brs,T1}=PT;
-    // roots: wide, wandering, tapering over the paper
-    let rts='';[-1,1].forEach(sg=>[[260,1300,34],[430,1338,22],[560,1300,16],[170,1360,18],[640,1360,10],[360,1405,12]].forEach(([dx,y,w],i)=>{
-      const b={x1:BX+sg*(90+i*8),y1:T1+14,cx:BX+sg*dx*.45,cy:y+(rnd()-.4)*40,x2:BX+sg*dx,y2:y+20};rts+=`<path class="root" d="${taperPath(b,w,1)}"/>`;
-      for(let j=0;j<3;j++){const [qx,qy]=qpt(b,.45+j*.18),c={x1:qx,y1:qy,cx:qx+sg*30,cy:qy+28,x2:qx+sg*(50+rnd()*60),y2:qy+40+rnd()*50};rts+=`<path class="root" d="${taperPath(c,Math.max(2,w*.3),.5)}"/>`;}}));
-    const under=`<ellipse cx="${BX}" cy="${T1+40}" rx="720" ry="70" fill="url(#pshade)"/><g filter="url(#ppaint)">${back}</g>`;
-    return {defs:defs+pdefs,under,ground:'',rootsUnder:`<g class="art">${rts}${trunk}</g>`,roots:'',brs,over:lv};}
-  if(st==='paper'){
-    const layers=[['#5f9a63',58,10],['#7fb46f',44,0],['#a3cc84',30,-8]];let canopy='';
-    layers.forEach(([c,pad,dy],li)=>{let g='';top.forEach(v=>{g+=`<circle cx="${f(v.x)}" cy="${f(v.y+dy)}" r="${f(v.r+pad)}"/>`;});TBR.filter(b=>b.w>=8&&b.w<20).forEach(b=>{[.45,.75].forEach(t=>{const [x,y]=qpt(b,t);g+=`<circle cx="${f(x)}" cy="${f(y+dy)}" r="${pad+6}"/>`;});});
-      canopy+=`<g fill="${c}" filter="url(#pshadow)">${g}</g>`;});
-    under=`<g class="art">${canopy}</g>`;
-    ground=`<g class="art" filter="url(#pshadow)"><path d="M${X0} 1384 Q915 1200 ${X1} 1384 L${X1} ${gb} L${X0} ${gb}Z" fill="#8fbf74"/><path d="M${X0} 1420 Q${X0+400} 1330 915 1410 T${X1} 1400 L${X1} ${gb} L${X0} ${gb}Z" fill="#76ad62"/></g>`;
-    let lv='';const lg=['#3f7d4a','#4f9256','#6aa95c'];TBR.forEach(b=>{if(b.w<3)return;const n=b.w>=20?4:b.w>=8?3:1;for(let i=0;i<n;i++){const t=.25+rnd()*.7,[x,y]=qpt(b,t),ang=Math.atan2(b.y2-b.y1,b.x2-b.x1)*180/Math.PI+(rnd()<.5?55:-55),s=.9+rnd()*.5;
-      lv+=`<path class="deco" d="${LEAFP}" fill="${lg[Math.floor(rnd()*3)]}" style="--d:${dl(y,x)+150}ms" transform="translate(${f(x)} ${f(y)}) rotate(${ang.toFixed(0)}) scale(${s.toFixed(2)}) translate(6 0)"/>`;}});
-    return {defs,under,ground,roots:`<g class="art">${roots}</g>`,brs:`<g filter="url(#pshadow)">${brs}</g>`,over:`<g filter="url(#pshadow)">${lv}</g>`};}
-  return null;}
+}
 // painted textures are expensive to redraw while zooming: paint them once into a picture
 const bakeCache={},bakePend={};let curBake=null;
 let lastBake=Promise.resolve();
@@ -1449,29 +1373,6 @@ function bakeArt(art,html){
 const GROWT=2600;let GROWR=1400,growR=99999;
 const growEase=u=>1-(1-u)*(1-u);                      // fast at first, gentle at the tips
 function growDelay(x,y){const f=Math.min(1,Math.hypot(x-915,y-1300)/GROWR);return Math.round(GROWT*(1-Math.sqrt(1-f)));}
-function growTree(onDone){const st=$('#tstage');
-  // The painted canopy is one big picture. Re-clipping that picture every frame makes phones re-paint it and flicker,
-  // so during the grow it is copied once onto a canvas and the widening circle is painted there instead.
-  const im=$('#tbackimg');let cv=null,ctx=null,bmp=null,sx=1,cx=0,cy=0;
-  const prep=async()=>{try{if(!im||!im.classList.contains('on')||!im.src)return;
-    try{await im.decode();}catch(e){}
-    const w=parseFloat(im.style.width),h=parseFloat(im.style.height),nw=im.naturalWidth,nh=im.naturalHeight;if(!w||!nw)return;
-    const k=Math.min(1,(innerWidth<700?1400:2400)/nw),cw=Math.round(nw*k),ch=Math.round(nh*k);
-    try{bmp=window.createImageBitmap?await createImageBitmap(im,{resizeWidth:cw,resizeHeight:ch}):im;}catch(e){bmp=im;}
-    cv=document.createElement('canvas');cv.id='tgrowcv';cv.width=cw;cv.height=ch;
-    Object.assign(cv.style,{position:'absolute',left:im.style.left,top:im.style.top,width:w+'px',height:h+'px',pointerEvents:'none'});
-    ctx=cv.getContext('2d');sx=cw/w;cx=(915-parseFloat(im.style.left))*sx;cy=(1300-parseFloat(im.style.top))*sx;
-    im.parentNode.insertBefore(cv,im);im.style.visibility='hidden';}finally{preparing=0;}};
-  const paint=r=>{if(!ctx)return;ctx.clearRect(0,0,cv.width,cv.height);if(r<=0)return;ctx.save();ctx.beginPath();ctx.arc(cx,cy,r*sx,0,Math.PI*2);ctx.clip();ctx.drawImage(bmp,0,0,cv.width,cv.height);ctx.restore();};
-  const done=()=>{if(im)im.style.visibility='';if(cv){cv.remove();cv=null;}if(bmp&&bmp.close)bmp.close();};
-  let started=0,preparing=0;
-  const go=()=>{if(started++)return;if(im)im.style.visibility='hidden';paint(0);st.classList.add('growing');tw.classList.add('tgrow');tw.classList.remove('pre');const t0=performance.now();
-  (function f(now){const u=Math.min(1,(now-t0)/GROWT);growR=u<1?GROWR*growEase(u):99999;const c=document.getElementById('growc');if(c)c.setAttribute('r',growR.toFixed(1));
-    if(u<1){if(!ctx&&im&&im.classList.contains('on')&&!preparing){preparing=1;prep();}paint(growR);requestAnimationFrame(f);}else{done();setTimeout(()=>{st.classList.remove('intro','growing');onDone&&onDone();},500);setTimeout(()=>tw.classList.remove('tgrow'),1600);}})(t0);};
-  const ready=lastBake.then(()=>{preparing=1;return prep();});
-  ready.then(()=>setTimeout(go,0),()=>go());setTimeout(go,2200);}
-
-// worn paper scroll: rough, slightly torn edges (fixed per name), aged colouring, curled ribbon ends
 function roughEdge(x0,x1,y,arch,seed,amp,inw){const n=Math.max(4,Math.round(Math.abs(x1-x0)/7)),pts=[];let h=seed;
   for(let i=0;i<=n;i++){h=Math.imul(h^(h>>>13),1597334677)>>>0;const t=i/n,x=x0+(x1-x0)*t,j=((h%1000)/1000-.5)*2*amp,nick=(h%97)<6?amp*1.8:0;
     pts.push([x,y-arch*4*t*(1-t)+j+nick*inw]);}return pts;}
@@ -1491,7 +1392,7 @@ const SCROLLDEFS=`<linearGradient id="scrollG" x1="0" y1="0" x2="0" y2="1"><stop
   <linearGradient id="scrollT" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dcc396"/><stop offset="1" stop-color="#b8975f"/></linearGradient>`;
 function drawLeafTree(grow){
   const L=tLayout();TP=L.pos;TBR=L.br;
-  const big=document.body.classList.contains('big'),BIGT={gk:1.15,aunt:1.18,asp:1.18,kid:1.2,ksp:1.2,ggp:1.15,gp:1.1,par:1.05,son:1,ssp:1};
+  const big=document.body.classList.contains('big')||$('#tstage').clientWidth<700,BIGT={gk:1.2,aunt:1.25,asp:1.25,kid:1.3,ksp:1.3,ggp:1.2,gp:1.15,par:1.05,son:1.05,ssp:1.05};
   // name scrolls: where two would overlap, slide both people (photo and scroll together) apart, and let their branches follow
   if(SCROLLS){const bx=Object.entries(TP).map(([id,v])=>{const p=byId[id],fs=FS[v.t]*(big?BIGT[v.t]||1:1),nm=p.s.length>22?p.s.slice(0,21)+'…':p.s,w=Math.max(50,nm.length*fs*.46+24)+30,h=fs*1.6;return {id,x:v.x,dx:0,bx:[[v.y+v.r+6,v.y+v.r+6+h,w],[v.y-v.r-4,v.y+v.r+4,2*v.r+8]]};});
     // each person is a photo box and a scroll box that move together; any overlap pushes the two people apart sideways
@@ -1505,7 +1406,6 @@ function drawLeafTree(grow){
       n.d=`M${n.x1.toFixed(1)} ${n.y1.toFixed(1)}Q${n.cx.toFixed(1)} ${n.cy.toFixed(1)} ${n.x2.toFixed(1)} ${n.y2.toFixed(1)}`;return n;});}
   const xs=[],ys=[];Object.values(TP).forEach(v=>{xs.push(v.x-v.r-70,v.x+v.r+70);ys.push(v.y-v.r-8,v.y+v.r+34);});TBR.forEach(b=>{xs.push(b.x1,b.x2);ys.push(b.y1,b.y2);});
   TB={x0:Math.min(...xs),y0:Math.min(...ys),x1:Math.max(...xs),y1:Math.max(...ys)};
-  SKYG=null;if(TSTYLE==='ink'&&SCROLLS&&!PRINT&&!STAGE){const ct=Math.min(...Object.values(TP).filter(v=>v.y<1060).map(v=>v.y-v.r-95));SKYG={ct,by:ct-135};TB.y0=Math.min(TB.y0,SKYG.by-52);}
   GROWR=Math.max(...Object.values(TP).map(v=>Math.hypot(v.x-915,v.y-1300)+v.r))+60;
   const dl=(y,x=915)=>growDelay(x,y);
   let deco='',seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
@@ -1523,7 +1423,7 @@ function drawLeafTree(grow){
   const art=treeArt(TSTYLE,dl);
   if(art&&PRINT){$('#tdefs').innerHTML=art.defs+defs;tw.innerHTML=`<g class="bake">${art.under+art.ground}</g>`+(art.rootsUnder||'')+art.brs+art.over+leaves;bakeArt(art,false);}
   else if(art){$('#tdefs').innerHTML=art.defs+defs+`<clipPath id="growclip" clipPathUnits="userSpaceOnUse"><circle id="growc" cx="915" cy="1300" r="${growR.toFixed(1)}"/></clipPath>`;
-    tw.innerHTML=(art.planet||'')+`<g class="growg" clip-path="url(#growclip)">${(art.rootsUnder||'')+art.brs+art.over}</g>`+leaves+skyMarkup();bakeArt(art,true);renderNewest();}
+    tw.innerHTML=(art.planet||'')+`<g class="growg" clip-path="url(#growclip)">${(art.rootsUnder||'')+art.brs+art.over}</g>`+leaves;bakeArt(art,true);renderNewest();}
   else{$('#tdefs').innerHTML=defs;tw.innerHTML=ground+brs+deco+leaves;}
   if(grow){tw.classList.add('tgrow');setTimeout(()=>tw.classList.remove('tgrow'),3400);}
   renderMemStars();
@@ -1589,8 +1489,10 @@ function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!
   const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?m.getBoundingClientRect().bottom-r.top+(SD.ph?104:10):0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot+((st=>st?st.offsetHeight+10:0)($('#tstage>.tools'))):0),b=(ids&&ids.length)?tBox(ids):TB,w=b.x1-b.x0,h=b.y1-b.y0;
   const k=Math.max(.12,Math.min((r.width-36-(SD?SD.side*2:0))/w,avail/h,ids&&ids.length===1?1.5:1.2));
   tv.k=k;tv.x=r.width/2-(b.x0+b.x1)/2*k;tv.y=top+avail/2-(b.y0+b.y1)/2*k;
-  // tall phone screens: sit the tree just under the sign instead of leaving a gap above it
-  if(SD&&SD.ph&&!(ids&&ids.length===1))tv.y=Math.min(tv.y,top+12-TB.y0*k);tApply(anim);}
+  // phones, opening view: zoom so the core family just fills the width (outer cousins run off the sides, a swipe away)
+  // and centre the whole tree in the height between the sky and the buttons, so there's no empty ground below it
+  if(SD&&SD.ph&&ids===TCORE){const k2=Math.max(.12,Math.min((r.width-6)/w,avail/(TB.y1-TB.y0)));tv.k=k2;tv.x=r.width/2-(b.x0+b.x1)/2*k2;tv.y=top+(avail-(TB.y1-TB.y0)*k2)/2-TB.y0*k2;}
+  else if(SD&&SD.ph&&!(ids&&ids.length===1))tv.y=Math.min(tv.y,top+12-TB.y0*k);tApply(anim);}
 // the setting sun sits right behind the trunk whenever the view is framed (first load, Fit); panning leaves it where it is
 function sunToTrunk(jump){const st=SKYEL||(SKYEL=$('#tstage .sky')),W=$('#tstage').getBoundingClientRect().width;if(!st||!W)return;
   if(jump)st.style.transition='none';st.style.setProperty('--sunx',Math.max(8,Math.min(92,(tv.x+915*tv.k)/W*100)).toFixed(2)+'%');if(jump){void st.offsetWidth;st.style.transition='';}}
@@ -1608,11 +1510,11 @@ function tZoom(f,cx,cy,fast){tTouched=1;hidePop();const r=tsz();cx??=r.w/2;cy??=
    if(pts.size===2&&pinch){const [a,b]=[...pts.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),r=pinchR||(pinchR=$('#tstage').getBoundingClientRect());tZoom(d/pinch,(a[0]+b[0])/2-r.left,(a[1]+b[1])/2-r.top,true);pinch=d;moved=99;return;}
    const dx=e.clientX-last[0],dy=e.clientY-last[1];moved+=Math.abs(dx)+Math.abs(dy);last=[e.clientX,e.clientY];if(moved<4)return;tv.x+=dx;tv.y+=dy;tTouched=1;gBegin();gFrame();});
  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(pts.size===1){last=[...pts.values()][0].slice();moved=99;}if(!pts.size){tsvg.classList.remove('drag');gEnd();}
-   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar');if(ms){openMem(ms);return;}const tn=hit?.closest('#tnew');if(tn){openNewest(tn);return;}const tc=hit?.closest('.tconst');if(tc){openConst(tc);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
+   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar');if(ms){openMem(ms);return;}const tn=hit?.closest('#tnew');if(tn){openNewest(tn);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
  tsvg.addEventListener('pointerup',up);tsvg.addEventListener('pointercancel',up);
  tsvg.addEventListener('wheel',e=>{e.preventDefault();const r=$('#tstage').getBoundingClientRect();tZoom(e.deltaY<0?1.12:1/1.12,e.clientX-r.left,e.clientY-r.top);},{passive:false});
  tsvg.addEventListener('dblclick',e=>{const r=$('#tstage').getBoundingClientRect();tZoom(1.8,e.clientX-r.left,e.clientY-r.top);});
- tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const tn=e.target.closest?.('#tnew'),tc=e.target.closest?.('.tconst');if(tn||tc){e.preventDefault();tn?openNewest(tn):openConst(tc);return;}}const ms=e.target.closest?.('.tmstar');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
+ tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const tn=e.target.closest?.('#tnew');if(tn){e.preventDefault();openNewest(tn);return;}}const ms=e.target.closest?.('.tmstar');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
 $('#tzin').onclick=()=>tZoom(1.3);$('#tzout').onclick=()=>tZoom(1/1.3);$('#tfit').onclick=()=>{tTouched=1;tFit();};
 $('#q').addEventListener('change',e=>{const v=e.target.value.toLowerCase().trim();const p=P.find(p=>p.n.toLowerCase()===v)||P.find(p=>p.n.toLowerCase().includes(v));if(p){select(p.id);tFocus(p.id);}});
 
@@ -1827,6 +1729,8 @@ function showStep(){
   $('#sPrev')&&($('#sPrev').onclick=()=>{si--;resetAuto();showStep();});
   $('#sNext')&&($('#sNext').onclick=()=>{si++;resetAuto();showStep();});
   document.querySelectorAll('#sEnd').forEach(b=>b.onclick=endStory);
+  // the curtain-call: finishing the story with 'Explore the tree' also turns night to sunset (or sunset to night)
+  if(last){const ex=$('#cap .pri#sEnd');if(ex)ex.onclick=()=>{endStory();setTimeout(()=>$('#tSky').click(),1100);};}
   $('#sAuto').onclick=()=>{if(auto){clearInterval(auto);auto=null;}else{auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}showStep();};
 }
 function resetAuto(){if(auto){clearInterval(auto);auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}}
@@ -1872,11 +1776,6 @@ const cover=$('#cover'),RM=matchMedia('(prefers-reduced-motion: reduce)').matche
 {let h='';for(let i=0;i<34;i++){const z=1.2+Math.random()*2.8,t=20+Math.random()*22;
   h+=`<i style="left:${Math.random()*100}%;width:${z}px;height:${z}px;--t:${t}s;--dl:${-Math.random()*t}s;--o:${(.18+Math.random()*.42).toFixed(2)};--sx:${Math.round(Math.random()*80-40)}px"></i>`;}
  $('#specks').innerHTML=h;}
-// the gold tree flies down and becomes the real tree
-const SRCSEG=[[110,148,110,92],[110,92,60,40],[110,92,160,40],[110,110,40,88],[110,110,180,88],[60,40,30,20],[60,40,80,10],[160,40,190,20],[160,40,140,10]];
-function segsOf(d){const out=[];let x=0,y=0;const re=/([MVH])\s*(-?[\d.]+)(?:\s+(-?[\d.]+))?/g;let m;
-  while((m=re.exec(d))){if(m[1]==='M'){x=+m[2];y=+m[3];}else if(m[1]==='V'){out.push([x,y,x,+m[2]]);y=+m[2];}else{out.push([x,y,+m[2],y]);x=+m[2];}}return out;}
-const rgb=c=>{const m=c.match(/[\d.]+/g)||[0,0,0];return m.slice(0,3).map(Number);};
 // stage theme: the opening screen is the closed curtain; the tree is already drawn full-screen behind it
 if(STAGE&&getComputedStyle(cover).display!=='none'){cover.classList.add('curtain');$('#tstage').classList.add('hoisted');
   // the drifting family photos scroll inside the card only, not across the curtains
@@ -1896,39 +1795,7 @@ function openCurtain(story){if(cover.classList.contains('opening'))return;cover.
       cover.classList.add('open');{const st=$('#tstage');st.classList.add('lowering');st.classList.remove('hoisted');setTimeout(()=>st.classList.remove('lowering'),5000);}const T=RM?300:1900;
       setTimeout(()=>{cover.style.display='none';if(story)startStory();else setTimeout(showHint,300);},T);})));};
   setTimeout(()=>{if(pr){pr.then(go);setTimeout(go,900);}else go();},RM?0:420);}
-function closeCover(story){if(cover.classList.contains('curtain'))return openCurtain(story);
-  const leaf=$('#leaf'),lr=leaf.getBoundingClientRect(),vb=leaf.viewBox.baseVal,sc=lr.width/vb.width;
-  const from=SRCSEG.map(([a,b,c,d])=>[lr.left+(a-vb.x)*sc,lr.top+(b-vb.y)*sc,lr.left+(c-vb.x)*sc,lr.top+(d-vb.y)*sc]);
-  cover.classList.add('morphing','out');setTimeout(()=>cover.style.display='none',900);
-  if(!RM&&lr.width){growR=0;const gc=document.getElementById('growc');if(gc)gc.setAttribute('r',0);tw.classList.add('pre');$('#tstage').classList.add('intro');}
-  location.hash='tree';
-  // open the tree full screen; wait for the browser to finish resizing before measuring
-  const pr=setFull(true,true);let went=0;const go=()=>{if(went++)return;requestAnimationFrame(build);};
-  if(pr){pr.then(go);setTimeout(go,900);}else go();
-  function build(){
-    const fin=()=>{if(story)setTimeout(startStory,300);else setTimeout(showHint,500);};
-    if(RM||!lr.width){route();drawLeafTree(false);tStart();tFitted=1;fin();return;}
-    // hide the tree, then draw it: the planet rises, the gold sketch folds into the trunk, and the tree grows out from the ground
-    route();drawLeafTree(false);tStart();tFitted=1;
-    setTimeout(()=>growTree(fin),650);
-    requestAnimationFrame(()=>{
-      const st=$('#tstage').getBoundingClientRect(),toS=(x,y)=>[st.left+tv.x+x*tv.k,st.top+tv.y+y*tv.k];
-      const b0=tw.querySelector('.br'),bark=b0?rgb((cs=>cs.stroke==='none'?cs.fill:cs.stroke)(getComputedStyle(b0))):[125,95,66],gold=[243,217,184];
-      const big=[...TBR].sort((a,b)=>b.w-a.w).slice(0,3);
-      const cy=y=>Math.min(y,1205);const tg0=big.map(b=>{const p=toS(b.x1,cy(b.y1)),q=toS(b.x2,cy(b.y2));return [p[0],p[1],q[0],q[1],Math.max(1.5,b.w*tv.k*.8)];}),tg=from.map((_,i)=>tg0[i%tg0.length]);
-      if(!tg.length)return;
-      const fx=document.createElementNS('http://www.w3.org/2000/svg','svg');fx.setAttribute('class','morphfx');
-      fx.innerHTML=tg.map(()=>'<line stroke-linecap="round"/>').join('');document.body.appendChild(fx);
-      const L=[...fx.children],n=L.length,T=1250,t0=performance.now(),ez=u=>u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2;
-      function f(now){let all=true;
-        L.forEach((ln,i)=>{const s=from[i],e=tg[i],dl=(i/n)*220,u=Math.min(1,Math.max(0,(now-t0-dl)/T));if(u<1)all=false;const k=ez(u);
-          ln.setAttribute('x1',s[0]+(e[0]-s[0])*k);ln.setAttribute('y1',s[1]+(e[1]-s[1])*k);ln.setAttribute('x2',s[2]+(e[2]-s[2])*k);ln.setAttribute('y2',s[3]+(e[3]-s[3])*k);
-          const c=gold.map((g,j)=>Math.round(g+(bark[j]-g)*k));ln.setAttribute('stroke',`rgb(${c})`);ln.setAttribute('stroke-width',2.4+(e[4]-2.4)*k);});
-        if(!all)requestAnimationFrame(f);else{fx.style.transition='opacity .7s ease';fx.style.opacity=0;setTimeout(()=>fx.remove(),800);}}
-      requestAnimationFrame(f);
-    });
-  }
-}
+function closeCover(story){openCurtain(story);}
 // quietly fetch every face while the opening screen is showing, so they're ready when the tree grows
 (window.requestIdleCallback||(f=>setTimeout(f,1200)))(()=>{Object.values(photo).forEach(u=>{if(!u)return;const i=new Image();i.decoding='async';i.src=u;});});
 $('#begin').onclick=()=>{startMusic();closeCover(true);};

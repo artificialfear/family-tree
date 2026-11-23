@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-22 — Easier to read on phones
+- On phones the tree opens larger, filling the space between the sky and the buttons, and the names on the scrolls are bigger. The outer cousins are a swipe away at the sides.
+- The story card on phones is slimmer, with smaller photos and text; longer chapters scroll inside the card.
+- Finishing the story with "Explore the tree" now changes the sky: night turns to sunset (or sunset to night).
+- Behind the scenes: removed old designs that are no longer used (earlier tree styles, the growing-tree opening, faces on the sun and moon, the oval title plaque, red curtains, and the in-tree banner and constellations).
+
 ## 2026-11-22 — Lowered in on opening
 - When the curtains first open, the moon and the hanging stars are lowered down into place on their strings.
 

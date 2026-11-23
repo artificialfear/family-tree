@@ -48,6 +48,8 @@ function showStep(){
   $('#sPrev')&&($('#sPrev').onclick=()=>{si--;resetAuto();showStep();});
   $('#sNext')&&($('#sNext').onclick=()=>{si++;resetAuto();showStep();});
   document.querySelectorAll('#sEnd').forEach(b=>b.onclick=endStory);
+  // the curtain-call: finishing the story with 'Explore the tree' also turns night to sunset (or sunset to night)
+  if(last){const ex=$('#cap .pri#sEnd');if(ex)ex.onclick=()=>{endStory();setTimeout(()=>$('#tSky').click(),1100);};}
   $('#sAuto').onclick=()=>{if(auto){clearInterval(auto);auto=null;}else{auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}showStep();};
 }
 function resetAuto(){if(auto){clearInterval(auto);auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}}
