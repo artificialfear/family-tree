@@ -95,19 +95,21 @@ function faceSVG(kind){const sun=kind==='sun';let rays='';
    <path d="M-3 -2Q-6 6 -1 8" fill="none" stroke="#a8712a" stroke-width="1.8" stroke-linecap="round"/></svg>`;}
 /* the family name as a lit marquee sign, fixed at the top of the stage */
 function marqueeSVG(){
-  // the family name on a celestial cartouche: a midnight oval in a gold frame, hung from a gold crescent (Mat's pick, design D)
-  return `<svg class="mqsign" viewBox="0 0 520 180" role="img" aria-label="The Graham and Harper Family" style="overflow:visible">
-   <defs><linearGradient id="mqcG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a6"/><stop offset=".5" stop-color="#d9a441"/><stop offset="1" stop-color="#8f5f1b"/></linearGradient>
-   <radialGradient id="mqcB" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#2a1a5e"/><stop offset="1" stop-color="#120a33"/></radialGradient></defs>
-   <line x1="260" y1="-400" x2="260" y2="14" stroke="#d9a441" stroke-width="2"/>
-   <g transform="translate(260 22)"><circle r="12" fill="url(#mqcG)"/><circle cx="5" cy="-3" r="10" fill="#120a33"/></g>
-   <ellipse cx="260" cy="98" rx="214" ry="66" fill="url(#mqcG)"/><ellipse cx="260" cy="98" rx="206" ry="59" fill="url(#mqcB)"/>
-   <ellipse cx="260" cy="98" rx="196" ry="51" fill="none" stroke="#d9a441" stroke-width="1.2" stroke-dasharray="1 5" stroke-linecap="round"/>
-   <path d="M56 98l10-8 10 8-10 8Z M464 98l-10-8-10 8 10 8Z" fill="url(#mqcG)"/>
-   <text x="260" y="78" text-anchor="middle" font-family="Spectral,Georgia,serif" font-style="italic" font-size="16" fill="#f3dc95" letter-spacing="2">The</text>
-   <text x="260" y="112" text-anchor="middle" font-family="Spectral,Georgia,serif" font-weight="700" font-size="34" fill="url(#mqcG)" textLength="300" lengthAdjust="spacingAndGlyphs">Graham &amp; Harper</text>
-   <text x="260" y="138" text-anchor="middle" font-family="Spectral,Georgia,serif" font-style="italic" font-size="16" fill="#f3dc95" letter-spacing="4">Family</text>
-   <g fill="#f3dc95"><circle cx="130" cy="72" r="1.6"/><circle cx="392" cy="70" r="1.6"/><circle cx="150" cy="128" r="1.2"/><circle cx="372" cy="130" r="1.2"/></g></svg>
+  // the family name on a purple velvet pennant hung from a gold rod, with gold tassels (Mat's pick, design B)
+  return `<svg class="mqsign" viewBox="0 0 520 190" role="img" aria-label="The Graham and Harper Family" style="overflow:visible">
+   <defs><linearGradient id="mqpV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b2a8f"/><stop offset="1" stop-color="#2c0f50"/></linearGradient>
+   <linearGradient id="mqpG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a6"/><stop offset=".5" stop-color="#e0ae45"/><stop offset="1" stop-color="#9a6a1e"/></linearGradient>
+   <pattern id="mqpS" width="54" height="70" patternUnits="userSpaceOnUse"><path d="${star6(12,14,3)}" fill="#e9c46a" opacity=".45"/><circle cx="38" cy="46" r="1.1" fill="#fff3c8" opacity=".45"/></pattern></defs>
+   <line x1="110" y1="-400" x2="110" y2="20" stroke="#d9a441" stroke-width="2"/><line x1="410" y1="-400" x2="410" y2="20" stroke="#d9a441" stroke-width="2"/>
+   <path d="M96 24H424V140L392 158 360 140 328 158 296 140 260 160 224 140 192 158 160 140 128 158 96 140Z" fill="url(#mqpV)" stroke="#d9a441" stroke-width="2.5"/>
+   <path d="M96 24H424V140L392 158 360 140 328 158 296 140 260 160 224 140 192 158 160 140 128 158 96 140Z" fill="url(#mqpS)"/>
+   <path d="M106 32H414V134L392 147 360 132 328 147 296 132 260 149 224 132 192 147 160 132 128 147 106 134Z" fill="none" stroke="#d9a441" stroke-width="1" opacity=".6"/>
+   <rect x="80" y="14" width="360" height="10" rx="5" fill="url(#mqpG)"/><circle cx="80" cy="19" r="8" fill="url(#mqpG)"/><circle cx="440" cy="19" r="8" fill="url(#mqpG)"/>
+   <text x="260" y="62" text-anchor="middle" font-family="Spectral,Georgia,serif" font-style="italic" font-size="17" fill="#f3dc95">The</text>
+   <text x="260" y="98" text-anchor="middle" font-family="Spectral,Georgia,serif" font-weight="700" font-size="34" fill="url(#mqpG)" stroke="#2a0f45" stroke-width=".8" textLength="290" lengthAdjust="spacingAndGlyphs">Graham &amp; Harper</text>
+   <text x="260" y="124" text-anchor="middle" font-family="Spectral,Georgia,serif" font-style="italic" font-size="17" fill="#f3dc95" letter-spacing="3">Family</text>
+   <g fill="#e9c46a"><path transform="translate(222 57)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/><path transform="translate(298 57)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/><path transform="translate(212 120)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/><path transform="translate(308 120)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/></g>
+   ${[128,192,260,328,392].map(x=>`<line x1="${x}" y1="${x===260?160:158}" x2="${x}" y2="${x===260?178:172}" stroke="#d9a441" stroke-width="1.5"/><circle cx="${x}" cy="${x===260?181:175}" r="3.5" fill="#e0ae45"/>`).join('')}</svg>
    <svg class="mqnew" viewBox="-300 -20 600 40"><g id="tnew" class="tnew" role="button" tabindex="0"><rect class="tnbg" x="-200" y="-17" width="400" height="32" rx="16"/><text class="tntext" text-anchor="middle" y="5"></text></g></svg>`;}
 /* stage moon: a gold paper-cut crescent hanging on a string from behind the valance (Mat's pick, design #2) */
 function paperMoonSVG(){return `<svg viewBox="-110 -110 220 220" aria-hidden="true" style="overflow:visible">

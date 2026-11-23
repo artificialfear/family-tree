@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Velvet pennant title
+- The title now hangs as a purple velvet pennant from a gold rod — gold lettering, a scatter of tiny stars, a zigzag hem with gold tassels — matching the curtains.
+
 ## 2026-11-22 — Celestial title plaque
 - The bright marquee sign is replaced by a midnight-blue oval plaque in a gold frame, hanging from a little gold crescent, with "The Graham & Harper Family" in gold — matching the purple curtains, paper moon and gold stars.
 
