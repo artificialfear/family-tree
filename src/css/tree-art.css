@@ -303,7 +303,7 @@ footer{height:80px}
 .theme-stage .sky::after{content:"";position:absolute;inset:0;pointer-events:none;background:
   radial-gradient(120% 95% at 50% 55%,rgba(0,0,0,0) 55%,rgba(60,30,10,.42) 100%),
   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .42 0 0 0 0 .25 0 0 0 .2 0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)'/%3E%3C/svg%3E")}
-.theme-stage.sky-night{background:linear-gradient(180deg,#0a1440 0%,#13266b 40%,#1d3a8a 72%,#2a3f7a 100%)}
+.theme-stage.sky-night,.theme-stage.sky-day{background:linear-gradient(180deg,#232a52 0%,#45406f 24%,#8a4f7c 46%,#d0687a 64%,#f28d5f 80%,#ffc27a 92%,#ffdca0 100%)}
 .theme-stage .sky .stars i{border-radius:0;clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%)}
 /* gold-rimmed sun and moon, each with a crescent behind */
 .theme-stage .sky .sunset{box-shadow:0 0 0 5px #8f5f1b,0 0 0 9px #e2b552,0 0 0 12px #8f5f1b,0 0 60px 18px rgba(255,190,110,.55)}
@@ -402,3 +402,21 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .cpurple .cover.curtain .veil{background:radial-gradient(60% 55% at 50% 50%,rgba(16,6,40,.75) 0%,rgba(16,6,40,.35) 60%,rgba(16,6,40,0) 100%)}
 #marquee .mqsign{overflow:visible}
 .theme-stage .sky .sunset{display:none!important}
+/* ---------- stage: night ⇄ sunset scene change ----------
+   The moon is pulled up behind the valance on its string, then the sun is lowered on its strings (and the reverse),
+   while the night sky fades in or out over the sunset. */
+@property --dayk{syntax:'<number>';inherits:true;initial-value:0}
+.nightwash{display:none}
+.theme-stage .sky{--dayk:0;transition:--sunup .9s cubic-bezier(.4,0,.2,1),--sunx .9s cubic-bezier(.4,0,.2,1),--dayk 3s ease-in-out}
+.theme-stage.sky-day .sky{--dayk:1}
+.theme-stage .nightwash{display:block;position:absolute;inset:0;background:linear-gradient(180deg,#0a1440 0%,#13266b 40%,#1d3a8a 72%,#2a3f7a 100%);opacity:calc(1 - var(--dayk))}
+.theme-stage .sky .sunglow{display:block;opacity:calc(var(--sunup)*var(--dayk))}
+.theme-stage .sky .skydim{display:block;opacity:calc((1 - var(--sunup))*.55*var(--dayk))}
+.theme-stage .sky .cloud{display:block;opacity:var(--dayk)}
+.theme-stage .sky .stars{opacity:calc(1 - var(--dayk)*(.88 - (1 - var(--sunup))*.7))}
+.theme-stage .sbackdrop .sc1,.theme-stage .sbackdrop .sc2{transition:fill 3s ease-in-out,stroke 3s ease-in-out}
+.theme-stage #celest .moon,.theme-stage #celest .sun{display:block;transition:transform 1.4s cubic-bezier(.55,0,.35,1),visibility 0s}
+.theme-stage.sky-night #celest .moon,.theme-stage.sky-day #celest .sun{transform:none;visibility:visible;transition-delay:1.3s,1.3s;transition-timing-function:cubic-bezier(.25,.8,.35,1)}
+.theme-stage.sky-night #celest .sun,.theme-stage.sky-day #celest .moon{transform:translateY(-130vh);visibility:hidden;transition-delay:0s,1.4s;transition-timing-function:cubic-bezier(.55,0,.8,.4)}
+.theme-stage.skyinit .sky,.theme-stage.skyinit #celest .moon,.theme-stage.skyinit #celest .sun,.theme-stage.skyinit .sbackdrop path{transition:none!important}
+@media(prefers-reduced-motion:reduce){.theme-stage #celest .moon,.theme-stage #celest .sun{transition:visibility 0s}}

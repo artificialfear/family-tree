@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-22 — Night and sunset scene change
+- The sky button now simply switches between night and sunset (the automatic mode is gone).
+- Switching is a little scene change: the paper moon is pulled up behind the curtain on its string, then the paper sun is lowered down on its strings while the night sky slowly fades into sunset — and the reverse going back to night.
+
 ## 2026-11-22 — Paper-cut sun
 - At sunset the sun is now a gold paper-cut sun with pointed rays, hanging on two strings from behind the curtain — a matching prop to the paper moon. Tap it for the note for Mom.
 

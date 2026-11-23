@@ -87,7 +87,8 @@ $('#asks').addEventListener('submit',async e=>{e.preventDefault();const f=e.targ
 const goPerson=(id,form)=>{location.hash='tree';setTimeout(()=>{select(id,1);tFocus(id);if(form)setTimeout(()=>openForm(form),500);else $('#panel').scrollIntoView({behavior:RM?'auto':'smooth'});},120);};
 $('#asks').addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();goPerson(g.dataset.go);}});
 $('#wanted').addEventListener('click',e=>{const b=e.target.closest('[data-want]');if(b)goPerson(b.dataset.want,'photo');});
-$('#tSky').onclick=()=>{SKYPREF={auto:'night',night:'day',day:'auto'}[SKYPREF]||'auto';store.set('sky',SKYPREF);applySky(true);};
+// night ⇄ sunset only. On the stage the change is animated (moon/sun on strings, sky fades), so the tree isn't redrawn
+$('#tSky').onclick=()=>{SKYPREF=SKY==='day'?'night':'day';store.set('sky',SKYPREF);if(STAGE){applySky(false);sunLight();}else applySky(true);};
 /* ---------- larger text ---------- */
 function setBig(on){document.body.classList.toggle('big',on);store.set('bigtext',on?'1':'0');
   $('#bigBtn').setAttribute('aria-pressed',on);$('#bigBtn').textContent=on?'Aa Normal text':'Aa Larger text';$('#tBig').setAttribute('aria-pressed',on);$('#tBig').setAttribute('aria-label',on?'Normal text':'Larger text');

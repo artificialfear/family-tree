@@ -65,7 +65,7 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
 {const st=$('#tstage');let sd=3;const r=()=>(sd=(sd*16807)%2147483647)/2147483647;let stars='',clouds='';
  for(let i=0,N=innerWidth<700?60:110;i<N;i++){const x=r()*100,y=Math.pow(r(),1.4)*78,z=r()<.12?2.6:r()<.4?1.8:1.1,tw=r()<.3;stars+=`<i class="${tw?'tw':''}${y>34?' lo':''}" style="left:${x.toFixed(2)}%;top:${y.toFixed(2)}%;width:${z}px;height:${z}px;--o:${(.45+r()*.5).toFixed(2)};${tw?`--t:${(5+r()*9).toFixed(1)}s;--dl:-${(r()*12).toFixed(1)}s`:''}"></i>`;}
  for(let i=0;i<5;i++)clouds+=`<b class="cloud" style="top:${(6+r()*34).toFixed(1)}%;--s:${(.6+r()*.7).toFixed(2)};--t:${(150+r()*120).toFixed(0)}s;--dl:-${(r()*200).toFixed(0)}s"></b>`;
- const sky=document.createElement('div');sky.className='sky';sky.setAttribute('aria-hidden','true');sky.innerHTML=`<div class="sunglow"></div><div class="stars">${stars}</div>${clouds}<div class="sunset"></div><div class="skydim"></div>`;
+ const sky=document.createElement('div');sky.className='sky';sky.setAttribute('aria-hidden','true');sky.innerHTML=`<div class="nightwash"></div><div class="sunglow"></div><div class="stars">${stars}</div>${clouds}<div class="sunset"></div><div class="skydim"></div>`;
  const back=document.createElement('div');back.id='tback';back.className='wlayer';back.innerHTML='<img id="tbackimg" alt="" decoding="async">';
  const front=document.createElement('div');front.id='tfront';front.className='wlayer';let ff='';
  for(let i=0;i<12;i++){const x=330+r()*1180,y=1110+r()*170;ff+=`<i style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;--t:${(6+r()*6).toFixed(1)}s;--p:${(2.5+r()*2.5).toFixed(1)}s;--dl:-${(r()*8).toFixed(1)}s;--dx:${(r()*60-30).toFixed(0)}px;--dy:${(-20-r()*40).toFixed(0)}px"></i>`;}
@@ -73,7 +73,7 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
  const cel=document.createElement('div');cel.id='celest';cel.innerHTML=`<button class="moon" id="moonBtn" aria-label="A note for Mom">${moonSVG(moonPhase(Date.now()))}</button><button class="sun" id="sunBtn" aria-label="The evening star: a note for Mom"></button><div id="mstars"></div>`;
  const note=document.createElement('div');note.id='mnote';note.setAttribute('role','dialog');note.hidden=true;
  st.prepend(sky);sky.after(back);st.querySelector('svg').after(front);front.after(cel);st.appendChild(note);
- if(STAGE){st.classList.add('theme-stage');const bd=document.createElement('div');bd.className='sbackdrop';sky.appendChild(bd);
+ if(STAGE){st.classList.add('theme-stage','skyinit');setTimeout(()=>st.classList.remove('skyinit'),600);const bd=document.createElement('div');bd.className='sbackdrop';sky.appendChild(bd);
    const pr=document.createElement('div');pr.id='proscen';pr.setAttribute('aria-hidden','true');cel.after(pr);
    $('#moonBtn').innerHTML=paperMoonSVG();$('#sunBtn').innerHTML=paperSunSVG();$('#sunBtn').setAttribute('aria-label','The setting sun: a note for Mom');
    const mq=document.createElement('div');mq.id='marquee';mq.innerHTML=marqueeSVG();pr.after(mq);
@@ -180,7 +180,7 @@ function applySky(redraw){SKY=skyNow();NIGHT=true;const st=$('#tstage');['day','
   const b=$('#tSky');if(b){const IC={auto:'<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"/></svg>',
    day:'<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 17a6 6 0 0 1 12 0Z" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 20h20M12 5v3M4.6 9.6l2 2M19.4 9.6l-2 2"/></g></svg>',
    night:'<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="currentColor"/></svg>'};
-  const L={auto:['auto','Sky: automatic (sunset by day, night after dark)'],day:['day','Sky: always sunset'],night:['night','Sky: always night']}[SKYPREF]||['auto',''];b.innerHTML=IC[L[0]];b.setAttribute('aria-label',L[1]);b.title=L[1];}
+  const L={auto:['auto','Sky: automatic (sunset by day, night after dark)'],day:['day','Sunset — tap for night'],night:['night','Night — tap for sunset']}[SKYPREF]||['auto',''];b.innerHTML=IC[L[0]];b.setAttribute('aria-label',L[1]);b.title=L[1];}
   if(redraw&&tw.childElementCount){const k={...tv};drawLeafTree(false);tv=k;tApply(false);}}
 applySky(false);
 setInterval(()=>{if(SKYPREF==='auto'&&autoSky()!==SKY)applySky(true);},5*60*1000);
