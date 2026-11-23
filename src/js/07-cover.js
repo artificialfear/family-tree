@@ -32,10 +32,11 @@ function openCurtain(story){if(cover.classList.contains('opening'))return;cover.
   // full screen first (the tree refits to the new size behind the curtain), then part the curtains
   let pr=null;const d=document.documentElement,rq=d.requestFullscreen||d.webkitRequestFullscreen;try{const p=rq&&rq.call(d);if(p&&p.then)pr=p.then(()=>new Promise(r=>setTimeout(r,180)),()=>{});}catch(e){}
   // entering full screen resizes the window (bars slide away on phones); wait until the size has settled
-  // and the stage behind has been redrawn for it, so nothing jumps while the curtains part
+  // and the stage behind has been redrawn for it, so nothing jumps while the curtains part (touch screens wait a little
+  // longer: an Android tablet needs a moment to redraw everything at the new size, and showed black until it had)
   const settled=()=>new Promise(res=>{let w=innerWidth,h=innerHeight,still=0,t0=performance.now();(function chk(now){
       if(innerWidth!==w||innerHeight!==h){w=innerWidth;h=innerHeight;still=now;}
-      if(now-still>320&&now-t0>200||now-t0>1600)res();else requestAnimationFrame(chk);})(t0);});
+      if(now-still>(TOUCH?720:320)&&now-t0>200||now-t0>(TOUCH?2200:1600))res();else requestAnimationFrame(chk);})(t0);});
   let went=0;const go=()=>{if(went++)return;Promise.all([lastBake,settled()]).then(()=>{if(!tTouched)tStart();}).then(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{
       cover.classList.add('open');startMusic(story?'story':'tree',true);{const st=$('#tstage');st.classList.add('lowering');st.classList.remove('hoisted');setTimeout(()=>st.classList.remove('lowering'),5000);}const T=RM?300:1900;
       setTimeout(()=>{cover.style.display='none';if(story)startStory();else setTimeout(showHint,300);},T);})));};

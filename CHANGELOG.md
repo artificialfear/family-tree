@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-23 — Tablets
+- Held upright, a tablet now hangs the gold stars and the sunset clouds in the open sky between the banner and the top of the tree, not bunched in the corners or tangled in the branches. Landscape, phones and computers look the same as before.
+- Smoother night ⇄ sunset change: the sky no longer repaints itself on every frame, which showed up as black or blocky patches on Android tablets.
+- Tablets use the lighter graphics that phones already use: a smaller canopy picture, and the tree fades to its new view instead of sliding. On touch screens the curtains also wait a moment longer for full screen to settle before they part.
+
 ## 2026-11-23 — "For Mom" in Mat's words; Johnnie
 - The last chapter, "For Mom", now ends with Mat's own words, including Annie Mae as the glue that held the family together and "We love you very much, momma!"
 - Johnnie Harper's name is spelled "Johnnie" everywhere (the spelling on his 1940 census record).

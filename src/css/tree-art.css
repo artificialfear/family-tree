@@ -262,7 +262,9 @@ footer{height:80px}
 .sbackdrop .sstr{stroke:rgba(240,220,170,.45);stroke-width:1}
 .sbackdrop .sgold{fill:url(#sgg);stroke:#6b4410;stroke-width:1.2;filter:drop-shadow(0 0 6px rgba(255,214,120,.55))}
 .sbackdrop .sglint{fill:#fff6d8;opacity:.55}
-.sky-day .sbackdrop .sc1{fill:#3a3f86;stroke:#1c1f4e}.sky-day .sbackdrop .sc2{fill:#2a2c66}
+.sbackdrop .sc1d{fill:#3a3f86;stroke:#1c1f4e;stroke-width:2;filter:drop-shadow(0 6px 5px rgba(5,8,25,.45))}.sbackdrop .sc2d{fill:#2a2c66;stroke:#0a1640;stroke-width:1.5;opacity:.9}
+.sbackdrop .srowday{opacity:0;transition:opacity 3s ease-in-out;will-change:opacity}.sky-day .sbackdrop .srowday{opacity:1}
+.sbackdrop .hstar,.sbackdrop .hcloud{will-change:transform}
 #proscen .pband,.cframe .pband{fill:#14215a}#proscen .pgold,.cframe .pgold,#proscen .pcres,.cframe .pcres{fill:url(#pgl)}#proscen .pcut,.cframe .pcut{fill:#14215a}
 #proscen .pred,.cframe .pred{fill:url(#prg);stroke:#3d070c;stroke-width:1.5}#proscen .pgrn,.cframe .pgrn{fill:url(#pgg);stroke:#0b2e20;stroke-width:1.2}
 #proscen .pfold,.cframe .pfold{fill:none;stroke:rgba(40,4,8,.45);stroke-width:2}
@@ -354,6 +356,8 @@ body.stagemode #tstage .hint{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 2
 /* phones: keep the big tree picture still so the phone isn't redrawing it constantly */
 @media(max-width:699px){#tworld .leaf,#tworld .br,#tworld .deco{transition:none!important}#tmstars .msp{animation:none!important;transform:scale(1.6)}
   #tworld .leaf.spot .lin,#tworld .leaf.spot .glow{animation:none!important}}
+.touch #tworld .leaf,.touch #tworld .br,.touch #tworld .deco{transition:none!important}.touch #tmstars .msp{animation:none!important;transform:scale(1.6)}
+.touch #tworld .leaf.spot .lin,.touch #tworld .leaf.spot .glow{animation:none!important}
 /* the sign is its own layer so changes behind it never make it repaint */
 #marquee .mqsign{will-change:transform;transform:translateZ(0)}
 /* during the story the toolbar steps aside; the story card's Skip / Explore the tree brings it back */
@@ -375,20 +379,22 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 /* ---------- stage: night ⇄ sunset scene change ----------
    The moon is pulled up behind the valance on its string, then the sun is lowered on its strings (and the reverse),
    while the night sky fades in or out over the sunset. */
-@property --dayk{syntax:'<number>';inherits:true;initial-value:0}
 .nightwash{display:none}
-.theme-stage .sky{--dayk:0;transition:--sunup .9s cubic-bezier(.4,0,.2,1),--sunx .9s cubic-bezier(.4,0,.2,1),--dayk 3s ease-in-out}
-.theme-stage.sky-day .sky{--dayk:1}
-.theme-stage .nightwash{display:block;position:absolute;inset:0;background:linear-gradient(180deg,#0a1440 0%,#13266b 40%,#1d3a8a 72%,#2a3f7a 100%);opacity:calc(1 - var(--dayk))}
-.theme-stage .sky .sunglow{display:block;opacity:calc(var(--sunup)*var(--dayk))}
-.theme-stage .sky .skydim{display:block;opacity:calc((1 - var(--sunup))*.55*var(--dayk))}
-.theme-stage .sky .cloud{display:block;opacity:var(--dayk)}
-.theme-stage .sky .stars{opacity:calc(1 - var(--dayk)*(.88 - (1 - var(--sunup))*.7))}
-.theme-stage .sbackdrop .sc1,.theme-stage .sbackdrop .sc2{transition:fill 3s ease-in-out,stroke 3s ease-in-out}
+/* the stage sun is always fully up, so --sunup is fixed at 1 (easing it from night's value restyled and repainted every
+   piece of the sky for the first second of each night ⇄ sunset change) */
+.theme-stage .sky{--sunup:1;--suny:62%;transition:--sunx .9s cubic-bezier(.4,0,.2,1)}
+.theme-stage .nightwash{display:block;position:absolute;inset:0;background:linear-gradient(180deg,#0a1440 0%,#13266b 40%,#1d3a8a 72%,#2a3f7a 100%);opacity:1}
+/* night ⇄ sunset: plain opacity fades on their own layers (animating a shared variable restyled and repainted the whole sky every frame) */
+.theme-stage .nightwash,.theme-stage .sky .sunglow,.theme-stage .sky .skydim,.theme-stage .sky .cloud,.theme-stage .sky .stars{transition:opacity 3s ease-in-out;will-change:opacity}
+.theme-stage.sky-day .nightwash{opacity:0}
+.theme-stage .sky .sunglow{display:block;opacity:0}.theme-stage.sky-day .sky .sunglow{opacity:var(--sunup)}
+.theme-stage .sky .skydim{display:block;opacity:0}.theme-stage.sky-day .sky .skydim{opacity:calc((1 - var(--sunup))*.55)}
+.theme-stage .sky .cloud{display:block;opacity:0}.theme-stage.sky-day .sky .cloud{opacity:1}
+.theme-stage .sky .stars{opacity:1}.theme-stage.sky-day .sky .stars{opacity:calc(.12 + (1 - var(--sunup))*.7)}
 .theme-stage #celest .moon,.theme-stage #celest .sun{display:block;transition:transform 1.4s cubic-bezier(.55,0,.35,1),visibility 0s}
 .theme-stage.sky-night #celest .moon,.theme-stage.sky-day #celest .sun{transform:none;visibility:visible;transition-delay:1.3s,1.3s;transition-timing-function:cubic-bezier(.25,.8,.35,1)}
 .theme-stage.sky-night #celest .sun,.theme-stage.sky-day #celest .moon{transform:translateY(-130vh);visibility:hidden;transition-delay:0s,1.4s;transition-timing-function:cubic-bezier(.55,0,.8,.4)}
-.theme-stage.skyinit .sky,.theme-stage.skyinit #celest .moon,.theme-stage.skyinit #celest .sun,.theme-stage.skyinit .sbackdrop path,.theme-stage.skyinit .sbackdrop g{transition:none!important}
+.theme-stage.skyinit .sky,.theme-stage.skyinit #celest .moon,.theme-stage.skyinit #celest .sun,.theme-stage.skyinit .sbackdrop path,.theme-stage.skyinit .sbackdrop svg,.theme-stage.skyinit .nightwash,.theme-stage.skyinit .sky .sunglow,.theme-stage.skyinit .sky .skydim,.theme-stage.skyinit .sky .cloud,.theme-stage.skyinit .sky .stars{transition:none!important}
 @media(prefers-reduced-motion:reduce){.theme-stage #celest .moon,.theme-stage #celest .sun{transition:visibility 0s}}
 .theme-stage .sky .sunglow{background:radial-gradient(75% 65% at var(--sunx,50%) 62%,rgba(255,206,135,.9) 0%,rgba(255,160,115,.5) 40%,rgba(255,120,120,0) 80%)}
 .theme-stage.sky-day,.theme-stage.sky-night{background:linear-gradient(180deg,#3a3f78 0%,#6a4f8a 22%,#b0608a 44%,#e8807a 62%,#ffa86a 78%,#ffcf8a 90%,#ffe6b0 100%)}

@@ -30,7 +30,7 @@ function runSpots(s){clearSpots();const spans=[...$('#cap').querySelectorAll('.m
 function startStory(){musicFor('story');clearTimeout(hintT);$('#hint').classList.remove('on');location.hash='tree';tTouched=1;si=0;tw.classList.add('story');document.body.classList.add('storyon');requestAnimationFrame(()=>{$('#tstage').scrollIntoView({behavior:RM?'auto':'smooth',block:innerWidth<600?'start':'nearest'});showStep();});}
 // auto-play: each chapter stays up long enough to read it (about 200 words a minute, plus time for the move)
 const readMs=s=>Math.max(9000,Math.min(28000,3000+s.t.split(/\s+/).length*300));
-let stepT=0;const PHONE=()=>$('#tstage').clientWidth<700;
+let stepT=0;const PHONE=()=>$('#tstage').clientWidth<700||TOUCH;
 function showStep(){
   const s=STORY[si];storyFocus=s.f.length?s.f:null;
   const pics=(s.img?`<img src="${s.img}" alt="Jack Graham in Navy uniform">`:'')+s.f.filter(id=>photo[id]).slice(0,s.img?3:4).map(id=>`<img src="${esc(photo[id])}" alt="${esc(byId[id].n)}">`).join('');

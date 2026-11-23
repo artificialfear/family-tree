@@ -1,5 +1,5 @@
 /* ---------- illustrated tree ---------- */
-const tsvg=$('#tsvg'),tw=$('#tworld');let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
+const tsvg=$('#tsvg'),tw=$('#tworld');let stageDraw=null,sbdKey='';const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
 const RAD={ssp:36,son:40,par:62,gp:44,ggp:34,aunt:33,asp:26,kid:27,ksp:22,gk:30},FS={ssp:19,son:21,par:27,gp:22,ggp:18,aunt:18,asp:15,kid:15,ksp:13,gk:17};
 function tLayout(){
   const pos={},br=[],put=(id,x,y,t)=>{if(byId[id]&&!pos[id])pos[id]={x,y,r:RAD[t],t};return pos[id];};
@@ -77,8 +77,8 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
    const pr=document.createElement('div');pr.id='proscen';pr.setAttribute('aria-hidden','true');cel.after(pr);
    $('#moonBtn').innerHTML=paperMoonSVG();$('#sunBtn').innerHTML=paperSunSVG();$('#sunBtn').setAttribute('aria-label','The setting sun: a note for Mom');
    const mq=document.createElement('div');mq.id='marquee';mq.innerHTML=marqueeSVG();pr.after(mq);
-   const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;const tb=st.querySelector('.tools'),D=stageDims(r.width,r.height);$('#marquee').style.top=(r.width<700?4:6)+'px';if(r.width<700){const mb=$('#marquee').getBoundingClientRect().bottom-r.top;st.style.setProperty('--mqb',mb+'px');}st.style.setProperty('--apron',D.ah+'px');if(tb)st.style.setProperty('--tbh',tb.offsetHeight+'px');bd.innerHTML=stageBackdrop(r.width,r.height,$('#marquee').getBoundingClientRect().bottom-r.top);pr.innerHTML=stageFrame(r.width,r.height);};
-   draw();let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(()=>{draw();if(!tTouched)tStart();},120);}).observe(st);}}
+   const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;const tb=st.querySelector('.tools'),D=stageDims(r.width,r.height);$('#marquee').style.top=(r.width<700?4:6)+'px';if(r.width<700){const mb=$('#marquee').getBoundingClientRect().bottom-r.top;st.style.setProperty('--mqb',mb+'px');}st.style.setProperty('--apron',D.ah+'px');if(tb)st.style.setProperty('--tbh',tb.offsetHeight+'px');bd.innerHTML=stageBackdrop(r.width,r.height,$('#marquee').getBoundingClientRect().bottom-r.top,canopyTopFit(r));pr.innerHTML=stageFrame(r.width,r.height);};
+   draw();stageDraw=draw;let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(()=>{draw();if(!tTouched)tStart();},120);}).observe(st);}}
 /* the moon and sun as friendly faces, gold-rimmed like an old stage sign (original drawings) */
 function marqueeSVG(){
   // the family name on a purple velvet pennant hung from a gold rod, with gold tassels (Mat's pick, design B)
@@ -116,28 +116,43 @@ function paperMoonSVG(){return `<svg viewBox="-110 -110 220 220" aria-hidden="tr
   <circle cx="-40" cy="-62" r="4" fill="#b98530"/></svg>`;}
 /* ---------- toy-theater scenery (theme=stage): drawn to the screen size, redrawn only on resize ---------- */
 function star6(x,y,r){let d='';for(let i=0;i<12;i++){const a=(i*30-90)*Math.PI/180,rr=i%2?r*.45:r;d+=(i?'L':'M')+(x+Math.cos(a)*rr).toFixed(1)+' '+(y+Math.sin(a)*rr).toFixed(1);}return d+'Z';}
-function stageBackdrop(W,H,mqb=200){const ph=W<700;let sd=11;const r=()=>(sd=(sd*16807)%2147483647)/2147483647,f=n=>n.toFixed(1);
+function stageBackdrop(W,H,mqb=200,gb=0){const ph=W<700;let sd=11;const r=()=>(sd=(sd*16807)%2147483647)/2147483647,f=n=>n.toFixed(1);
   // two rows of flat cut-out clouds hanging from the top, then gold stars on strings
-  const top=stageDims(W,H).top-(ph?4:10);let back='',front='';
+  const top=stageDims(W,H).top-(ph?4:10);
   const row=(y,sc,cls)=>{let x=-40,d='M-60 0L-60 '+f(y);while(x<W+60){const w=(ph?60:90)*sc*(.75+r()*.6),h=w*(.42+r()*.18);d+=`Q${f(x+w*.05)} ${f(y+h)} ${f(x+w*.5)} ${f(y+h*.95)}Q${f(x+w*.95)} ${f(y+h)} ${f(x+w)} ${f(y)}`;x+=w;}return `<path class="${cls}" d="${d}L${f(W+60)} 0Z"/>`;};
-  back=row(top+(ph?8:14),1.25,'sc2');front=row(top,1,'sc1');
+  const sd0=sd,back=row(top+(ph?8:14),1.25,'sc2'),front=row(top,1,'sc1');sd=sd0;const backD=row(top+(ph?8:14),1.25,'sc2d'),frontD=row(top,1,'sc1d');
+  // tall screens (a tablet held upright): the open sky is the band between the valance and the top of the canopy,
+  // so everything hangs there instead of beside the tree, where the canopy fills the width
+  const tall=!ph&&H>W*1.15&&gb-top>150,sunL=W*.92-Math.min(140,Math.max(90,W*.095))-14,sunY=H*.22-10;
+  // each hanging piece is its own small picture, so raising and lowering it is a move the graphics chip does by itself
+  // (one big picture had to be repainted every frame of the set change, and Android tablets showed black patches)
+  const piece=(cls,i,x0,x1,y1,inner)=>`<svg class="${cls}" style="--i:${i};left:${f(x0)}px;width:${f(x1-x0)}px;height:${f(y1)}px" width="${f(x1-x0)}" height="${f(y1)}" viewBox="${f(x0)} 0 ${f(x1-x0)} ${f(y1)}" overflow="visible">${inner}</svg>`;
   // gold stars on strings, hanging from behind the valance at different drops and sizes.
   // They hang in the open sky: beside the tree on wide screens, in the gap under the sign on phones.
-  let stars='',si=0;const n=ph?8:24,base=ph?6:13;for(let i=0;i<n;i++){const x=W*(.04+.92*(i+.5)/n)+(r()-.5)*W*(ph?.03:.025),dx=Math.abs(x-W/2)/W,rs=base*(ph?(i%3===1?1.5+r()*.5:.6+r()*.7):.55+r()*1.15);let len;
+  let stars='',si=0;const n=ph?8:tall?18:24,base=ph?6:13;for(let i=0;i<n;i++){const x=W*(.04+.92*(i+.5)/n)+(r()-.5)*W*(ph?.03:.025),dx=Math.abs(x-W/2)/W,rs=base*(ph?(i%3===1?1.5+r()*.5:.6+r()*.7):.55+r()*1.15);let len;
     if(ph){if(dx>.44||x>W*.74)continue;const PD=[.1,.95,.45,.75,0,.6,1,.3];const d=PD[i%PD.length];
       len=(dx>.32?top+14+d*(mqb+80-top):mqb+8+d*82)+rs;}
+    else if(tall){if(dx>.45)continue;const PD=[.15,.8,.4,.95,.05,.6,.3,1,.5,.7,.2,.9];const d=PD[i%PD.length];
+      const lo=dx<.2?mqb+14:top+16,hi=gb-rs-10;if(hi<lo+10)continue;len=lo+d*(hi-lo);
+      if(x+rs>sunL-6&&len+rs>sunY-20)len=Math.max(top+16,sunY-26-rs);}
     else if(dx<.21)continue;
     else if(dx<.31)len=top+20+r()*Math.max(10,mqb-top-30);
     else len=top+(ph?16:24)+Math.pow(r(),1.4)*H*.46;
-    stars+=`<g class="hstar" style="--i:${si++}"><line x1="${f(x)}" y1="0" x2="${f(x)}" y2="${f(len-rs)}" class="sstr"/><path class="sgold" d="${star6(x,len,rs)}"/><path class="sglint" d="${star6(x-rs*.12,len-rs*.12,rs*.42)}"/></g>`;}
+    stars+=piece('hstar',si++,x-rs-10,x+rs+10,len+rs+10,`<line x1="${f(x)}" y1="0" x2="${f(x)}" y2="${f(len-rs)}" class="sstr"/><path class="sgold" d="${star6(x,len,rs)}"/><path class="sglint" d="${star6(x-rs*.12,len-rs*.12,rs*.42)}"/>`);}
   // sunset set piece: peach paper clouds on strings that are lowered in when the stars are hoisted out
-  const cl=ph?[[.13,mqb+26,92],[.47,mqb+70,104]]:[[.07,top+62,132],[.15,top+H*.33,112],[.08,top+H*.53,128],[.775,top+H*.4,124],[.91,top+H*.64,100]];
+  const band=k=>mqb+k*(gb-mqb);
+  const cl=ph?[[.13,mqb+26,92],[.47,mqb+70,104]]:tall?[[.12,top+.5*(gb-top),112],[.33,band(.78),100],[.6,band(.42),104],[.83,gb-12,96]]:[[.07,top+62,132],[.15,top+H*.33,112],[.08,top+H*.53,128],[.775,top+H*.4,124],[.91,top+H*.64,100]];
   let clouds='';cl.forEach(([fx,cy,w],k)=>{const x0=W*fx-w/2,p=`M${f(x0)} ${f(cy)}A${f(w*.2)} ${f(w*.2)} 0 0 1 ${f(x0+w*.3)} ${f(cy-w*.13)}A${f(w*.26)} ${f(w*.26)} 0 0 1 ${f(x0+w*.72)} ${f(cy-w*.1)}A${f(w*.19)} ${f(w*.19)} 0 0 1 ${f(x0+w)} ${f(cy)}Z`;
-    clouds+=`<g class="hcloud" style="--i:${k}"><line x1="${f(x0+w*.32)}" y1="0" x2="${f(x0+w*.32)}" y2="${f(cy-w*.16)}" class="sstr"/><line x1="${f(x0+w*.7)}" y1="0" x2="${f(x0+w*.7)}" y2="${f(cy-w*.2)}" class="sstr"/>
-      <path d="${p}" transform="translate(5 7)" class="pcsh"/><path d="${p}" class="pcl"/><path d="M${f(x0+w*.12)} ${f(cy-3)}H${f(x0+w*.88)}" class="pcln"/></g>`;});
-  stars+=clouds;
-  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
-   <linearGradient id="pclg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe0c2"/><stop offset="1" stop-color="#f49a8e"/></linearGradient><linearGradient id="sgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient></defs>${back}${front}${stars}</svg>`;}
+    clouds+=piece('hcloud',k,x0-4,x0+w+10,cy+12,`<line x1="${f(x0+w*.32)}" y1="0" x2="${f(x0+w*.32)}" y2="${f(cy-w*.16)}" class="sstr"/><line x1="${f(x0+w*.7)}" y1="0" x2="${f(x0+w*.7)}" y2="${f(cy-w*.2)}" class="sstr"/>
+      <path d="${p}" transform="translate(5 7)" class="pcsh"/><path d="${p}" class="pcl"/><path d="M${f(x0+w*.12)} ${f(cy-3)}H${f(x0+w*.88)}" class="pcln"/>`);});
+  // the day-coloured copy of the cloud rows fades in over the night one (a fade costs nothing; changing the colours repainted it every frame)
+  return `<svg class="srow" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
+   <linearGradient id="pclg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe0c2"/><stop offset="1" stop-color="#f49a8e"/></linearGradient><linearGradient id="sgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient></defs>${back}${front}</svg>`+
+   `<svg class="srow srowday" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${backD}${frontD}</svg>${stars}${clouds}`;}
+// where the top of the canopy lands when the whole tree is fitted (same sums as tFrame), so tall screens can hang the stars above it
+function canopyTopFit(r){if(!TB||!isFinite(TB.y0)||TB.x1-TB.x0<50)return 0;const SD=stageDims(r.width,r.height),m=$('#marquee'),tl=$('#tstage>.tools'),
+  top=Math.max(60,SD.top,m?m.getBoundingClientRect().bottom-r.top+(SD.ph?104:10):0),avail=r.height-top-8-SD.bot-(tl?tl.offsetHeight+10:0),w=TB.x1-TB.x0,h=TB.y1-TB.y0,
+  k=Math.max(.12,Math.min((r.width-36-SD.side*2)/w,avail/h,1.2));return top+avail/2-h*k/2-CANOPY_UP*k;}
 // how much of each edge the stage frame covers, so Fit keeps the family inside it
 function stageDims(W,H){const ph=W<700,vh=ph?22:Math.max(30,Math.min(56,W*.032)),n=Math.max(3,Math.round(W/(ph?150:250))),sw=W/n,dr=Math.min(sw*.16,ph?20:36),
   cw=ph?16:Math.max(26,Math.min(78,W*.045)),ah=ph?12:Math.max(16,Math.min(30,W*.018));return {ph,vh,n,sw,dr,cw,ah,top:vh+dr*1.9+10,side:cw*1.3,bot:ah+(ph?14:34)};}
@@ -328,7 +343,7 @@ function treeArt(st,dl){
 const bakeCache={},bakePend={};let curBake=null;
 let lastBake=Promise.resolve();
 function bakeArt(art,html){
-  const x0=TB.x0-500,y0=TB.y0-320,w=TB.x1-TB.x0+1000,h=Math.max(1410,TB.y1+30)+520-y0,sc=Math.min(.8,(innerWidth<700?2200:3400)/w),W=Math.round(w*sc),H=Math.round(h*sc);
+  const x0=TB.x0-500,y0=TB.y0-320,w=TB.x1-TB.x0+1000,h=Math.max(1410,TB.y1+30)+520-y0,sc=Math.min(.8,(innerWidth<700||TOUCH?2200:3400)/w),W=Math.round(w*sc),H=Math.round(h*sc);
   const bg=art.bg;
   const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${x0} ${y0} ${w} ${h}" width="${W}" height="${H}"><defs>${art.defs}${bg?`<radialGradient id="bgg" cx="50%" cy="42%" r="62%"><stop offset="0" stop-color="${bg[0]}"/><stop offset="1" stop-color="${bg[1]}"/></radialGradient>`:''}</defs>${bg?`<rect x="${x0}" y="${y0}" width="${w}" height="${h}" fill="url(#bgg)"/>`:''}${art.under}${art.ground}</svg>`;
   const put=u=>{if(!u)return;if(html){if(curBake!==svg)return;const im=$('#tbackimg');im.src=u;Object.assign(im.style,{left:x0+'px',top:y0+'px',width:w+'px',height:h+'px'});im.classList.add('on');return;}
@@ -378,6 +393,8 @@ function drawLeafTree(grow){
       n.d=`M${n.x1.toFixed(1)} ${n.y1.toFixed(1)}Q${n.cx.toFixed(1)} ${n.cy.toFixed(1)} ${n.x2.toFixed(1)} ${n.y2.toFixed(1)}`;return n;});}
   const xs=[],ys=[];Object.values(TP).forEach(v=>{xs.push(v.x-v.r-70,v.x+v.r+70);ys.push(v.y-v.r-8,v.y+v.r+34);});TBR.forEach(b=>{xs.push(b.x1,b.x2);ys.push(b.y1,b.y2);});
   TB={x0:Math.min(...xs),y0:Math.min(...ys),x1:Math.max(...xs),y1:Math.max(...ys)};
+  // the tree's size decides where tall screens hang the stars, so redraw the backdrop when it changes
+  {const k=[TB.x0,TB.y0,TB.x1,TB.y1].map(Math.round).join();if(k!==sbdKey){sbdKey=k;if(stageDraw)requestAnimationFrame(()=>stageDraw());}}
   GROWR=Math.max(...Object.values(TP).map(v=>Math.hypot(v.x-915,v.y-1300)+v.r))+60;
   const dl=(y,x=915)=>growDelay(x,y);
   let deco='',seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
@@ -430,7 +447,7 @@ function tApply(anim){tClamp();sunLight();endGlide();if(SW){clearTimeout(SW);SW=
   const moved=was&&(Math.abs(was.x-tv.x)>.5||Math.abs(was.y-tv.y)>.5||Math.abs(was.k-tv.k)>1e-4);
   // phones: sliding a picture this big makes Android show stale copies of it while it redraws, so fade out,
   // jump to the new view while hidden, and fade back in once it has been drawn
-  if(anim&&moved&&!RM&&z.w<700){const st=$('#tstage');st.classList.add('tswap');
+  if(anim&&moved&&!RM&&(z.w<700||TOUCH)){const st=$('#tstage');st.classList.add('tswap');
     SW=setTimeout(()=>{SW=0;wl().forEach(e=>{if(e){e.classList.add('nomo');e.style.transform=T;}});tw.classList.add('nomo');setTW(tv,z);tsvg.style.transform='';msScale();
       requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>st.classList.remove('tswap'),140)));},200);
     G=null;st.classList.remove('moving');return;}

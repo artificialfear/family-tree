@@ -1,6 +1,8 @@
 /* ---------- shared helpers and state ---------- */
 const MAP=__MAP__;
 const $=s=>document.querySelector(s);
+// touch screens (phones and tablets) get the lighter graphics paths: Android tablets ran out of graphics memory on the desktop ones
+const TOUCH=matchMedia('(pointer:coarse)').matches;document.documentElement.classList.toggle('touch',TOUCH);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let myName=(()=>{try{return localStorage.getItem('myname')||''}catch(e){return ''}})();
 const whoOf=c=>c.from||names[c.by]||'Family';
