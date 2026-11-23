@@ -221,6 +221,8 @@ function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contr
   const obst=inTree?Object.values(TP).flatMap(v=>[[v.x,v.y,v.r+10],[v.x,v.y+v.r+22,Math.max(36,v.r*.9)]]):[];
   const free=(x,y)=>obst.every(([ox,oy,or])=>Math.hypot(x-ox,y-oy)>or+12)&&taken.every(([tx,ty])=>Math.hypot(x-tx,y-ty)>30);
   const ANG=[-50,-130,-90,-20,-160,-70,-110,10,190,30,150];
+  // on the stage every memory is a flower in the garden instead (Mat, 2026-11-23), so no stars beside people or in the sky
+  if(STAGE&&inTree){box.innerHTML='';let g=tw.querySelector('#tmstars');if(!g){g=document.createElementNS('http://www.w3.org/2000/svg','g');g.id='tmstars';tw.appendChild(g);}g.innerHTML=gardenSVG(list);msScale();return;}
   list.forEach(c=>{const h=hsh(c.id),v=inTree&&TP[c.pid];let spot=null;
     if(v)for(const d of [v.r+26,v.r+46,v.r+66]){for(const a of ANG){const x=v.x+Math.cos(a*Math.PI/180)*d,y=v.y+Math.sin(a*Math.PI/180)*d;if(free(x,y)){spot=[x,y];break;}}if(spot)break;}
     const lab=`A memory about ${esc(byId[c.pid].n)}`;

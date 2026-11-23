@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Memories live in the garden
+- The gold memory stars beside people (and in the sky) are gone; every memory is a flower in the memory garden. After posting, the message says it's growing in the garden.
+
 ## 2026-11-23 — Memory garden and keepsake chest
 - **Memory garden:** every memory someone shares grows a small glowing flower on the planet, in rows along its rim beside the family. Tap a flower to read its memory. Colors show the kind: peach for a story, pink for a photo, blue for an answer, lavender for a voice memory. A new memory sprouts into the garden while people are looking. A wooden "Memory Garden" sign on the left explains it. Memories still show as gold stars by each person too.
 - **Keepsake chest:** a treasure chest half-buried on the right side of the planet. Tap it to open a page of old and family photographs (Jack in his Navy uniform, the Harper family, Annie Mae, and more) and the records the tree is built on (the 1940 census, obituaries, FamilySearch pages). Also in the Program menu as "Keepsakes".

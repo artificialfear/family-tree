@@ -50,7 +50,7 @@ $('#panel').addEventListener('submit',async e=>{e.preventDefault();const f=e.tar
     let audio=null;if(t==='story'&&f._voice){audio=await blobToB64(f._voice.blob);audio={b64:audio,mime:f._voice.mime};}
     btn.textContent=audio?'Uploading voice memory…':photo?'Uploading photo…':'Saving…';
     const r=await withCode(code=>apiPost({action:'add',code,devId,doc,photo,audio}));if(!r.ok)throw r;
-    await refreshContribs();sfx.chime();const m2=$('#fmsg');if(m2)m2.textContent='Saved — thank you!';
+    await refreshContribs();sfx.chime();const m2=$('#fmsg');if(m2)m2.textContent=STAGE?'Saved — thank you! It\'s growing in the memory garden.':'Saved — thank you!';
   }catch(err){btn.disabled=false;btn.textContent='Try again';if(msg)msg.textContent=err==='cancel'?'':err==='badphoto'?'That photo couldn\'t be read. Try a different one.':(err==='locked'||err?.error==='locked')?LOCKED_MSG:'That didn\'t save. Check your internet connection and try again.';}});
 
 function openLb(u,a,c){$('#lbImg').src=u;$('#lbImg').alt=a||'';$('#lbCap').textContent=c||'';$('#lb').classList.add('on');}
