@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-23 — Steady tree while the sky changes
+- Switching between night and sunset no longer touches the tree. The fireflies now fade out together instead of being switched off one by one, and the faint low stars stay put. Before, the tablet had to redraw the layer over the tree, and photos and name scrolls flickered for a moment.
+- Phones and tablets keep a smaller picture of the tree in memory, which leaves the tablet more room during the sky change.
+
 ## 2026-11-23 — Tablets, round 2
 - Phones and tablets no longer switch the browser to full screen when the tree opens. That switch is what turned an Android tablet's screen black for about 3 seconds, hiding the curtains. To get full screen without the black screen, add the site to the home screen (Chrome menu ⋮ → Add to Home screen). It then opens full screen like an app, with its own crescent-moon icon.
 - Smoother sky change: the moon, sun, stars and clouds now wait just above the stage instead of far off-screen, so the tablet keeps them drawn. This fixes the grey square where the moon or sun came in, and the half-drawn sky during the change.

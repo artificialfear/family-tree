@@ -438,3 +438,12 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 @media(prefers-reduced-motion:reduce){.cap .smap .smh{animation:none}}
 @media(max-width:600px){.cap .smap{width:96px;margin-left:10px}.cap .smbox{height:76px}.cap .smap figcaption{font-size:10.5px}}
 @media(min-width:1000px){.cap .smap{width:156px}.cap .smbox{height:120px}}
+
+/* touch screens: smaller drawn margin around the tree (see PADF) */
+.touch #tsvg{left:-20%;top:-20%;width:140%;height:140%;transform-origin:14.2857% 14.2857%}
+/* night ⇄ sunset leaves the tree alone: the fireflies fade out together (switching each one off redrew the layer over the tree,
+   and on a tablet the photos and name scrolls flickered while it caught up) and the faint low stars stay in place */
+.theme-stage #tfront i{display:block}
+.theme-stage #tfront .ffw{transition:opacity 1.5s ease-in-out;will-change:opacity}
+.theme-stage.sky-day #tfront .ffw{opacity:0}
+.theme-stage.sky-day .sky .stars i.lo{display:block}

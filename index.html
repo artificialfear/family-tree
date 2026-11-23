@@ -630,6 +630,15 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 @media(prefers-reduced-motion:reduce){.cap .smap .smh{animation:none}}
 @media(max-width:600px){.cap .smap{width:96px;margin-left:10px}.cap .smbox{height:76px}.cap .smap figcaption{font-size:10.5px}}
 @media(min-width:1000px){.cap .smap{width:156px}.cap .smbox{height:120px}}
+
+/* touch screens: smaller drawn margin around the tree (see PADF) */
+.touch #tsvg{left:-20%;top:-20%;width:140%;height:140%;transform-origin:14.2857% 14.2857%}
+/* night ⇄ sunset leaves the tree alone: the fireflies fade out together (switching each one off redrew the layer over the tree,
+   and on a tablet the photos and name scrolls flickered while it caught up) and the faint low stars stay in place */
+.theme-stage #tfront i{display:block}
+.theme-stage #tfront .ffw{transition:opacity 1.5s ease-in-out;will-change:opacity}
+.theme-stage.sky-day #tfront .ffw{opacity:0}
+.theme-stage.sky-day .sky .stars i.lo{display:block}
 </style>
 </head>
 <body>
@@ -1115,7 +1124,7 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
  const back=document.createElement('div');back.id='tback';back.className='wlayer';back.innerHTML='<img id="tbackimg" alt="" decoding="async">';
  const front=document.createElement('div');front.id='tfront';front.className='wlayer';let ff='';
  for(let i=0;i<12;i++){const x=330+r()*1180,y=1110+r()*170;ff+=`<i style="left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;--t:${(6+r()*6).toFixed(1)}s;--p:${(2.5+r()*2.5).toFixed(1)}s;--dl:-${(r()*8).toFixed(1)}s;--dx:${(r()*60-30).toFixed(0)}px;--dy:${(-20-r()*40).toFixed(0)}px"></i>`;}
- front.innerHTML=ff;
+ front.innerHTML=`<div class="ffw">${ff}</div>`;
  const cel=document.createElement('div');cel.id='celest';cel.innerHTML=`<button class="moon" id="moonBtn" aria-label="A note for Mom">${moonSVG(moonPhase(Date.now()))}</button><button class="sun" id="sunBtn" aria-label="The evening star: a note for Mom"></button><div id="mstars"></div>`;
  const note=document.createElement('div');note.id='mnote';note.setAttribute('role','dialog');note.hidden=true;
  st.prepend(sky);sky.after(back);st.querySelector('svg').after(front);front.after(cel);st.appendChild(note);
@@ -1484,8 +1493,11 @@ const WL=[];const wl=()=>WL.length?WL:(WL.push($('#tback'),$('#tfront')),WL);
    redrawing the whole tree every frame, which stuttered on phones. The tree is drawn once at one end of the
    move and the picture slides between the two views; the plain redraw is only used if the picture can't cover the screen. */
 let AP=null,AT=0;
-const setTW=(v,z)=>{tw.style.transform=`translate(${v.x+z.w*.4}px,${v.y+z.h*.4}px) scale(${v.k})`;};
-function glideOK(R,D,z){const s=D.k/R.k,tx=D.x-R.x*s,ty=D.y-R.y*s,ok=(tx,ty,s)=>tx-s*.4*z.w<=1&&tx+s*1.4*z.w>=z.w-1&&ty-s*.4*z.h<=1&&ty+s*1.4*z.h>=z.h-1;
+// the tree is drawn with a margin around the screen (#tsvg is 180% on computers so views can slide; 140% on touch
+// screens, which fade instead of sliding, to save the graphics memory an Android tablet ran short of)
+const PADF=TOUCH?.2:.4;
+const setTW=(v,z)=>{tw.style.transform=`translate(${v.x+z.w*PADF}px,${v.y+z.h*PADF}px) scale(${v.k})`;};
+function glideOK(R,D,z){const s=D.k/R.k,tx=D.x-R.x*s,ty=D.y-R.y*s,ok=(tx,ty,s)=>tx-s*PADF*z.w<=1&&tx+s*(1+PADF)*z.w>=z.w-1&&ty-s*PADF*z.h<=1&&ty+s*(1+PADF)*z.h>=z.h-1;
   return ok(tx,ty,s)&&ok(tx/2,ty/2,(1+s)/2)&&s<2.2&&s>.45;}
 function endGlide(){if(!AT)return;clearTimeout(AT);AT=0;tsvg.classList.remove('tglide');tsvg.style.transform='';if(AP)setTW(AP,tsz());}
 let SW=0;
