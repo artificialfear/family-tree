@@ -1619,7 +1619,7 @@ const sfx={chime(){},page(){},bloom(){},ctx(){}};
 /* ---------- music (Web Audio, gapless loops; one track for the tree, one for the story) ---------- */
 // lead: where the first note lands (samples from the first sound); a cold start begins right there
 // each file: an intro that plays once, then loops START..END (samples counted from the first sound, 44.1 kHz)
-const TRACKS={tree:{url:'music.mp3',start:1042874,end:4544554,lead:8700},story:{url:'music-story.mp3',start:2200327,end:5849374}},LOOP_RATE=44100;
+const TRACKS={tree:{url:'music.mp3',start:1042874,end:4544554,lead:8700},story:{url:'music-story.mp3',start:2200327,end:5849374,lead:4700}},LOOP_RATE=44100;
 let trackUrl='music.mp3',trackName='',mctx=null,mgain=null,mState='stopped',mLoading=null,curKey='tree',cur=null;const mbufs={};
 const vol=()=>+$('#mVol').value;
 function musicUi(){const b=$('#mPlay'),t=$('#tMusic');b.disabled=t.disabled=false;$('#mVol').style.display='';const on=mState==='playing';b.textContent=mLoading?'♪ Loading…':on?'❚❚ Pause music':'♪ Music';
@@ -1793,13 +1793,13 @@ function openCurtain(story){if(cover.classList.contains('opening'))return;cover.
       if(innerWidth!==w||innerHeight!==h){w=innerWidth;h=innerHeight;still=now;}
       if(now-still>320&&now-t0>200||now-t0>1600)res();else requestAnimationFrame(chk);})(t0);});
   let went=0;const go=()=>{if(went++)return;Promise.all([lastBake,settled()]).then(()=>{if(!tTouched)tStart();}).then(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      cover.classList.add('open');if(!story)startMusic('tree',true);{const st=$('#tstage');st.classList.add('lowering');st.classList.remove('hoisted');setTimeout(()=>st.classList.remove('lowering'),5000);}const T=RM?300:1900;
+      cover.classList.add('open');startMusic(story?'story':'tree',true);{const st=$('#tstage');st.classList.add('lowering');st.classList.remove('hoisted');setTimeout(()=>st.classList.remove('lowering'),5000);}const T=RM?300:1900;
       setTimeout(()=>{cover.style.display='none';if(story)startStory();else setTimeout(showHint,300);},T);})));};
   setTimeout(()=>{if(pr){pr.then(go);setTimeout(go,900);}else go();},RM?0:420);}
 function closeCover(story){openCurtain(story);}
 // quietly fetch every face while the opening screen is showing, so they're ready when the tree grows
 (window.requestIdleCallback||(f=>setTimeout(f,1200)))(()=>{Object.values(photo).forEach(u=>{if(!u)return;const i=new Image();i.decoding='async';i.src=u;});});
-$('#begin').onclick=()=>{startMusic('story');closeCover(true);};
+$('#begin').onclick=()=>{primeMusic('story');closeCover(true);};
 $('#skip').onclick=()=>{primeMusic('tree');closeCover(false);};
 
 /* ---------- map ---------- */

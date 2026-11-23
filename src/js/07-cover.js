@@ -37,12 +37,12 @@ function openCurtain(story){if(cover.classList.contains('opening'))return;cover.
       if(innerWidth!==w||innerHeight!==h){w=innerWidth;h=innerHeight;still=now;}
       if(now-still>320&&now-t0>200||now-t0>1600)res();else requestAnimationFrame(chk);})(t0);});
   let went=0;const go=()=>{if(went++)return;Promise.all([lastBake,settled()]).then(()=>{if(!tTouched)tStart();}).then(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      cover.classList.add('open');if(!story)startMusic('tree',true);{const st=$('#tstage');st.classList.add('lowering');st.classList.remove('hoisted');setTimeout(()=>st.classList.remove('lowering'),5000);}const T=RM?300:1900;
+      cover.classList.add('open');startMusic(story?'story':'tree',true);{const st=$('#tstage');st.classList.add('lowering');st.classList.remove('hoisted');setTimeout(()=>st.classList.remove('lowering'),5000);}const T=RM?300:1900;
       setTimeout(()=>{cover.style.display='none';if(story)startStory();else setTimeout(showHint,300);},T);})));};
   setTimeout(()=>{if(pr){pr.then(go);setTimeout(go,900);}else go();},RM?0:420);}
 function closeCover(story){openCurtain(story);}
 // quietly fetch every face while the opening screen is showing, so they're ready when the tree grows
 (window.requestIdleCallback||(f=>setTimeout(f,1200)))(()=>{Object.values(photo).forEach(u=>{if(!u)return;const i=new Image();i.decoding='async';i.src=u;});});
-$('#begin').onclick=()=>{startMusic('story');closeCover(true);};
+$('#begin').onclick=()=>{primeMusic('story');closeCover(true);};
 $('#skip').onclick=()=>{primeMusic('tree');closeCover(false);};
 

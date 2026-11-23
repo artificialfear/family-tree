@@ -1,7 +1,7 @@
 /* ---------- music (Web Audio, gapless loops; one track for the tree, one for the story) ---------- */
 // lead: where the first note lands (samples from the first sound); a cold start begins right there
 // each file: an intro that plays once, then loops START..END (samples counted from the first sound, 44.1 kHz)
-const TRACKS={tree:{url:'music.mp3',start:1042874,end:4544554,lead:8700},story:{url:'music-story.mp3',start:2200327,end:5849374}},LOOP_RATE=44100;
+const TRACKS={tree:{url:'music.mp3',start:1042874,end:4544554,lead:8700},story:{url:'music-story.mp3',start:2200327,end:5849374,lead:4700}},LOOP_RATE=44100;
 let trackUrl='music.mp3',trackName='',mctx=null,mgain=null,mState='stopped',mLoading=null,curKey='tree',cur=null;const mbufs={};
 const vol=()=>+$('#mVol').value;
 function musicUi(){const b=$('#mPlay'),t=$('#tMusic');b.disabled=t.disabled=false;$('#mVol').style.display='';const on=mState==='playing';b.textContent=mLoading?'♪ Loading…':on?'❚❚ Pause music':'♪ Music';
