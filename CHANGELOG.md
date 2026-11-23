@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Roots lower
+- The roots and their hometowns now spread out below the grandchildren instead of running into them. The tree stays the same size; drag up a little to see the lower towns.
+
 ## 2026-11-23 — Story in order
 - "Johnnie and Annie Mae" now comes after "Jack and Margaret's eight" (1956) and stays undated, since their marriage year isn't known. The story now runs in date order: the Graham family, then the Harper family, then 1982, when Ed and Renee bring the two together.
 

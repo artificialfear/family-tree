@@ -322,9 +322,10 @@ function treeArt(st,dl){
       planet=`<g class="art planet"><circle cx="${cx}" cy="${cy}" r="${R+34}" fill="url(#atmo)"/><circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#pfill)"/>${rings}<g fill="${PL.dot}" opacity=".35">${dots}</g>${STAGE?`<g clip-path="url(#pclip)" opacity=".22"><circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#phatch)" mask="url(#prim)"/></g>`:''}<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${STAGE?'#0c1a10':K.line}" stroke-width="${STAGE?3:1.6}" opacity=".8"/><g stroke="${K.line}" stroke-width="1.1" fill="none" stroke-linecap="round" opacity=".8">${tf}</g></g>`;
       ground='';
       // roots that lead to the places the family came from
-      const PINS=[['orange',200,1580,'1911'],['durham',330,1655,'1930'],['louisville',455,1570,'1932'],['greenville',590,1650,'1956'],['collegepark',730,1575,''],['covington',915,1690,'1982'],['newborn',1120,1580,''],['upson',1300,1650,'1940']];
-      const RB={x1:915,y1:1290,cx:915,cy:1380,x2:915,y2:1470};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
-      PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=1462,b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
+      // below the grandchildren (their name scrolls end near y 1590), so the roots fan out under the whole family
+      const PINS=[['orange',200,1710,'1911'],['durham',330,1785,'1930'],['louisville',455,1700,'1932'],['greenville',590,1780,'1956'],['collegepark',730,1705,''],['covington',915,1820,'1982'],['newborn',1120,1710,''],['upson',1300,1780,'1940']];
+      const RB={x1:915,y1:1290,cx:915,cy:1420,x2:915,y2:1600};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
+      PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=1592,b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
         rts+=`<path class="root" d="${taperPath(b,13,2.2)}"/>`;
         for(let j=0;j<3;j++){const t=.35+j*.2,[qx,qy]=qpt(b,t),dir=(j%2?1:-1)*(px<915?1:-1),c={x1:qx,y1:qy,cx:qx+dir*24,cy:qy+22,x2:qx+dir*(30+rnd()*30),y2:qy+50+rnd()*30};rts+=`<path class="root" d="${taperPath(c,4,.6)}" opacity=".8"/>`;}
         const nm=(PL_NAMES[k]||k).replace(' (Meriwether Co.)','');
@@ -425,7 +426,7 @@ let TSZ={w:0,h:0};const tsz=()=>{if(!TSZ.w){const s=$('#tstage');TSZ={w:s.client
 new ResizeObserver(()=>{const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};if(tw.childElementCount&&!G)tApply(false);}).observe($('#tstage'));
 function tClamp(){const r={width:tsz().w,height:tsz().h};if(!r.width||!(TB.x1>TB.x0))return;const W=r.width,H=r.height,bw=TB.x1-TB.x0,bh=TB.y1-TB.y0;
   const kmin=Math.min(W/bw,H/bh)*.5;if(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
-  const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(H*.5-(TB.y1+(PRINT?0:280))*k,tv.y));}
+  const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(H*.5-(TB.y1+(PRINT?0:340))*k,tv.y));}
 let SKYEL=null;
 function sunLight(){if(SKY!=='day')return;
   // stage: the sun hangs in the sky, not behind the tree, so the light no longer follows the view — always full sunset light
