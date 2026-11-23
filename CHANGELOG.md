@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Music on cue
+- Choosing "Explore" now starts the tree song on its first piano chord, at full volume, right as the curtains open.
+
 ## 2026-11-22 — New music, and story music
 - The tree has a new background song, and the story now has its own song that starts when the story begins and blends back into the tree song when the story ends.
 - Both songs start right away (no silence at the start) and loop smoothly without their endings.
