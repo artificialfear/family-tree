@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Stars out, clouds in
+- When the sky turns to sunset, the hanging gold stars are hoisted up one after another behind the curtain, and peach paper clouds are lowered in on strings beside the tree. Going back to night, the clouds go up and the stars come back down.
+
 ## 2026-11-22 — Brighter, steady sunset
 - The sunset sky is brighter and warmer, and it no longer gets darker or lighter as you move around the tree.
 

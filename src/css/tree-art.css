@@ -418,7 +418,13 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .theme-stage #celest .moon,.theme-stage #celest .sun{display:block;transition:transform 1.4s cubic-bezier(.55,0,.35,1),visibility 0s}
 .theme-stage.sky-night #celest .moon,.theme-stage.sky-day #celest .sun{transform:none;visibility:visible;transition-delay:1.3s,1.3s;transition-timing-function:cubic-bezier(.25,.8,.35,1)}
 .theme-stage.sky-night #celest .sun,.theme-stage.sky-day #celest .moon{transform:translateY(-130vh);visibility:hidden;transition-delay:0s,1.4s;transition-timing-function:cubic-bezier(.55,0,.8,.4)}
-.theme-stage.skyinit .sky,.theme-stage.skyinit #celest .moon,.theme-stage.skyinit #celest .sun,.theme-stage.skyinit .sbackdrop path{transition:none!important}
+.theme-stage.skyinit .sky,.theme-stage.skyinit #celest .moon,.theme-stage.skyinit #celest .sun,.theme-stage.skyinit .sbackdrop path,.theme-stage.skyinit .sbackdrop g{transition:none!important}
 @media(prefers-reduced-motion:reduce){.theme-stage #celest .moon,.theme-stage #celest .sun{transition:visibility 0s}}
 .theme-stage .sky .sunglow{background:radial-gradient(75% 65% at var(--sunx,50%) 62%,rgba(255,206,135,.9) 0%,rgba(255,160,115,.5) 40%,rgba(255,120,120,0) 80%)}
 .theme-stage.sky-day,.theme-stage.sky-night{background:linear-gradient(180deg,#3a3f78 0%,#6a4f8a 22%,#b0608a 44%,#e8807a 62%,#ffa86a 78%,#ffcf8a 90%,#ffe6b0 100%)}
+/* set change: stars hoisted out / paper clouds lowered in for sunset, and the reverse for night */
+.sbackdrop .pcl{fill:url(#pclg);stroke:#b8586a;stroke-width:1.5}.sbackdrop .pcsh{fill:#4a1838;opacity:.3}.sbackdrop .pcln{stroke:#c76a78;stroke-width:1.2;opacity:.5}
+.sbackdrop .hstar,.sbackdrop .hcloud{transition:transform 1.3s}
+.theme-stage.sky-night .sbackdrop .hstar,.theme-stage.sky-day .sbackdrop .hcloud{transform:none;transition-timing-function:cubic-bezier(.25,.8,.35,1);transition-delay:calc(1.3s + var(--i)*110ms)}
+.theme-stage.sky-day .sbackdrop .hstar,.theme-stage.sky-night .sbackdrop .hcloud{transform:translateY(-110vh);transition-timing-function:cubic-bezier(.55,0,.8,.4);transition-delay:calc(var(--i)*55ms)}
+@media(prefers-reduced-motion:reduce){.sbackdrop .hstar,.sbackdrop .hcloud{transition:none!important}}

@@ -603,10 +603,16 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .theme-stage #celest .moon,.theme-stage #celest .sun{display:block;transition:transform 1.4s cubic-bezier(.55,0,.35,1),visibility 0s}
 .theme-stage.sky-night #celest .moon,.theme-stage.sky-day #celest .sun{transform:none;visibility:visible;transition-delay:1.3s,1.3s;transition-timing-function:cubic-bezier(.25,.8,.35,1)}
 .theme-stage.sky-night #celest .sun,.theme-stage.sky-day #celest .moon{transform:translateY(-130vh);visibility:hidden;transition-delay:0s,1.4s;transition-timing-function:cubic-bezier(.55,0,.8,.4)}
-.theme-stage.skyinit .sky,.theme-stage.skyinit #celest .moon,.theme-stage.skyinit #celest .sun,.theme-stage.skyinit .sbackdrop path{transition:none!important}
+.theme-stage.skyinit .sky,.theme-stage.skyinit #celest .moon,.theme-stage.skyinit #celest .sun,.theme-stage.skyinit .sbackdrop path,.theme-stage.skyinit .sbackdrop g{transition:none!important}
 @media(prefers-reduced-motion:reduce){.theme-stage #celest .moon,.theme-stage #celest .sun{transition:visibility 0s}}
 .theme-stage .sky .sunglow{background:radial-gradient(75% 65% at var(--sunx,50%) 62%,rgba(255,206,135,.9) 0%,rgba(255,160,115,.5) 40%,rgba(255,120,120,0) 80%)}
 .theme-stage.sky-day,.theme-stage.sky-night{background:linear-gradient(180deg,#3a3f78 0%,#6a4f8a 22%,#b0608a 44%,#e8807a 62%,#ffa86a 78%,#ffcf8a 90%,#ffe6b0 100%)}
+/* set change: stars hoisted out / paper clouds lowered in for sunset, and the reverse for night */
+.sbackdrop .pcl{fill:url(#pclg);stroke:#b8586a;stroke-width:1.5}.sbackdrop .pcsh{fill:#4a1838;opacity:.3}.sbackdrop .pcln{stroke:#c76a78;stroke-width:1.2;opacity:.5}
+.sbackdrop .hstar,.sbackdrop .hcloud{transition:transform 1.3s}
+.theme-stage.sky-night .sbackdrop .hstar,.theme-stage.sky-day .sbackdrop .hcloud{transform:none;transition-timing-function:cubic-bezier(.25,.8,.35,1);transition-delay:calc(1.3s + var(--i)*110ms)}
+.theme-stage.sky-day .sbackdrop .hstar,.theme-stage.sky-night .sbackdrop .hcloud{transform:translateY(-110vh);transition-timing-function:cubic-bezier(.55,0,.8,.4);transition-delay:calc(var(--i)*55ms)}
+@media(prefers-reduced-motion:reduce){.sbackdrop .hstar,.sbackdrop .hcloud{transition:none!important}}
 </style>
 </head>
 <body>
@@ -1159,15 +1165,21 @@ function stageBackdrop(W,H,mqb=200){const ph=W<700;let sd=11;const r=()=>(sd=(sd
   back=row(top+(ph?8:14),1.25,'sc2');front=row(top,1,'sc1');
   // gold stars on strings, hanging from behind the valance at different drops and sizes.
   // They hang in the open sky: beside the tree on wide screens, in the gap under the sign on phones.
-  let stars='';const n=ph?8:24,base=ph?6:13;for(let i=0;i<n;i++){const x=W*(.04+.92*(i+.5)/n)+(r()-.5)*W*(ph?.03:.025),dx=Math.abs(x-W/2)/W,rs=base*(ph?(i%3===1?1.5+r()*.5:.6+r()*.7):.55+r()*1.15);let len;
+  let stars='',si=0;const n=ph?8:24,base=ph?6:13;for(let i=0;i<n;i++){const x=W*(.04+.92*(i+.5)/n)+(r()-.5)*W*(ph?.03:.025),dx=Math.abs(x-W/2)/W,rs=base*(ph?(i%3===1?1.5+r()*.5:.6+r()*.7):.55+r()*1.15);let len;
     if(ph){if(dx>.44||x>W*.74)continue;const PD=[.1,.95,.45,.75,0,.6,1,.3];const d=PD[i%PD.length];
       len=(dx>.32?top+14+d*(mqb+80-top):mqb+8+d*82)+rs;}
     else if(dx<.21)continue;
     else if(dx<.31)len=top+20+r()*Math.max(10,mqb-top-30);
     else len=top+(ph?16:24)+Math.pow(r(),1.4)*H*.46;
-    stars+=`<line x1="${f(x)}" y1="0" x2="${f(x)}" y2="${f(len-rs)}" class="sstr"/><path class="sgold" d="${star6(x,len,rs)}"/><path class="sglint" d="${star6(x-rs*.12,len-rs*.12,rs*.42)}"/>`;}
+    stars+=`<g class="hstar" style="--i:${si++}"><line x1="${f(x)}" y1="0" x2="${f(x)}" y2="${f(len-rs)}" class="sstr"/><path class="sgold" d="${star6(x,len,rs)}"/><path class="sglint" d="${star6(x-rs*.12,len-rs*.12,rs*.42)}"/></g>`;}
+  // sunset set piece: peach paper clouds on strings that are lowered in when the stars are hoisted out
+  const cl=ph?[[.13,mqb+26,92],[.47,mqb+70,104]]:[[.07,top+62,132],[.15,top+H*.33,112],[.08,top+H*.53,128],[.87,top+H*.46,124],[.91,top+H*.64,100]];
+  let clouds='';cl.forEach(([fx,cy,w],k)=>{const x0=W*fx-w/2,p=`M${f(x0)} ${f(cy)}A${f(w*.2)} ${f(w*.2)} 0 0 1 ${f(x0+w*.3)} ${f(cy-w*.13)}A${f(w*.26)} ${f(w*.26)} 0 0 1 ${f(x0+w*.72)} ${f(cy-w*.1)}A${f(w*.19)} ${f(w*.19)} 0 0 1 ${f(x0+w)} ${f(cy)}Z`;
+    clouds+=`<g class="hcloud" style="--i:${k}"><line x1="${f(x0+w*.32)}" y1="0" x2="${f(x0+w*.32)}" y2="${f(cy-w*.16)}" class="sstr"/><line x1="${f(x0+w*.7)}" y1="0" x2="${f(x0+w*.7)}" y2="${f(cy-w*.2)}" class="sstr"/>
+      <path d="${p}" transform="translate(5 7)" class="pcsh"/><path d="${p}" class="pcl"/><path d="M${f(x0+w*.12)} ${f(cy-3)}H${f(x0+w*.88)}" class="pcln"/></g>`;});
+  stars+=clouds;
   return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
-   <linearGradient id="sgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient></defs>${back}${front}${stars}</svg>`;}
+   <linearGradient id="pclg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe0c2"/><stop offset="1" stop-color="#f49a8e"/></linearGradient><linearGradient id="sgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient></defs>${back}${front}${stars}</svg>`;}
 // how much of each edge the stage frame covers, so Fit keeps the family inside it
 function stageDims(W,H){const ph=W<700,vh=ph?22:Math.max(30,Math.min(56,W*.032)),n=Math.max(3,Math.round(W/(ph?150:250))),sw=W/n,dr=Math.min(sw*.16,ph?20:36),
   cw=ph?16:Math.max(26,Math.min(78,W*.045)),ah=ph?12:Math.max(16,Math.min(30,W*.018));return {ph,vh,n,sw,dr,cw,ah,top:vh+dr*1.9+10,side:cw*1.3,bot:ah+(ph?14:34)};}
