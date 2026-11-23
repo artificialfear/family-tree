@@ -1,5 +1,10 @@
 /* ---------- illustrated tree ---------- */
-const tsvg=$('#tsvg'),tw=$('#tworld');let stageDraw=null,sbdKey='';const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
+const tsvg=$('#tsvg'),tw=$('#tworld');let stageDraw=null,sbdKey='';
+// the hometowns at the ends of the roots, below the grandchildren
+const ROOTPINS=[['orange',200,1710,'1911'],['durham',330,1785,'1930'],['louisville',455,1700,'1932'],['greenville',590,1780,'1956'],['collegepark',730,1705,''],['covington',915,1820,'1982'],['newborn',1120,1710,''],['upson',1300,1780,'1940']];
+// the planet (a circle under the tree) and the memory garden on it
+const PLANET={cx:915,cy:1272+2200,R:2200},surfY=x=>PLANET.cy-Math.sqrt(PLANET.R**2-(x-PLANET.cx)**2);
+const CHEST={x:1835,y:1500},GSIGN={x:-20,y:1528};let gardenSeen=null;const gardenNew={};const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
 const RAD={ssp:36,son:40,par:62,gp:44,ggp:34,aunt:33,asp:26,kid:27,ksp:22,gk:30},FS={ssp:19,son:21,par:27,gp:22,ggp:18,aunt:18,asp:15,kid:15,ksp:13,gk:17};
 function tLayout(){
   const pos={},br=[],put=(id,x,y,t)=>{if(byId[id]&&!pos[id])pos[id]={x,y,r:RAD[t],t};return pos[id];};
@@ -222,7 +227,31 @@ function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contr
     if(spot){taken.push(spot);tree+=`<g class="mstar tmstar" data-c="${esc(c.id)}" tabindex="0" role="button" aria-label="${lab}" transform="translate(${spot[0].toFixed(1)} ${spot[1].toFixed(1)})"><g class="mss"><circle r="18" fill="transparent"/><g class="msp" style="--dl:-${(h%40)/10}s">${star}</g></g></g>`;return;}
     const h2=hsh(c.id+'y');let x=4+(h%9200)/100,y=13+(h2%3700)/100;if(x<58&&y<17)y+=10;if(x>78&&y<30)x-=24;
     sky+=`<button class="mstar" data-c="${esc(c.id)}" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;--dl:-${(h%40)/10}s" aria-label="${lab}"><svg viewBox="-10 -10 20 20">${star}</svg></button>`;});
-  box.innerHTML=sky;let g=tw.querySelector('#tmstars');if(!g&&tw.querySelector('.leaf')){g=document.createElementNS('http://www.w3.org/2000/svg','g');g.id='tmstars';tw.appendChild(g);}if(g)g.innerHTML=tree;msScale();}
+  box.innerHTML=sky;let g=tw.querySelector('#tmstars');if(!g&&tw.querySelector('.leaf')){g=document.createElementNS('http://www.w3.org/2000/svg','g');g.id='tmstars';tw.appendChild(g);}if(g)g.innerHTML=(inTree&&STAGE?gardenSVG(list):'')+tree;msScale();}
+/* memory garden: every memory plants a glowing flower on the planet, in rows along its rim, outer shoulders first.
+   Flowers step around faces, name scrolls, the main root, the root towns, the sign and the chest.
+   A memory that arrives while the page is open sprouts (grows in). */
+function gardenSlots(){const ob=[];Object.values(TP).forEach(v=>{ob.push(['c',v.x,v.y,v.r+16]);ob.push(['r',v.x,v.y+v.r+24,Math.max(56,v.r*1.7),20]);});
+  ROOTPINS.forEach(([,px,py])=>ob.push(['r',px,py+18,82,48]));ob.push(['r',915,1440,34,170]);ob.push(['r',CHEST.x,CHEST.y-40,100,72]);ob.push(['r',GSIGN.x,GSIGN.y-60,78,84]);
+  const ok=(x,y)=>ob.every(o=>o[0]==='c'?Math.hypot(x-o[1],y-o[2])>o[3]:Math.abs(x-o[1])>o[3]||Math.abs(y-o[2])>o[4]);
+  const S=[];for(let j=0;j<9;j++){const d=30+j*36;for(let x=-600+(j%2)*19;x<=2430;x+=38){if(Math.abs(x-PLANET.cx)>PLANET.R*.62)continue;const y=surfY(x)+d;if(ok(x,y))S.push([x,y,j,y<1585?0:1]);}}
+  return S.sort((a,b)=>a[3]-b[3]||a[2]-b[2]||Math.abs(b[0]-915)-Math.abs(a[0]-915));}
+const FLC={story:['#ffc7a3','#f48f6e'],photo:['#ffc1dc','#ee6fa6'],answer:['#bfe3ff','#5fa8e8'],voice:['#e2d4ff','#9a7bf0']};
+function gardenSVG(list){const S=gardenSlots(),mem=[...list].sort((a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)));
+  const first=gardenSeen===null,seen=gardenSeen||new Set();let fl='';
+  mem.forEach((c,i)=>{const sp=S[i];if(!sp)return;const [x,y]=sp,h=hsh(c.id),k=c.audio?'voice':FLC[c.type]?c.type:'story',[p1,p2]=FLC[k],rot=h%72,sw=((h>>8)%9-4),
+      pet=[0,72,144,216,288].map(a=>`<ellipse cx="0" cy="-6.2" rx="3.9" ry="6.2" transform="rotate(${a+rot})" fill="${p1}" stroke="${p2}" stroke-width=".9"/>`).join('');
+    if(!first&&!seen.has(c.id))gardenNew[c.id]=Date.now();const nw=Date.now()-(gardenNew[c.id]||0)<2500;
+    fl+=`<g class="mflower${nw?' sprout':''}" data-c="${esc(c.id)}" tabindex="0" role="button" aria-label="A memory about ${esc(byId[c.pid].n)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mfs" style="--sw:${sw}deg;--dl:-${(h%50)/10}s"><circle r="20" fill="transparent"/><circle class="mfg" r="16" fill="url(#mfglow)"/><path class="mfstem" d="M0 16Q${(sw/2).toFixed(1)} 8 0 2"/><path class="mfleaf" d="M0 11q-6 -3 -8 1q5 2 8 -1z"/>${pet}<circle r="3" fill="#ffe27a" stroke="#c9902c" stroke-width=".8"/></g></g></g>`;});
+  gardenSeen=new Set(mem.map(c=>c.id));
+  const sign=`<g class="gsign" tabindex="0" role="button" aria-label="The memory garden: what the flowers are" transform="translate(${GSIGN.x} ${GSIGN.y}) scale(1.7)"><rect x="-4" y="-52" width="8" height="58" rx="2" class="gpost"/><rect x="-40" y="-70" width="80" height="34" rx="5" class="gboard"/><text y="-57" class="gtx">Memory</text><text y="-44" class="gtx">Garden</text><path d="M-10 -36q10 6 20 0" class="gvine"/></g>`;
+  const chest=`<g class="kchest" tabindex="0" role="button" aria-label="Open the keepsake chest: old photographs and family records" transform="translate(${CHEST.x} ${CHEST.y}) scale(1.35)"><ellipse cx="0" cy="8" rx="64" ry="10" class="kmound"/><circle cx="0" cy="-30" r="54" fill="url(#mfglow)" class="kglow"/>
+    <path d="M-44 -26v26q0 6 6 6h76q6 0 6-6v-26z" class="kbody"/><path d="M-44 -26q0 -26 44 -26q44 0 44 26z" class="klid"/><path d="M-44 -26h88" class="kband"/><path d="M-28 -50v50M28 -50v50" class="kstrap"/>
+    <rect x="-8" y="-30" width="16" height="14" rx="2" class="klock"/><circle cx="0" cy="-23" r="2.2" class="khole"/><path d="M-36 -2q36 8 72 0" class="kdirt"/></g>`;
+  return `<defs><radialGradient id="mfglow"><stop offset="0" stop-color="#fff4c2" stop-opacity=".75"/><stop offset=".55" stop-color="#ffd77a" stop-opacity=".22"/><stop offset="1" stop-color="#ffd77a" stop-opacity="0"/></radialGradient></defs><g class="garden">${sign}${chest}${fl}</g>`;}
+const f1=n=>n.toFixed(1);
+function gardenNote(el){const r=$('#tstage').getBoundingClientRect(),q=el.getBoundingClientRect(),n=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]).length;
+  showNote(`<div class="mem"><div class="mq">The memory garden</div><p>Every flower is a memory someone shared about the family${n?` — ${n} so far`:''}. Tap a flower to read it.</p><p>To plant one, tap anyone's photo on the tree and choose <b>Add a memory or story</b>.</p></div>`,q.left-r.left+q.width/2,q.bottom-r.top);}
 // stars keep a readable size however far you zoom out
 function msScale(){const k=Math.min(2.4,Math.max(1,.62/tv.k));tw.style.setProperty('--msk',k.toFixed(3));}
 function openMem(b){const c=contribs.find(x=>x.id===b.dataset.c);if(!c)return;
@@ -323,7 +352,7 @@ function treeArt(st,dl){
       ground='';
       // roots that lead to the places the family came from
       // below the grandchildren (their name scrolls end near y 1590), so the roots fan out under the whole family
-      const PINS=[['orange',200,1710,'1911'],['durham',330,1785,'1930'],['louisville',455,1700,'1932'],['greenville',590,1780,'1956'],['collegepark',730,1705,''],['covington',915,1820,'1982'],['newborn',1120,1710,''],['upson',1300,1780,'1940']];
+      const PINS=ROOTPINS;
       const RB={x1:915,y1:1290,cx:915,cy:1420,x2:915,y2:1600};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
       PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=1592,b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
         rts+=`<path class="root" d="${taperPath(b,13,2.2)}"/>`;
@@ -504,11 +533,11 @@ function tZoom(f,cx,cy,fast){tTouched=1;hidePop();const r=tsz();cx??=r.w/2;cy??=
    if(pts.size===2&&pinch){const [a,b]=[...pts.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),r=pinchR||(pinchR=$('#tstage').getBoundingClientRect());tZoom(d/pinch,(a[0]+b[0])/2-r.left,(a[1]+b[1])/2-r.top,true);pinch=d;moved=99;return;}
    const dx=e.clientX-last[0],dy=e.clientY-last[1];moved+=Math.abs(dx)+Math.abs(dy);last=[e.clientX,e.clientY];if(moved<4)return;tv.x+=dx;tv.y+=dy;tTouched=1;gBegin();gFrame();});
  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(pts.size===1){last=[...pts.values()][0].slice();moved=99;}if(!pts.size){tsvg.classList.remove('drag');gEnd();}
-   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar');if(ms){openMem(ms);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
+   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar,.mflower');if(ms){openMem(ms);return;}if(hit?.closest('.kchest')){location.hash='keepsakes';return;}const gs=hit?.closest('.gsign');if(gs){gardenNote(gs);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
  tsvg.addEventListener('pointerup',up);tsvg.addEventListener('pointercancel',up);
  tsvg.addEventListener('wheel',e=>{e.preventDefault();const r=$('#tstage').getBoundingClientRect();tZoom(e.deltaY<0?1.12:1/1.12,e.clientX-r.left,e.clientY-r.top);},{passive:false});
  tsvg.addEventListener('dblclick',e=>{const r=$('#tstage').getBoundingClientRect();tZoom(1.8,e.clientX-r.left,e.clientY-r.top);});
- tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){}const ms=e.target.closest?.('.tmstar');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
+ tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){}const ms=e.target.closest?.('.tmstar,.mflower');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}if((e.key==='Enter'||e.key===' ')&&e.target.closest?.('.kchest')){e.preventDefault();location.hash='keepsakes';return;}const gs=e.target.closest?.('.gsign');if(gs&&(e.key==='Enter'||e.key===' ')){e.preventDefault();gardenNote(gs);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
 $('#tzin').onclick=()=>tZoom(1.3);$('#tzout').onclick=()=>tZoom(1/1.3);$('#tfit').onclick=()=>{tTouched=1;tFit();};
 $('#q').addEventListener('change',e=>{const v=e.target.value.toLowerCase().trim();const p=P.find(p=>p.n.toLowerCase()===v)||P.find(p=>p.n.toLowerCase().includes(v));if(p){select(p.id);tFocus(p.id);}});
 

@@ -48,9 +48,16 @@ function drawTimeline(){
   $('#gaps').innerHTML=GAPS.map(g=>`<li>${esc(g)}</li>`).join('');
 }
 
+/* ---------- keepsake chest ---------- */
+function renderKeepsakes(){const pics=$('#kpics');if(!pics||pics.dataset.done)return;pics.dataset.done=1;
+  pics.innerHTML=KEEP.photos.map(([u,c])=>`<button type="button" class="kpic" data-u="${esc(u)}" data-c="${esc(c)}"><img src="${esc(u)}" alt="" loading="lazy"><span>${esc(c)}</span></button>`).join('');
+  pics.onclick=e=>{const b=e.target.closest('.kpic');if(b)openLb(b.dataset.u,b.dataset.c,b.dataset.c);};
+  $('#krecs').innerHTML=KEEP.records.filter(k=>SRC[k]).map(k=>{const s=SRC[k],[t,...rest]=s.t.split(' — ');const ic=/obituary/i.test(s.t)?'📰':/census/i.test(s.t)?'📜':'🌳';
+    return `<a class="krec" href="${esc(s.u)}" target="_blank" rel="noopener"><span class="kic" aria-hidden="true">${ic}</span><span><b>${esc(t)}</b>${rest.length?`<small>${esc(rest.join(' — '))}</small>`:''}</span></a>`;}).join('');
+  $('#kadd').hidden=!assets;}
 /* ---------- views ---------- */
 let fitted=0;
-function route(){const h=location.hash.slice(1),v=['tree','help','chart','places','timeline','sources'].includes(h)?h:'tree';
+function route(){const h=location.hash.slice(1),v=['tree','help','chart','places','timeline','sources','keepsakes'].includes(h)?h:'tree';if(v==='keepsakes')renderKeepsakes();
   // stage theme: the tree stays on stage and every other section opens as a page over it
   if(STAGE){document.querySelectorAll('.view').forEach(s=>{const me=s.id==='v-'+v;s.classList.toggle('on',s.id==='v-tree'||me);s.classList.toggle('sheet',me&&v!=='tree');});
     document.body.classList.toggle('sheeton',v!=='tree');if(v!=='tree'){const sh=$('#v-'+v);sh.scrollTop=0;if(!sh.querySelector('.shclose'))sh.insertAdjacentHTML('afterbegin','<button class="shclose" aria-label="Back to the tree">✕ Back to the tree</button>');}}

@@ -458,3 +458,32 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .theme-stage .bfull svg{position:static;inset:auto;display:block;width:18px;height:18px;cursor:pointer;z-index:auto}
 .theme-stage .bfull:focus-visible{outline:2px solid #ffe7a1;outline-offset:2px}
 @media(max-width:699px){.theme-stage .bfull:not([hidden]){width:34px;height:34px;top:calc(6px + env(safe-area-inset-top));left:calc(6px + env(safe-area-inset-left))}.theme-stage .bfull svg{width:16px;height:16px}}
+/* ---------- memory garden and keepsake chest on the planet ---------- */
+#tmstars .mflower,#tmstars .gsign,#tmstars .kchest{cursor:pointer}
+#tmstars .mfs{transform-origin:0 16px;animation:mfsway 6s ease-in-out infinite alternate;animation-delay:var(--dl)}
+@keyframes mfsway{from{transform:rotate(calc(var(--sw) - 3deg))}to{transform:rotate(calc(var(--sw) + 3deg))}}
+#tmstars .mfstem{fill:none;stroke:#5f9a52;stroke-width:1.8;stroke-linecap:round}#tmstars .mfleaf{fill:#6fae5f}
+#tmstars .mflower.sprout .mfs{animation:mfsprout 1.6s cubic-bezier(.2,1.4,.4,1) both,mfsway 6s ease-in-out 1.6s infinite alternate}
+@keyframes mfsprout{from{transform:scale(0) rotate(0)}to{transform:scale(1) rotate(var(--sw))}}
+#tmstars .mflower:focus-visible .mfg,#tmstars .kchest:focus-visible .kglow{fill:#fff3b0;opacity:.8}
+#tmstars .gsign:focus-visible .gboard,#tmstars .kchest:focus-visible .klid{stroke:#fff3b0;stroke-width:3}
+#tmstars .gpost{fill:#6b4423}#tmstars .gboard{fill:#8a5a2b;stroke:#4e2f14;stroke-width:1.5}#tmstars .gvine{fill:none;stroke:#6fae5f;stroke-width:2}
+#tmstars .gtx{font:italic 700 11px Spectral,Georgia,serif;fill:#ffe7b0;text-anchor:middle}
+#tmstars .kmound{fill:#1f3d24;opacity:.85}#tmstars .kglow{opacity:.7}
+#tmstars .kbody{fill:#7a4a22;stroke:#3e230c;stroke-width:2}#tmstars .klid{fill:#8f5a2c;stroke:#3e230c;stroke-width:2}
+#tmstars .kband,#tmstars .kstrap{stroke:#d9a441;stroke-width:4;fill:none}#tmstars .klock{fill:#e2b552;stroke:#7a5212;stroke-width:1.2}#tmstars .khole{fill:#3e230c}
+#tmstars .kdirt{fill:none;stroke:#1f3d24;stroke-width:6;stroke-linecap:round}
+#tmstars .kchest:hover .klid,#tmstars .kchest:focus-visible .klid{transform:translateY(-3px) rotate(-3deg);transform-origin:-44px -26px}
+#tmstars .klid{transition:transform .25s ease}
+.touch #tmstars .mfs{animation:none;transform:rotate(var(--sw))}
+.touch #tmstars .mflower.sprout .mfs{animation:mfsprout 1.6s cubic-bezier(.2,1.4,.4,1) both}
+@media(prefers-reduced-motion:reduce){#tmstars .mfs,#tmstars .mflower.sprout .mfs{animation:none;transform:rotate(var(--sw))}}
+#tworld.story #tmstars .garden{opacity:.5}
+/* keepsakes page */
+.kpics{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin:14px 0 26px}
+.kpic{display:flex;flex-direction:column;gap:6px;padding:8px;min-height:0;background:#fffaf0;border:1px solid #d8c8a6;border-radius:10px;box-shadow:2px 3px 0 rgba(60,40,10,.15);text-align:left;font-size:13px;font-weight:600;color:#4a3418}
+.kpic img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;filter:sepia(.12)}
+.krecs{display:grid;gap:10px;margin:10px 0 20px}
+.krec{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);text-decoration:none}
+.krec .kic{font-size:22px;line-height:1}.krec b{display:block}.krec small{display:block;color:var(--clay);margin-top:3px;line-height:1.35}
+.kadd{color:var(--clay)}
