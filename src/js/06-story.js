@@ -30,13 +30,25 @@ function runSpots(s){clearSpots();const spans=[...$('#cap').querySelectorAll('.m
 function startStory(){musicFor('story');clearTimeout(hintT);$('#hint').classList.remove('on');location.hash='tree';tTouched=1;si=0;tw.classList.add('story');document.body.classList.add('storyon');requestAnimationFrame(()=>{$('#tstage').scrollIntoView({behavior:RM?'auto':'smooth',block:innerWidth<600?'start':'nearest'});showStep();});}
 // auto-play: each chapter stays up long enough to read it (about 200 words a minute, plus time for the move)
 const readMs=s=>Math.max(9000,Math.min(28000,3000+s.t.split(/\s+/).length*300));
+// a small map in the corner of the story card: this chapter's town glows gold, earlier towns stay as faint dots.
+// Georgia-only chapters use the Georgia close-up (on the regional map its towns sit on top of each other).
+const MAPVB={reg:[190,80,470,380],ga:[170,20,520,600]};
+function storyMap(s){if(!s.pl||!s.pl.length)return'';const ga=s.pl.every(k=>GA.includes(k)),M=ga?MAP.ga:MAP.states?MAP:null;if(!M)return'';
+  const st=ga?MAP.ga.states:MAP.states,pt=ga?MAP.ga.pts:MAP.pts,[vx,vy,vw,vh]=ga?MAPVB.ga:MAPVB.reg,R=vw*.028,f=n=>n.toFixed(1),core=['Georgia','Kentucky','North Carolina','Alabama','Missouri','Illinois'];
+  const seen=[...new Set(STORY.slice(0,si).flatMap(c=>c.pl||[]))].filter(k=>!s.pl.includes(k)&&pt[k]&&(!ga||GA.includes(k)));
+  const inV=([x,y])=>x>=vx&&x<=vx+vw&&y>=vy&&y<=vy+vh;
+  const paths=st.map(o=>`<path d="${o.d}" class="${core.includes(o.n)?'smc':''}"/>`).join('');
+  const trail=seen.filter(k=>inV(pt[k])).map(k=>`<circle cx="${pt[k][0]}" cy="${pt[k][1]}" r="${f(R*.62)}" class="smt"/>`).join('');
+  const lit=s.pl.filter(k=>pt[k]&&inV(pt[k])).map((k,i)=>{const [x,y]=pt[k],r=i&&s.pl.length>3?R*.75:R;return `<circle cx="${x}" cy="${y}" r="${f(r*2.3)}" class="smh"/><circle cx="${x}" cy="${y}" r="${f(r)}" class="smd"/>`;}).join('');
+  const cap=s.plc||PL[s.pl[0]].replace(' (Meriwether Co.)','').replace(' (Buchanan Co.)','');
+  return `<figure class="smap" role="img" aria-label="Map: ${esc(s.plc?s.pl.map(k=>PL[k]).join(', '):PL[s.pl[0]])}"><div class="smbox"><svg viewBox="${vx} ${vy} ${vw} ${vh}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${paths}${trail}${lit}</svg></div><figcaption>${esc(cap)}</figcaption></figure>`;}
 let stepT=0;const PHONE=()=>$('#tstage').clientWidth<700||TOUCH;
 function showStep(){
   const s=STORY[si];storyFocus=s.f.length?s.f:null;
   const pics=(s.img?`<img src="${s.img}" alt="Jack Graham in Navy uniform">`:'')+s.f.filter(id=>photo[id]).slice(0,s.img?3:4).map(id=>`<img src="${esc(photo[id])}" alt="${esc(byId[id].n)}">`).join('');
   const last=si===STORY.length-1,ms=readMs(s);
   if(auto){clearTimeout(auto);auto=last?null:setTimeout(()=>{if(si<STORY.length-1){si++;showStep();}},ms);}
-  $('#cap').innerHTML=`<div class="dots">${STORY.map((_,i)=>`<i class="${i<=si?'on':''}"></i>`).join('')}</div>${s.y?`<div class="yr">${esc(s.y)}</div>`:''}<h3>${esc(s.h)}</h3>${pics?`<div class="ph">${pics}</div>`:''}<p>${markNames(s.t,MN[si])}</p>
+  $('#cap').innerHTML=`<div class="dots">${STORY.map((_,i)=>`<i class="${i<=si?'on':''}"></i>`).join('')}</div>${s.y?`<div class="yr">${esc(s.y)}</div>`:''}${storyMap(s)}<h3>${esc(s.h)}</h3>${pics?`<div class="ph">${pics}</div>`:''}<p>${markNames(s.t,MN[si])}</p>
    <div class="ctl">${si>0?'<button id="sPrev">Back</button>':''}${last?'<button class="pri" id="sEnd">Explore the tree</button>'+(db?'<button id="sMem">💬 Add a memory</button>':''):'<button class="pri" id="sNext">Next</button>'}<button id="sAuto" aria-pressed="${!!auto}">${auto?'Pause':'Auto-play'}</button>${last?'':'<button id="sEnd">Skip</button>'}<span class="step">${si+1} of ${STORY.length}</span></div>${auto?`<div class="aprog" aria-hidden="true"><i style="animation-duration:${ms}ms"></i></div>`:''}`;
   const cap=$('#cap');cap.classList.remove('on');void cap.offsetWidth;cap.classList.add('on');
   // move first; change the tree's highlighting only once the move has finished, so phones don't have to

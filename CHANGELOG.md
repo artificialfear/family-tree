@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Map in the story
+- Each story chapter shows a small map in the corner of the card, with that chapter's town glowing gold and earlier towns as faint dots. Georgia chapters zoom in on Georgia.
+
 ## 2026-11-23 — Tablets
 - Held upright, a tablet now hangs the gold stars and the sunset clouds in the open sky between the banner and the top of the tree, not bunched in the corners or tangled in the branches. Landscape, phones and computers look the same as before.
 - Smoother night ⇄ sunset change: the sky no longer repaints itself on every frame, which showed up as black or blocky patches on Android tablets.

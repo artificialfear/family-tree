@@ -420,3 +420,21 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .cap .aprog i{display:block;height:100%;background:var(--gold);transform-origin:0 50%;transform:scaleX(0);animation:aprog linear forwards}
 @keyframes aprog{to{transform:scaleX(1)}}
 .stage.night .cap .aprog{background:rgba(232,180,138,.18)}.stage.night .cap .aprog i{background:#e8b48a}
+/* story card inset map (Mat's pick, design A): this chapter's town in gold, earlier towns faint */
+.cap .smap{float:right;width:128px;margin:-2px 0 6px 12px;text-align:center}
+.cap .smbox{height:100px;border-radius:10px;border:1px solid color-mix(in srgb,var(--clay) 35%,transparent);background:color-mix(in srgb,var(--clay) 6%,transparent);overflow:hidden}
+.cap .smap svg{position:static;inset:auto;display:block;width:100%;height:100%;cursor:default;overflow:hidden}
+.cap .smap path{fill:none;stroke:#8a5a2b;stroke-opacity:.5;stroke-width:1.4;vector-effect:non-scaling-stroke}
+.cap .smap path.smc{fill:rgba(201,160,80,.2)}
+.cap .smap .smt{fill:#8a5a2b;opacity:.45}
+.cap .smap .smh{fill:#f2b84b;opacity:.35;transform-box:fill-box;transform-origin:center;animation:smpulse 2.4s ease-in-out infinite}
+.cap .smap .smd{fill:#ffcf5a;stroke:#fff6dc;stroke-width:1.6;vector-effect:non-scaling-stroke}
+.cap .smap figcaption{margin-top:3px;font-size:11.5px;font-weight:600;letter-spacing:.03em;line-height:1.2;color:var(--clay)}
+.stage.night .cap .smbox{border-color:rgba(232,180,138,.3);background:rgba(255,255,255,.03)}
+.stage.night .cap .smap path{stroke:#e8b48a;stroke-opacity:.55}.stage.night .cap .smap path.smc{fill:rgba(232,180,138,.14)}
+.stage.night .cap .smap .smt{fill:#e8b48a}.stage.night .cap .smap figcaption{color:#e8b48a}
+@keyframes smpulse{50%{transform:scale(1.5);opacity:.12}}
+.touch .cap .smap .smh{animation:none}
+@media(prefers-reduced-motion:reduce){.cap .smap .smh{animation:none}}
+@media(max-width:600px){.cap .smap{width:96px;margin-left:10px}.cap .smbox{height:76px}.cap .smap figcaption{font-size:10.5px}}
+@media(min-width:1000px){.cap .smap{width:156px}.cap .smbox{height:120px}}
