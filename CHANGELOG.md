@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Story in order
+- "Johnnie and Annie Mae" now comes after "Jack and Margaret's eight" (1956) and stays undated, since their marriage year isn't known. The story now runs in date order: the Graham family, then the Harper family, then 1982, when Ed and Renee bring the two together.
+
 ## 2026-11-23 — Full-screen button
 - A small round button in the top-left corner switches the browser to full screen and back. Phones and tablets no longer go full screen by themselves, so this lets anyone choose it. It doesn't appear where the browser can't do full screen (iPhone Safari) or when the tree was opened from a home-screen icon, which is already full screen.
 
