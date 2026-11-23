@@ -681,6 +681,9 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .krec{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);text-decoration:none}
 .krec .kic{font-size:22px;line-height:1}.krec b{display:block}.krec small{display:block;color:var(--clay);margin-top:3px;line-height:1.35}
 .kadd{color:var(--clay)}
+
+/* diorama planet: pale gold paper roots in the dark soil */
+.theme-stage #tworld .roots .root{fill:#e2bf86;stroke:#7a4f1e;stroke-width:1;opacity:.95}
 </style>
 </head>
 <body>
@@ -1109,7 +1112,12 @@ const ROOTPINS=[['orange',200,1710,'1911'],['durham',330,1785,'1930'],['louisvil
 // the planet (a circle under the tree) and the memory garden on it
 const PLANET={cx:915,cy:1272+2200,R:2200},surfY=x=>PLANET.cy-Math.sqrt(PLANET.R**2-(x-PLANET.cx)**2);
 const f1=n=>n.toFixed(1);
-const CHEST={x:1835,y:1500},GSIGN={x:-46,y:1546};let gardenSeen=null;const gardenNew={};const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
+const CHEST={x:1835,y:1500},GSIGN={x:-46,y:1546};let gardenSeen=null;const gardenNew={};
+// the planet is a cut-paper diorama: a grass layer on top for the garden, soil underneath where the roots reach the hometowns.
+// The grass starts SOIL0 deep and grows a row (36) at a time when the garden needs room, pushing the soil, roots and towns down.
+const SOIL0=250;let SOILD=SOIL0;
+const memCount=()=>contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]).length;
+function soilDepthFor(n){let D=SOIL0;while(D<SOIL0+36*20&&gardenSlots(D).length<n)D+=36;return D;}const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
 const RAD={ssp:36,son:40,par:62,gp:44,ggp:34,aunt:33,asp:26,kid:27,ksp:22,gk:30},FS={ssp:19,son:21,par:27,gp:22,ggp:18,aunt:18,asp:15,kid:15,ksp:13,gk:17};
 function tLayout(){
   const pos={},br=[],put=(id,x,y,t)=>{if(byId[id]&&!pos[id])pos[id]={x,y,r:RAD[t],t};return pos[id];};
@@ -1338,10 +1346,10 @@ function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contr
 /* memory garden: every memory plants a glowing flower on the planet, in rows along its rim, outer shoulders first.
    Flowers step around faces, name scrolls, the main root, the root towns, the sign and the chest.
    A memory that arrives while the page is open sprouts (grows in). */
-function gardenSlots(){const ob=[];Object.values(TP).forEach(v=>{ob.push(['c',v.x,v.y,v.r+16]);ob.push(['r',v.x,v.y+v.r+24,Math.max(56,v.r*1.7),20]);});
-  ROOTPINS.forEach(([,px,py])=>ob.push(['r',px,py+18,82,48]));ob.push(['r',915,1440,34,170]);ob.push(['r',CHEST.x,CHEST.y-40,100,72]);ob.push(['r',GSIGN.x+25,GSIGN.y-50,62,72]);
+function gardenSlots(D=SOILD){const ob=[];Object.values(TP).forEach(v=>{ob.push(['c',v.x,v.y,v.r+16]);ob.push(['r',v.x,v.y+v.r+24,Math.max(56,v.r*1.7),20]);});
+  ob.push(['r',915,1440,34,170]);ob.push(['r',CHEST.x,CHEST.y-40,100,72]);ob.push(['r',GSIGN.x+25,GSIGN.y-50,62,72]);
   const ok=(x,y)=>ob.every(o=>o[0]==='c'?Math.hypot(x-o[1],y-o[2])>o[3]:Math.abs(x-o[1])>o[3]||Math.abs(y-o[2])>o[4]);
-  const S=[];for(let j=0;j<9;j++){const d=30+j*36;for(let x=-600+(j%2)*19;x<=2430;x+=38){if(Math.abs(x-PLANET.cx)>PLANET.R*.62)continue;const y=surfY(x)+d;if(ok(x,y))S.push([x,y,j,y<1585?0:1]);}}
+  const S=[];for(let j=0;30+j*36<=D-24;j++){const d=30+j*36;for(let x=-600+(j%2)*19;x<=2430;x+=38){if(Math.abs(x-PLANET.cx)>PLANET.R*.62)continue;const y=surfY(x)+d;if(ok(x,y))S.push([x,y,j,y<1585?0:1]);}}
   return S.sort((a,b)=>a[3]-b[3]||a[2]-b[2]||Math.abs(b[0]-915)-Math.abs(a[0]-915));}
 // flower papers by kind of memory: [light, dark, outline]
 const FLC={story:['#ffe0c2','#f49a8e','#b8586a'],photo:['#ffd9ea','#e8789f','#a8406a'],answer:['#dcefff','#7fb3e6','#3f6fa8'],voice:['#efe4ff','#a98be8','#6a4fb0']};
@@ -1478,13 +1486,18 @@ function treeArt(st,dl){
       let rings='';RINGS.forEach(([yr,rr],i)=>{const a=(i%2?1:-1)*(12+i*2.2)*Math.PI/180,lx=BXc+Math.sin(a)*rr,ly=BYc+Math.cos(a)*rr;
         rings+=`<circle cx="${BXc}" cy="${BYc}" r="${rr}" fill="none" stroke="${K.line}" stroke-width="1.3" stroke-dasharray="${i%3?'2 7':'10 6'}" opacity=".16"/><text x="${f(lx)}" y="${f(ly+5)}" class="ringyr" transform="rotate(${f(-a*180/Math.PI)} ${f(lx)} ${f(ly)})">${yr}</text>`;});
       rings=`<g clip-path="url(#pclip)">${rings}</g>`;
-      planet=`<g class="art planet"><circle cx="${cx}" cy="${cy}" r="${R+34}" fill="url(#atmo)"/><circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#pfill)"/>${rings}<g fill="${PL.dot}" opacity=".35">${dots}</g>${STAGE?`<g clip-path="url(#pclip)" opacity=".22"><circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#phatch)" mask="url(#prim)"/></g>`:''}<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${STAGE?'#0c1a10':K.line}" stroke-width="${STAGE?3:1.6}" opacity=".8"/><g stroke="${K.line}" stroke-width="1.1" fill="none" stroke-linecap="round" opacity=".8">${tf}</g></g>`;
+      let soil='';if(STAGE){SOILD=soilDepthFor(memCount());const sy=x=>surfY(Math.max(cx-R*.98,Math.min(cx+R*.98,x)))+SOILD+Math.sin(x/37)*7+Math.sin(x/113)*10;
+        let d=`M${cx-R-60} ${cy+R}`;for(let x=cx-R-60;x<=cx+R+60;x+=40)d+=`L${f(x)} ${f(sy(x))}`;d+=`L${cx+R+60} ${cy+R}Z`;
+        let peb='';for(let i=0;i<110;i++){const x=-500+(hsh('p'+i)%2900),y=sy(x)+40+(hsh('q'+i)%560);peb+=`<ellipse cx="${x}" cy="${y}" rx="${4+hsh('r'+i)%7}" ry="${3+hsh('t'+i)%4}"/>`;}
+        soil=`<g clip-path="url(#pclip)"><defs><linearGradient id="soilg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b3b20"/><stop offset=".5" stop-color="#3d2614"/><stop offset="1" stop-color="#24150a"/></linearGradient></defs>`+
+          `<path d="${d}" fill="url(#soilg)"/><g fill="#7a5532" opacity=".5">${peb}</g><path d="${d}" fill="none" stroke="#0f2614" stroke-width="3" transform="translate(0 7)" opacity=".8"/><path d="${d}" fill="none" stroke="#2c5a2f" stroke-width="10"/></g>`;}
+      planet=`<g class="art planet"><circle cx="${cx}" cy="${cy}" r="${R+34}" fill="url(#atmo)"/><circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#pfill)"/>${soil}${rings}<g fill="${PL.dot}" opacity=".35">${dots}</g>${STAGE?`<g clip-path="url(#pclip)" opacity=".22"><circle cx="${cx}" cy="${cy}" r="${R}" fill="url(#phatch)" mask="url(#prim)"/></g>`:''}<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${STAGE?'#0c1a10':K.line}" stroke-width="${STAGE?3:1.6}" opacity=".8"/><g stroke="${K.line}" stroke-width="1.1" fill="none" stroke-linecap="round" opacity=".8">${tf}</g></g>`;
       ground='';
       // roots that lead to the places the family came from
       // below the grandchildren (their name scrolls end near y 1590), so the roots fan out under the whole family
-      const PINS=ROOTPINS;
-      const RB={x1:915,y1:1290,cx:915,cy:1420,x2:915,y2:1600};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
-      PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=1592,b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
+      const G=STAGE?SOILD-SOIL0:0,PINS=ROOTPINS.map(([k,x,y,yr])=>[k,x,y+G,yr]);
+      const RB={x1:915,y1:1290,cx:915,cy:1420+G/2,x2:915,y2:1600+G};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
+      PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=1592+G,b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
         rts+=`<path class="root" d="${taperPath(b,13,2.2)}"/>`;
         for(let j=0;j<3;j++){const t=.35+j*.2,[qx,qy]=qpt(b,t),dir=(j%2?1:-1)*(px<915?1:-1),c={x1:qx,y1:qy,cx:qx+dir*24,cy:qy+22,x2:qx+dir*(30+rnd()*30),y2:qy+50+rnd()*30};rts+=`<path class="root" d="${taperPath(c,4,.6)}" opacity=".8"/>`;}
         const nm=(PL_NAMES[k]||k).replace(' (Meriwether Co.)','');
@@ -1585,7 +1598,7 @@ let TSZ={w:0,h:0};const tsz=()=>{if(!TSZ.w){const s=$('#tstage');TSZ={w:s.client
 new ResizeObserver(()=>{const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};if(tw.childElementCount&&!G)tApply(false);}).observe($('#tstage'));
 function tClamp(){const r={width:tsz().w,height:tsz().h};if(!r.width||!(TB.x1>TB.x0))return;const W=r.width,H=r.height,bw=TB.x1-TB.x0,bh=TB.y1-TB.y0;
   const kmin=Math.min(W/bw,H/bh)*.5;if(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
-  const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(H*.5-(TB.y1+(PRINT?0:340))*k,tv.y));}
+  const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(H*.5-(TB.y1+(PRINT?0:340+SOILD-SOIL0))*k,tv.y));}
 let SKYEL=null;
 function sunLight(){if(SKY!=='day')return;
   // stage: the sun hangs in the sky, not behind the tree, so the light no longer follows the view — always full sunset light

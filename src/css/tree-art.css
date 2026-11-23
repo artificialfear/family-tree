@@ -489,3 +489,6 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .krec{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);text-decoration:none}
 .krec .kic{font-size:22px;line-height:1}.krec b{display:block}.krec small{display:block;color:var(--clay);margin-top:3px;line-height:1.35}
 .kadd{color:var(--clay)}
+
+/* diorama planet: pale gold paper roots in the dark soil */
+.theme-stage #tworld .roots .root{fill:#e2bf86;stroke:#7a4f1e;stroke-width:1;opacity:.95}

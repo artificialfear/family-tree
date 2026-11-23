@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-23 — Garden above, roots below
+- The planet is now a cut-paper diorama. The memory garden grows in a grassy top layer, and underneath is a layer of dark soil where pale gold roots reach down to the family's hometowns.
+- As more memories are shared, the grass layer grows deeper a row at a time and pushes the soil, roots and towns down, so over the years the garden spreads across the planet and every memory always gets a flower.
+
 ## 2026-11-23 — Garden in the stage style
 - The garden flowers, the Memory Garden sign and the keepsake chest are redrawn in the same cut-paper style as the hanging stars, moon and banner. Flowers are paper petals with a gold star in the middle. The sign is a little velvet pennant on a gold post. The chest has gold bands, a star clasp and a few gold stars floating out of it.
 
