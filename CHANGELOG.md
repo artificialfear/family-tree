@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Purple celestial curtains
+- The stage curtains are now deep purple velvet scattered with little gold stars and crescent moons — on the closed opening curtain and on the tied-back curtains and drapes around the tree. The back drapes along the top are midnight blue.
+
 ## 2026-11-22 — Livelier hanging stars on phones
 - On phones the hanging stars now drop to clearly different lengths, from just under the curtain to just above the tree, and a few are noticeably bigger. The tree sits a little lower to make room.
 

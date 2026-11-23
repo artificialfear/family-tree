@@ -49,7 +49,7 @@ const TSTYLE=(new URLSearchParams(location.search).get('style'))||'ink';
 const PL_NAMES={covington:'Covington, GA',newborn:'Newborn, GA',greenville:'Meriwether County, GA',collegepark:'College Park, GA',upson:'Upson County, GA',louisville:'Louisville, KY',durham:'Durham, NC',orange:'Orange County, NC'};
 const SKYQ=new URLSearchParams(location.search).get('sky');
 // 'stage' = toy-theater look (painted backdrop, curtains, engraved tree); mockup behind ?theme=stage
-const PURP=new URLSearchParams(location.search).get('curtain')==='purple';if(PURP)document.documentElement.classList.add('cpurple');
+const PURP=new URLSearchParams(location.search).get('curtain')!=='red';if(PURP)document.documentElement.classList.add('cpurple');
 const THEME=new URLSearchParams(location.search).get('theme')||'stage',STAGE=THEME==='stage';
 let PRINT=false,SKYPREF=SKYQ||'night',SKY='night',NIGHT=true;
 function autoSky(){const d=new Date(),h=d.getHours()+d.getMinutes()/60;return h>=7.5&&h<17?'day':((h>=17&&h<18.75)||(h>=6&&h<7.5))?'dusk':'night';}
