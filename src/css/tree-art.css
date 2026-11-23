@@ -89,7 +89,7 @@
 .stage.night{--bk:#7d5f42}
 .stage.night .cap{background:rgba(13,22,40,.94);color:#efe7d6;border-color:rgba(243,233,210,.16);box-shadow:0 14px 40px rgba(0,0,0,.45);}
 .stage.night .cap h3{color:#fff7e6}.stage.night .cap .yr{color:#e8b48a}.stage.night .cap .step{color:#aab4c6}
-.stage.night .cap .ph img{border-color:#22324f}.stage.night .cap .dots i{background:#3a4a66}.stage.night .cap .dots i.on{background:#e8b48a}
+.stage.night .cap .ph img,.stage.night .cap .mpl img,.stage.night .cap .mpl .mi{border-color:#22324f}.stage.night .cap .dots i{background:#3a4a66}.stage.night .cap .dots i.on{background:#e8b48a}
 .stage.night .cap .mn.lit{background-color:rgba(243,217,184,.22);color:#fff7e6}
 .stage.night .leaf .halo{fill:#f3e9d2;stroke:#cdb88c}
 .stage.night .leaf .lname{fill:#f6eedc;stroke:#0d1729;stroke-width:5px}

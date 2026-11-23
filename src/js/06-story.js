@@ -27,14 +27,14 @@ function runSpots(s){clearSpots();const spans=[...$('#cap').querySelectorAll('.m
   spans.forEach(x=>{const id=x.dataset.id;spotT.push(setTimeout(()=>{x.classList.add('lit');spotlight(id);},t));seen.add(id);t+=650;});
   const rest=(s.f||[]).filter(id=>!seen.has(id));
   if(rest.length)spotT.push(setTimeout(()=>rest.forEach(spotlight),t+150));}
-function startStory(){musicFor('story');location.hash='tree';tTouched=1;si=0;tw.classList.add('story');document.body.classList.add('storyon');requestAnimationFrame(()=>{$('#tstage').scrollIntoView({behavior:RM?'auto':'smooth',block:innerWidth<600?'start':'nearest'});showStep();});}
+function startStory(){musicFor('story');clearTimeout(hintT);$('#hint').classList.remove('on');location.hash='tree';tTouched=1;si=0;tw.classList.add('story');document.body.classList.add('storyon');requestAnimationFrame(()=>{$('#tstage').scrollIntoView({behavior:RM?'auto':'smooth',block:innerWidth<600?'start':'nearest'});showStep();});}
 let stepT=0;const PHONE=()=>$('#tstage').clientWidth<700;
 function showStep(){
   const s=STORY[si];storyFocus=s.f.length?s.f:null;
   const pics=(s.img?`<img src="${s.img}" alt="Jack Graham in Navy uniform">`:'')+s.f.filter(id=>photo[id]).slice(0,s.img?3:4).map(id=>`<img src="${esc(photo[id])}" alt="${esc(byId[id].n)}">`).join('');
   const last=si===STORY.length-1;
   $('#cap').innerHTML=`<div class="dots">${STORY.map((_,i)=>`<i class="${i<=si?'on':''}"></i>`).join('')}</div>${s.y?`<div class="yr">${esc(s.y)}</div>`:''}<h3>${esc(s.h)}</h3>${pics?`<div class="ph">${pics}</div>`:''}<p>${markNames(s.t,MN[si])}</p>
-   <div class="ctl">${si>0?'<button id="sPrev">Back</button>':''}${last?'<button class="pri" id="sEnd">Explore the tree</button>':'<button class="pri" id="sNext">Next</button>'}<button id="sAuto" aria-pressed="${!!auto}">${auto?'Pause':'Auto-play'}</button>${last?'':'<button id="sEnd">Skip</button>'}<span class="step">${si+1} of ${STORY.length}</span></div>`;
+   <div class="ctl">${si>0?'<button id="sPrev">Back</button>':''}${last?'<button class="pri" id="sEnd">Explore the tree</button>'+(db?'<button id="sMem">💬 Add a memory</button>':''):'<button class="pri" id="sNext">Next</button>'}<button id="sAuto" aria-pressed="${!!auto}">${auto?'Pause':'Auto-play'}</button>${last?'':'<button id="sEnd">Skip</button>'}<span class="step">${si+1} of ${STORY.length}</span></div>`;
   const cap=$('#cap');cap.classList.remove('on');void cap.offsetWidth;cap.classList.add('on');
   // move first; change the tree's highlighting only once the move has finished, so phones don't have to
   // redraw the whole tree while it is sliding (that made the picture stutter and jump)
@@ -50,8 +50,19 @@ function showStep(){
   document.querySelectorAll('#sEnd').forEach(b=>b.onclick=endStory);
   // the curtain-call: finishing the story with 'Explore the tree' also turns night to sunset (or sunset to night)
   if(last){const ex=$('#cap .pri#sEnd');if(ex)ex.onclick=()=>{endStory();setTimeout(()=>$('#tSky').click(),1100);};}
+  $('#sMem')&&($('#sMem').onclick=memPick);
   $('#sAuto').onclick=()=>{if(auto){clearInterval(auto);auto=null;}else{auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}showStep();};
 }
+// last chapter → 'Add a memory': pick who it's about, then the story closes and that person's memory form opens
+const MEMWHO=[['ed','Ed'],['renee','Renee'],['johnny','Johnny'],['annie','Annie Mae'],['jack','Jack'],['margaret','Margaret']];
+function memPick(){if(auto){clearInterval(auto);auto=null;}const c=$('#cap .ctl');if(!c)return;
+  c.outerHTML=`<div class="mpick"><div class="mq">Who is your memory about?</div><div class="mpl">${MEMWHO.filter(([id])=>byId[id]).map(([id,nm])=>`<button data-mw="${id}">${photo[id]?`<img src="${esc(photo[id])}" alt="">`:`<span class="mi">${esc(nm[0])}</span>`}<span>${esc(nm)}</span></button>`).join('')}<button data-mw=""><span class="mi">＋</span><span>Someone else</span></button></div><button class="mback" id="mBack">Back</button></div>`;
+  const m=$('#cap .mpick');m.querySelector('[data-mw]').focus({preventScroll:true});
+  $('#mBack').onclick=()=>showStep();
+  m.querySelectorAll('[data-mw]').forEach(b=>b.onclick=()=>{const id=b.dataset.mw;endStory();
+    setTimeout(()=>{const h=$('#hint');clearTimeout(hintT);
+      if(id){h.classList.remove('on');select(id);tFocus(id);openForm('story');}
+      else{h.textContent='Tap anyone’s face, then “Share a memory”';h.classList.add('on');hintT=setTimeout(()=>{h.classList.remove('on');setTimeout(()=>h.textContent='Tap any face to learn about them',600);},9000);}},950);});}
 function resetAuto(){if(auto){clearInterval(auto);auto=setInterval(()=>{if(si<STORY.length-1){si++;showStep();}else{clearInterval(auto);auto=null;showStep();}},11000);}}
 function endStory(){musicFor('tree');document.body.classList.remove('storyon');clearTimeout(stepT);clearInterval(auto);auto=null;si=-1;setTimeout(showHint,900);clearSpots();storyFocus=null;tw.classList.remove('story');tw.querySelectorAll('.leaf.dim').forEach(c=>c.classList.remove('dim'));$('#cap').classList.remove('on');select('renee',1);setTimeout(()=>innerWidth<600?tFrame(TCORE):tFit(true),50);}
 addEventListener('keydown',e=>{if(si<0)return;if(e.key==='ArrowRight'&&si<STORY.length-1){si++;resetAuto();showStep();}else if(e.key==='ArrowLeft'&&si>0){si--;resetAuto();showStep();}else if(e.key==='Escape')endStory();});

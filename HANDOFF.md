@@ -74,3 +74,4 @@ A Thanksgiving 2026 gift for Mat's mom, Renee. Interactive illustrated family tr
 - The claude.ai artifact version (slug 3be5a35b-…) is retired and no longer updated.
 - Mat to do a real end-to-end test with the passcode (memory, photo, voice) on iPhone and Android.
 - Ideas offered, not built: email alert to Mat on new posts; a simple mode for older relatives.
+- Story last chapter (2026-11-22): "💬 Add a memory" (`#sMem`, only when the backend is on) → `memPick()` in `06-story.js` swaps the card's controls for a face picker (`MEMWHO`: ed, renee, johnny, annie, jack, margaret + "Someone else"). A pick ends the story, then after 950 ms `select(id)` + `tFocus(id)` + `openForm('story')`; "Someone else" shows a temporary hint for 9 s. Back restores the chapter. "Explore the tree" still flips the sky; Add a memory does not. `startStory()` now hides `#hint`.

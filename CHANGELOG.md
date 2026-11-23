@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-22 — Add a memory from the story
+- The last story chapter has an "Add a memory" button. It asks who the memory is about (Ed, Renee, Johnny, Annie Mae, Jack, Margaret, or someone else), then closes the story and opens that person's memory form. "Someone else" returns to the tree with a tip to tap anyone's face.
+- The "Tap any face" tip no longer shows on top of the story card.
+
 ## 2026-11-22 — Cleaner sky
 - Removed the newest-memory line under the title banner. Family memories still appear as gold stars beside each person on the tree.
 

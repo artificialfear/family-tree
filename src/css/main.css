@@ -76,6 +76,12 @@ textarea{min-height:84px;resize:vertical}
 .cap .step{color:var(--mute);font-size:14px;margin-inline-start:auto;white-space:nowrap}
 .cap .ph{display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap}
 .cap .ph img{width:76px;height:76px;object-fit:cover;border-radius:50%;border:3px solid var(--paper)}
+.cap .mpick .mq{font-family:Spectral,serif;font-size:20px;font-style:italic;margin:2px 0 10px}
+.cap .mpl{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px}
+.cap .mpl button{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;padding:4px;min-width:72px;cursor:pointer;color:inherit;font:inherit;font-size:15px;border-radius:12px}
+.cap .mpl button:hover,.cap .mpl button:focus-visible{background:color-mix(in srgb,var(--gold) 22%,transparent);outline:none}
+.cap .mpl img,.cap .mpl .mi{width:60px;height:60px;border-radius:50%;object-fit:cover;border:3px solid var(--paper);display:grid;place-items:center;font-size:24px;background:color-mix(in srgb,var(--gold) 25%,transparent)}
+@media(max-width:600px){.cap .mpl{gap:4px}.cap .mpl button{min-width:60px;font-size:13px}.cap .mpl img,.cap .mpl .mi{width:48px;height:48px;font-size:19px}.cap .mpick .mq{font-size:17px;margin-bottom:6px}}
 .dots{display:flex;gap:6px;margin:0 0 10px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--clay)}
 aside.panel{border:1px solid var(--line);border-radius:14px;padding:18px;background:var(--bg);max-height:min(74vh,740px);overflow:auto}
 aside.panel.fresh{animation:slide .4s ease both}
