@@ -409,3 +409,8 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
   body.stagemode .cap p{font-size:15px;line-height:1.45;margin:0 0 10px;max-height:22vh;overflow:auto;-webkit-overflow-scrolling:touch}
   body.stagemode .cap .ctl{gap:6px}body.stagemode .cap .ctl button{min-height:40px;padding:6px 13px;font-size:15px}
   body.stagemode .cap .step{font-size:13px}body.stagemode .cap .dots{margin-bottom:4px}}
+/* auto-play: a thin gold line fills while each chapter is showing */
+.cap .aprog{height:3px;margin:10px 2px 0;border-radius:2px;background:color-mix(in srgb,var(--gold) 20%,transparent);overflow:hidden}
+.cap .aprog i{display:block;height:100%;background:var(--gold);transform-origin:0 50%;transform:scaleX(0);animation:aprog linear forwards}
+@keyframes aprog{to{transform:scaleX(1)}}
+.stage.night .cap .aprog{background:rgba(232,180,138,.18)}.stage.night .cap .aprog i{background:#e8b48a}
