@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Brighter, steady sunset
+- The sunset sky is brighter and warmer, and it no longer gets darker or lighter as you move around the tree.
+
 ## 2026-11-22 — Night and sunset scene change
 - The sky button now simply switches between night and sunset (the automatic mode is gone).
 - Switching is a little scene change: the paper moon is pulled up behind the curtain on its string, then the paper sun is lowered down on its strings while the night sky slowly fades into sunset — and the reverse going back to night.

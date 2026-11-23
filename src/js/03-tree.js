@@ -500,7 +500,9 @@ function tClamp(){const r={width:tsz().w,height:tsz().h};if(!r.width||!(TB.x1>TB
   const kmin=Math.min(W/bw,H/bh)*.5;if(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
   const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(H*.5-(TB.y1+(PRINT?0:280))*k,tv.y));}
 let SKYEL=null;
-function sunLight(){if(SKY!=='day')return;const st=SKYEL||(SKYEL=$('#tstage .sky')),r={height:tsz().h};if(!st||!r.height)return;
+function sunLight(){if(SKY!=='day')return;
+  // stage: the sun hangs in the sky, not behind the tree, so the light no longer follows the view — always full sunset light
+  if(STAGE){const st=SKYEL||(SKYEL=$('#tstage .sky'));if(st&&st.style.getPropertyValue('--sunup')!=='1'){st.style.setProperty('--sunup','1');st.style.setProperty('--suny','62%');}return;}const st=SKYEL||(SKYEL=$('#tstage .sky')),r={height:tsz().h};if(!st||!r.height)return;
   const H=r.height,sunY=H*(innerWidth<600?.62:.7),hz=tv.y+1272*tv.k,sz=Math.min(190,Math.max(110,innerWidth*.13));
   const up=Math.max(0,Math.min(1,(hz-sunY+sz*.15)/(sz*1.6)));
   st.style.setProperty('--sunup',up.toFixed(3));st.style.setProperty('--suny',(sunY/H*100).toFixed(1)+'%');}
