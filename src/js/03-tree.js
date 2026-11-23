@@ -49,6 +49,7 @@ const TSTYLE=(new URLSearchParams(location.search).get('style'))||'ink';
 const PL_NAMES={covington:'Covington, GA',newborn:'Newborn, GA',greenville:'Meriwether County, GA',collegepark:'College Park, GA',upson:'Upson County, GA',louisville:'Louisville, KY',durham:'Durham, NC',orange:'Orange County, NC'};
 const SKYQ=new URLSearchParams(location.search).get('sky');
 // 'stage' = toy-theater look (painted backdrop, curtains, engraved tree); mockup behind ?theme=stage
+const PURP=new URLSearchParams(location.search).get('curtain')==='purple';if(PURP)document.documentElement.classList.add('cpurple');
 const THEME=new URLSearchParams(location.search).get('theme')||'stage',STAGE=THEME==='stage';
 let PRINT=false,SKYPREF=SKYQ||'night',SKY='night',NIGHT=true;
 function autoSky(){const d=new Date(),h=d.getHours()+d.getMinutes()/60;return h>=7.5&&h<17?'day':((h>=17&&h<18.75)||(h>=6&&h<7.5))?'dusk':'night';}
@@ -148,15 +149,16 @@ function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah}=stageDims
   const ty=H*.58;
   const side=sg=>{const e=sg<0?0:W,o=-sg;const pts=`M${e} 0L${f(e+o*cw*1.25)} 0Q${f(e+o*cw*.6)} ${f(ty*.6)} ${f(e+o*cw*.45)} ${f(ty)}Q${f(e+o*cw*1.4)} ${f(ty+(H-ty)*.55)} ${f(e+o*cw*1.1)} ${H}L${e} ${H}Z`;
     let folds='';for(let k=1;k<4;k++){const fx=e+o*cw*k*.27;folds+=`<path class="pfold" d="M${f(fx)} 0Q${f(e+o*cw*k*.13)} ${f(ty*.6)} ${f(e+o*cw*k*.11)} ${f(ty)}Q${f(e+o*cw*k*.33)} ${f(ty+(H-ty)*.5)} ${f(e+o*cw*k*.28)} ${H}"/>`;}
-    const tx=e+o*cw*.45;return `<path class="pred" d="${pts}"/>${folds}<path class="ptie" d="M${f(e)} ${f(ty-5)}L${f(tx+o*4)} ${f(ty-5)}L${f(tx+o*4)} ${f(ty+5)}L${f(e)} ${f(ty+5)}Z"/><circle cx="${f(tx+o*4)}" cy="${f(ty)}" r="${ph?4:6}" class="pgold"/><path class="ptas" d="M${f(tx+o*4)} ${f(ty+4)}l-${ph?4:7} ${ph?14:24}h${ph?8:14}Z"/>`;};
+    const tx=e+o*cw*.45;return `<path class="pred" d="${pts}"/>${PURP?`<path d="${pts}" fill="url(#pstp)"/>`:''}${folds}<path class="ptie" d="M${f(e)} ${f(ty-5)}L${f(tx+o*4)} ${f(ty-5)}L${f(tx+o*4)} ${f(ty+5)}L${f(e)} ${f(ty+5)}Z"/><circle cx="${f(tx+o*4)}" cy="${f(ty)}" r="${ph?4:6}" class="pgold"/><path class="ptas" d="M${f(tx+o*4)} ${f(ty+4)}l-${ph?4:7} ${ph?14:24}h${ph?8:14}Z"/>`;};
   // stage apron with footlights
   let lights='';for(let x=W*.12;x<W*.9;x+=ph?70:120)lights+=`<ellipse cx="${f(x)}" cy="${f(H-ah)}" rx="${ph?10:16}" ry="${ph?3:5}" class="plight"/>`;
   const apron=`<rect x="0" y="${f(H-ah)}" width="${W}" height="${f(ah)}" class="papron"/><rect x="0" y="${f(H-ah)}" width="${W}" height="2.5" class="pgold"/>${lights}`;
   const corner=sg=>{const x=sg<0?cw*.9:W-cw*.9,y=vh+(ph?14:26),rr=ph?11:20;return `<g transform="translate(${f(x)} ${f(y)})"><circle r="${rr}" class="pcres"/><circle cx="${f(-sg*rr*.4)}" cy="${f(-rr*.15)}" r="${f(rr*.8)}" class="pcut"/></g>`;};
-  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="prg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b3262c"/><stop offset="1" stop-color="#6d1018"/></linearGradient>
-   <linearGradient id="pgg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f8a67"/><stop offset="1" stop-color="#14523b"/></linearGradient>
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="prg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${PURP?'#6b3aa0':'#b3262c'}"/><stop offset="1" stop-color="${PURP?'#2b1150':'#6d1018'}"/></linearGradient>
+   <linearGradient id="pgg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${PURP?'#2c3f98':'#2f8a67'}"/><stop offset="1" stop-color="${PURP?'#141d5a':'#14523b'}"/></linearGradient>
+   ${PURP?`<pattern id="pstp" width="54" height="70" patternUnits="userSpaceOnUse"><path d="${star6(12,14,4.2)}" fill="#e9c46a" opacity=".85"/><path d="${star6(40,48,2.6)}" fill="#f3dc95" opacity=".7"/><circle cx="34" cy="16" r="1.2" fill="#fff3c8" opacity=".7"/><circle cx="8" cy="52" r="1" fill="#fff3c8" opacity=".6"/><g transform="translate(26 33)"><circle r="5" fill="#e9c46a" opacity=".85"/><circle cx="2.2" cy="-1.2" r="4.3" fill="#3d1a68"/></g></pattern>`:''}
    <linearGradient id="pgl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset=".5" stop-color="#d9a441"/><stop offset="1" stop-color="#8f5f1b"/></linearGradient></defs>
-   ${side(-1)}${side(1)}${band}${green}${red}${fringe}${orn}${corner(-1)}${corner(1)}${apron}</svg>`;}
+   ${side(-1)}${side(1)}${band}${green}${red}${PURP?(red.match(/<path class="pred"[^>]*>/g)||[]).join('').replace(/class="pred"/g,'fill="url(#pstp)"'):''}${fringe}${orn}${corner(-1)}${corner(1)}${apron}</svg>`;}
 
 function applySky(redraw){SKY=skyNow();NIGHT=true;const st=$('#tstage');['day','dusk','night'].forEach(m=>st.classList.toggle('sky-'+m,SKY===m));st.classList.toggle('night',NIGHT);
   const b=$('#tSky');if(b){const IC={auto:'<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"/></svg>',

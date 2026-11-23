@@ -387,3 +387,14 @@ body.stagemode #tstage .hint{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 2
 /* during the story the toolbar steps aside; the story card's Skip / Explore the tree brings it back */
 body.storyon.stagemode #tstage>.tools{display:none}
 body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
+/* purple celestial curtains (mockup: ?curtain=purple) */
+.cpurple #proscen .pred,.cpurple .cframe .pred{stroke:#1a0833}
+.cpurple #proscen .pfold,.cpurple .cframe .pfold{stroke:rgba(18,4,40,.5)}
+.cpurple .cover.curtain .cpanel{background:
+  radial-gradient(circle at 20% 30%,rgba(255,236,170,.9) 0 1.6px,transparent 2.4px) 0 0/58px 74px,
+  radial-gradient(circle at 70% 70%,rgba(255,236,170,.7) 0 1.2px,transparent 2px) 0 0/58px 74px,
+  radial-gradient(circle at 45% 55%,rgba(255,250,220,.6) 0 .9px,transparent 1.6px) 0 0/31px 43px,
+  linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,0) 30%,rgba(0,0,0,.35) 100%),
+  repeating-linear-gradient(90deg,#24093f 0,#4a2178 2.2%,#7444ad 3.6%,#52268a 5%,#2e0d52 7.2%)}
+.cpurple .cover.curtain .cpanel{box-shadow:inset 0 0 60px rgba(10,0,30,.6)}
+.cpurple .cover.curtain .veil{background:radial-gradient(60% 55% at 50% 50%,rgba(16,6,40,.75) 0%,rgba(16,6,40,.35) 60%,rgba(16,6,40,0) 100%)}
