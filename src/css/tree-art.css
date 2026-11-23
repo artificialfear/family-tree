@@ -312,7 +312,7 @@ footer{height:80px}
 #marquee{display:none}
 .theme-stage #marquee{display:block;position:absolute;left:50%;transform:translateX(-50%);width:min(520px,86%);z-index:3;pointer-events:none}
 #marquee svg{display:block;position:relative;left:auto;top:auto;width:100%;height:auto;transform:none;will-change:auto}
-#marquee .mqsign{filter:drop-shadow(0 6px 8px rgba(8,4,20,.55))}
+#marquee .mqsign{filter:drop-shadow(0 6px 10px rgba(8,4,20,.6))}
 #marquee .mqbig{font-family:Rockwell,"Roboto Slab","Clarendon",Georgia,serif;font-weight:800;font-size:38px;fill:#fff3dc;stroke:#0c1a4a;stroke-width:5;paint-order:stroke;letter-spacing:1px}
 #marquee .mqsmall{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#e0404a;letter-spacing:4px;stroke:#0c1a4a;stroke-width:3;paint-order:stroke}
 #marquee .mqplaque{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#fff3dc;letter-spacing:4px}
@@ -398,3 +398,4 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
   repeating-linear-gradient(90deg,#24093f 0,#4a2178 2.2%,#7444ad 3.6%,#52268a 5%,#2e0d52 7.2%)}
 .cpurple .cover.curtain .cpanel{box-shadow:inset 0 0 60px rgba(10,0,30,.6)}
 .cpurple .cover.curtain .veil{background:radial-gradient(60% 55% at 50% 50%,rgba(16,6,40,.75) 0%,rgba(16,6,40,.35) 60%,rgba(16,6,40,0) 100%)}
+#marquee .mqsign{overflow:visible}

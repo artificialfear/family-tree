@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Celestial title plaque
+- The bright marquee sign is replaced by a midnight-blue oval plaque in a gold frame, hanging from a little gold crescent, with "The Graham & Harper Family" in gold — matching the purple curtains, paper moon and gold stars.
+
 ## 2026-11-22 — Paper-cut moon
 - The moon is now a gold paper-cut crescent hanging on a string from behind the curtain, like a stage prop. Tap it for the note for Mom.
 

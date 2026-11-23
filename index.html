@@ -497,7 +497,7 @@ footer{height:80px}
 #marquee{display:none}
 .theme-stage #marquee{display:block;position:absolute;left:50%;transform:translateX(-50%);width:min(520px,86%);z-index:3;pointer-events:none}
 #marquee svg{display:block;position:relative;left:auto;top:auto;width:100%;height:auto;transform:none;will-change:auto}
-#marquee .mqsign{filter:drop-shadow(0 6px 8px rgba(8,4,20,.55))}
+#marquee .mqsign{filter:drop-shadow(0 6px 10px rgba(8,4,20,.6))}
 #marquee .mqbig{font-family:Rockwell,"Roboto Slab","Clarendon",Georgia,serif;font-weight:800;font-size:38px;fill:#fff3dc;stroke:#0c1a4a;stroke-width:5;paint-order:stroke;letter-spacing:1px}
 #marquee .mqsmall{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#e0404a;letter-spacing:4px;stroke:#0c1a4a;stroke-width:3;paint-order:stroke}
 #marquee .mqplaque{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#fff3dc;letter-spacing:4px}
@@ -583,6 +583,7 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
   repeating-linear-gradient(90deg,#24093f 0,#4a2178 2.2%,#7444ad 3.6%,#52268a 5%,#2e0d52 7.2%)}
 .cpurple .cover.curtain .cpanel{box-shadow:inset 0 0 60px rgba(10,0,30,.6)}
 .cpurple .cover.curtain .veil{background:radial-gradient(60% 55% at 50% 50%,rgba(16,6,40,.75) 0%,rgba(16,6,40,.35) 60%,rgba(16,6,40,0) 100%)}
+#marquee .mqsign{overflow:visible}
 </style>
 </head>
 <body>
@@ -1091,25 +1092,20 @@ function faceSVG(kind){const sun=kind==='sun';let rays='';
    <path d="M-12 14Q0 25 12 14" fill="none" stroke="#6b3d10" stroke-width="2.8" stroke-linecap="round"/>
    <path d="M-3 -2Q-6 6 -1 8" fill="none" stroke="#a8712a" stroke-width="1.8" stroke-linecap="round"/></svg>`;}
 /* the family name as a lit marquee sign, fixed at the top of the stage */
-function marqueeSVG(){const f=n=>n.toFixed(1);let bulbs='';
-  const edge=[];for(let t=0;t<=1.0001;t+=1/26){const x=30+460*t;edge.push([x,46-Math.sin(Math.PI*t)*22]);}
-  edge.forEach(([x,y])=>bulbs+=`<circle cx="${f(x)}" cy="${f(y)}" r="3.4"/>`);
-  for(let x=30;x<=490;x+=460/26)bulbs+=`<circle cx="${f(x)}" cy="148" r="3.4"/>`;
-  for(let y=60;y<140;y+=14)bulbs+=`<circle cx="20" cy="${y}" r="3.4"/><circle cx="500" cy="${y}" r="3.4"/>`;
-  let rays='';for(let i=0;i<14;i++){const a=(-90+(i-6.5)*13)*Math.PI/180;rays+=`<path d="M260 176L${f(260+Math.cos(a-.08)*320)} ${f(176+Math.sin(a-.08)*320)}L${f(260+Math.cos(a+.08)*320)} ${f(176+Math.sin(a+.08)*320)}Z"/>`;}
-  const panel='M18 52Q260 2 502 52L506 156L14 156Z';
-  return `<svg class="mqsign" viewBox="0 0 520 170" role="img" aria-label="The Graham and Harper Family">
-   <defs><linearGradient id="mqg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a6"/><stop offset=".5" stop-color="#e0ae45"/><stop offset="1" stop-color="#9a6a1e"/></linearGradient>
-   <linearGradient id="mqb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b58c4"/><stop offset="1" stop-color="#16307f"/></linearGradient><clipPath id="mqc"><path d="M30 56Q260 12 490 56L492 144L28 144Z"/></clipPath></defs>
-   <path d="${panel}" fill="url(#mqg)" stroke="#6b4410" stroke-width="2"/>
-   <g transform="translate(14 54)"><circle r="16" fill="url(#mqg)" stroke="#6b4410" stroke-width="1.5"/><path d="M0 0m-9 0a9 9 0 1 1 9 9a5 5 0 1 1 -5 -5" fill="none" stroke="#7a5214" stroke-width="2.2"/></g>
-   <g transform="translate(506 54) scale(-1 1)"><circle r="16" fill="url(#mqg)" stroke="#6b4410" stroke-width="1.5"/><path d="M0 0m-9 0a9 9 0 1 1 9 9a5 5 0 1 1 -5 -5" fill="none" stroke="#7a5214" stroke-width="2.2"/></g>
-   <path d="M30 56Q260 12 490 56L492 144L28 144Z" fill="url(#mqb)" stroke="#f5e6c0" stroke-width="2"/>
-   <g clip-path="url(#mqc)" fill="#5a86e6" opacity=".22">${rays}</g>
-   <text x="260" y="58" text-anchor="middle" class="mqsmall">THE</text>
-   <text x="260" y="102" text-anchor="middle" class="mqbig" textLength="384" lengthAdjust="spacingAndGlyphs">GRAHAM &amp; HARPER</text>
-   <g transform="translate(260 124)"><path d="M-62 -13H62L70 0L62 13H-62L-70 0Z" fill="#b3262c" stroke="#f5e6c0" stroke-width="1.6"/><text y="6" text-anchor="middle" class="mqplaque">FAMILY</text></g>
-   <g class="mqbulbs">${bulbs}</g></svg>
+function marqueeSVG(){
+  // the family name on a celestial cartouche: a midnight oval in a gold frame, hung from a gold crescent (Mat's pick, design D)
+  return `<svg class="mqsign" viewBox="0 0 520 180" role="img" aria-label="The Graham and Harper Family" style="overflow:visible">
+   <defs><linearGradient id="mqcG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a6"/><stop offset=".5" stop-color="#d9a441"/><stop offset="1" stop-color="#8f5f1b"/></linearGradient>
+   <radialGradient id="mqcB" cx=".5" cy=".4" r=".7"><stop offset="0" stop-color="#2a1a5e"/><stop offset="1" stop-color="#120a33"/></radialGradient></defs>
+   <line x1="260" y1="-400" x2="260" y2="14" stroke="#d9a441" stroke-width="2"/>
+   <g transform="translate(260 22)"><circle r="12" fill="url(#mqcG)"/><circle cx="5" cy="-3" r="10" fill="#120a33"/></g>
+   <ellipse cx="260" cy="98" rx="214" ry="66" fill="url(#mqcG)"/><ellipse cx="260" cy="98" rx="206" ry="59" fill="url(#mqcB)"/>
+   <ellipse cx="260" cy="98" rx="196" ry="51" fill="none" stroke="#d9a441" stroke-width="1.2" stroke-dasharray="1 5" stroke-linecap="round"/>
+   <path d="M56 98l10-8 10 8-10 8Z M464 98l-10-8-10 8 10 8Z" fill="url(#mqcG)"/>
+   <text x="260" y="78" text-anchor="middle" font-family="Spectral,Georgia,serif" font-style="italic" font-size="16" fill="#f3dc95" letter-spacing="2">The</text>
+   <text x="260" y="112" text-anchor="middle" font-family="Spectral,Georgia,serif" font-weight="700" font-size="34" fill="url(#mqcG)" textLength="300" lengthAdjust="spacingAndGlyphs">Graham &amp; Harper</text>
+   <text x="260" y="138" text-anchor="middle" font-family="Spectral,Georgia,serif" font-style="italic" font-size="16" fill="#f3dc95" letter-spacing="4">Family</text>
+   <g fill="#f3dc95"><circle cx="130" cy="72" r="1.6"/><circle cx="392" cy="70" r="1.6"/><circle cx="150" cy="128" r="1.2"/><circle cx="372" cy="130" r="1.2"/></g></svg>
    <svg class="mqnew" viewBox="-300 -20 600 40"><g id="tnew" class="tnew" role="button" tabindex="0"><rect class="tnbg" x="-200" y="-17" width="400" height="32" rx="16"/><text class="tntext" text-anchor="middle" y="5"></text></g></svg>`;}
 /* stage moon: a gold paper-cut crescent hanging on a string from behind the valance (Mat's pick, design #2) */
 function paperMoonSVG(){return `<svg viewBox="-110 -110 220 220" aria-hidden="true" style="overflow:visible">
