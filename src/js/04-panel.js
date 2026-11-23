@@ -65,8 +65,8 @@ const ASK=[
  {id:'q4',pid:'margaret',q:'When and where did Jack and Margaret get married?'},
  {id:'q5',pid:'annie',q:'Who were Annie Mae’s parents? Where and when was she born?'},
  {id:'q6',pid:'annie',q:'What year did Annie Mae pass away?'},
- {id:'q7',pid:'johnny',q:'How did Johnny and Annie Mae meet, and when did they marry?'},
- {id:'q8',pid:'earl',q:'What do you remember hearing about Earl and Sara Lee Harper, Johnny’s parents?'},
+ {id:'q7',pid:'johnny',q:'How did Johnnie and Annie Mae meet, and when did they marry?'},
+ {id:'q8',pid:'earl',q:'What do you remember hearing about Earl and Sara Lee Harper, Johnnie’s parents?'},
  {id:'q9',pid:'ed',q:'How did Ed and Renee meet?'},
  {id:'q10',pid:'renee',q:'Is there a family tradition, recipe or holiday memory that belongs on this tree?'}];
 const ASKQ=Object.fromEntries(ASK.map(a=>[a.id,a.q]));

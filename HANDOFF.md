@@ -68,6 +68,8 @@ A Thanksgiving 2026 gift for Mat's mom, Renee. Interactive illustrated family tr
 - Living people: no birth dates beyond what Mat supplied.
 
 ## Open items
+- Spelling (Mat, 2026-11-23): "Johnnie" everywhere it is shown (id stays `johnny`, source key `obitJohnny`, and the census search URL keeps `Johnny%20Lee`). Story chapter 7 now explains 1956 (Richard's birth). "For Mom" is Mat's text; `MN` marks Ed, Johnnie, Annie Mae.
+- Still open: the undated "Johnnie and Annie Mae" chapter sits before 1956; waiting on Mat for a marriage year (or move it after the Graham chapter, undated). Inset chapter map: two mockups sent (A in-card, B hanging paper map), waiting for Mat's pick.
 - Apps Script deployed (personal Gmail, project "Family Tree Memories Backend", bound to Sheet "Family Tree Memories" 1HkfTGciP1XuJdExkbUpby_ip1TJzKUZnhXYrVG5cml4). URL in src/api.txt. To update the backend: paste backend/Code.gs, then Deploy > Manage deployments > edit > New version (never "New deployment"). Version 2 (2026-11-21): hashed device ids, lockout, voice memories.
 - Remaining "died"/"Died" wording not yet changed to "passed away"/"Passed" (Mat hasn't decided).
 - Idea offered, not built: hometown markers glow during story chapters.

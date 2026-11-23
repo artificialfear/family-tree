@@ -6,12 +6,12 @@ const MN=[[],
  [['Jack','jack']],
  [['Margaret E. Lush','margaret']],
  [['Earl','earl'],['Sara Lee Harper','sara'],['Johnnie Lee','johnny']],
- [['Johnny Lee Harper','johnny'],['Annie Mae Ralston','annie'],['Renee','renee'],['Pam','pam'],['John','johnh'],['Jeff','jeff']],
+ [['Johnnie Lee Harper','johnny'],['Annie Mae Ralston','annie'],['Renee','renee'],['Pam','pam'],['John','johnh'],['Jeff','jeff']],
  [['Jack','jack'],['Margaret','margaret'],['Richard','richard'],['Norma','norma'],['Evelyn','evelyn'],['Eileen','eileen'],['Donna','donna'],['Wayne','wayne'],['Bruce','bruce'],['Ed','ed']],
  [['Ed Graham','ed'],['Renee Harper','renee']],
  [['Ed','ed'],['Renee','renee'],['Chris','chris'],['Mat','mat'],['Jon','jon'],['Dustin','dustin'],['Amanda','amanda'],['Emily','emily'],['Jessica','jessica'],['Lydia','lydia'],['Lilly','lilly'],['Maddie','maddie'],['Dustin Jr','dustinjr']],
  [['Amber','amber'],['Steven','stevenn'],['Brandon','brandon'],['Jeremy','jeremy'],['Michael','michael'],['Andrew','andrew'],['Alissa','alissa'],['Malik','malik'],['Ashley','ashley'],['Shelby','shelby'],['Kayla','kayla'],['John John','johnjohn'],['Chasity','chasity'],['Amber','amberl'],['Ashley','ashleyl'],['Shannon','shannon'],['Jacob','jacob']],
- [['Ed','ed'],['Johnny','johnny']]];
+ [['Ed','ed'],['Johnnie','johnny'],['Annie Mae','annie']]];
 function markNames(t,ms){let out='',pos=0;
   (ms||[]).forEach(([fr,id])=>{if(!byId[id])return;const re=new RegExp('\\b'+fr.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','g');re.lastIndex=pos;const m=re.exec(t);if(!m)return;
     out+=esc(t.slice(pos,m.index))+`<span class="mn" data-id="${id}" tabindex="0" role="button" aria-label="Show ${esc(byId[id].n)} on the tree">${esc(m[0])}</span>`;pos=m.index+m[0].length;});
@@ -57,7 +57,7 @@ function showStep(){
   $('#sAuto').onclick=()=>{if(auto){clearTimeout(auto);auto=null;}else auto=1;showStep();};
 }
 // last chapter → 'Add a memory': pick who it's about, then the story closes and that person's memory form opens
-const MEMWHO=[['ed','Ed'],['renee','Renee'],['johnny','Johnny'],['annie','Annie Mae'],['jack','Jack'],['margaret','Margaret']];
+const MEMWHO=[['ed','Ed'],['renee','Renee'],['johnny','Johnnie'],['annie','Annie Mae'],['jack','Jack'],['margaret','Margaret']];
 function memPick(){if(auto){clearTimeout(auto);auto=null;}const c=$('#cap .ctl');if(!c)return;
   c.outerHTML=`<div class="mpick"><div class="mq">Who is your memory about?</div><div class="mpl">${MEMWHO.filter(([id])=>byId[id]).map(([id,nm])=>`<button data-mw="${id}">${photo[id]?`<img src="${esc(photo[id])}" alt="">`:`<span class="mi">${esc(nm[0])}</span>`}<span>${esc(nm)}</span></button>`).join('')}<button data-mw=""><span class="mi">＋</span><span>Someone else</span></button></div><button class="mback" id="mBack">Back</button></div>`;
   const m=$('#cap .mpick');m.querySelector('[data-mw]').focus({preventScroll:true});

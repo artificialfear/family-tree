@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-23 — "For Mom" in Mat's words; Johnnie
+- The last chapter, "For Mom", now ends with Mat's own words, including Annie Mae as the glue that held the family together and "We love you very much, momma!"
+- Johnnie Harper's name is spelled "Johnnie" everywhere (the spelling on his 1940 census record).
+- The 1956 chapter now says what happened that year: Jack and Margaret's first child, Richard, was born.
+
 ## 2026-11-23 — Story music on cue, paced auto-play
 - "Begin the story" now starts the story song on its first note, at full volume, right as the curtains open (the same as "Explore").
 - Auto-play gives each chapter as long as it needs to read (about 9 to 18 seconds, longer chapters stay up longer) instead of a flat 11 seconds. A thin gold line under the buttons fills while each chapter is showing.

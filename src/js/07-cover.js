@@ -8,7 +8,7 @@
 /* ---------- cover ---------- */
 const cover=$('#cover'),RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 // faces fill the gold dots: Graham branches left, Harper branches right, parents on the lower pair
-{const F=[['jack',30,20,'Jack'],['margaret',80,10,'Margaret'],['johnny',140,10,'Johnny'],['annie',190,20,'Annie Mae'],['ed',40,88,'Ed'],['renee',180,88,'Renee']],r=13;
+{const F=[['jack',30,20,'Jack'],['margaret',80,10,'Margaret'],['johnny',140,10,'Johnnie'],['annie',190,20,'Annie Mae'],['ed',40,88,'Ed'],['renee',180,88,'Renee']],r=13;
  const fz=$('#faces');
  fz.innerHTML=F.map(([id,x,y,nm],i)=>`<g class="face" data-f="${id}" style="--d:${2.7+i*.55}s"><g class="fz"><clipPath id="fc-${id}"><circle cx="${x}" cy="${y}" r="${r}"/></clipPath><image href="${PHOTOS[id]?.p||''}" x="${x-r}" y="${y-r}" width="${2*r}" height="${2*r}" clip-path="url(#fc-${id})" preserveAspectRatio="xMidYMid slice"/><circle cx="${x}" cy="${y}" r="${r+.8}"/></g><text class="fn" x="${x}" y="${y+r*2.5+8}">${nm}</text></g>`).join('');
  // bring the face under the pointer to the front so it enlarges over its neighbours
