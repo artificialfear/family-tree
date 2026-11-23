@@ -639,6 +639,17 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .theme-stage #tfront .ffw{transition:opacity 1.5s ease-in-out;will-change:opacity}
 .theme-stage.sky-day #tfront .ffw{opacity:0}
 .theme-stage.sky-day .sky .stars i.lo{display:block}
+
+/* browser full-screen button, top-left corner over the valance */
+.bfull{display:none}
+.theme-stage .bfull:not([hidden]){display:flex;align-items:center;justify-content:center;position:absolute;z-index:8;top:calc(6px + env(safe-area-inset-top));left:calc(6px + env(safe-area-inset-left));
+  width:36px;height:36px;padding:0;border-radius:50%;border:2px solid #e2b552;background:#4a1f86;color:#ffe7a1;cursor:pointer;
+  min-height:0;min-width:0;box-sizing:border-box;line-height:0;box-shadow:0 2px 6px rgba(0,0,0,.45);-webkit-tap-highlight-color:transparent}
+.theme-stage .bfull::before{content:'';position:absolute;inset:-5px;border-radius:50%}/* a 44 px tap target around the smaller circle */
+.theme-stage .bfull:hover{background:#5d2aa3}
+.theme-stage .bfull svg{position:static;inset:auto;display:block;width:18px;height:18px;cursor:pointer;z-index:auto}
+.theme-stage .bfull:focus-visible{outline:2px solid #ffe7a1;outline-offset:2px}
+@media(max-width:699px){.theme-stage .bfull:not([hidden]){width:34px;height:34px;top:calc(6px + env(safe-area-inset-top));left:calc(6px + env(safe-area-inset-left))}.theme-stage .bfull svg{width:16px;height:16px}}
 </style>
 </head>
 <body>
@@ -674,6 +685,7 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
   </div>
   <div class="treewrap">
     <div class="stage" id="tstage">
+      <button class="bfull" id="bFull" type="button" hidden aria-label="Full screen" title="Full screen"></button>
       <svg id="tsvg" role="group" aria-label="Illustrated family tree"><defs id="tdefs"></defs><g id="tworld"></g></svg>
       <div class="tools">
         <input id="q" list="names" placeholder="Find a person" aria-label="Find a person" hidden>
@@ -1816,6 +1828,17 @@ addEventListener('keydown',e=>{if(si<0)return;if(e.key==='ArrowRight'&&si<STORY.
 $('#storyBtn').onclick=$('#tStory').onclick=()=>{sfx.ctx();startMusic('story');startStory();};
 /* ---------- full screen tree ---------- */
 const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
+// corner button for the browser's own full screen. Phones and tablets don't switch on their own any more
+// (Android showed a black screen while it happened), so this lets them choose it. Hidden where the browser
+// can't do it (iPhone Safari) and when the site was opened from the home screen, which is already full screen.
+{const bf=$('#bFull'),d=document.documentElement,can=!!(document.fullscreenEnabled||document.webkitFullscreenEnabled)&&!!(d.requestFullscreen||d.webkitRequestFullscreen),
+  app=matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
+  const IN='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    OUT='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const show=()=>{const on=!!fsEl();bf.innerHTML=on?OUT:IN;const t=on?'Exit full screen':'Full screen';bf.setAttribute('aria-label',t);bf.title=t;};
+  if(bf&&STAGE&&can&&!app){bf.hidden=false;show();
+    bf.onclick=()=>{try{if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document);else{const p=(d.requestFullscreen||d.webkitRequestFullscreen).call(d);if(p&&p.catch)p.catch(()=>{});}}catch(e){}};
+    ['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,show));}}
 function refit(){setTimeout(()=>{if(si>=0&&storyFocus)tFrame(storyFocus);else tFit();},80);}
 function setFull(on,quiet){const b=document.body;if(STAGE&&!on)return null;if(on===b.classList.contains('tfull'))return null;let pr=null;
   b.classList.toggle('tfull',on);b.classList.remove('pdrawer');hidePop();

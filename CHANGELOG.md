@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Full-screen button
+- A small round button in the top-left corner switches the browser to full screen and back. Phones and tablets no longer go full screen by themselves, so this lets anyone choose it. It doesn't appear where the browser can't do full screen (iPhone Safari) or when the tree was opened from a home-screen icon, which is already full screen.
+
 ## 2026-11-23 — Steady tree while the sky changes
 - Switching between night and sunset no longer touches the tree. The fireflies now fade out together instead of being switched off one by one, and the faint low stars stay put. Before, the tablet had to redraw the layer over the tree, and photos and name scrolls flickered for a moment.
 - Phones and tablets keep a smaller picture of the tree in memory, which leaves the tablet more room during the sky change.

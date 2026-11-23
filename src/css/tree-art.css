@@ -447,3 +447,14 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .theme-stage #tfront .ffw{transition:opacity 1.5s ease-in-out;will-change:opacity}
 .theme-stage.sky-day #tfront .ffw{opacity:0}
 .theme-stage.sky-day .sky .stars i.lo{display:block}
+
+/* browser full-screen button, top-left corner over the valance */
+.bfull{display:none}
+.theme-stage .bfull:not([hidden]){display:flex;align-items:center;justify-content:center;position:absolute;z-index:8;top:calc(6px + env(safe-area-inset-top));left:calc(6px + env(safe-area-inset-left));
+  width:36px;height:36px;padding:0;border-radius:50%;border:2px solid #e2b552;background:#4a1f86;color:#ffe7a1;cursor:pointer;
+  min-height:0;min-width:0;box-sizing:border-box;line-height:0;box-shadow:0 2px 6px rgba(0,0,0,.45);-webkit-tap-highlight-color:transparent}
+.theme-stage .bfull::before{content:'';position:absolute;inset:-5px;border-radius:50%}/* a 44 px tap target around the smaller circle */
+.theme-stage .bfull:hover{background:#5d2aa3}
+.theme-stage .bfull svg{position:static;inset:auto;display:block;width:18px;height:18px;cursor:pointer;z-index:auto}
+.theme-stage .bfull:focus-visible{outline:2px solid #ffe7a1;outline-offset:2px}
+@media(max-width:699px){.theme-stage .bfull:not([hidden]){width:34px;height:34px;top:calc(6px + env(safe-area-inset-top));left:calc(6px + env(safe-area-inset-left))}.theme-stage .bfull svg{width:16px;height:16px}}
