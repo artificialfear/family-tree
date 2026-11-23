@@ -684,6 +684,17 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 
 /* diorama planet: pale gold paper roots in the dark soil */
 .theme-stage #tworld .roots .root{fill:#e2bf86;stroke:#7a4f1e;stroke-width:1;opacity:.95}
+
+/* lanterns (memories of family who have passed): a gentle float on computers, still on touch screens; a new one rises into place */
+#tmstars .mlantern{cursor:pointer}
+#tmstars .mls{transform:rotate(var(--rot));animation:lfloat 7s ease-in-out infinite alternate;animation-delay:var(--dl)}
+@keyframes lfloat{from{transform:translateY(4px) rotate(calc(var(--rot) - 2deg))}to{transform:translateY(-5px) rotate(calc(var(--rot) + 2deg))}}
+#tmstars .mlantern.sprout .mls{animation:lrise 2.2s cubic-bezier(.2,.8,.3,1) both,lfloat 7s ease-in-out 2.2s infinite alternate}
+@keyframes lrise{from{transform:translateY(120px) rotate(var(--rot));opacity:0}to{transform:translateY(0) rotate(var(--rot));opacity:1}}
+#tmstars .mlantern:focus-visible path[fill="url(#lpaper)"]{stroke:#fff3b0;stroke-width:2.5}
+.touch #tmstars .mls{animation:none}.touch #tmstars .mlantern.sprout .mls{animation:lrise 2.2s cubic-bezier(.2,.8,.3,1) both}
+@media(prefers-reduced-motion:reduce){#tmstars .mls,#tmstars .mlantern.sprout .mls{animation:none}}
+#tworld.story #tmstars .lanterns{opacity:.5}
 </style>
 </head>
 <body>
@@ -744,6 +755,7 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 
 <section class="band view" id="v-help">
   <h2 style="margin:0 0 6px;font-size:32px">Can you help fill in the tree?</h2>
+  <p class="note" style="font-size:17px">🌸 Every memory you share grows a flower in the garden on the planet. 🏮 Memories of family who have passed rise as lanterns in the sky around the tree.</p>
   <p class="lead">These are the questions the records couldn't answer. If you know — or even half-remember — type it in. Short answers are perfect. On a phone, you can tap the microphone on your keyboard and talk instead of typing.</p>
   <div class="asks" id="asks"></div>
   <h3 style="font-size:24px">Photos we're still looking for</h3>
@@ -1116,7 +1128,8 @@ const CHEST={x:1835,y:1500},GSIGN={x:-46,y:1546};let gardenSeen=null;const garde
 // the planet is a cut-paper diorama: a grass layer on top for the garden, soil underneath where the roots reach the hometowns.
 // The grass starts SOIL0 deep and grows a row (36) at a time when the garden needs room, pushing the soil, roots and towns down.
 const SOIL0=250;let SOILD=SOIL0;
-const memCount=()=>contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]).length;
+const passed=c=>!byId[c.pid].living;
+const memCount=()=>contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]&&!passed(c)).length;
 function soilDepthFor(n){let D=SOIL0;while(D<SOIL0+36*20&&gardenSlots(D).length<n)D+=36;return D;}const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
 const RAD={ssp:36,son:40,par:62,gp:44,ggp:34,aunt:33,asp:26,kid:27,ksp:22,gk:30},FS={ssp:19,son:21,par:27,gp:22,ggp:18,aunt:18,asp:15,kid:15,ksp:13,gk:17};
 function tLayout(){
@@ -1347,16 +1360,30 @@ function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contr
    Flowers step around faces, name scrolls, the main root, the root towns, the sign and the chest.
    A memory that arrives while the page is open sprouts (grows in). */
 function gardenSlots(D=SOILD){const ob=[];Object.values(TP).forEach(v=>{ob.push(['c',v.x,v.y,v.r+16]);ob.push(['r',v.x,v.y+v.r+24,Math.max(56,v.r*1.7),20]);});
-  ob.push(['r',915,1440,34,170]);ob.push(['r',CHEST.x,CHEST.y-40,100,72]);ob.push(['r',GSIGN.x+25,GSIGN.y-50,62,72]);
+  ob.push(['r',915,1440,34,170]);
+  // the children and grandchildren on the planet stand on clear grass: no flowers among or above them
+  const fam=Object.values(TP).filter(v=>v.y>1250);if(fam.length){const fx0=Math.min(...fam.map(v=>v.x-v.r))-50,fx1=Math.max(...fam.map(v=>v.x+v.r))+50,fb=Math.max(...fam.map(v=>v.y+v.r))+62;ob.push(['r',(fx0+fx1)/2,0,(fx1-fx0)/2,fb]);}ob.push(['r',CHEST.x,CHEST.y-40,100,72]);
   const ok=(x,y)=>ob.every(o=>o[0]==='c'?Math.hypot(x-o[1],y-o[2])>o[3]:Math.abs(x-o[1])>o[3]||Math.abs(y-o[2])>o[4]);
   const S=[];for(let j=0;30+j*36<=D-24;j++){const d=30+j*36;for(let x=-600+(j%2)*19;x<=2430;x+=38){if(Math.abs(x-PLANET.cx)>PLANET.R*.62)continue;const y=surfY(x)+d;if(ok(x,y))S.push([x,y,j,y<1585?0:1]);}}
   return S.sort((a,b)=>a[3]-b[3]||a[2]-b[2]||Math.abs(b[0]-915)-Math.abs(a[0]-915));}
+/* lanterns: memories of family who have passed float in the open sky around the canopy,
+   gathering as a crown above it first and then down both sides */
+function lanternSlots(){const can=Object.values(TP).filter(v=>v.y<1250);if(!can.length)return [];
+  const xs=can.map(v=>v.x),ys=can.map(v=>v.y),cX=(Math.min(...xs)+Math.max(...xs))/2,rX=(Math.max(...xs)-Math.min(...xs))/2+110,top=Math.min(...ys),cY=(top+1250)/2,rY=(1250-top)/2+120;
+  const ob=Object.values(TP).flatMap(v=>[[v.x,v.y,v.r+34],[v.x,v.y+v.r+24,Math.max(70,v.r*1.9)]]);
+  const S=[];for(let y=top-200,r=0;y<=1180;y+=62,r++)for(let x=cX-rX-700+(r%2)*31;x<=cX+rX+700;x+=62){
+    if(((x-cX)/rX)**2+((y-cY)/rY)**2<1)continue;if(ob.some(([ox,oy,rr])=>Math.hypot(x-ox,y-oy)<rr))continue;
+    if(Math.abs(x-cX)<400&&y<top+60)continue;// the title banner hangs here
+    S.push([x,y]);}
+  // a crown over both shoulders of the canopy first, then down the sides
+  const T=[[cX-rX*.72,top-40],[cX+rX*.72,top-40]],d=p=>Math.min(...T.map(([tx,ty])=>Math.hypot(p[0]-tx,(p[1]-ty)*1.25)));return S.sort((a,b)=>d(a)-d(b));}
 // flower papers by kind of memory: [light, dark, outline]
 const FLC={story:['#ffe0c2','#f49a8e','#b8586a'],photo:['#ffd9ea','#e8789f','#a8406a'],answer:['#dcefff','#7fb3e6','#3f6fa8'],voice:['#efe4ff','#a98be8','#6a4fb0']};
 // one paper-cut flower: five rounded petals in a single shape
 const FLOWER=(()=>{let d='';for(let i=0;i<5;i++){const a=i*72*Math.PI/180,P=(r,o)=>[Math.sin(a+o)*r,-Math.cos(a+o)*r],v0=P(3.4,-.63),c0=P(12.5,-.5),c1=P(12.5,.5),v1=P(3.4,.63);
   d+=(i?'L':'M')+v0.map(f1).join(' ')+'C'+[...c0,...c1,...v1].map(f1).join(' ');}return d+'Z';})();
-function gardenSVG(list){const S=gardenSlots(),mem=[...list].sort((a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)));
+function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)),list=all.filter(c=>!passed(c)),LS=lanternSlots();
+  const S=gardenSlots(),mem=[...list].sort((a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)));
   const first=gardenSeen===null,seen=gardenSeen||new Set();let fl='';
   mem.forEach((c,i)=>{const sp=S[i];if(!sp)return;const [x,y]=sp,h=hsh(c.id),k=c.audio?'voice':FLC[c.type]?c.type:'story',rot=h%72,sw=((h>>8)%9-4);
     if(!first&&!seen.has(c.id))gardenNew[c.id]=Date.now();const nw=Date.now()-(gardenNew[c.id]||0)<2500;
@@ -1364,16 +1391,12 @@ function gardenSVG(list){const S=gardenSlots(),mem=[...list].sort((a,b)=>String(
       <path d="M0 17Q${f1(sw/2)} 9 0 3" class="mfstem"/><path d="M0 12q-8-5-11 1q6 3 11-1z" class="mfleaf"/>
       <g transform="rotate(${rot})"><path d="${FLOWER}" transform="translate(2.2 3)" class="pfsh"/><path d="${FLOWER}" fill="url(#gf-${k})" stroke="${FLC[k][2]}" stroke-width="1.1"/></g>
       <path d="${star6(0,0,4.4)}" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><path d="${star6(-.6,-.6,1.8)}" fill="#fff6d8" opacity=".6"/></g></g></g>`;});
-  gardenSeen=new Set(mem.map(c=>c.id));
-  // the sign: a little velvet pennant like the title banner, hung from a gold lamppost
-  const sign=`<g class="gsign" tabindex="0" role="button" aria-label="The memory garden: what the flowers are" transform="translate(${GSIGN.x} ${GSIGN.y})">
-    <path d="M-2 4V-96h46" transform="translate(4 5)" class="gshadow"/><path d="M-2 4V-96h46" class="gpost"/><circle cx="-2" cy="-98" r="4.5" fill="url(#ggold)" stroke="#6b4410" stroke-width="1"/><path d="M-8 6h12" class="gpost"/>
-    <path d="M10 -96v8M40 -96v8" stroke="#d9a441" stroke-width="1.4"/>
-    <path d="M-2 -88h54v44l-27 12l-27 -12z" transform="translate(4 5)" class="gshadow"/>
-    <path d="M-2 -88h54v44l-27 12l-27 -12z" fill="url(#gvel)" stroke="url(#ggold)" stroke-width="3" stroke-linejoin="round"/>
-    <path d="M3 -83h44v36l-22 10l-22 -10z" fill="none" stroke="#e9c46a" stroke-width=".8" stroke-dasharray="2 2.5" opacity=".7"/>
-    <text x="25" y="-68" class="gtx">Memory</text><text x="25" y="-54" class="gtx">Garden</text>
-    <path d="${star6(25,-42,3.2)}" fill="url(#ggold)" stroke="#6b4410" stroke-width=".6"/></g>`;
+  let lt='';[...all].filter(passed).sort(byDate).forEach((c,i)=>{const sp=LS[i];if(!sp)return;const h=hsh(c.id),x=sp[0]+(h%30)-15,y=sp[1]+((h>>5)%30)-15,rot=((h>>9)%14)-7;
+    if(!first&&!seen.has(c.id))gardenNew[c.id]=Date.now();const nw=Date.now()-(gardenNew[c.id]||0)<2500;
+    lt+=`<g class="mlantern${nw?' sprout':''}" data-c="${esc(c.id)}" tabindex="0" role="button" aria-label="A memory of ${esc(byId[c.pid].n)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mls" style="--rot:${rot}deg;--dl:-${(h%60)/10}s"><circle r="34" fill="url(#lglow)"/>
+      <path d="M-14 -17L14 -17L10 15L-10 15Z" transform="translate(3 4)" fill="#0b1630" opacity=".35"/><path d="M-14 -17L14 -17L10 15L-10 15Z" fill="url(#lpaper)" stroke="#a8561c" stroke-width="1.2"/><path d="M-5 -17L-4 15M5 -17L4 15" stroke="#d98a3c" stroke-width=".8" opacity=".6"/>
+      <rect x="-15" y="-20" width="30" height="4" rx="1.5" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><rect x="-10" y="14" width="20" height="3" rx="1" fill="url(#ggold)" stroke="#6b4410" stroke-width=".6"/><ellipse cy="20" rx="2.2" ry="3.4" fill="#fff3b0"/></g></g></g>`;});
+  gardenSeen=new Set(all.map(c=>c.id));
   // the chest: cut-paper wood with gold bands and a star clasp, a few gold stars floating out of it
   const chest=`<g class="kchest" tabindex="0" role="button" aria-label="Open the keepsake chest: old photographs and family records" transform="translate(${CHEST.x} ${CHEST.y}) scale(1.3)">
     <circle cx="0" cy="-34" r="20" fill="transparent"/><ellipse cx="0" cy="7" rx="60" ry="9" fill="#0f2a16" opacity=".55"/>
@@ -1387,7 +1410,7 @@ function gardenSVG(list){const S=gardenSlots(),mem=[...list].sort((a,b)=>String(
     <path d="M-40 -1q40 9 80 0" fill="none" stroke="#1f3d24" stroke-width="7" stroke-linecap="round"/></g>`;
   const grad=(id,a,b)=>`<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
   return `<defs><linearGradient id="ggold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient>
-    ${grad('gvel','#5b2a8f','#2c0f50')}${grad('gwood','#9a6234','#5e3615')}${Object.entries(FLC).map(([k,[a,b]])=>grad('gf-'+k,a,b)).join('')}</defs><g class="garden">${sign}${chest}${fl}</g>`;}
+    ${grad('gvel','#5b2a8f','#2c0f50')}${grad('gwood','#9a6234','#5e3615')}${Object.entries(FLC).map(([k,[a,b]])=>grad('gf-'+k,a,b)).join('')}<linearGradient id="lpaper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset=".6" stop-color="#ffc36e"/><stop offset="1" stop-color="#f08a3c"/></linearGradient><radialGradient id="lglow"><stop offset="0" stop-color="#ffd98a" stop-opacity=".55"/><stop offset="1" stop-color="#ffb860" stop-opacity="0"/></radialGradient></defs><g class="garden">${chest}${fl}</g><g class="lanterns">${lt}</g>`;}
 function gardenNote(el){const r=$('#tstage').getBoundingClientRect(),q=el.getBoundingClientRect(),n=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]).length;
   showNote(`<div class="mem"><div class="mq">The memory garden</div><p>Every flower is a memory someone shared about the family${n?` — ${n} so far`:''}. Tap a flower to read it.</p><p>To plant one, tap anyone's photo on the tree and choose <b>Add a memory or story</b>.</p></div>`,q.left-r.left+q.width/2,q.bottom-r.top);}
 // stars keep a readable size however far you zoom out
@@ -1676,11 +1699,11 @@ function tZoom(f,cx,cy,fast){tTouched=1;hidePop();const r=tsz();cx??=r.w/2;cy??=
    if(pts.size===2&&pinch){const [a,b]=[...pts.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),r=pinchR||(pinchR=$('#tstage').getBoundingClientRect());tZoom(d/pinch,(a[0]+b[0])/2-r.left,(a[1]+b[1])/2-r.top,true);pinch=d;moved=99;return;}
    const dx=e.clientX-last[0],dy=e.clientY-last[1];moved+=Math.abs(dx)+Math.abs(dy);last=[e.clientX,e.clientY];if(moved<4)return;tv.x+=dx;tv.y+=dy;tTouched=1;gBegin();gFrame();});
  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(pts.size===1){last=[...pts.values()][0].slice();moved=99;}if(!pts.size){tsvg.classList.remove('drag');gEnd();}
-   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar,.mflower');if(ms){openMem(ms);return;}if(hit?.closest('.kchest')){location.hash='keepsakes';return;}const gs=hit?.closest('.gsign');if(gs){gardenNote(gs);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
+   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar,.mflower,.mlantern');if(ms){openMem(ms);return;}if(hit?.closest('.kchest')){location.hash='keepsakes';return;}const gs=hit?.closest('.gsign');if(gs){gardenNote(gs);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
  tsvg.addEventListener('pointerup',up);tsvg.addEventListener('pointercancel',up);
  tsvg.addEventListener('wheel',e=>{e.preventDefault();const r=$('#tstage').getBoundingClientRect();tZoom(e.deltaY<0?1.12:1/1.12,e.clientX-r.left,e.clientY-r.top);},{passive:false});
  tsvg.addEventListener('dblclick',e=>{const r=$('#tstage').getBoundingClientRect();tZoom(1.8,e.clientX-r.left,e.clientY-r.top);});
- tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){}const ms=e.target.closest?.('.tmstar,.mflower');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}if((e.key==='Enter'||e.key===' ')&&e.target.closest?.('.kchest')){e.preventDefault();location.hash='keepsakes';return;}const gs=e.target.closest?.('.gsign');if(gs&&(e.key==='Enter'||e.key===' ')){e.preventDefault();gardenNote(gs);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
+ tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){}const ms=e.target.closest?.('.tmstar,.mflower,.mlantern');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}if((e.key==='Enter'||e.key===' ')&&e.target.closest?.('.kchest')){e.preventDefault();location.hash='keepsakes';return;}const gs=e.target.closest?.('.gsign');if(gs&&(e.key==='Enter'||e.key===' ')){e.preventDefault();gardenNote(gs);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
 $('#tzin').onclick=()=>tZoom(1.3);$('#tzout').onclick=()=>tZoom(1/1.3);$('#tfit').onclick=()=>{tTouched=1;tFit();};
 $('#q').addEventListener('change',e=>{const v=e.target.value.toLowerCase().trim();const p=P.find(p=>p.n.toLowerCase()===v)||P.find(p=>p.n.toLowerCase().includes(v));if(p){select(p.id);tFocus(p.id);}});
 

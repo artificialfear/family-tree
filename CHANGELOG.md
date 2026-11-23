@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-23 — Lanterns for loved ones, a calmer garden
+- Memories of family who have passed (Ed, Johnnie, Annie Mae, Jack, Margaret, Norma, Richard and the earlier generations) now rise as glowing paper lanterns in the sky around the tree. They gather over both shoulders of the canopy first, then spread down the sides. A new one rises into place while people are watching. Tap a lantern to read its memory.
+- Memories of the living are still flowers in the garden. The children and grandchildren now stand on clear grass, with the flowers growing on either side of them and beneath them.
+- The Memory Garden sign is gone. The "Can you help?" page now explains the flowers and lanterns.
+
 ## 2026-11-23 — Garden above, roots below
 - The planet is now a cut-paper diorama. The memory garden grows in a grassy top layer, and underneath is a layer of dark soil where pale gold roots reach down to the family's hometowns.
 - As more memories are shared, the grass layer grows deeper a row at a time and pushes the soil, roots and towns down, so over the years the garden spreads across the planet and every memory always gets a flower.

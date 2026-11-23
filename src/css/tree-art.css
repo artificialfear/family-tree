@@ -492,3 +492,14 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 
 /* diorama planet: pale gold paper roots in the dark soil */
 .theme-stage #tworld .roots .root{fill:#e2bf86;stroke:#7a4f1e;stroke-width:1;opacity:.95}
+
+/* lanterns (memories of family who have passed): a gentle float on computers, still on touch screens; a new one rises into place */
+#tmstars .mlantern{cursor:pointer}
+#tmstars .mls{transform:rotate(var(--rot));animation:lfloat 7s ease-in-out infinite alternate;animation-delay:var(--dl)}
+@keyframes lfloat{from{transform:translateY(4px) rotate(calc(var(--rot) - 2deg))}to{transform:translateY(-5px) rotate(calc(var(--rot) + 2deg))}}
+#tmstars .mlantern.sprout .mls{animation:lrise 2.2s cubic-bezier(.2,.8,.3,1) both,lfloat 7s ease-in-out 2.2s infinite alternate}
+@keyframes lrise{from{transform:translateY(120px) rotate(var(--rot));opacity:0}to{transform:translateY(0) rotate(var(--rot));opacity:1}}
+#tmstars .mlantern:focus-visible path[fill="url(#lpaper)"]{stroke:#fff3b0;stroke-width:2.5}
+.touch #tmstars .mls{animation:none}.touch #tmstars .mlantern.sprout .mls{animation:lrise 2.2s cubic-bezier(.2,.8,.3,1) both}
+@media(prefers-reduced-motion:reduce){#tmstars .mls,#tmstars .mlantern.sprout .mls{animation:none}}
+#tworld.story #tmstars .lanterns{opacity:.5}
