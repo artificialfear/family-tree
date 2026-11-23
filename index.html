@@ -613,6 +613,10 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .theme-stage.sky-night .sbackdrop .hstar,.theme-stage.sky-day .sbackdrop .hcloud{transform:none;transition-timing-function:cubic-bezier(.25,.8,.35,1);transition-delay:calc(1.3s + var(--i)*110ms)}
 .theme-stage.sky-day .sbackdrop .hstar,.theme-stage.sky-night .sbackdrop .hcloud{transform:translateY(-110vh);transition-timing-function:cubic-bezier(.55,0,.8,.4);transition-delay:calc(var(--i)*55ms)}
 @media(prefers-reduced-motion:reduce){.sbackdrop .hstar,.sbackdrop .hcloud{transition:none!important}}
+/* opening night: the moon (or sun) and stars (or clouds) start up in the flies and are lowered in as the curtains part */
+.theme-stage.hoisted .sbackdrop .hstar,.theme-stage.hoisted .sbackdrop .hcloud,.theme-stage.hoisted #celest .moon,.theme-stage.hoisted #celest .sun{transform:translateY(-110vh)}
+.theme-stage.lowering.sky-night .sbackdrop .hstar,.theme-stage.lowering.sky-day .sbackdrop .hcloud{transition-delay:calc(.6s + var(--i)*110ms)}
+.theme-stage.lowering.sky-night #celest .moon,.theme-stage.lowering.sky-day #celest .sun{transition-delay:.9s,.9s}
 </style>
 </head>
 <body>
@@ -1874,7 +1878,7 @@ function segsOf(d){const out=[];let x=0,y=0;const re=/([MVH])\s*(-?[\d.]+)(?:\s+
   while((m=re.exec(d))){if(m[1]==='M'){x=+m[2];y=+m[3];}else if(m[1]==='V'){out.push([x,y,x,+m[2]]);y=+m[2];}else{out.push([x,y,+m[2],y]);x=+m[2];}}return out;}
 const rgb=c=>{const m=c.match(/[\d.]+/g)||[0,0,0];return m.slice(0,3).map(Number);};
 // stage theme: the opening screen is the closed curtain; the tree is already drawn full-screen behind it
-if(STAGE&&getComputedStyle(cover).display!=='none'){cover.classList.add('curtain');
+if(STAGE&&getComputedStyle(cover).display!=='none'){cover.classList.add('curtain');$('#tstage').classList.add('hoisted');
   // the drifting family photos scroll inside the card only, not across the curtains
   const ci=cover.querySelector('.coverIn'),dr=$('#drift');if(ci&&dr)ci.prepend(dr);
   cover.insertAdjacentHTML('afterbegin','<div class="cpanel l" aria-hidden="true"></div><div class="cpanel r" aria-hidden="true"></div><div class="cframe" aria-hidden="true"></div>');
@@ -1889,7 +1893,7 @@ function openCurtain(story){if(cover.classList.contains('opening'))return;cover.
       if(innerWidth!==w||innerHeight!==h){w=innerWidth;h=innerHeight;still=now;}
       if(now-still>320&&now-t0>200||now-t0>1600)res();else requestAnimationFrame(chk);})(t0);});
   let went=0;const go=()=>{if(went++)return;Promise.all([lastBake,settled()]).then(()=>{if(!tTouched)tStart();}).then(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      cover.classList.add('open');const T=RM?300:1900;
+      cover.classList.add('open');{const st=$('#tstage');st.classList.add('lowering');st.classList.remove('hoisted');setTimeout(()=>st.classList.remove('lowering'),5000);}const T=RM?300:1900;
       setTimeout(()=>{cover.style.display='none';if(story)startStory();else setTimeout(showHint,300);},T);})));};
   setTimeout(()=>{if(pr){pr.then(go);setTimeout(go,900);}else go();},RM?0:420);}
 function closeCover(story){if(cover.classList.contains('curtain'))return openCurtain(story);

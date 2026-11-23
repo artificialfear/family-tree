@@ -428,3 +428,7 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .theme-stage.sky-night .sbackdrop .hstar,.theme-stage.sky-day .sbackdrop .hcloud{transform:none;transition-timing-function:cubic-bezier(.25,.8,.35,1);transition-delay:calc(1.3s + var(--i)*110ms)}
 .theme-stage.sky-day .sbackdrop .hstar,.theme-stage.sky-night .sbackdrop .hcloud{transform:translateY(-110vh);transition-timing-function:cubic-bezier(.55,0,.8,.4);transition-delay:calc(var(--i)*55ms)}
 @media(prefers-reduced-motion:reduce){.sbackdrop .hstar,.sbackdrop .hcloud{transition:none!important}}
+/* opening night: the moon (or sun) and stars (or clouds) start up in the flies and are lowered in as the curtains part */
+.theme-stage.hoisted .sbackdrop .hstar,.theme-stage.hoisted .sbackdrop .hcloud,.theme-stage.hoisted #celest .moon,.theme-stage.hoisted #celest .sun{transform:translateY(-110vh)}
+.theme-stage.lowering.sky-night .sbackdrop .hstar,.theme-stage.lowering.sky-day .sbackdrop .hcloud{transition-delay:calc(.6s + var(--i)*110ms)}
+.theme-stage.lowering.sky-night #celest .moon,.theme-stage.lowering.sky-day #celest .sun{transition-delay:.9s,.9s}
