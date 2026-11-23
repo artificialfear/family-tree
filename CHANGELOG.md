@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-23 — Story music on cue, paced auto-play
+- "Begin the story" now starts the story song on its first note, at full volume, right as the curtains open (the same as "Explore").
+- Auto-play gives each chapter as long as it needs to read (about 9 to 18 seconds, longer chapters stay up longer) instead of a flat 11 seconds. A thin gold line under the buttons fills while each chapter is showing.
+
 ## 2026-11-22 — Add a memory from the story
 - The last story chapter has an "Add a memory" button. It asks who the memory is about (Ed, Renee, Johnny, Annie Mae, Jack, Margaret, or someone else), then closes the story and opens that person's memory form. "Someone else" returns to the tree with a tip to tap anyone's face.
 - The "Tap any face" tip no longer shows on top of the story card.
