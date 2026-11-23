@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-22 — New music, and story music
+- The tree has a new background song, and the story now has its own song that starts when the story begins and blends back into the tree song when the story ends.
+- Both songs start right away (no silence at the start) and loop smoothly without their endings.
+
 ## 2026-11-22 — Easier to read on phones
 - On phones the tree opens larger, filling the space between the sky and the buttons, and the names on the scrolls are bigger. The outer cousins are a swipe away at the sides.
 - The story card on phones is slimmer, with smaller photos and text; longer chapters scroll inside the card.

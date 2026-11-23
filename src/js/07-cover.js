@@ -43,6 +43,6 @@ function openCurtain(story){if(cover.classList.contains('opening'))return;cover.
 function closeCover(story){openCurtain(story);}
 // quietly fetch every face while the opening screen is showing, so they're ready when the tree grows
 (window.requestIdleCallback||(f=>setTimeout(f,1200)))(()=>{Object.values(photo).forEach(u=>{if(!u)return;const i=new Image();i.decoding='async';i.src=u;});});
-$('#begin').onclick=()=>{startMusic();closeCover(true);};
-$('#skip').onclick=()=>{startMusic();closeCover(false);};
+$('#begin').onclick=()=>{startMusic('story');closeCover(true);};
+$('#skip').onclick=()=>{startMusic('tree');closeCover(false);};
 
