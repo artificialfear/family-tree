@@ -318,10 +318,10 @@ footer{height:80px}
 #marquee .mqplaque{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#fff3dc;letter-spacing:4px}
 #marquee .mqbulbs{fill:#fffbe8;filter:drop-shadow(0 0 3px rgba(255,236,170,.95))}
 #marquee .mqnew{width:100%;margin-top:4px}#marquee #tnew{pointer-events:auto}
-.theme-stage #celest .moon{box-shadow:0 0 0 4px #8f5f1b,0 0 0 8px #e2b552,0 0 0 10px #8f5f1b;top:24%;right:8%}
-.theme-stage #celest .moon::before{content:"";position:absolute;inset:-26%;border-radius:50%;z-index:-1;background:radial-gradient(circle at 66% 50%,transparent 0 47%,#e2b552 48%,#b98530 60%,#8f5f1b 66%,transparent 67%)}
+.theme-stage #celest .moon{top:24%;right:8%;width:clamp(90px,9.5vw,140px);border-radius:0;overflow:visible;filter:drop-shadow(0 0 16px rgba(255,214,120,.35))}
+.theme-stage #celest .moon svg{overflow:visible}
 .theme-stage #celest .sun{top:26%;right:10%}
-@media(max-width:600px){.theme-stage #celest .moon{top:calc(var(--mqb,240px) + 8px);right:9%;width:44px}.theme-stage #celest .sun{top:calc(var(--mqb,240px) + 8px);right:10%}}
+@media(max-width:600px){.theme-stage #celest .moon{top:calc(var(--mqb,240px) + 14px);right:9%;width:58px}.theme-stage #celest .sun{top:calc(var(--mqb,240px) + 8px);right:10%}}
 
 /* ---------- opening screen as a closed stage curtain (stage theme) ---------- */
 .cover.curtain{background:none;overflow:hidden}

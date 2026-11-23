@@ -503,10 +503,10 @@ footer{height:80px}
 #marquee .mqplaque{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#fff3dc;letter-spacing:4px}
 #marquee .mqbulbs{fill:#fffbe8;filter:drop-shadow(0 0 3px rgba(255,236,170,.95))}
 #marquee .mqnew{width:100%;margin-top:4px}#marquee #tnew{pointer-events:auto}
-.theme-stage #celest .moon{box-shadow:0 0 0 4px #8f5f1b,0 0 0 8px #e2b552,0 0 0 10px #8f5f1b;top:24%;right:8%}
-.theme-stage #celest .moon::before{content:"";position:absolute;inset:-26%;border-radius:50%;z-index:-1;background:radial-gradient(circle at 66% 50%,transparent 0 47%,#e2b552 48%,#b98530 60%,#8f5f1b 66%,transparent 67%)}
+.theme-stage #celest .moon{top:24%;right:8%;width:clamp(90px,9.5vw,140px);border-radius:0;overflow:visible;filter:drop-shadow(0 0 16px rgba(255,214,120,.35))}
+.theme-stage #celest .moon svg{overflow:visible}
 .theme-stage #celest .sun{top:26%;right:10%}
-@media(max-width:600px){.theme-stage #celest .moon{top:calc(var(--mqb,240px) + 8px);right:9%;width:44px}.theme-stage #celest .sun{top:calc(var(--mqb,240px) + 8px);right:10%}}
+@media(max-width:600px){.theme-stage #celest .moon{top:calc(var(--mqb,240px) + 14px);right:9%;width:58px}.theme-stage #celest .sun{top:calc(var(--mqb,240px) + 8px);right:10%}}
 
 /* ---------- opening screen as a closed stage curtain (stage theme) ---------- */
 .cover.curtain{background:none;overflow:hidden}
@@ -1072,6 +1072,7 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
  st.prepend(sky);sky.after(back);st.querySelector('svg').after(front);front.after(cel);st.appendChild(note);
  if(STAGE){st.classList.add('theme-stage');const bd=document.createElement('div');bd.className='sbackdrop';sky.appendChild(bd);
    const pr=document.createElement('div');pr.id='proscen';pr.setAttribute('aria-hidden','true');cel.after(pr);
+   $('#moonBtn').innerHTML=paperMoonSVG();
    const mq=document.createElement('div');mq.id='marquee';mq.innerHTML=marqueeSVG();pr.after(mq);
    mq.addEventListener('click',e=>{const g=e.target.closest('#tnew');if(g)openNewest(g);});
    mq.addEventListener('keydown',e=>{const g=e.target.closest('#tnew');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openNewest(g);}});
@@ -1110,6 +1111,16 @@ function marqueeSVG(){const f=n=>n.toFixed(1);let bulbs='';
    <g transform="translate(260 124)"><path d="M-62 -13H62L70 0L62 13H-62L-70 0Z" fill="#b3262c" stroke="#f5e6c0" stroke-width="1.6"/><text y="6" text-anchor="middle" class="mqplaque">FAMILY</text></g>
    <g class="mqbulbs">${bulbs}</g></svg>
    <svg class="mqnew" viewBox="-300 -20 600 40"><g id="tnew" class="tnew" role="button" tabindex="0"><rect class="tnbg" x="-200" y="-17" width="400" height="32" rx="16"/><text class="tntext" text-anchor="middle" y="5"></text></g></svg>`;}
+/* stage moon: a gold paper-cut crescent hanging on a string from behind the valance (Mat's pick, design #2) */
+function paperMoonSVG(){return `<svg viewBox="-110 -110 220 220" aria-hidden="true" style="overflow:visible">
+  <defs><mask id="pmA" maskUnits="userSpaceOnUse" x="-120" y="-120" width="240" height="240"><rect x="-120" y="-120" width="240" height="240" fill="#000"/><circle r="78" fill="#fff"/><circle cx="34" cy="-18" r="70" fill="#000"/></mask>
+   <mask id="pmB" maskUnits="userSpaceOnUse" x="-120" y="-120" width="240" height="240"><rect x="-120" y="-120" width="240" height="240" fill="#000"/><circle r="66" fill="#fff"/><circle cx="30" cy="-16" r="62" fill="#000"/></mask>
+   <linearGradient id="pmG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset=".55" stop-color="#ecbf5c"/><stop offset="1" stop-color="#c08a32"/></linearGradient></defs>
+  <line x1="-40" y1="-4000" x2="-40" y2="-62" stroke="#e8d8a8" stroke-width="2" opacity=".75"/>
+  <g transform="translate(7 9)" opacity=".5"><rect x="-90" y="-90" width="180" height="180" fill="#050a22" mask="url(#pmA)"/></g>
+  <rect x="-90" y="-90" width="180" height="180" fill="url(#pmG)" mask="url(#pmA)"/>
+  <rect x="-90" y="-90" width="180" height="180" fill="#ffe9b0" mask="url(#pmB)" opacity=".55"/>
+  <circle cx="-40" cy="-62" r="4" fill="#b98530"/></svg>`;}
 /* ---------- toy-theater scenery (theme=stage): drawn to the screen size, redrawn only on resize ---------- */
 function star6(x,y,r){let d='';for(let i=0;i<12;i++){const a=(i*30-90)*Math.PI/180,rr=i%2?r*.45:r;d+=(i?'L':'M')+(x+Math.cos(a)*rr).toFixed(1)+' '+(y+Math.sin(a)*rr).toFixed(1);}return d+'Z';}
 function stageBackdrop(W,H,mqb=200){const ph=W<700;let sd=11;const r=()=>(sd=(sd*16807)%2147483647)/2147483647,f=n=>n.toFixed(1);

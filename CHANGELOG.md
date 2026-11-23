@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Paper-cut moon
+- The moon is now a gold paper-cut crescent hanging on a string from behind the curtain, like a stage prop. Tap it for the note for Mom.
+
 ## 2026-11-22 — Purple celestial curtains
 - The stage curtains are now deep purple velvet scattered with little gold stars and crescent moons — on the closed opening curtain and on the tied-back curtains and drapes around the tree. The back drapes along the top are midnight blue.
 
