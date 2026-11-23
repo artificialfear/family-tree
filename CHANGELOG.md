@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-22 — Cleaner sky
+- Removed the newest-memory line under the title banner. Family memories still appear as gold stars beside each person on the tree.
+
 ## 2026-11-22 — Music on cue
 - Choosing "Explore" now starts the tree song on its first piano chord, at full volume, right as the curtains open.
 

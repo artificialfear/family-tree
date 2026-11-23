@@ -435,12 +435,7 @@ footer{height:80px}
 #tstage.intro.growing #tback{opacity:1}
 #tstage.growing #tbackimg{transition:none;animation:none}
 /* sky above the tree */
-.tnew{cursor:pointer;transition:opacity .45s}.tnew.fade{opacity:0}
-.tnew .tnbg{fill:rgba(22,16,36,.55);stroke:rgba(255,236,200,.25);stroke-width:1}
-.tnew .tntext{font-family:Spectral,Georgia,serif;font-style:italic;font-size:19px;fill:#fbefd6}
-.tnew:focus-visible .tnbg{stroke:var(--gold);stroke-width:2.5}
 #mnote .cnote .g1{font-family:Spectral,Georgia,serif;font-style:italic;font-size:1.15rem;margin-bottom:.3rem}#mnote .cnote p{margin:.2rem 0 .6rem}
-#tnew:focus{outline:none}
 
 /* ---------- toy-theater stage theme (?theme=stage) ---------- */
 #proscen{display:none}
@@ -477,7 +472,7 @@ footer{height:80px}
 #marquee .mqsmall{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#e0404a;letter-spacing:4px;stroke:#0c1a4a;stroke-width:3;paint-order:stroke}
 #marquee .mqplaque{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#fff3dc;letter-spacing:4px}
 #marquee .mqbulbs{fill:#fffbe8;filter:drop-shadow(0 0 3px rgba(255,236,170,.95))}
-#marquee .mqnew{width:100%;margin-top:4px}#marquee #tnew{pointer-events:auto}
+
 .theme-stage #celest .moon{top:24%;right:8%;width:clamp(90px,9.5vw,140px);border-radius:0;overflow:visible;filter:drop-shadow(0 0 16px rgba(255,214,120,.35))}
 .theme-stage #celest .moon svg{overflow:visible}
 .theme-stage #celest .sun{top:22%;right:8%;width:clamp(90px,9.5vw,140px);height:auto;aspect-ratio:1;background:none;animation:none;overflow:visible;filter:drop-shadow(0 0 18px rgba(255,200,110,.45))}
@@ -545,7 +540,7 @@ body.stagemode #tstage .hint{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 2
 @media(max-width:699px){#tworld .leaf,#tworld .br,#tworld .deco{transition:none!important}#tmstars .msp{animation:none!important;transform:scale(1.6)}
   #tworld .leaf.spot .lin,#tworld .leaf.spot .glow{animation:none!important}}
 /* the sign is its own layer so changes behind it never make it repaint */
-#marquee .mqsign,#marquee .mqnew{will-change:transform;transform:translateZ(0)}
+#marquee .mqsign{will-change:transform;transform:translateZ(0)}
 /* during the story the toolbar steps aside; the story card's Skip / Explore the tree brings it back */
 body.storyon.stagemode #tstage>.tools{display:none}
 body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
@@ -1090,8 +1085,6 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
    const pr=document.createElement('div');pr.id='proscen';pr.setAttribute('aria-hidden','true');cel.after(pr);
    $('#moonBtn').innerHTML=paperMoonSVG();$('#sunBtn').innerHTML=paperSunSVG();$('#sunBtn').setAttribute('aria-label','The setting sun: a note for Mom');
    const mq=document.createElement('div');mq.id='marquee';mq.innerHTML=marqueeSVG();pr.after(mq);
-   mq.addEventListener('click',e=>{const g=e.target.closest('#tnew');if(g)openNewest(g);});
-   mq.addEventListener('keydown',e=>{const g=e.target.closest('#tnew');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openNewest(g);}});
    const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;const tb=st.querySelector('.tools'),D=stageDims(r.width,r.height);$('#marquee').style.top=(r.width<700?4:6)+'px';if(r.width<700){const mb=$('#marquee').getBoundingClientRect().bottom-r.top;st.style.setProperty('--mqb',mb+'px');}st.style.setProperty('--apron',D.ah+'px');if(tb)st.style.setProperty('--tbh',tb.offsetHeight+'px');bd.innerHTML=stageBackdrop(r.width,r.height,$('#marquee').getBoundingClientRect().bottom-r.top);pr.innerHTML=stageFrame(r.width,r.height);};
    draw();let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(()=>{draw();if(!tTouched)tStart();},120);}).observe(st);}}
 /* the moon and sun as friendly faces, gold-rimmed like an old stage sign (original drawings) */
@@ -1110,8 +1103,7 @@ function marqueeSVG(){
    <text x="260" y="98" text-anchor="middle" font-family="Spectral,Georgia,serif" font-weight="700" font-size="34" fill="url(#mqpG)" stroke="#2a0f45" stroke-width=".8" textLength="290" lengthAdjust="spacingAndGlyphs">Graham &amp; Harper</text>
    <text x="260" y="124" text-anchor="middle" font-family="Spectral,Georgia,serif" font-style="italic" font-size="17" fill="#f3dc95" letter-spacing="3">Family</text>
    <g fill="#e9c46a"><path transform="translate(222 57)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/><path transform="translate(298 57)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/><path transform="translate(212 120)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/><path transform="translate(308 120)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/></g>
-   ${[128,192,260,328,392].map(x=>`<line x1="${x}" y1="${x===260?160:158}" x2="${x}" y2="${x===260?178:172}" stroke="#d9a441" stroke-width="1.5"/><circle cx="${x}" cy="${x===260?181:175}" r="3.5" fill="#e0ae45"/>`).join('')}</svg>
-   <svg class="mqnew" viewBox="-300 -20 600 40"><g id="tnew" class="tnew" role="button" tabindex="0"><rect class="tnbg" x="-200" y="-17" width="400" height="32" rx="16"/><text class="tntext" text-anchor="middle" y="5"></text></g></svg>`;}
+   ${[128,192,260,328,392].map(x=>`<line x1="${x}" y1="${x===260?160:158}" x2="${x}" y2="${x===260?178:172}" stroke="#d9a441" stroke-width="1.5"/><circle cx="${x}" cy="${x===260?181:175}" r="3.5" fill="#e0ae45"/>`).join('')}</svg>`;}
 /* stage sun: a gold paper-cut sun with pointed rays, hanging on two strings (Mat's pick, design #1) */
 function paperSunSVG(){let rays='',sh='';for(let i=0;i<12;i++){const d=`<path transform="rotate(${i*30})" d="M-10 -52L0 -92 10 -52Z"/>`;rays+=d;sh+=d;}
   return `<svg viewBox="-110 -110 220 220" aria-hidden="true" style="overflow:visible">
@@ -1207,21 +1199,9 @@ setTimeout(shoot,15000+Math.random()*15000);
 /* memory stars: every memory, photo or answer someone adds lights a star */
 function hsh(t){let h=2166136261;for(const c of String(t)){h^=c.charCodeAt(0);h=Math.imul(h,16777619);}return h>>>0;}
 
-/* ---------- in the sky above the tree: title banner, newest memory, family constellation ---------- */
+/* ---------- in the sky above the tree: title banner ---------- */
 let SKYG=null;
-const ago=t=>{const s=(Date.now()-t)/1000;if(s<90)return 'just now';const m=s/60;if(m<60)return Math.round(m)+' minutes ago';const h=m/60;if(h<24)return Math.round(h)+(Math.round(h)===1?' hour ago':' hours ago');const d=h/24;if(d<7)return Math.round(d)+(Math.round(d)===1?' day ago':' days ago');
-  return new Date(t).toLocaleDateString(undefined,{month:'short',day:'numeric'});};
-let newIdx=0,newT=null;
-function renderNewest(){const g=document.getElementById('tnew');if(!g)return;const list=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]).sort((a,b)=>(+b.at||0)-(+a.at||0)).slice(0,5);
-  const say=c=>{const who=(c.from||'').trim()||'Someone',nm=byId[c.pid].s;return `✦ ${who} ${c.type==='photo'?'added a photo of':c.type==='answer'?'answered a question about':'shared a memory about'} ${nm} · ${ago(+c.at)}`;};
-  const show=()=>{const t=g.querySelector('.tntext'),bg=g.querySelector('.tnbg');let msg,cid='';
-    if(list.length){const c=list[newIdx%list.length];msg=say(c);cid=c.id;}else msg='✦ Tap any face to share a memory';
-    if(msg.length>64)msg=msg.slice(0,63)+'…';
-    g.classList.add('fade');setTimeout(()=>{t.textContent=msg;g.dataset.c=cid;g.setAttribute('aria-label',cid?'Newest memory: '+msg.slice(2):'Tap any face to share a memory');
-      let w=400;try{w=t.getComputedTextLength()+44;}catch(e){}bg.setAttribute('x',(-w/2).toFixed(1));bg.setAttribute('width',w.toFixed(1));g.classList.remove('fade');},g.dataset.c===undefined?0:450);};
-  show();clearInterval(newT);if(list.length>1)newT=setInterval(()=>{if(document.hidden||$('#tstage').classList.contains('moving'))return;newIdx++;show();},9000);}
-function openNewest(g){if(g.dataset.c)openMem(g);}
-function renderMemStars(){renderNewest();const box=$('#mstars');if(!box)return;const list=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]);
+function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]);
   const star=`<path d="M0-9L2 -2L9 0L2 2L0 9L-2 2L-9 0L-2-2Z"/>`;
   // beside the person: try spots around their photo that miss every face and name label
   const inTree=TSTYLE==='ink'&&tw.querySelector('.leaf'),taken=[];let sky='',tree='';
@@ -1423,7 +1403,7 @@ function drawLeafTree(grow){
   const art=treeArt(TSTYLE,dl);
   if(art&&PRINT){$('#tdefs').innerHTML=art.defs+defs;tw.innerHTML=`<g class="bake">${art.under+art.ground}</g>`+(art.rootsUnder||'')+art.brs+art.over+leaves;bakeArt(art,false);}
   else if(art){$('#tdefs').innerHTML=art.defs+defs+`<clipPath id="growclip" clipPathUnits="userSpaceOnUse"><circle id="growc" cx="915" cy="1300" r="${growR.toFixed(1)}"/></clipPath>`;
-    tw.innerHTML=(art.planet||'')+`<g class="growg" clip-path="url(#growclip)">${(art.rootsUnder||'')+art.brs+art.over}</g>`+leaves;bakeArt(art,true);renderNewest();}
+    tw.innerHTML=(art.planet||'')+`<g class="growg" clip-path="url(#growclip)">${(art.rootsUnder||'')+art.brs+art.over}</g>`+leaves;bakeArt(art,true);}
   else{$('#tdefs').innerHTML=defs;tw.innerHTML=ground+brs+deco+leaves;}
   if(grow){tw.classList.add('tgrow');setTimeout(()=>tw.classList.remove('tgrow'),3400);}
   renderMemStars();
@@ -1510,11 +1490,11 @@ function tZoom(f,cx,cy,fast){tTouched=1;hidePop();const r=tsz();cx??=r.w/2;cy??=
    if(pts.size===2&&pinch){const [a,b]=[...pts.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),r=pinchR||(pinchR=$('#tstage').getBoundingClientRect());tZoom(d/pinch,(a[0]+b[0])/2-r.left,(a[1]+b[1])/2-r.top,true);pinch=d;moved=99;return;}
    const dx=e.clientX-last[0],dy=e.clientY-last[1];moved+=Math.abs(dx)+Math.abs(dy);last=[e.clientX,e.clientY];if(moved<4)return;tv.x+=dx;tv.y+=dy;tTouched=1;gBegin();gFrame();});
  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(pts.size===1){last=[...pts.values()][0].slice();moved=99;}if(!pts.size){tsvg.classList.remove('drag');gEnd();}
-   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar');if(ms){openMem(ms);return;}const tn=hit?.closest('#tnew');if(tn){openNewest(tn);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
+   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar');if(ms){openMem(ms);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
  tsvg.addEventListener('pointerup',up);tsvg.addEventListener('pointercancel',up);
  tsvg.addEventListener('wheel',e=>{e.preventDefault();const r=$('#tstage').getBoundingClientRect();tZoom(e.deltaY<0?1.12:1/1.12,e.clientX-r.left,e.clientY-r.top);},{passive:false});
  tsvg.addEventListener('dblclick',e=>{const r=$('#tstage').getBoundingClientRect();tZoom(1.8,e.clientX-r.left,e.clientY-r.top);});
- tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const tn=e.target.closest?.('#tnew');if(tn){e.preventDefault();openNewest(tn);return;}}const ms=e.target.closest?.('.tmstar');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
+ tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){}const ms=e.target.closest?.('.tmstar');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
 $('#tzin').onclick=()=>tZoom(1.3);$('#tzout').onclick=()=>tZoom(1/1.3);$('#tfit').onclick=()=>{tTouched=1;tFit();};
 $('#q').addEventListener('change',e=>{const v=e.target.value.toLowerCase().trim();const p=P.find(p=>p.n.toLowerCase()===v)||P.find(p=>p.n.toLowerCase().includes(v));if(p){select(p.id);tFocus(p.id);}});
 

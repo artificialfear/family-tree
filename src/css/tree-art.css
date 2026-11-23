@@ -250,12 +250,7 @@ footer{height:80px}
 #tstage.intro.growing #tback{opacity:1}
 #tstage.growing #tbackimg{transition:none;animation:none}
 /* sky above the tree */
-.tnew{cursor:pointer;transition:opacity .45s}.tnew.fade{opacity:0}
-.tnew .tnbg{fill:rgba(22,16,36,.55);stroke:rgba(255,236,200,.25);stroke-width:1}
-.tnew .tntext{font-family:Spectral,Georgia,serif;font-style:italic;font-size:19px;fill:#fbefd6}
-.tnew:focus-visible .tnbg{stroke:var(--gold);stroke-width:2.5}
 #mnote .cnote .g1{font-family:Spectral,Georgia,serif;font-style:italic;font-size:1.15rem;margin-bottom:.3rem}#mnote .cnote p{margin:.2rem 0 .6rem}
-#tnew:focus{outline:none}
 
 /* ---------- toy-theater stage theme (?theme=stage) ---------- */
 #proscen{display:none}
@@ -292,7 +287,7 @@ footer{height:80px}
 #marquee .mqsmall{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#e0404a;letter-spacing:4px;stroke:#0c1a4a;stroke-width:3;paint-order:stroke}
 #marquee .mqplaque{font-family:Georgia,serif;font-weight:700;font-size:15px;fill:#fff3dc;letter-spacing:4px}
 #marquee .mqbulbs{fill:#fffbe8;filter:drop-shadow(0 0 3px rgba(255,236,170,.95))}
-#marquee .mqnew{width:100%;margin-top:4px}#marquee #tnew{pointer-events:auto}
+
 .theme-stage #celest .moon{top:24%;right:8%;width:clamp(90px,9.5vw,140px);border-radius:0;overflow:visible;filter:drop-shadow(0 0 16px rgba(255,214,120,.35))}
 .theme-stage #celest .moon svg{overflow:visible}
 .theme-stage #celest .sun{top:22%;right:8%;width:clamp(90px,9.5vw,140px);height:auto;aspect-ratio:1;background:none;animation:none;overflow:visible;filter:drop-shadow(0 0 18px rgba(255,200,110,.45))}
@@ -360,7 +355,7 @@ body.stagemode #tstage .hint{bottom:calc(var(--apron,24px) + var(--tbh,54px) + 2
 @media(max-width:699px){#tworld .leaf,#tworld .br,#tworld .deco{transition:none!important}#tmstars .msp{animation:none!important;transform:scale(1.6)}
   #tworld .leaf.spot .lin,#tworld .leaf.spot .glow{animation:none!important}}
 /* the sign is its own layer so changes behind it never make it repaint */
-#marquee .mqsign,#marquee .mqnew{will-change:transform;transform:translateZ(0)}
+#marquee .mqsign{will-change:transform;transform:translateZ(0)}
 /* during the story the toolbar steps aside; the story card's Skip / Explore the tree brings it back */
 body.storyon.stagemode #tstage>.tools{display:none}
 body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
