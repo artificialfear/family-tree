@@ -462,19 +462,21 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 #tmstars .mflower,#tmstars .gsign,#tmstars .kchest{cursor:pointer}
 #tmstars .mfs{transform-origin:0 16px;animation:mfsway 6s ease-in-out infinite alternate;animation-delay:var(--dl)}
 @keyframes mfsway{from{transform:rotate(calc(var(--sw) - 3deg))}to{transform:rotate(calc(var(--sw) + 3deg))}}
-#tmstars .mfstem{fill:none;stroke:#5f9a52;stroke-width:1.8;stroke-linecap:round}#tmstars .mfleaf{fill:#6fae5f}
+#tmstars .mfstem{fill:none;stroke:#4f8a46;stroke-width:2.2;stroke-linecap:round}#tmstars .mfleaf{fill:#6fae5f;stroke:#2f5e2a;stroke-width:.8}
+#tmstars .pfsh,#tmstars .gshadow{fill:#0b2410;opacity:.35}#tmstars .gshadow{stroke:none}
 #tmstars .mflower.sprout .mfs{animation:mfsprout 1.6s cubic-bezier(.2,1.4,.4,1) both,mfsway 6s ease-in-out 1.6s infinite alternate}
 @keyframes mfsprout{from{transform:scale(0) rotate(0)}to{transform:scale(1) rotate(var(--sw))}}
-#tmstars .mflower:focus-visible .mfg,#tmstars .kchest:focus-visible .kglow{fill:#fff3b0;opacity:.8}
-#tmstars .gsign:focus-visible .gboard,#tmstars .kchest:focus-visible .klid{stroke:#fff3b0;stroke-width:3}
-#tmstars .gpost{fill:#6b4423}#tmstars .gboard{fill:#8a5a2b;stroke:#4e2f14;stroke-width:1.5}#tmstars .gvine{fill:none;stroke:#6fae5f;stroke-width:2}
-#tmstars .gtx{font:italic 700 11px Spectral,Georgia,serif;fill:#ffe7b0;text-anchor:middle}
-#tmstars .kmound{fill:#1f3d24;opacity:.85}#tmstars .kglow{opacity:.7}
-#tmstars .kbody{fill:#7a4a22;stroke:#3e230c;stroke-width:2}#tmstars .klid{fill:#8f5a2c;stroke:#3e230c;stroke-width:2}
-#tmstars .kband,#tmstars .kstrap{stroke:#d9a441;stroke-width:4;fill:none}#tmstars .klock{fill:#e2b552;stroke:#7a5212;stroke-width:1.2}#tmstars .khole{fill:#3e230c}
-#tmstars .kdirt{fill:none;stroke:#1f3d24;stroke-width:6;stroke-linecap:round}
-#tmstars .kchest:hover .klid,#tmstars .kchest:focus-visible .klid{transform:translateY(-3px) rotate(-3deg);transform-origin:-44px -26px}
-#tmstars .klid{transition:transform .25s ease}
+#tmstars .mflower:focus-visible path:not(.pfsh){stroke:#fff3b0;stroke-width:2}
+#tmstars .gpost{fill:none;stroke:url(#ggold);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}#tmstars .gsign .gshadow{fill:none;stroke:#0b2410;stroke-width:4}
+#tmstars .gsign path.gshadow[d^="M-2 -88"]{fill:#0b2410;stroke:none}
+#tmstars .gtx{font:italic 700 11.5px Spectral,Georgia,serif;fill:#f3d58a;text-anchor:middle;letter-spacing:.02em}
+#tmstars .gsign:focus-visible path[fill="url(#gvel)"],#tmstars .kchest:focus-visible .klid path{stroke:#fff3b0;stroke-width:3}
+#tmstars .klid{transition:transform .25s ease;transform-origin:-44px -26px}
+#tmstars .kchest:hover .klid,#tmstars .kchest:focus-visible .klid{transform:rotate(-6deg) translateY(-2px)}
+#tmstars .kst{animation:kfloat 5s ease-in-out infinite alternate;animation-delay:calc(var(--i) * -1.3s);transform-box:fill-box;transform-origin:center}
+@keyframes kfloat{from{transform:translateY(3px) rotate(-8deg)}to{transform:translateY(-4px) rotate(8deg)}}
+.touch #tmstars .kst{animation:none}
+@media(prefers-reduced-motion:reduce){#tmstars .kst{animation:none}}
 .touch #tmstars .mfs{animation:none;transform:rotate(var(--sw))}
 .touch #tmstars .mflower.sprout .mfs{animation:mfsprout 1.6s cubic-bezier(.2,1.4,.4,1) both}
 @media(prefers-reduced-motion:reduce){#tmstars .mfs,#tmstars .mflower.sprout .mfs{animation:none;transform:rotate(var(--sw))}}

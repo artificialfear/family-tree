@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Garden in the stage style
+- The garden flowers, the Memory Garden sign and the keepsake chest are redrawn in the same cut-paper style as the hanging stars, moon and banner. Flowers are paper petals with a gold star in the middle. The sign is a little velvet pennant on a gold post. The chest has gold bands, a star clasp and a few gold stars floating out of it.
+
 ## 2026-11-23 — Memories live in the garden
 - The gold memory stars beside people (and in the sky) are gone; every memory is a flower in the memory garden. After posting, the message says it's growing in the garden.
 

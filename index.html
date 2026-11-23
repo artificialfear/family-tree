@@ -654,19 +654,21 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 #tmstars .mflower,#tmstars .gsign,#tmstars .kchest{cursor:pointer}
 #tmstars .mfs{transform-origin:0 16px;animation:mfsway 6s ease-in-out infinite alternate;animation-delay:var(--dl)}
 @keyframes mfsway{from{transform:rotate(calc(var(--sw) - 3deg))}to{transform:rotate(calc(var(--sw) + 3deg))}}
-#tmstars .mfstem{fill:none;stroke:#5f9a52;stroke-width:1.8;stroke-linecap:round}#tmstars .mfleaf{fill:#6fae5f}
+#tmstars .mfstem{fill:none;stroke:#4f8a46;stroke-width:2.2;stroke-linecap:round}#tmstars .mfleaf{fill:#6fae5f;stroke:#2f5e2a;stroke-width:.8}
+#tmstars .pfsh,#tmstars .gshadow{fill:#0b2410;opacity:.35}#tmstars .gshadow{stroke:none}
 #tmstars .mflower.sprout .mfs{animation:mfsprout 1.6s cubic-bezier(.2,1.4,.4,1) both,mfsway 6s ease-in-out 1.6s infinite alternate}
 @keyframes mfsprout{from{transform:scale(0) rotate(0)}to{transform:scale(1) rotate(var(--sw))}}
-#tmstars .mflower:focus-visible .mfg,#tmstars .kchest:focus-visible .kglow{fill:#fff3b0;opacity:.8}
-#tmstars .gsign:focus-visible .gboard,#tmstars .kchest:focus-visible .klid{stroke:#fff3b0;stroke-width:3}
-#tmstars .gpost{fill:#6b4423}#tmstars .gboard{fill:#8a5a2b;stroke:#4e2f14;stroke-width:1.5}#tmstars .gvine{fill:none;stroke:#6fae5f;stroke-width:2}
-#tmstars .gtx{font:italic 700 11px Spectral,Georgia,serif;fill:#ffe7b0;text-anchor:middle}
-#tmstars .kmound{fill:#1f3d24;opacity:.85}#tmstars .kglow{opacity:.7}
-#tmstars .kbody{fill:#7a4a22;stroke:#3e230c;stroke-width:2}#tmstars .klid{fill:#8f5a2c;stroke:#3e230c;stroke-width:2}
-#tmstars .kband,#tmstars .kstrap{stroke:#d9a441;stroke-width:4;fill:none}#tmstars .klock{fill:#e2b552;stroke:#7a5212;stroke-width:1.2}#tmstars .khole{fill:#3e230c}
-#tmstars .kdirt{fill:none;stroke:#1f3d24;stroke-width:6;stroke-linecap:round}
-#tmstars .kchest:hover .klid,#tmstars .kchest:focus-visible .klid{transform:translateY(-3px) rotate(-3deg);transform-origin:-44px -26px}
-#tmstars .klid{transition:transform .25s ease}
+#tmstars .mflower:focus-visible path:not(.pfsh){stroke:#fff3b0;stroke-width:2}
+#tmstars .gpost{fill:none;stroke:url(#ggold);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}#tmstars .gsign .gshadow{fill:none;stroke:#0b2410;stroke-width:4}
+#tmstars .gsign path.gshadow[d^="M-2 -88"]{fill:#0b2410;stroke:none}
+#tmstars .gtx{font:italic 700 11.5px Spectral,Georgia,serif;fill:#f3d58a;text-anchor:middle;letter-spacing:.02em}
+#tmstars .gsign:focus-visible path[fill="url(#gvel)"],#tmstars .kchest:focus-visible .klid path{stroke:#fff3b0;stroke-width:3}
+#tmstars .klid{transition:transform .25s ease;transform-origin:-44px -26px}
+#tmstars .kchest:hover .klid,#tmstars .kchest:focus-visible .klid{transform:rotate(-6deg) translateY(-2px)}
+#tmstars .kst{animation:kfloat 5s ease-in-out infinite alternate;animation-delay:calc(var(--i) * -1.3s);transform-box:fill-box;transform-origin:center}
+@keyframes kfloat{from{transform:translateY(3px) rotate(-8deg)}to{transform:translateY(-4px) rotate(8deg)}}
+.touch #tmstars .kst{animation:none}
+@media(prefers-reduced-motion:reduce){#tmstars .kst{animation:none}}
 .touch #tmstars .mfs{animation:none;transform:rotate(var(--sw))}
 .touch #tmstars .mflower.sprout .mfs{animation:mfsprout 1.6s cubic-bezier(.2,1.4,.4,1) both}
 @media(prefers-reduced-motion:reduce){#tmstars .mfs,#tmstars .mflower.sprout .mfs{animation:none;transform:rotate(var(--sw))}}
@@ -1106,7 +1108,8 @@ const tsvg=$('#tsvg'),tw=$('#tworld');let stageDraw=null,sbdKey='';
 const ROOTPINS=[['orange',200,1710,'1911'],['durham',330,1785,'1930'],['louisville',455,1700,'1932'],['greenville',590,1780,'1956'],['collegepark',730,1705,''],['covington',915,1820,'1982'],['newborn',1120,1710,''],['upson',1300,1780,'1940']];
 // the planet (a circle under the tree) and the memory garden on it
 const PLANET={cx:915,cy:1272+2200,R:2200},surfY=x=>PLANET.cy-Math.sqrt(PLANET.R**2-(x-PLANET.cx)**2);
-const CHEST={x:1835,y:1500},GSIGN={x:-20,y:1528};let gardenSeen=null;const gardenNew={};const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
+const f1=n=>n.toFixed(1);
+const CHEST={x:1835,y:1500},GSIGN={x:-46,y:1546};let gardenSeen=null;const gardenNew={};const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
 const RAD={ssp:36,son:40,par:62,gp:44,ggp:34,aunt:33,asp:26,kid:27,ksp:22,gk:30},FS={ssp:19,son:21,par:27,gp:22,ggp:18,aunt:18,asp:15,kid:15,ksp:13,gk:17};
 function tLayout(){
   const pos={},br=[],put=(id,x,y,t)=>{if(byId[id]&&!pos[id])pos[id]={x,y,r:RAD[t],t};return pos[id];};
@@ -1336,24 +1339,47 @@ function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contr
    Flowers step around faces, name scrolls, the main root, the root towns, the sign and the chest.
    A memory that arrives while the page is open sprouts (grows in). */
 function gardenSlots(){const ob=[];Object.values(TP).forEach(v=>{ob.push(['c',v.x,v.y,v.r+16]);ob.push(['r',v.x,v.y+v.r+24,Math.max(56,v.r*1.7),20]);});
-  ROOTPINS.forEach(([,px,py])=>ob.push(['r',px,py+18,82,48]));ob.push(['r',915,1440,34,170]);ob.push(['r',CHEST.x,CHEST.y-40,100,72]);ob.push(['r',GSIGN.x,GSIGN.y-60,78,84]);
+  ROOTPINS.forEach(([,px,py])=>ob.push(['r',px,py+18,82,48]));ob.push(['r',915,1440,34,170]);ob.push(['r',CHEST.x,CHEST.y-40,100,72]);ob.push(['r',GSIGN.x+25,GSIGN.y-50,62,72]);
   const ok=(x,y)=>ob.every(o=>o[0]==='c'?Math.hypot(x-o[1],y-o[2])>o[3]:Math.abs(x-o[1])>o[3]||Math.abs(y-o[2])>o[4]);
   const S=[];for(let j=0;j<9;j++){const d=30+j*36;for(let x=-600+(j%2)*19;x<=2430;x+=38){if(Math.abs(x-PLANET.cx)>PLANET.R*.62)continue;const y=surfY(x)+d;if(ok(x,y))S.push([x,y,j,y<1585?0:1]);}}
   return S.sort((a,b)=>a[3]-b[3]||a[2]-b[2]||Math.abs(b[0]-915)-Math.abs(a[0]-915));}
-const FLC={story:['#ffc7a3','#f48f6e'],photo:['#ffc1dc','#ee6fa6'],answer:['#bfe3ff','#5fa8e8'],voice:['#e2d4ff','#9a7bf0']};
+// flower papers by kind of memory: [light, dark, outline]
+const FLC={story:['#ffe0c2','#f49a8e','#b8586a'],photo:['#ffd9ea','#e8789f','#a8406a'],answer:['#dcefff','#7fb3e6','#3f6fa8'],voice:['#efe4ff','#a98be8','#6a4fb0']};
+// one paper-cut flower: five rounded petals in a single shape
+const FLOWER=(()=>{let d='';for(let i=0;i<5;i++){const a=i*72*Math.PI/180,P=(r,o)=>[Math.sin(a+o)*r,-Math.cos(a+o)*r],v0=P(3.4,-.63),c0=P(12.5,-.5),c1=P(12.5,.5),v1=P(3.4,.63);
+  d+=(i?'L':'M')+v0.map(f1).join(' ')+'C'+[...c0,...c1,...v1].map(f1).join(' ');}return d+'Z';})();
 function gardenSVG(list){const S=gardenSlots(),mem=[...list].sort((a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)));
   const first=gardenSeen===null,seen=gardenSeen||new Set();let fl='';
-  mem.forEach((c,i)=>{const sp=S[i];if(!sp)return;const [x,y]=sp,h=hsh(c.id),k=c.audio?'voice':FLC[c.type]?c.type:'story',[p1,p2]=FLC[k],rot=h%72,sw=((h>>8)%9-4),
-      pet=[0,72,144,216,288].map(a=>`<ellipse cx="0" cy="-6.2" rx="3.9" ry="6.2" transform="rotate(${a+rot})" fill="${p1}" stroke="${p2}" stroke-width=".9"/>`).join('');
+  mem.forEach((c,i)=>{const sp=S[i];if(!sp)return;const [x,y]=sp,h=hsh(c.id),k=c.audio?'voice':FLC[c.type]?c.type:'story',rot=h%72,sw=((h>>8)%9-4);
     if(!first&&!seen.has(c.id))gardenNew[c.id]=Date.now();const nw=Date.now()-(gardenNew[c.id]||0)<2500;
-    fl+=`<g class="mflower${nw?' sprout':''}" data-c="${esc(c.id)}" tabindex="0" role="button" aria-label="A memory about ${esc(byId[c.pid].n)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mfs" style="--sw:${sw}deg;--dl:-${(h%50)/10}s"><circle r="20" fill="transparent"/><circle class="mfg" r="16" fill="url(#mfglow)"/><path class="mfstem" d="M0 16Q${(sw/2).toFixed(1)} 8 0 2"/><path class="mfleaf" d="M0 11q-6 -3 -8 1q5 2 8 -1z"/>${pet}<circle r="3" fill="#ffe27a" stroke="#c9902c" stroke-width=".8"/></g></g></g>`;});
+    fl+=`<g class="mflower${nw?' sprout':''}" data-c="${esc(c.id)}" tabindex="0" role="button" aria-label="A memory about ${esc(byId[c.pid].n)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mfs" style="--sw:${sw}deg;--dl:-${(h%50)/10}s"><circle r="20" fill="transparent"/>
+      <path d="M0 17Q${f1(sw/2)} 9 0 3" class="mfstem"/><path d="M0 12q-8-5-11 1q6 3 11-1z" class="mfleaf"/>
+      <g transform="rotate(${rot})"><path d="${FLOWER}" transform="translate(2.2 3)" class="pfsh"/><path d="${FLOWER}" fill="url(#gf-${k})" stroke="${FLC[k][2]}" stroke-width="1.1"/></g>
+      <path d="${star6(0,0,4.4)}" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><path d="${star6(-.6,-.6,1.8)}" fill="#fff6d8" opacity=".6"/></g></g></g>`;});
   gardenSeen=new Set(mem.map(c=>c.id));
-  const sign=`<g class="gsign" tabindex="0" role="button" aria-label="The memory garden: what the flowers are" transform="translate(${GSIGN.x} ${GSIGN.y}) scale(1.7)"><rect x="-4" y="-52" width="8" height="58" rx="2" class="gpost"/><rect x="-40" y="-70" width="80" height="34" rx="5" class="gboard"/><text y="-57" class="gtx">Memory</text><text y="-44" class="gtx">Garden</text><path d="M-10 -36q10 6 20 0" class="gvine"/></g>`;
-  const chest=`<g class="kchest" tabindex="0" role="button" aria-label="Open the keepsake chest: old photographs and family records" transform="translate(${CHEST.x} ${CHEST.y}) scale(1.35)"><ellipse cx="0" cy="8" rx="64" ry="10" class="kmound"/><circle cx="0" cy="-30" r="54" fill="url(#mfglow)" class="kglow"/>
-    <path d="M-44 -26v26q0 6 6 6h76q6 0 6-6v-26z" class="kbody"/><path d="M-44 -26q0 -26 44 -26q44 0 44 26z" class="klid"/><path d="M-44 -26h88" class="kband"/><path d="M-28 -50v50M28 -50v50" class="kstrap"/>
-    <rect x="-8" y="-30" width="16" height="14" rx="2" class="klock"/><circle cx="0" cy="-23" r="2.2" class="khole"/><path d="M-36 -2q36 8 72 0" class="kdirt"/></g>`;
-  return `<defs><radialGradient id="mfglow"><stop offset="0" stop-color="#fff4c2" stop-opacity=".75"/><stop offset=".55" stop-color="#ffd77a" stop-opacity=".22"/><stop offset="1" stop-color="#ffd77a" stop-opacity="0"/></radialGradient></defs><g class="garden">${sign}${chest}${fl}</g>`;}
-const f1=n=>n.toFixed(1);
+  // the sign: a little velvet pennant like the title banner, hung from a gold lamppost
+  const sign=`<g class="gsign" tabindex="0" role="button" aria-label="The memory garden: what the flowers are" transform="translate(${GSIGN.x} ${GSIGN.y})">
+    <path d="M-2 4V-96h46" transform="translate(4 5)" class="gshadow"/><path d="M-2 4V-96h46" class="gpost"/><circle cx="-2" cy="-98" r="4.5" fill="url(#ggold)" stroke="#6b4410" stroke-width="1"/><path d="M-8 6h12" class="gpost"/>
+    <path d="M10 -96v8M40 -96v8" stroke="#d9a441" stroke-width="1.4"/>
+    <path d="M-2 -88h54v44l-27 12l-27 -12z" transform="translate(4 5)" class="gshadow"/>
+    <path d="M-2 -88h54v44l-27 12l-27 -12z" fill="url(#gvel)" stroke="url(#ggold)" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M3 -83h44v36l-22 10l-22 -10z" fill="none" stroke="#e9c46a" stroke-width=".8" stroke-dasharray="2 2.5" opacity=".7"/>
+    <text x="25" y="-68" class="gtx">Memory</text><text x="25" y="-54" class="gtx">Garden</text>
+    <path d="${star6(25,-42,3.2)}" fill="url(#ggold)" stroke="#6b4410" stroke-width=".6"/></g>`;
+  // the chest: cut-paper wood with gold bands and a star clasp, a few gold stars floating out of it
+  const chest=`<g class="kchest" tabindex="0" role="button" aria-label="Open the keepsake chest: old photographs and family records" transform="translate(${CHEST.x} ${CHEST.y}) scale(1.3)">
+    <circle cx="0" cy="-34" r="20" fill="transparent"/><ellipse cx="0" cy="7" rx="60" ry="9" fill="#0f2a16" opacity=".55"/>
+    <g class="kfloat">${[[-30,-74,5],[4,-90,6.5],[34,-70,4.5],[18,-108,3.5]].map(([sx,sy,sr],i)=>`<path d="${star6(sx,sy,sr)}" fill="url(#ggold)" stroke="#6b4410" stroke-width=".8" class="kst" style="--i:${i}"/>`).join('')}</g>
+    <g transform="translate(5 6)" class="gshadow"><path d="M-44 -26v26q0 6 6 6h76q6 0 6-6v-26z"/><path d="M-44 -26q0-26 44-26q44 0 44 26z"/></g>
+    <path d="M-44 -26v26q0 6 6 6h76q6 0 6-6v-26z" fill="url(#gwood)" stroke="#3e230c" stroke-width="2"/>
+    <g class="klid"><path d="M-44 -26q0-26 44-26q44 0 44 26z" fill="url(#gwood)" stroke="#3e230c" stroke-width="2"/><path d="M-30 -42q30-12 60 0" fill="none" stroke="#c8915a" stroke-width="1.4" opacity=".6"/></g>
+    <path d="M-44 -26h88" stroke="url(#ggold)" stroke-width="5"/><path d="M-27 -48v48M27 -48v48" stroke="url(#ggold)" stroke-width="5"/>
+    <path d="M-27 -48v48M27 -48v48M-44 -26h88" stroke="#6b4410" stroke-width="5" fill="none" opacity=".25" transform="translate(1.2 1.2)"/>
+    <path d="${star6(0,-24,10)}" fill="url(#ggold)" stroke="#6b4410" stroke-width="1"/><path d="${star6(-1.5,-25.5,4)}" fill="#fff6d8" opacity=".6"/><circle cx="0" cy="-23" r="2" fill="#3e230c"/>
+    <path d="M-40 -1q40 9 80 0" fill="none" stroke="#1f3d24" stroke-width="7" stroke-linecap="round"/></g>`;
+  const grad=(id,a,b)=>`<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
+  return `<defs><linearGradient id="ggold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient>
+    ${grad('gvel','#5b2a8f','#2c0f50')}${grad('gwood','#9a6234','#5e3615')}${Object.entries(FLC).map(([k,[a,b]])=>grad('gf-'+k,a,b)).join('')}</defs><g class="garden">${sign}${chest}${fl}</g>`;}
 function gardenNote(el){const r=$('#tstage').getBoundingClientRect(),q=el.getBoundingClientRect(),n=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]).length;
   showNote(`<div class="mem"><div class="mq">The memory garden</div><p>Every flower is a memory someone shared about the family${n?` — ${n} so far`:''}. Tap a flower to read it.</p><p>To plant one, tap anyone's photo on the tree and choose <b>Add a memory or story</b>.</p></div>`,q.left-r.left+q.width/2,q.bottom-r.top);}
 // stars keep a readable size however far you zoom out
