@@ -1177,7 +1177,7 @@ function stageBackdrop(W,H,mqb=200){const ph=W<700;let sd=11;const r=()=>(sd=(sd
     else len=top+(ph?16:24)+Math.pow(r(),1.4)*H*.46;
     stars+=`<g class="hstar" style="--i:${si++}"><line x1="${f(x)}" y1="0" x2="${f(x)}" y2="${f(len-rs)}" class="sstr"/><path class="sgold" d="${star6(x,len,rs)}"/><path class="sglint" d="${star6(x-rs*.12,len-rs*.12,rs*.42)}"/></g>`;}
   // sunset set piece: peach paper clouds on strings that are lowered in when the stars are hoisted out
-  const cl=ph?[[.13,mqb+26,92],[.47,mqb+70,104]]:[[.07,top+62,132],[.15,top+H*.33,112],[.08,top+H*.53,128],[.87,top+H*.46,124],[.91,top+H*.64,100]];
+  const cl=ph?[[.13,mqb+26,92],[.47,mqb+70,104]]:[[.07,top+62,132],[.15,top+H*.33,112],[.08,top+H*.53,128],[.775,top+H*.4,124],[.91,top+H*.64,100]];
   let clouds='';cl.forEach(([fx,cy,w],k)=>{const x0=W*fx-w/2,p=`M${f(x0)} ${f(cy)}A${f(w*.2)} ${f(w*.2)} 0 0 1 ${f(x0+w*.3)} ${f(cy-w*.13)}A${f(w*.26)} ${f(w*.26)} 0 0 1 ${f(x0+w*.72)} ${f(cy-w*.1)}A${f(w*.19)} ${f(w*.19)} 0 0 1 ${f(x0+w)} ${f(cy)}Z`;
     clouds+=`<g class="hcloud" style="--i:${k}"><line x1="${f(x0+w*.32)}" y1="0" x2="${f(x0+w*.32)}" y2="${f(cy-w*.16)}" class="sstr"/><line x1="${f(x0+w*.7)}" y1="0" x2="${f(x0+w*.7)}" y2="${f(cy-w*.2)}" class="sstr"/>
       <path d="${p}" transform="translate(5 7)" class="pcsh"/><path d="${p}" class="pcl"/><path d="M${f(x0+w*.12)} ${f(cy-3)}H${f(x0+w*.88)}" class="pcln"/></g>`;});
