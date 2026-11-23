@@ -87,7 +87,7 @@ function refit(){setTimeout(()=>{if(si>=0&&storyFocus)tFrame(storyFocus);else tF
 function setFull(on,quiet){const b=document.body;if(STAGE&&!on)return null;if(on===b.classList.contains('tfull'))return null;let pr=null;
   b.classList.toggle('tfull',on);b.classList.remove('pdrawer');hidePop();
   $('#tFull').textContent=on?'✕ Exit full screen':'⤢ Full screen';$('#tFull').setAttribute('aria-pressed',on);
-  if(on){if(location.hash!=='#tree')location.hash='tree';const d=document.documentElement,rq=d.requestFullscreen||d.webkitRequestFullscreen;try{const p=rq&&rq.call(d);if(p&&p.then)pr=p.then(()=>new Promise(r=>setTimeout(r,140)),()=>{});}catch(e){}}
+  if(on){if(location.hash!=='#tree')location.hash='tree';const d=document.documentElement,rq=TOUCH?null:d.requestFullscreen||d.webkitRequestFullscreen;try{const p=rq&&rq.call(d);if(p&&p.then)pr=p.then(()=>new Promise(r=>setTimeout(r,140)),()=>{});}catch(e){}}
   else if(fsEl()){try{(document.exitFullscreen||document.webkitExitFullscreen).call(document);}catch(e){}}
   if(!quiet)refit();return pr;}
 $('#tFull').onclick=()=>{tTouched=1;setFull(!document.body.classList.contains('tfull'));};

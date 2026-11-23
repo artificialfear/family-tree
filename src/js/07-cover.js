@@ -30,7 +30,9 @@ if(STAGE&&getComputedStyle(cover).display!=='none'){cover.classList.add('curtain
   document.body.classList.add('tfull');$('#tFull').textContent='✕ Exit full screen';$('#tFull').setAttribute('aria-pressed',true);}
 function openCurtain(story){if(cover.classList.contains('opening'))return;cover.classList.add('opening');location.hash='tree';
   // full screen first (the tree refits to the new size behind the curtain), then part the curtains
-  let pr=null;const d=document.documentElement,rq=d.requestFullscreen||d.webkitRequestFullscreen;try{const p=rq&&rq.call(d);if(p&&p.then)pr=p.then(()=>new Promise(r=>setTimeout(r,180)),()=>{});}catch(e){}
+  // touch screens skip the browser's full-screen switch: an Android tablet showed a black screen for ~3 s while it happened
+  // (adding the site to the home screen opens it full screen from the start instead, via manifest.json)
+  let pr=null;const d=document.documentElement,rq=TOUCH?null:d.requestFullscreen||d.webkitRequestFullscreen;try{const p=rq&&rq.call(d);if(p&&p.then)pr=p.then(()=>new Promise(r=>setTimeout(r,180)),()=>{});}catch(e){}
   // entering full screen resizes the window (bars slide away on phones); wait until the size has settled
   // and the stage behind has been redrawn for it, so nothing jumps while the curtains part (touch screens wait a little
   // longer: an Android tablet needs a moment to redraw everything at the new size, and showed black until it had)

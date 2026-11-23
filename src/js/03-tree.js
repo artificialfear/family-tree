@@ -63,7 +63,7 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
   return `<svg viewBox="-50 -50 100 100" aria-hidden="true"><defs><radialGradient id="mg" cx="38%" cy="34%" r="70%"><stop offset="0" stop-color="#fffaf0"/><stop offset=".5" stop-color="#f6ecd2"/><stop offset="1" stop-color="#e0cfa7"/></radialGradient><clipPath id="mlit"><path d="${lit}"/></clipPath></defs>
    <circle r="${R}" fill="#26314d" opacity=".55"/><path d="${lit}" fill="url(#mg)"/><g clip-path="url(#mlit)" fill="#bfa97c" opacity=".35"><circle cx="12" cy="8" r="8"/><circle cx="-14" cy="-18" r="5"/><circle cx="-6" cy="22" r="4"/><circle cx="22" cy="-16" r="3.5"/></g></svg>`;}
 {const st=$('#tstage');let sd=3;const r=()=>(sd=(sd*16807)%2147483647)/2147483647;let stars='',clouds='';
- for(let i=0,N=innerWidth<700?60:110;i<N;i++){const x=r()*100,y=Math.pow(r(),1.4)*78,z=r()<.12?2.6:r()<.4?1.8:1.1,tw=r()<.3;stars+=`<i class="${tw?'tw':''}${y>34?' lo':''}" style="left:${x.toFixed(2)}%;top:${y.toFixed(2)}%;width:${z}px;height:${z}px;--o:${(.45+r()*.5).toFixed(2)};${tw?`--t:${(5+r()*9).toFixed(1)}s;--dl:-${(r()*12).toFixed(1)}s`:''}"></i>`;}
+ for(let i=0,N=innerWidth<700||TOUCH?60:110;i<N;i++){const x=r()*100,y=Math.pow(r(),1.4)*78,z=r()<.12?2.6:r()<.4?1.8:1.1,tw=r()<.3;stars+=`<i class="${tw?'tw':''}${y>34?' lo':''}" style="left:${x.toFixed(2)}%;top:${y.toFixed(2)}%;width:${z}px;height:${z}px;--o:${(.45+r()*.5).toFixed(2)};${tw?`--t:${(5+r()*9).toFixed(1)}s;--dl:-${(r()*12).toFixed(1)}s`:''}"></i>`;}
  for(let i=0;i<5;i++)clouds+=`<b class="cloud" style="top:${(6+r()*34).toFixed(1)}%;--s:${(.6+r()*.7).toFixed(2)};--t:${(150+r()*120).toFixed(0)}s;--dl:-${(r()*200).toFixed(0)}s"></b>`;
  const sky=document.createElement('div');sky.className='sky';sky.setAttribute('aria-hidden','true');sky.innerHTML=`<div class="nightwash"></div><div class="sunglow"></div><div class="stars">${stars}</div>${clouds}<div class="sunset"></div><div class="skydim"></div>`;
  const back=document.createElement('div');back.id='tback';back.className='wlayer';back.innerHTML='<img id="tbackimg" alt="" decoding="async">';
@@ -146,9 +146,10 @@ function stageBackdrop(W,H,mqb=200,gb=0){const ph=W<700;let sd=11;const r=()=>(s
     clouds+=piece('hcloud',k,x0-4,x0+w+10,cy+12,`<line x1="${f(x0+w*.32)}" y1="0" x2="${f(x0+w*.32)}" y2="${f(cy-w*.16)}" class="sstr"/><line x1="${f(x0+w*.7)}" y1="0" x2="${f(x0+w*.7)}" y2="${f(cy-w*.2)}" class="sstr"/>
       <path d="${p}" transform="translate(5 7)" class="pcsh"/><path d="${p}" class="pcl"/><path d="M${f(x0+w*.12)} ${f(cy-3)}H${f(x0+w*.88)}" class="pcln"/>`);});
   // the day-coloured copy of the cloud rows fades in over the night one (a fade costs nothing; changing the colours repainted it every frame)
-  return `<svg class="srow" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
+  const RH=Math.ceil(top+(ph?8:14)+(ph?60:90)*1.25*1.35*.6+14);
+  return `<svg class="srow" width="${W}" height="${RH}" viewBox="0 0 ${W} ${RH}" style="width:${W}px;height:${RH}px"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
    <linearGradient id="pclg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe0c2"/><stop offset="1" stop-color="#f49a8e"/></linearGradient><linearGradient id="sgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient></defs>${back}${front}</svg>`+
-   `<svg class="srow srowday" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${backD}${frontD}</svg>${stars}${clouds}`;}
+   `<svg class="srow srowday" width="${W}" height="${RH}" viewBox="0 0 ${W} ${RH}" style="width:${W}px;height:${RH}px">${backD}${frontD}</svg>${stars}${clouds}`;}
 // where the top of the canopy lands when the whole tree is fitted (same sums as tFrame), so tall screens can hang the stars above it
 function canopyTopFit(r){if(!TB||!isFinite(TB.y0)||TB.x1-TB.x0<50)return 0;const SD=stageDims(r.width,r.height),m=$('#marquee'),tl=$('#tstage>.tools'),
   top=Math.max(60,SD.top,m?m.getBoundingClientRect().bottom-r.top+(SD.ph?104:10):0),avail=r.height-top-8-SD.bot-(tl?tl.offsetHeight+10:0),w=TB.x1-TB.x0,h=TB.y1-TB.y0,
@@ -182,7 +183,7 @@ function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah}=stageDims
    <linearGradient id="pgl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset=".5" stop-color="#d9a441"/><stop offset="1" stop-color="#8f5f1b"/></linearGradient></defs>
    ${side(-1)}${side(1)}${band}${green}${red}${PURP?(red.match(/<path class="pred"[^>]*>/g)||[]).join('').replace(/class="pred"/g,'fill="url(#pstp)"'):''}${fringe}${orn}${corner(-1)}${corner(1)}${apron}</svg>`;}
 
-function applySky(redraw){SKY=skyNow();NIGHT=true;const st=$('#tstage');['day','dusk','night'].forEach(m=>st.classList.toggle('sky-'+m,SKY===m));st.classList.toggle('night',NIGHT);
+function applySky(redraw){SKY=skyNow();NIGHT=true;const st=$('#tstage');['day','dusk','night'].forEach(m=>st.classList.toggle('sky-'+m,SKY===m));if(STAGE){const mb=$('#moonBtn'),sb=$('#sunBtn');if(mb)mb.inert=SKY==='day';if(sb)sb.inert=SKY!=='day';}st.classList.toggle('night',NIGHT);
   const b=$('#tSky');if(b){const IC={auto:'<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"/></svg>',
    day:'<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 17a6 6 0 0 1 12 0Z" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 20h20M12 5v3M4.6 9.6l2 2M19.4 9.6l-2 2"/></g></svg>',
    night:'<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5Z" fill="currentColor"/></svg>'};

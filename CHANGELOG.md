@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-23 — Tablets, round 2
+- Phones and tablets no longer switch the browser to full screen when the tree opens. That switch is what turned an Android tablet's screen black for about 3 seconds, hiding the curtains. To get full screen without the black screen, add the site to the home screen (Chrome menu ⋮ → Add to Home screen). It then opens full screen like an app, with its own crescent-moon icon.
+- Smoother sky change: the moon, sun, stars and clouds now wait just above the stage instead of far off-screen, so the tablet keeps them drawn. This fixes the grey square where the moon or sun came in, and the half-drawn sky during the change.
+- Desktop computers still go full screen as before.
+
 ## 2026-11-23 — Map in the story
 - Each story chapter shows a small map in the corner of the card, with that chapter's town glowing gold and earlier towns as faint dots. Georgia chapters zoom in on Georgia.
 
