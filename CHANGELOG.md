@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Photos for Evelyn, Wayne and Richard
+- Evelyn Groover and Wayne Graham now have their photos on the tree (they showed initials before), and Richard Graham has a new photo. Tapping each face shows the full picture. (Live page and preview.)
+
 ## 2026-11-24 — Preview: lanterns spread through the sky
 - On computers (and tablets held sideways), the lanterns float in the open sky to the left and right of the tree, spread out evenly, with Ed's on the left and Annie Mae's on the right.
 - On phones and tablets held upright, they float in the sky between the bottom of the leaves and the hill, on either side of the trunk, with Ed's and Annie Mae's nearest the trunk.
