@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Pull cord timing
+- Lowering the banner: the pull cord now rises out of view first, then the banner comes down. Raising it: the banner goes up first, then the cord drops.
+
 ## 2026-11-24 — Smaller banner you can hoist away
 - On computers the family banner is about 20% smaller.
 - Tap the banner and it's hoisted up out of view; a little gold pull cord with a tassel then hangs from the middle of the curtain. Tap the cord to lower the banner again. Each device remembers which way you left it.

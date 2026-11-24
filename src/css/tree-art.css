@@ -575,3 +575,8 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .art .theme-stage #mqPull svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
 .art .theme-stage #mqPull:focus-visible{outline:2px solid #ffe6a0;outline-offset:2px}
 @media(max-width:699px),(max-height:520px){.art .theme-stage #mqPull{width:22px;height:66px;margin-left:-11px}}
+/* order: hoisting, the banner goes up first and then the cord drops; lowering, the cord goes up first and then the banner comes down */
+.art .theme-stage #marquee{transition:transform .9s cubic-bezier(.5,0,.3,1) .45s}
+.art .theme-stage #marquee.up{transition-delay:0s}
+.art .theme-stage #mqPull{transition:transform .4s ease-in 0s}
+.art .theme-stage #mqPull.on{transition:transform .5s ease-out .85s}
