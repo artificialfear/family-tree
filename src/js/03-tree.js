@@ -176,7 +176,7 @@ function stageBackdrop(W,H,mqb=200,gb=0){const ph=W<700;let sd=11;const r=()=>(s
   // sunset set piece: peach paper clouds on strings that are lowered in when the stars are hoisted out
   const band=k=>mqb+k*(gb-mqb);
   const cl=ph?[[.13,mqb+26,92],[.47,mqb+70,104]]:tall?[[.12,top+.5*(gb-top),112],[.33,band(.78),100],[.6,band(.42),104],[.83,gb-12,96]]:[[.07,top+62,132],[.15,top+H*.33,112],[.08,top+H*.53,128],[.775,top+H*.4,124],[.91,top+H*.64,100]];
-  let clouds='';cl.forEach(([fx,cy,w],k)=>{if(ART){const e=k%2,iw=e?400:360,ih=e?164:178,rx=e?199:181,bot=e?163:176,sc=w*1.25/iw,ix=W*fx-iw*sc/2,iy=cy-bot*sc;
+  let clouds='';cl.forEach(([fx,cy,w],k)=>{if(ART){const e=k%2,iw=e?400:360,ih=e?164:178,rx=e?199:181,bot=e?163:176,sc=w*(ph?.66:1.25)/iw,ix=W*fx-iw*sc/2,iy=cy-bot*sc;
       clouds+=piece('hcloud',k,ix-2,ix+iw*sc+2,cy+4,`<line x1="${f(ix+rx*sc)}" y1="0" x2="${f(ix+rx*sc)}" y2="${f(iy+3)}" class="sstr"/><image href="photos/art/cloud-sunset-${e?'wispy':'puffy'}.webp" x="${f(ix)}" y="${f(iy)}" width="${f(iw*sc)}" height="${f(ih*sc)}"/>`);return;}
     const x0=W*fx-w/2,p=`M${f(x0)} ${f(cy)}A${f(w*.2)} ${f(w*.2)} 0 0 1 ${f(x0+w*.3)} ${f(cy-w*.13)}A${f(w*.26)} ${f(w*.26)} 0 0 1 ${f(x0+w*.72)} ${f(cy-w*.1)}A${f(w*.19)} ${f(w*.19)} 0 0 1 ${f(x0+w)} ${f(cy)}Z`;
     clouds+=piece('hcloud',k,x0-4,x0+w+10,cy+12,`<line x1="${f(x0+w*.32)}" y1="0" x2="${f(x0+w*.32)}" y2="${f(cy-w*.16)}" class="sstr"/><line x1="${f(x0+w*.7)}" y1="0" x2="${f(x0+w*.7)}" y2="${f(cy-w*.2)}" class="sstr"/>
@@ -571,7 +571,7 @@ let TSZ={w:0,h:0};const tsz=()=>{if(!TSZ.w){const s=$('#tstage');TSZ={w:s.client
 new ResizeObserver(()=>{const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};if(tw.childElementCount&&!G)tApply(false);}).observe($('#tstage'));
 function tClamp(){const r={width:tsz().w,height:tsz().h};if(!r.width||!(TB.x1>TB.x0))return;const W=r.width,H=r.height,bw=TB.x1-TB.x0,bh=TB.y1-TB.y0;
   const kmin=Math.min(W/bw,H/bh)*(ART&&!PRINT?.85:.5);if(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
-  const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(ART&&!PRINT?H*.7-(TB.y1+60)*k:H*.5-(TB.y1+(PRINT?0:340+SOILD-SOIL0))*k,tv.y));}
+  const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(ART&&!PRINT?H*.5-(TB.y1+60)*k:H*.5-(TB.y1+(PRINT?0:340+SOILD-SOIL0))*k,tv.y));}
 let SKYEL=null;
 function sunLight(){if(SKY!=='day')return;
   // stage: the sun hangs in the sky, not behind the tree, so the light no longer follows the view — always full sunset light

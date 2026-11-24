@@ -27,7 +27,7 @@ function runSpots(s){clearSpots();const spans=[...$('#cap').querySelectorAll('.m
   spans.forEach(x=>{const id=x.dataset.id;spotT.push(setTimeout(()=>{x.classList.add('lit');spotlight(id);},t));seen.add(id);t+=650;});
   const rest=(s.f||[]).filter(id=>!seen.has(id));
   if(rest.length)spotT.push(setTimeout(()=>rest.forEach(spotlight),t+150));}
-function startStory(){musicFor('story');clearTimeout(hintT);$('#hint').classList.remove('on');location.hash='tree';tTouched=1;si=0;tw.classList.add('story');document.body.classList.add('storyon');requestAnimationFrame(()=>{$('#tstage').scrollIntoView({behavior:RM?'auto':'smooth',block:innerWidth<600?'start':'nearest'});showStep();});}
+function startStory(){musicFor('story');clearTimeout(hintT);$('#hint').classList.remove('on');location.hash='tree';tTouched=1;si=0;phF=0;tw.classList.add('story');document.body.classList.add('storyon');requestAnimationFrame(()=>{$('#tstage').scrollIntoView({behavior:RM?'auto':'smooth',block:innerWidth<600?'start':'nearest'});showStep();});}
 // auto-play: each chapter stays up long enough to read it (about 200 words a minute, plus time for the move)
 const readMs=s=>Math.max(9000,Math.min(28000,3000+s.t.split(/\s+/).length*300));
 // a small map in the corner of the story card: this chapter's town glows gold, earlier towns stay as faint dots.
@@ -42,7 +42,7 @@ function storyMap(s){if(!s.pl||!s.pl.length)return'';const ga=s.pl.every(k=>GA.i
   const lit=s.pl.filter(k=>pt[k]&&inV(pt[k])).map((k,i)=>{const [x,y]=pt[k],r=i&&s.pl.length>3?R*.75:R;return `<circle cx="${x}" cy="${y}" r="${f(r*2.3)}" class="smh"/><circle cx="${x}" cy="${y}" r="${f(r)}" class="smd"/>`;}).join('');
   const cap=s.plc||PL[s.pl[0]].replace(' (Meriwether Co.)','').replace(' (Buchanan Co.)','');
   return `<figure class="smap" role="img" aria-label="Map: ${esc(s.plc?s.pl.map(k=>PL[k]).join(', '):PL[s.pl[0]])}"><div class="smbox"><svg viewBox="${vx} ${vy} ${vw} ${vh}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${paths}${trail}${lit}</svg></div><figcaption>${esc(cap)}</figcaption></figure>`;}
-let stepT=0;const PHONE=()=>$('#tstage').clientWidth<700||TOUCH;
+let stepT=0,phF=0;const PHONE=()=>$('#tstage').clientWidth<700||TOUCH;
 function showStep(){
   const s=STORY[si];storyFocus=s.f.length?s.f:null;
   const pics=(s.img?`<img src="${s.img}" alt="Jack Graham in Navy uniform">`:'')+s.f.filter(id=>photo[id]).slice(0,s.img?3:4).map(id=>`<img src="${esc(photo[id])}" alt="${esc(byId[id].n)}">`).join('');
@@ -53,7 +53,10 @@ function showStep(){
   const cap=$('#cap');cap.classList.remove('on');void cap.offsetWidth;cap.classList.add('on');
   // move first; change the tree's highlighting only once the move has finished, so phones don't have to
   // redraw the whole tree while it is sliding (that made the picture stutter and jump)
-  clearTimeout(stepT);clearSpots();requestAnimationFrame(()=>tFrame(s.f));
+  clearTimeout(stepT);clearSpots();
+  // phones and tablets: frame the whole family once when the story starts and keep the camera still;
+  // each chapter then only dims and lights people (every move had to fade the tree out and back in)
+  if(PHONE()){if(!phF){phF=1;requestAnimationFrame(()=>tFrame(Object.keys(TP)));}}else requestAnimationFrame(()=>tFrame(s.f));
   // phones: change the highlighting while the tree is faded out, so it is redrawn once, out of sight
   stepT=setTimeout(()=>{if(STORY[si]!==s)return;tw.querySelectorAll('.leaf').forEach(c=>c.classList.toggle('dim',!!storyFocus&&!storyFocus.includes(c.dataset.id)));
     if(s.f.length)select(s.f[s.f.length===1?0:Math.min(1,s.f.length-1)],1);runSpots(s);},RM?0:PHONE()?120:960);
@@ -94,7 +97,7 @@ const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
   if(bf&&STAGE&&can&&!app){bf.hidden=false;show();
     bf.onclick=()=>{try{if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document);else{const p=(d.requestFullscreen||d.webkitRequestFullscreen).call(d);if(p&&p.catch)p.catch(()=>{});}}catch(e){}};
     ['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,show));}}
-function refit(){setTimeout(()=>{if(si>=0&&storyFocus)tFrame(storyFocus);else tFit();},80);}
+function refit(){setTimeout(()=>{if(si>=0&&PHONE())tFrame(Object.keys(TP));else if(si>=0&&storyFocus)tFrame(storyFocus);else tFit();},80);}
 function setFull(on,quiet){const b=document.body;if(STAGE&&!on)return null;if(on===b.classList.contains('tfull'))return null;let pr=null;
   b.classList.toggle('tfull',on);b.classList.remove('pdrawer');hidePop();
   $('#tFull').textContent=on?'✕ Exit full screen':'⤢ Full screen';$('#tFull').setAttribute('aria-pressed',on);

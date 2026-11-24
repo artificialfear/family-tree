@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-23 — Phones: steadier story mode, smaller clouds
+- On phones and tablets, story mode now frames the whole family once and keeps the tree still; each chapter just dims everyone else and lights up the people in it. The tree no longer disappears and reappears every time you tap Next. (Live page and preview.)
+- After a story ends on a phone, the tree comes back to its normal view instead of sitting low on the screen with empty sky above it. (Preview.)
+- On phones, the hanging sunset clouds are about the size of the sun instead of twice as big. (Preview.)
+
 ## 2026-11-23 — Preview: hometowns around the chest, lower stars
 - The hometowns now sit in the third layer of soil, spread around the buried chest: four on the left, three on the right, and Covington just below the chest. Their roots leave the main root sideways and pass beside the chest, and Covington's root bends around it. Every hometown and the chest can be tapped.
 - The chest sits a little higher, closer under the main root.
