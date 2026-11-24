@@ -101,6 +101,11 @@ const BASE=[
 // slideshow films made after they passed: on their cards, in the keepsake chest, as a special lantern each, and in story mode
 const FILMS=[{id:'ed',pid:'ed',title:'Ed Graham',sub:'A slideshow in his memory',by:'Made by Mat',src:'videos/ed-graham-slideshow.mp4',poster:'videos/ed-graham-poster.jpg',dur:'8:24'},
   {id:'annie',pid:'annie',title:'Annie Mae Harper',sub:'A celebration of her life',by:'Made by Jeff Harper',src:'videos/annie-mae-celebration.mp4',poster:'videos/annie-mae-poster.jpg',dur:'4:08'}];
+// home movies: in the Keepsake Chest (with chapters) and the story, but not on anyone's card and no lantern
+const HOMEFILMS=[{id:'md93',title:'Mother’s Day 1993',sub:'A family home movie, 9 May 1993',by:'Home video',src:'videos/mothers-day-1993.mp4',poster:'videos/mothers-day-1993-poster.jpg',dur:'32:38',
+  ch:[[0,'Arriving'],[259,'The trampoline'],[460,'Inside the house'],[483,'A little one takes the camera'],[710,'Late afternoon in the yard'],[959,'Swing set and trampoline'],[1191,'Evening games'],[1855,'Sunset']]},
+ {id:'md93h',hide:1,title:'Mother’s Day 1993',sub:'Highlights',by:'Home video, 9 May 1993',src:'videos/mothers-day-1993-highlights.mp4',poster:'videos/mothers-day-1993-poster.jpg',dur:'3:03'}];
+const ALLFILMS=FILMS.concat(HOMEFILMS);
 const filmOf=pid=>FILMS.find(f=>f.pid===pid);
 // keepsake chest on the planet: old and family photographs, and the records the tree is built on (SRC keys)
 const KEEP={photos:[['photos/jack-navy.jpg','Jack Graham in his U.S. Navy uniform'],['photos/john-jack-graham.jpg','Jack Graham'],['photos/margaret-graham.jpg','Margaret Graham'],
@@ -154,6 +159,7 @@ const STORY=[
  {y:'1982',h:'Ed and Renee',film:'ed',pl:['covington'],t:'In 1982, Ed Graham married Renee Harper, and the two families became one. They made their home in Covington, Georgia.',f:['ed','renee']},
  {y:'',h:'Four sons',pl:['covington'],t:'Ed and Renee raised four boys: Chris, Mat, Jon and Dustin. Then the family grew again: Chris married Amanda, Mat married Emily, and Jon married Jessica. And a new generation began: Lydia, Chris and Amanda’s daughter; Lilly and Maddie, Jon and Jessica’s girls; and Dustin Jr.',f:['ed','renee','chris','mat','jon','dustin','amanda','emily','jessica','lydia','lilly','maddie','dustinjr']},
  {y:'',h:'A houseful of cousins',t:'Around them grew a crowd of cousins. On the Graham side: Amber and Steven; Brandon, Jeremy and Michael — Brandon in Navy uniform like his grandfather Jack; Andrew; and Alissa and Malik. On the Harper side: Ashley, Shelby and Kayla; John John, Chasity, Amber, Ashley and Shannon; and Jacob.',f:['brandon','amber','ashley','kayla','stevenn','jeremy','shelby','johnjohn','chasity','amberl','ashleyl','shannon','michael','andrew','alissa','malik','jacob']},
+ {y:'1993',h:'Mother’s Day 1993',film:'md93h',t:'On 9 May 1993 both sides of the family spent Mother’s Day together: Annie Mae and Johnnie, Ed and Renee, Pam, John, Jeff and Danyelle, and a yard full of cousins. The camcorder rolled from mid-afternoon until sunset: the trampoline, the swing set, ball games on the grass and a little one who got hold of the camera.',f:['annie','johnny','renee','ed','pam','johnh','jeff','danyelle','mat','chris','jon','kayla','ashley','ashleyl','shelby','amber','shannon','johnjohn']},
  {y:'',h:'For Mom',t:'Ed was remembered as a good man who treasured his sons and grandchildren. Johnnie loved to dance and loved his family. Annie Mae was the glue that held the family together. We love you very much, momma! The tree is now waiting for everything you remember.',f:['renee']}
 ];
 

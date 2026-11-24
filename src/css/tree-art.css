@@ -554,3 +554,10 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .art #tworld .scroll.rib .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
 /* short landscape screens (a phone on its side): a smaller banner so it doesn't take over the sky */
 @media(max-height:520px) and (min-width:700px){.theme-stage #marquee{width:min(300px,36%)}}
+/* home movie chapters under the player */
+.vch{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;justify-content:center}
+.vch[hidden]{display:none}
+.vch button{font:600 13px Inter,system-ui,sans-serif;color:#f6ecd2;background:rgba(255,255,255,.08);border:1px solid rgba(232,196,120,.45);border-radius:999px;padding:6px 11px;cursor:pointer}
+.vch button:hover,.vch button:focus-visible{background:rgba(232,196,120,.25)}
+.vch small{color:#e8c478;font-weight:700;margin-right:3px}
+@media(max-width:600px){.vch{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:4px}.vch button{flex:none}}

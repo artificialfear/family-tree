@@ -746,6 +746,13 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .art #tworld .scroll.rib .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
 /* short landscape screens (a phone on its side): a smaller banner so it doesn't take over the sky */
 @media(max-height:520px) and (min-width:700px){.theme-stage #marquee{width:min(300px,36%)}}
+/* home movie chapters under the player */
+.vch{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;justify-content:center}
+.vch[hidden]{display:none}
+.vch button{font:600 13px Inter,system-ui,sans-serif;color:#f6ecd2;background:rgba(255,255,255,.08);border:1px solid rgba(232,196,120,.45);border-radius:999px;padding:6px 11px;cursor:pointer}
+.vch button:hover,.vch button:focus-visible{background:rgba(232,196,120,.25)}
+.vch small{color:#e8c478;font-weight:700;margin-right:3px}
+@media(max-width:600px){.vch{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:4px}.vch button{flex:none}}
 </style>
 </head>
 <body>
@@ -987,6 +994,11 @@ const BASE=[
 // slideshow films made after they passed: on their cards, in the keepsake chest, as a special lantern each, and in story mode
 const FILMS=[{id:'ed',pid:'ed',title:'Ed Graham',sub:'A slideshow in his memory',by:'Made by Mat',src:'videos/ed-graham-slideshow.mp4',poster:'videos/ed-graham-poster.jpg',dur:'8:24'},
   {id:'annie',pid:'annie',title:'Annie Mae Harper',sub:'A celebration of her life',by:'Made by Jeff Harper',src:'videos/annie-mae-celebration.mp4',poster:'videos/annie-mae-poster.jpg',dur:'4:08'}];
+// home movies: in the Keepsake Chest (with chapters) and the story, but not on anyone's card and no lantern
+const HOMEFILMS=[{id:'md93',title:'Mother’s Day 1993',sub:'A family home movie, 9 May 1993',by:'Home video',src:'videos/mothers-day-1993.mp4',poster:'videos/mothers-day-1993-poster.jpg',dur:'32:38',
+  ch:[[0,'Arriving'],[259,'The trampoline'],[460,'Inside the house'],[483,'A little one takes the camera'],[710,'Late afternoon in the yard'],[959,'Swing set and trampoline'],[1191,'Evening games'],[1855,'Sunset']]},
+ {id:'md93h',hide:1,title:'Mother’s Day 1993',sub:'Highlights',by:'Home video, 9 May 1993',src:'videos/mothers-day-1993-highlights.mp4',poster:'videos/mothers-day-1993-poster.jpg',dur:'3:03'}];
+const ALLFILMS=FILMS.concat(HOMEFILMS);
 const filmOf=pid=>FILMS.find(f=>f.pid===pid);
 // keepsake chest on the planet: old and family photographs, and the records the tree is built on (SRC keys)
 const KEEP={photos:[['photos/jack-navy.jpg','Jack Graham in his U.S. Navy uniform'],['photos/john-jack-graham.jpg','Jack Graham'],['photos/margaret-graham.jpg','Margaret Graham'],
@@ -1040,6 +1052,7 @@ const STORY=[
  {y:'1982',h:'Ed and Renee',film:'ed',pl:['covington'],t:'In 1982, Ed Graham married Renee Harper, and the two families became one. They made their home in Covington, Georgia.',f:['ed','renee']},
  {y:'',h:'Four sons',pl:['covington'],t:'Ed and Renee raised four boys: Chris, Mat, Jon and Dustin. Then the family grew again: Chris married Amanda, Mat married Emily, and Jon married Jessica. And a new generation began: Lydia, Chris and Amanda’s daughter; Lilly and Maddie, Jon and Jessica’s girls; and Dustin Jr.',f:['ed','renee','chris','mat','jon','dustin','amanda','emily','jessica','lydia','lilly','maddie','dustinjr']},
  {y:'',h:'A houseful of cousins',t:'Around them grew a crowd of cousins. On the Graham side: Amber and Steven; Brandon, Jeremy and Michael — Brandon in Navy uniform like his grandfather Jack; Andrew; and Alissa and Malik. On the Harper side: Ashley, Shelby and Kayla; John John, Chasity, Amber, Ashley and Shannon; and Jacob.',f:['brandon','amber','ashley','kayla','stevenn','jeremy','shelby','johnjohn','chasity','amberl','ashleyl','shannon','michael','andrew','alissa','malik','jacob']},
+ {y:'1993',h:'Mother’s Day 1993',film:'md93h',t:'On 9 May 1993 both sides of the family spent Mother’s Day together: Annie Mae and Johnnie, Ed and Renee, Pam, John, Jeff and Danyelle, and a yard full of cousins. The camcorder rolled from mid-afternoon until sunset: the trampoline, the swing set, ball games on the grass and a little one who got hold of the camera.',f:['annie','johnny','renee','ed','pam','johnh','jeff','danyelle','mat','chris','jon','kayla','ashley','ashleyl','shelby','amber','shannon','johnjohn']},
  {y:'',h:'For Mom',t:'Ed was remembered as a good man who treasured his sons and grandchildren. Johnnie loved to dance and loved his family. Annie Mae was the glue that held the family together. We love you very much, momma! The tree is now waiting for everything you remember.',f:['renee']}
 ];
 
@@ -1782,7 +1795,7 @@ $('#tstage').addEventListener('scroll',e=>{const t=e.currentTarget;if(t.scrollTo
 let TSZ={w:0,h:0};const tsz=()=>{if(!TSZ.w){const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};}return TSZ;};
 new ResizeObserver(()=>{const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};if(ART&&LWIDE!==null&&lanternWide()!==LWIDE&&tw.querySelector('.leaf'))renderMemStars();if(tw.childElementCount&&!G)tApply(false);}).observe($('#tstage'));
 function tClamp(){const r={width:tsz().w,height:tsz().h};if(!r.width||!(TB.x1>TB.x0))return;const W=r.width,H=r.height,bw=TB.x1-TB.x0,bh=TB.y1-TB.y0;
-  const kmin=Math.min(W/bw,H/bh)*(ART&&!PRINT?.6:.5);if(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
+  const kmin=Math.min(W/bw,H/bh)*(ART&&!PRINT?(tw.classList.contains('story')?.35:.6):.5);// story chapters with many people (Mother's Day 1993) need to zoom out further to fit above the captionif(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
   const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(ART&&!PRINT?H*.5-(TB.y1+60)*k:H*.5-(TB.y1+(PRINT?0:340+SOILD-SOIL0))*k,tv.y));}
 let SKYEL=null;
 function sunLight(){if(SKY!=='day')return;
@@ -1844,9 +1857,9 @@ function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!
   // and centre the whole tree in the height between the sky and the buttons, so there's no empty ground below it
   if(SD&&SD.ph&&ids===TCORE){const k2=Math.max(.12,Math.min((r.width-6)/w,avail/(TB.y1-TB.y0)));tv.k=k2;tv.x=r.width/2-(b.x0+b.x1)/2*k2;tv.y=top+(avail-(TB.y1-TB.y0)*k2)/2-TB.y0*k2;}
   else if(SD&&SD.ph&&!(ids&&ids.length===1))tv.y=Math.min(tv.y,top+12-TB.y0*k);
-  // painted stage: framed views (Fit, the opening view, story chapters) never go below 85% of the whole-tree size, the same framing as before
+  // painted stage: Fit and the opening view never go below 85% of the whole-tree size, the same framing as before
   // the zoom-out limit was loosened; scrolling, pinching and the - key can still zoom out further (to 60%, see tClamp)
-  if(ART&&!PRINT){const W=r.width,H=r.height,kf=Math.min(W/(TB.x1-TB.x0),H/(TB.y1-TB.y0))*.85;if(tv.k<kf){tv.x=W/2-(W/2-tv.x)*kf/tv.k;tv.y=H/2-(H/2-tv.y)*kf/tv.k;tv.k=kf;}}
+  if(ART&&!PRINT&&(!ids||!ids.length||ids===TCORE)){const W=r.width,H=r.height,kf=Math.min(W/(TB.x1-TB.x0),H/(TB.y1-TB.y0))*.85;if(tv.k<kf){tv.x=W/2-(W/2-tv.x)*kf/tv.k;tv.y=H/2-(H/2-tv.y)*kf/tv.k;tv.k=kf;}}
   tApply(anim);}
 // the setting sun sits right behind the trunk whenever the view is framed (first load, Fit); panning leaves it where it is
 function sunToTrunk(jump){const st=SKYEL||(SKYEL=$('#tstage .sky')),W=$('#tstage').getBoundingClientRect().width;if(!st||!W)return;
@@ -2008,10 +2021,13 @@ async function saveEdit(f){const fd=new FormData(f),btn=f.querySelector('button.
 
 /* film player: the tree's music pauses while a slideshow plays and comes back when it closes; story auto-play stops */
 let filmResume=false;
-function openFilm(id){const f=FILMS.find(x=>x.id===id);if(!f)return;const v=$('#vEl');
+function openFilm(id){const f=ALLFILMS.find(x=>x.id===id);if(!f)return;const v=$('#vEl');
   filmResume=mState==='playing';if(filmResume)pauseMusic();
   if(typeof auto!=='undefined'&&auto){clearTimeout(auto);auto=null;if(si>=0)showStep();}
   $('#vTitle').textContent=f.title+' — '+f.sub;$('#vBy').textContent=f.by;v.poster=f.poster;v.src=f.src;$('#vbox').hidden=false;document.body.classList.add('vopen');
+  // chapters (home movies): a row of buttons under the player that jump to each scene
+  let ch=$('#vCh');if(!ch){ch=document.createElement('div');ch.id='vCh';ch.className='vch';v.after(ch);ch.addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(!b)return;v.currentTime=+b.dataset.t;const p=v.play();if(p&&p.catch)p.catch(()=>{});});}
+  const fm=s=>`${s/60|0}:${String(s%60).padStart(2,'0')}`;ch.innerHTML=f.ch?f.ch.map(([t,l])=>`<button type="button" data-t="${t}"><small>${fm(t)}</small> ${esc(l)}</button>`).join(''):'';ch.hidden=!f.ch;
   const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{});setTimeout(()=>$('#vClose').focus(),50);}
 function closeFilm(){const v=$('#vEl');if($('#vbox').hidden)return;v.pause();v.removeAttribute('src');v.load();$('#vbox').hidden=true;document.body.classList.remove('vopen');
   if(filmResume)startMusic();filmResume=false;}
@@ -2122,7 +2138,7 @@ function showStep(){
   const last=si===STORY.length-1,ms=readMs(s);
   if(auto){clearTimeout(auto);auto=last?null:setTimeout(()=>{if(si<STORY.length-1){si++;showStep();}},ms);}
   $('#cap').innerHTML=`<div class="dots">${STORY.map((_,i)=>`<i class="${i<=si?'on':''}"></i>`).join('')}</div>${s.y?`<div class="yr">${esc(s.y)}</div>`:''}${storyMap(s)}<h3>${esc(s.h)}</h3>${pics?`<div class="ph">${pics}</div>`:''}<p>${markNames(s.t,MN[si])}</p>
-   <div class="ctl">${si>0?'<button id="sPrev">Back</button>':''}${last?'<button class="pri" id="sEnd">Explore the tree</button>'+(db?'<button id="sMem">💬 Add a memory</button>':''):'<button class="pri" id="sNext">Next</button>'}${s.film&&FILMS.find(f=>f.id===s.film)?`<button id="sFilm" data-film="${s.film}">▶ Watch ${esc(FILMS.find(f=>f.id===s.film).title.split(' ')[0])}${FILMS.find(f=>f.id===s.film).title.startsWith('Annie')?' Mae':''}'s video</button>`:''}<button id="sAuto" aria-pressed="${!!auto}">${auto?'Pause':'Auto-play'}</button>${last?'':'<button id="sEnd">Skip</button>'}<span class="step">${si+1} of ${STORY.length}</span></div>${auto?`<div class="aprog" aria-hidden="true"><i style="animation-duration:${ms}ms"></i></div>`:''}`;
+   <div class="ctl">${si>0?'<button id="sPrev">Back</button>':''}${last?'<button class="pri" id="sEnd">Explore the tree</button>'+(db?'<button id="sMem">💬 Add a memory</button>':''):'<button class="pri" id="sNext">Next</button>'}${s.film&&ALLFILMS.find(f=>f.id===s.film)?`<button id="sFilm" data-film="${s.film}">▶ ${s.film==='md93h'?'Watch the home movie':`Watch ${esc(FILMS.find(f=>f.id===s.film).title.split(' ')[0])}${FILMS.find(f=>f.id===s.film).title.startsWith('Annie')?' Mae':''}'s video`}</button>`:''}<button id="sAuto" aria-pressed="${!!auto}">${auto?'Pause':'Auto-play'}</button>${last?'':'<button id="sEnd">Skip</button>'}<span class="step">${si+1} of ${STORY.length}</span></div>${auto?`<div class="aprog" aria-hidden="true"><i style="animation-duration:${ms}ms"></i></div>`:''}`;
   const cap=$('#cap');cap.classList.remove('on');void cap.offsetWidth;cap.classList.add('on');
   // move first; change the tree's highlighting only once the move has finished, so phones don't have to
   // redraw the whole tree while it is sliding (that made the picture stutter and jump)
@@ -2290,7 +2306,7 @@ function drawTimeline(){
 // captured 2026-11-23 from Mat's FamilySearch login and Legacy.com. Annie Mae's FamilySearch page is left as a link: it's someone else's unsourced entry with a typo in its dates.
 const KEEPIMG={census40:['photos/records/census40.jpg'],obitJohnny:['photos/records/obitJohnny.jpg'],obitEd:['photos/records/obitEd.jpg'],obitNorma:['photos/records/obitNorma.jpg'],treeJack:['photos/records/treeJack.jpg'],treeMargaret:['photos/records/treeMargaret.jpg']};
 function renderKeepsakes(){const pics=$('#kpics');if(!pics)return;renderKeepDyn();if(pics.dataset.done)return;pics.dataset.done=1;
-  $('#kfilms').innerHTML=FILMS.map(f=>`<button type="button" class="kfilm" data-film="${f.id}"><span class="kfpic"><img src="${f.poster}" alt="" loading="lazy"><i aria-hidden="true">▶</i></span><span class="kftx"><b>${esc(f.title)}</b><span>${esc(f.sub)}</span><small>${esc(f.by)} · ${f.dur}</small></span></button>`).join('');
+  $('#kfilms').innerHTML=ALLFILMS.filter(f=>!f.hide).map(f=>`<button type="button" class="kfilm" data-film="${f.id}"><span class="kfpic"><img src="${f.poster}" alt="" loading="lazy"><i aria-hidden="true">▶</i></span><span class="kftx"><b>${esc(f.title)}</b><span>${esc(f.sub)}</span><small>${esc(f.by)} · ${f.dur}</small></span></button>`).join('');
   pics.innerHTML=KEEP.photos.map(([u,c])=>`<button type="button" class="kpic" data-u="${esc(u)}" data-c="${esc(c)}"><img src="${esc(u)}" alt="" loading="lazy"><span>${esc(c)}</span></button>`).join('');
   pics.onclick=e=>{const b=e.target.closest('.kpic');if(b)openLb(b.dataset.u,b.dataset.c,b.dataset.c);};
   $('#krecs').innerHTML=KEEP.records.filter(k=>SRC[k]).map(k=>{const s=SRC[k],[t,...rest]=s.t.split(' — ');const ic=/obituary/i.test(s.t)?'📰':/census/i.test(s.t)?'📜':'🌳',im=KEEPIMG[k];

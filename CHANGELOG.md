@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-24 — Mother's Day 1993 home movie
+- The Keepsake Chest's films now include the full Mother's Day 1993 home video (32 minutes), with chapter buttons under the player: Arriving, The trampoline, Inside the house, A little one takes the camera, Late afternoon in the yard, Swing set and trampoline, Evening games, Sunset.
+- The story has a new "Mother's Day 1993" chapter before "For Mom". It lights up everyone in the video and has a "Watch the home movie" button that plays a 3-minute highlights reel.
+- Story chapters with many people now zoom out far enough to show everyone above the caption.
+
 ## 2026-11-24 — Zoom out past Fit on computers (fixed)
 - On a computer you can now zoom out to about 70% of the Fit size with scrolling, pinching or the − key. Last night's change to allow this didn't actually take effect; it does now. Fit and the opening view look exactly as before.
 

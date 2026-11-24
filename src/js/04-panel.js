@@ -123,10 +123,13 @@ async function saveEdit(f){const fd=new FormData(f),btn=f.querySelector('button.
 
 /* film player: the tree's music pauses while a slideshow plays and comes back when it closes; story auto-play stops */
 let filmResume=false;
-function openFilm(id){const f=FILMS.find(x=>x.id===id);if(!f)return;const v=$('#vEl');
+function openFilm(id){const f=ALLFILMS.find(x=>x.id===id);if(!f)return;const v=$('#vEl');
   filmResume=mState==='playing';if(filmResume)pauseMusic();
   if(typeof auto!=='undefined'&&auto){clearTimeout(auto);auto=null;if(si>=0)showStep();}
   $('#vTitle').textContent=f.title+' — '+f.sub;$('#vBy').textContent=f.by;v.poster=f.poster;v.src=f.src;$('#vbox').hidden=false;document.body.classList.add('vopen');
+  // chapters (home movies): a row of buttons under the player that jump to each scene
+  let ch=$('#vCh');if(!ch){ch=document.createElement('div');ch.id='vCh';ch.className='vch';v.after(ch);ch.addEventListener('click',e=>{const b=e.target.closest('button[data-t]');if(!b)return;v.currentTime=+b.dataset.t;const p=v.play();if(p&&p.catch)p.catch(()=>{});});}
+  const fm=s=>`${s/60|0}:${String(s%60).padStart(2,'0')}`;ch.innerHTML=f.ch?f.ch.map(([t,l])=>`<button type="button" data-t="${t}"><small>${fm(t)}</small> ${esc(l)}</button>`).join(''):'';ch.hidden=!f.ch;
   const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{});setTimeout(()=>$('#vClose').focus(),50);}
 function closeFilm(){const v=$('#vEl');if($('#vbox').hidden)return;v.pause();v.removeAttribute('src');v.load();$('#vbox').hidden=true;document.body.classList.remove('vopen');
   if(filmResume)startMusic();filmResume=false;}
