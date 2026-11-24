@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Chest a little higher, no cracks
+- The buried Keepsake Chest sits a little higher, right under where the roots split. The cracks in the ground around it are gone; the soil mound and pebbles stay.
+
 ## 2026-11-24 — More clouds, phone stars back, shorter pull cord
 - On computers the top curtain sits higher and the painted cloud border hangs a little lower, so much more of the clouds shows.
 - Fixed: the hanging stars disappeared on phones after the banner started being lowered in on opening. They're back.
