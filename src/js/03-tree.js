@@ -115,10 +115,12 @@ function marqueeSVG(){
    <defs><linearGradient id="mqpG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a6"/><stop offset=".5" stop-color="#e6b65a"/><stop offset="1" stop-color="#b07a2a"/></linearGradient></defs>
    <line x1="79.7" y1="-400" x2="79.7" y2="7" stroke="#d9a441" stroke-width="2"/><line x1="438.1" y1="-400" x2="438.1" y2="7" stroke="#d9a441" stroke-width="2"/>
    <image href="photos/art/banner.webp" x="62.1" y="6" width="400" height="167.8"/>
-   <g font-family="Spectral,Georgia,serif" text-anchor="middle">
-    <text x="260" y="70" font-style="italic" font-size="17" fill="#f3dc95" stroke="#1e0a24" stroke-width="2.4" paint-order="stroke">The</text>
-    <g font-weight="700" font-size="35" fill="url(#mqpG)" stroke="#1e0a24" stroke-width="2.6" paint-order="stroke"><text x="238" y="99" text-anchor="end">Graham</text><text x="260" y="99">&amp;</text><text x="282" y="99" text-anchor="start">Harper</text></g>
-    <text x="260" y="121" font-style="italic" font-size="17" fill="#f3dc95" stroke="#1e0a24" stroke-width="2.4" paint-order="stroke" letter-spacing="3">Family</text></g></svg>`;
+   <g font-family="Spectral,Georgia,serif" text-anchor="middle">${(()=>{
+     // the dark outline is a separate copy drawn behind the gold, instead of paint-order (iPad Safari drew the outline over the letters)
+     const T=(a,t,st,fill)=>`<text ${a} stroke="#1e0a24" stroke-width="${st}" stroke-linejoin="round" fill="#1e0a24">${t}</text><text ${a} fill="${fill}">${t}</text>`;
+     return T('x="260" y="70" font-style="italic" font-size="17"','The',4.8,'#f3dc95')
+      +`<g font-weight="700" font-size="35">${T('x="238" y="99" text-anchor="end"','Graham',5.2,'url(#mqpG)')}${T('x="260" y="99"','&amp;',5.2,'url(#mqpG)')}${T('x="282" y="99" text-anchor="start"','Harper',5.2,'url(#mqpG)')}</g>`
+      +T('x="260" y="121" font-style="italic" font-size="17" letter-spacing="3"','Family',4.8,'#f3dc95');})()}</g></svg>`;
   // the family name on a purple velvet pennant hung from a gold rod, with gold tassels (Mat's pick, design B)
   return `<svg class="mqsign" viewBox="0 0 520 190" role="img" aria-label="The Graham and Harper Family" style="overflow:visible">
    <defs><linearGradient id="mqpV" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b2a8f"/><stop offset="1" stop-color="#2c0f50"/></linearGradient>

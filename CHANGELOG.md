@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-24 — iPad banner lettering; Android sky flash
+- On iPads the family name on the banner now shows as solid gold letters with a dark edge, like on other devices (Safari was drawing the edge on top of the letters).
+- On Android tablets, if the sky momentarily drops out it now shows deep blue instead of flashing black, and the sky keeps fewer always-on graphics layers so it happens less.
+
 ## 2026-11-24 — Tablet flashes fixed; lanterns hang from their portraits
 - Android tablets: tapping Fit, a face or a button no longer makes the tree flash out and back in; the view just moves. While the Keepsake Chest or any other page is open, the tree behind it rests, which fixes the flashing and the photos with a corner cut off.
 - Live: each lantern now hangs on a short gold string from its person's portrait, with a warm glow (gently flickering on computers).

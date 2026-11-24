@@ -623,3 +623,8 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 .touch body.tfull .view.sheet{box-shadow:none;animation:sheetfade .25s ease-out}
 .touch body.sheeton::after{content:'';position:fixed;inset:0;background:rgba(8,4,16,.55);z-index:28;pointer-events:none}
 @keyframes sheetfade{from{opacity:0}to{opacity:1}}
+/* Android tablets: if the GPU briefly drops a big sky layer, show the sky's own colour underneath instead of black,
+   and keep fewer always-on layers (the sky ones only get their own layer while day and night are actually changing) */
+.touch .theme-stage#tstage,.touch #tstage.theme-stage{background-color:#1f2f6b}
+.touch .theme-stage.sky-day#tstage{background-color:#5a4d86}
+.touch .theme-stage .nightwash,.touch .theme-stage .sky .sunglow,.touch .theme-stage .sky .skydim,.touch .theme-stage .sky .cloud,.touch .theme-stage .sky .stars,.touch .sbackdrop .srowday{will-change:auto}
