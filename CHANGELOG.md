@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-24 — The painted stage is live
+- The main page now shows everything from the preview: Gemini's painted tree, planet and grass, curtains, banner, clouds, sun, moon, stars, lanterns, flowers, gold face frames, ribbon name tags, footlights and opening curtains, plus the buried Keepsake Chest with the hometowns around it.
+- The preview link still works and shows the same page.
+
 ## 2026-11-24 — Three new photographs in the Keepsake Chest
 - The chest's Photographs now include "Jack Graham and his son Ed", "Renee and Ed", and "Renee, Ed and Johnnie Harper at the dinner table", next to Ed's photo. (Live page and preview.)
 

@@ -7,13 +7,14 @@
   src/mapdata.json    map shapes, replaces __MAP__
   src/api.txt         Apps Script /exec URL, replaces __API__ (empty = memories off)
 
-Usage: python3 build.py [--api URL] [--out FILE] [--art]
-  With no --out it writes index.html and also preview.html (the painted tree and hill turned on).
+Usage: python3 build.py [--api URL] [--out FILE] [--classic]
+  The painted art (ART) is on by default (live since 2026-11-24). --classic builds the old drawn look.
+  With no --out it writes index.html and preview.html (the same page, kept so old preview links still work).
 """
 import argparse, glob, json, os
 here = os.path.dirname(os.path.abspath(__file__))
 ap = argparse.ArgumentParser()
-ap.add_argument('--api'); ap.add_argument('--out'); ap.add_argument('--art', action='store_true')
+ap.add_argument('--api'); ap.add_argument('--out'); ap.add_argument('--art', action='store_true'); ap.add_argument('--classic', action='store_true')
 a = ap.parse_args()
 src = os.path.join(here, 'src')
 read = lambda p: open(p, encoding='utf-8').read()
@@ -28,7 +29,8 @@ page = page.replace('<!--CSS-->\n', css).replace('<!--JS-->\n', js)
 for ph in ('__MAP__', '__API__', '__ART__'):
     assert page.count(ph) == 1, (ph, page.count(ph))
 page = page.replace('__MAP__', mapdata).replace('__API__', json.dumps(api))
-outs = [(a.out, a.art)] if a.out else [(os.path.join(here, 'index.html'), a.art), (os.path.join(here, 'preview.html'), True)]
+art = not a.classic
+outs = [(a.out, art)] if a.out else [(os.path.join(here, 'index.html'), art), (os.path.join(here, 'preview.html'), art)]
 for out, art in outs:
     html = page.replace('__ART__', 'true' if art else 'false')
     open(out, 'w', encoding='utf-8').write(html)
