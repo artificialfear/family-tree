@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Preview: banner purple matches the curtains
+- The banner's velvet is now the same blue-leaning purple as the valance and side curtains (it was redder), with the same range of shadows and highlights. The gold trim, stars and moon are unchanged.
+
 ## 2026-11-23 — Preview: painted family banner
 - The family name now hangs on Gemini's painted plum velvet banner, with its gold rod, braid, fringe, tassels and sleeping moon, so it matches the curtains. "The Graham & Harper Family" is lettered on it in gold by the app, so the name stays sharp and spelled right.
 
