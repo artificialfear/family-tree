@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-23 — Preview: painted curtains, sky pieces and clouds
+- In the preview, the stage frame is now Gemini's painted art: the swagged valance across the top and the red-and-purple side curtains with gold tie-backs and tassels. The curtains keep their shape on any screen; only the straight part of the drape stretches.
+- The painted cloud border hangs under the valance at night, and a sunset-colored copy fades in for the sunset.
+- The hanging stars alternate between the painted six- and eight-point stars, the sunset clouds are the painted pink clouds, and the moon and sun are the painted faces, all still on their strings and lowered and raised the same way.
+- The opening cover uses the new curtains too. The footlights are unchanged. The live page is unchanged.
+
 ## 2026-11-23 — Preview: the painted tree and hill
 - A preview page, preview.html, shows the tree with Gemini's painted artwork: the painted tree behind everyone, and the painted planet as a round hill with grass on top and soil below. The live page is unchanged.
 - In the preview, thin bark-colored lines join each person to their parents. Tap someone and their parents, spouse and children glow and the lines between them turn gold.

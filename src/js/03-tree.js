@@ -113,7 +113,7 @@ function marqueeSVG(){
    <g fill="#e9c46a"><path transform="translate(222 57)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/><path transform="translate(298 57)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/><path transform="translate(212 120)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/><path transform="translate(308 120)" d="M0 -7l2 5 5 .4-4 3 1.3 5-4.3-2.7-4.3 2.7 1.3-5-4-3 5-.4Z"/></g>
    ${[128,192,260,328,392].map(x=>`<line x1="${x}" y1="${x===260?160:158}" x2="${x}" y2="${x===260?178:172}" stroke="#d9a441" stroke-width="1.5"/><circle cx="${x}" cy="${x===260?181:175}" r="3.5" fill="#e0ae45"/>`).join('')}</svg>`;}
 /* stage sun: a gold paper-cut sun with pointed rays, hanging on two strings (Mat's pick, design #1) */
-function paperSunSVG(){let rays='',sh='';for(let i=0;i<12;i++){const d=`<path transform="rotate(${i*30})" d="M-10 -52L0 -92 10 -52Z"/>`;rays+=d;sh+=d;}
+function paperSunSVG(){if(ART)return `<svg viewBox="-110 -110 220 220" aria-hidden="true" style="overflow:visible"><line x1="0" y1="-4000" x2="0" y2="-124" stroke="#f3e2b8" stroke-width="2" opacity=".8"/><image href="photos/art/sun.webp" x="-100" y="-125.5" width="201" height="216"/></svg>`;let rays='',sh='';for(let i=0;i<12;i++){const d=`<path transform="rotate(${i*30})" d="M-10 -52L0 -92 10 -52Z"/>`;rays+=d;sh+=d;}
   return `<svg viewBox="-110 -110 220 220" aria-hidden="true" style="overflow:visible">
   <defs><linearGradient id="psG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset=".55" stop-color="#f0b94e"/><stop offset="1" stop-color="#c47f22"/></linearGradient></defs>
   <line x1="-30" y1="-4000" x2="-30" y2="-54" stroke="#f3e2b8" stroke-width="2" opacity=".8"/><line x1="30" y1="-4000" x2="30" y2="-54" stroke="#f3e2b8" stroke-width="2" opacity=".8"/>
@@ -121,7 +121,7 @@ function paperSunSVG(){let rays='',sh='';for(let i=0;i<12;i++){const d=`<path tr
   <g fill="url(#psG)" stroke="#9a6a1e" stroke-width="1.2">${rays}</g>
   <circle r="56" fill="url(#psG)" stroke="#9a6a1e" stroke-width="2"/><circle r="44" fill="#ffe9b0" opacity=".45"/></svg>`;}
 /* stage moon: a gold paper-cut crescent hanging on a string from behind the valance (Mat's pick, design #2) */
-function paperMoonSVG(){return `<svg viewBox="-110 -110 220 220" aria-hidden="true" style="overflow:visible">
+function paperMoonSVG(){if(ART)return `<svg viewBox="-110 -110 220 220" aria-hidden="true" style="overflow:visible"><line x1="-5" y1="-4000" x2="-5" y2="-118" stroke="#e8d8a8" stroke-width="2" opacity=".75"/><image href="photos/art/moon-crescent-face.webp" x="-90" y="-120" width="180" height="216"/></svg>`;return `<svg viewBox="-110 -110 220 220" aria-hidden="true" style="overflow:visible">
   <defs><mask id="pmA" maskUnits="userSpaceOnUse" x="-120" y="-120" width="240" height="240"><rect x="-120" y="-120" width="240" height="240" fill="#000"/><circle r="78" fill="#fff"/><circle cx="34" cy="-18" r="70" fill="#000"/></mask>
    <mask id="pmB" maskUnits="userSpaceOnUse" x="-120" y="-120" width="240" height="240"><rect x="-120" y="-120" width="240" height="240" fill="#000"/><circle r="66" fill="#fff"/><circle cx="30" cy="-16" r="62" fill="#000"/></mask>
    <linearGradient id="pmG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset=".55" stop-color="#ecbf5c"/><stop offset="1" stop-color="#c08a32"/></linearGradient></defs>
@@ -154,15 +154,21 @@ function stageBackdrop(W,H,mqb=200,gb=0){const ph=W<700;let sd=11;const r=()=>(s
     else if(dx<.21)continue;
     else if(dx<.31)len=top+20+r()*Math.max(10,mqb-top-30);
     else len=top+(ph?16:24)+Math.pow(r(),1.4)*H*.46;
+    if(ART){const e=si%2,iw=e?184:161,cx=e?91:80,cy=e?115:123,sc=rs*2.3/iw,ix=x-cx*sc,iy=len-cy*sc;
+      stars+=piece('hstar',si++,ix-4,ix+iw*sc+4,iy+192*sc+4,`<line x1="${f(x)}" y1="0" x2="${f(x)}" y2="${f(iy+2)}" class="sstr"/><image href="photos/art/star-${e?8:6}point.webp" x="${f(ix)}" y="${f(iy)}" width="${f(iw*sc)}" height="${f(192*sc)}"/>`);continue;}
     stars+=piece('hstar',si++,x-rs-10,x+rs+10,len+rs+10,`<line x1="${f(x)}" y1="0" x2="${f(x)}" y2="${f(len-rs)}" class="sstr"/><path class="sgold" d="${star6(x,len,rs)}"/><path class="sglint" d="${star6(x-rs*.12,len-rs*.12,rs*.42)}"/>`);}
   // sunset set piece: peach paper clouds on strings that are lowered in when the stars are hoisted out
   const band=k=>mqb+k*(gb-mqb);
   const cl=ph?[[.13,mqb+26,92],[.47,mqb+70,104]]:tall?[[.12,top+.5*(gb-top),112],[.33,band(.78),100],[.6,band(.42),104],[.83,gb-12,96]]:[[.07,top+62,132],[.15,top+H*.33,112],[.08,top+H*.53,128],[.775,top+H*.4,124],[.91,top+H*.64,100]];
-  let clouds='';cl.forEach(([fx,cy,w],k)=>{const x0=W*fx-w/2,p=`M${f(x0)} ${f(cy)}A${f(w*.2)} ${f(w*.2)} 0 0 1 ${f(x0+w*.3)} ${f(cy-w*.13)}A${f(w*.26)} ${f(w*.26)} 0 0 1 ${f(x0+w*.72)} ${f(cy-w*.1)}A${f(w*.19)} ${f(w*.19)} 0 0 1 ${f(x0+w)} ${f(cy)}Z`;
+  let clouds='';cl.forEach(([fx,cy,w],k)=>{if(ART){const e=k%2,iw=e?400:360,ih=e?164:178,rx=e?199:181,bot=e?163:176,sc=w*1.25/iw,ix=W*fx-iw*sc/2,iy=cy-bot*sc;
+      clouds+=piece('hcloud',k,ix-2,ix+iw*sc+2,cy+4,`<line x1="${f(ix+rx*sc)}" y1="0" x2="${f(ix+rx*sc)}" y2="${f(iy+3)}" class="sstr"/><image href="photos/art/cloud-sunset-${e?'wispy':'puffy'}.webp" x="${f(ix)}" y="${f(iy)}" width="${f(iw*sc)}" height="${f(ih*sc)}"/>`);return;}
+    const x0=W*fx-w/2,p=`M${f(x0)} ${f(cy)}A${f(w*.2)} ${f(w*.2)} 0 0 1 ${f(x0+w*.3)} ${f(cy-w*.13)}A${f(w*.26)} ${f(w*.26)} 0 0 1 ${f(x0+w*.72)} ${f(cy-w*.1)}A${f(w*.19)} ${f(w*.19)} 0 0 1 ${f(x0+w)} ${f(cy)}Z`;
     clouds+=piece('hcloud',k,x0-4,x0+w+10,cy+12,`<line x1="${f(x0+w*.32)}" y1="0" x2="${f(x0+w*.32)}" y2="${f(cy-w*.16)}" class="sstr"/><line x1="${f(x0+w*.7)}" y1="0" x2="${f(x0+w*.7)}" y2="${f(cy-w*.2)}" class="sstr"/>
       <path d="${p}" transform="translate(5 7)" class="pcsh"/><path d="${p}" class="pcl"/><path d="M${f(x0+w*.12)} ${f(cy-3)}H${f(x0+w*.88)}" class="pcln"/>`);});
   // the day-coloured copy of the cloud rows fades in over the night one (a fade costs nothing; changing the colours repainted it every frame)
   const RH=Math.ceil(top+(ph?8:14)+(ph?60:90)*1.25*1.35*.6+14);
+  if(ART){const SH=Math.ceil(top+(ph?62:118)),im=d=>`<svg class="srow${d?' srowday':''}" width="${W}" height="${SH}" viewBox="0 0 ${W} ${SH}" style="width:${W}px;height:${SH}px"><image href="photos/art/clouds-strip${d?'-day':''}.webp" width="${W}" height="${SH}" preserveAspectRatio="xMidYMax slice"/></svg>`;
+    return im(0)+im(1)+stars+clouds;}
   return `<svg class="srow" width="${W}" height="${RH}" viewBox="0 0 ${W} ${RH}" style="width:${W}px;height:${RH}px"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
    <linearGradient id="pclg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe0c2"/><stop offset="1" stop-color="#f49a8e"/></linearGradient><linearGradient id="sgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient></defs>${back}${front}</svg>`+
    `<svg class="srow srowday" width="${W}" height="${RH}" viewBox="0 0 ${W} ${RH}" style="width:${W}px;height:${RH}px">${backD}${frontD}</svg>${stars}${clouds}`;}
@@ -172,8 +178,20 @@ function canopyTopFit(r){if(!TB||!isFinite(TB.y0)||TB.x1-TB.x0<50)return 0;const
   k=Math.max(.12,Math.min((r.width-36-SD.side*2)/w,avail/h,1.2));return top+avail/2-h*k/2-CANOPY_UP*k;}
 // how much of each edge the stage frame covers, so Fit keeps the family inside it
 function stageDims(W,H){const ph=W<700,vh=ph?22:Math.max(30,Math.min(56,W*.032)),n=Math.max(3,Math.round(W/(ph?150:250))),sw=W/n,dr=Math.min(sw*.16,ph?20:36),
-  cw=ph?16:Math.max(26,Math.min(78,W*.045)),ah=ph?12:Math.max(16,Math.min(30,W*.018));return {ph,vh,n,sw,dr,cw,ah,top:vh+dr*1.9+10,side:cw*1.3,bot:ah+(ph?14:34)};}
-function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah}=stageDims(W,H);
+  cw=ph?16:Math.max(26,Math.min(78,W*.045)),ah=ph?12:Math.max(16,Math.min(30,W*.018));
+  if(ART){/* painted valance (1600x397, swags about 215 deep) and side curtains (612x1200, drape about 224 wide) */
+    const hv=Math.min(W*397/1600,H*(ph?.15:.2)),cwI=ph?Math.max(64,W*.19):Math.max(150,Math.min(290,W*.15));
+    return {ph,vh,n,sw,dr,cw,ah,hv,cwI,top:hv*.56+8,side:cwI*224/612*1.05,bot:ah+(ph?14:34)};}
+  return {ph,vh,n,sw,dr,cw,ah,top:vh+dr*1.9+10,side:cw*1.3,bot:ah+(ph?14:34)};}
+function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah,hv,cwI}=stageDims(W,H);
+  if(ART){// side curtains in three slices: swag + tie-back and the hem keep their shape, the straight drape between them stretches to the screen height
+    const s=cwI/612,tH=912*s,hH=144*s,mH=Math.max(0,H-tH-hH);
+    const cur=(src,iw,right)=>{const w=iw*s,x=right?W-w:0,sl=(y,h,sy,sh)=>`<svg x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" viewBox="0 ${sy} ${iw} ${sh}" preserveAspectRatio="none"><image href="photos/art/${src}.webp" width="${iw}" height="1200"/></svg>`;
+      return sl(0,tH+1,0,913)+sl(tH,mH+2,912,144)+sl(H-hH,hH,1056,144);};
+    let lights='';for(let x=W*.12;x<W*.9;x+=ph?70:120)lights+=`<ellipse cx="${f(x)}" cy="${f(H-ah)}" rx="${ph?10:16}" ry="${ph?3:5}" class="plight"/>`;
+    return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="pgl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset=".5" stop-color="#d9a441"/><stop offset="1" stop-color="#8f5f1b"/></linearGradient></defs>
+     <rect x="0" y="${f(H-ah)}" width="${W}" height="${f(ah)}" class="papron"/><rect x="0" y="${f(H-ah)}" width="${W}" height="2.5" class="pgold"/>${lights}
+     ${cur('curtain-left',612,0)}${cur('curtain-right',546,1)}<image href="photos/art/valance-top.webp" x="0" y="0" width="${W}" height="${f(hv)}" preserveAspectRatio="none"/></svg>`;}
   // valance: green swags behind, red swags in front, gold fringe, crescents where they meet
   let green='',red='',fringe='',orn='';
   for(let i=-1;i<=n;i++){const x=i*sw,gx=x+sw/2;
