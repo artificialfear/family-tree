@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-23 — Preview: tree-first view, less zoom-out, roots below the grass
+- On a computer the tree now opens larger and higher, framed down to the hometowns; the buried chest is a short drag below. Fit does the same. Phones and tablets held upright are unchanged.
+- You can't zoom out much past the whole tree any more, or drag the planet far up the screen.
+- The main root now starts below the green grass layer, so no roots touch the grass.
+
 ## 2026-11-23 — Preview: the chest sinks into the soil
 - The buried chest's bottom edge now sits under a low mound of loose soil with a few pebbles, and small cracks spread out through the ground around it.
 

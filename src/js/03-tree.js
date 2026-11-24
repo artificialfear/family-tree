@@ -430,7 +430,7 @@ function treeArt(st,dl){
       // roots that lead to the places the family came from
       // below the grandchildren (their name scrolls end near y 1590), so the roots fan out under the whole family
       const G=STAGE&&!ART?SOILD-SOIL0:DROP,PINS=ROOTPINS.map(([k,x,y,yr])=>[k,x,y+G,yr]);
-      const RB={x1:915,y1:1290+DROP,cx:915,cy:1420+G/2,x2:915,y2:1600+G};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
+      const RB={x1:915,y1:ART?1272+DROP+SOIL0+30:1290,cx:915,cy:ART?(1272+DROP+SOIL0+30+1600+G)/2:1420+G/2,x2:915,y2:1600+G};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
       PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=1592+G,b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
         rts+=`<path class="root" d="${taperPath(b,13,2.2)}"/>`;
         for(let j=0;j<3;j++){const t=.35+j*.2,[qx,qy]=qpt(b,t),dir=(j%2?1:-1)*(px<915?1:-1),c={x1:qx,y1:qy,cx:qx+dir*24,cy:qy+22,x2:qx+dir*(30+rnd()*30),y2:qy+50+rnd()*30};rts+=`<path class="root" d="${taperPath(c,4,.6)}" opacity=".8"/>`;}
@@ -552,8 +552,8 @@ $('#tstage').addEventListener('scroll',e=>{const t=e.currentTarget;if(t.scrollTo
 let TSZ={w:0,h:0};const tsz=()=>{if(!TSZ.w){const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};}return TSZ;};
 new ResizeObserver(()=>{const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};if(tw.childElementCount&&!G)tApply(false);}).observe($('#tstage'));
 function tClamp(){const r={width:tsz().w,height:tsz().h};if(!r.width||!(TB.x1>TB.x0))return;const W=r.width,H=r.height,bw=TB.x1-TB.x0,bh=TB.y1-TB.y0;
-  const kmin=Math.min(W/bw,H/bh)*.5;if(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
-  const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(H*.5-(TB.y1+(PRINT?0:340+SOILD-SOIL0))*k,tv.y));}
+  const kmin=Math.min(W/bw,H/bh)*(ART&&!PRINT?.85:.5);if(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
+  const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(ART&&!PRINT?H*.7-(TB.y1+60)*k:H*.5-(TB.y1+(PRINT?0:340+SOILD-SOIL0))*k,tv.y));}
 let SKYEL=null;
 function sunLight(){if(SKY!=='day')return;
   // stage: the sun hangs in the sky, not behind the tree, so the light no longer follows the view — always full sunset light
@@ -607,7 +607,7 @@ function gEnd(){if(gRaf){cancelAnimationFrame(gRaf);gRaf=0;}if(G)tApply(false);}
 function tBox(ids){const vs=(ids&&ids.length?ids:Object.keys(TP)).map(id=>TP[id]).filter(Boolean);if(!vs.length)return TB;
   return {x0:Math.min(...vs.map(v=>v.x-v.r-60)),x1:Math.max(...vs.map(v=>v.x+v.r+60)),y0:Math.min(...vs.map(v=>v.y-v.r-10)),y1:Math.max(...vs.map(v=>v.y+v.r+34))};}
 function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!r.width)return;
-  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?m.getBoundingClientRect().bottom-r.top+(SD.ph?104:10):0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot+((st=>st?st.offsetHeight+10:0)($('#tstage>.tools'))):0),b=(ids&&ids.length)?tBox(ids):TB,w=b.x1-b.x0,h=b.y1-b.y0;
+  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?m.getBoundingClientRect().bottom-r.top+(SD.ph?104:10):0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot+((st=>st?st.offsetHeight+10:0)($('#tstage>.tools'))):0),b=(ids&&ids.length)?tBox(ids):(ART&&!PRINT&&SD&&!SD.ph&&r.width>r.height?{...TB,y1:Math.min(TB.y1,1272+DROP+600)}:TB),w=b.x1-b.x0,h=b.y1-b.y0;
   const k=Math.max(.12,Math.min((r.width-36-(SD?SD.side*2:0))/w,avail/h,ids&&ids.length===1?1.5:1.2));
   tv.k=k;tv.x=r.width/2-(b.x0+b.x1)/2*k;tv.y=top+avail/2-(b.y0+b.y1)/2*k;
   // phones, opening view: zoom so the core family just fills the width (outer cousins run off the sides, a swipe away)
