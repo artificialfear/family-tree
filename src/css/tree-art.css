@@ -561,3 +561,6 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .vch button:hover,.vch button:focus-visible{background:rgba(232,196,120,.25)}
 .vch small{color:#e8c478;font-weight:700;margin-right:3px}
 @media(max-width:600px){.vch{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:4px}.vch button{flex:none}}
+#tmstars .plantern{cursor:pointer}
+.art #tmstars .plantern .limg{transform-box:fill-box;transform-origin:50% 100%;transition:transform .3s}
+.art #tmstars .plantern:hover .limg,.art #tmstars .plantern:focus-visible .limg{transform:scale(1.12)}

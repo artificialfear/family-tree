@@ -106,6 +106,8 @@ const HOMEFILMS=[{id:'md93',title:'Mother’s Day 1993',sub:'A family home movie
   ch:[[0,'Arriving'],[259,'The trampoline'],[460,'Inside the house'],[483,'A little one takes the camera'],[710,'Late afternoon in the yard'],[959,'Swing set and trampoline'],[1191,'Evening games'],[1855,'Sunset']]},
  {id:'md93h',hide:1,title:'Mother’s Day 1993',sub:'Highlights',by:'Home video, 9 May 1993',src:'videos/mothers-day-1993-highlights.mp4',poster:'videos/mothers-day-1993-poster.jpg',dur:'3:03'}];
 const ALLFILMS=FILMS.concat(HOMEFILMS);
+// memorial lanterns (no film): family who have passed; tapping one opens their card
+const MEMLANTERNS=['jack','margaret','richard','norma','johnny'];
 const filmOf=pid=>FILMS.find(f=>f.pid===pid);
 // keepsake chest on the planet: old and family photographs, and the records the tree is built on (SRC keys)
 const KEEP={photos:[['photos/jack-navy.jpg','Jack Graham in his U.S. Navy uniform'],['photos/john-jack-graham.jpg','Jack Graham'],['photos/margaret-graham.jpg','Margaret Graham'],

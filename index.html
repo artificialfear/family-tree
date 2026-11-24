@@ -753,6 +753,9 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .vch button:hover,.vch button:focus-visible{background:rgba(232,196,120,.25)}
 .vch small{color:#e8c478;font-weight:700;margin-right:3px}
 @media(max-width:600px){.vch{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding-bottom:4px}.vch button{flex:none}}
+#tmstars .plantern{cursor:pointer}
+.art #tmstars .plantern .limg{transform-box:fill-box;transform-origin:50% 100%;transition:transform .3s}
+.art #tmstars .plantern:hover .limg,.art #tmstars .plantern:focus-visible .limg{transform:scale(1.12)}
 </style>
 </head>
 <body>
@@ -999,6 +1002,8 @@ const HOMEFILMS=[{id:'md93',title:'Mother’s Day 1993',sub:'A family home movie
   ch:[[0,'Arriving'],[259,'The trampoline'],[460,'Inside the house'],[483,'A little one takes the camera'],[710,'Late afternoon in the yard'],[959,'Swing set and trampoline'],[1191,'Evening games'],[1855,'Sunset']]},
  {id:'md93h',hide:1,title:'Mother’s Day 1993',sub:'Highlights',by:'Home video, 9 May 1993',src:'videos/mothers-day-1993-highlights.mp4',poster:'videos/mothers-day-1993-poster.jpg',dur:'3:03'}];
 const ALLFILMS=FILMS.concat(HOMEFILMS);
+// memorial lanterns (no film): family who have passed; tapping one opens their card
+const MEMLANTERNS=['jack','margaret','richard','norma','johnny'];
 const filmOf=pid=>FILMS.find(f=>f.pid===pid);
 // keepsake chest on the planet: old and family photographs, and the records the tree is built on (SRC keys)
 const KEEP={photos:[['photos/jack-navy.jpg','Jack Graham in his U.S. Navy uniform'],['photos/john-jack-graham.jpg','Jack Graham'],['photos/margaret-graham.jpg','Margaret Graham'],
@@ -1533,12 +1538,19 @@ function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(Strin
   let lt='';const NF=FILMS.length;
   // each slideshow film gets a larger lantern with a play mark, in the best spots of the crown
   // the film lanterns take the best spots, each on its own person's side of the crown (Ed left, Annie Mae right)
-  const FS2=LS.slice(0,NF).sort((a,b)=>a[0]-b[0]),FO=FILMS.map((fm,i)=>i).sort((a,b)=>((TP[FILMS[a].pid]||{x:0}).x)-((TP[FILMS[b].pid]||{x:0}).x)),FSP={};FO.forEach((fi,j)=>FSP[fi]=FS2[j]);
+  // every lantern (films and memorials) floats on its own person's side of the tree: the first spots are split left/right of the trunk
+  // and handed out on each side in the order the people sit (outermost person, outermost lantern)
+  const MLS=MEMLANTERNS.filter(id=>byId[id]&&TP[id]),ALL=[...FILMS.map((fm,i)=>({k:'f',i,pid:fm.pid})),...MLS.map(id=>({k:'m',pid:id}))].filter(o=>TP[o.pid]),FSP={},MSP={};
+  {const px=o=>TP[o.pid].x,L=ALL.filter(o=>px(o)<915).sort((a,b)=>px(a)-px(b)),R=ALL.filter(o=>px(o)>=915).sort((a,b)=>px(a)-px(b));
+   const SL=LS.filter(q=>q[0]<915),SR=LS.filter(q=>q[0]>=915),pick=(pool,n)=>pool.slice(0,n).sort((a,b)=>a[0]-b[0]);
+   const put=(grp,sp)=>grp.forEach((o,j)=>{if(o.k==='f')FSP[o.i]=sp[j];else MSP[o.pid]=sp[j];});put(L,pick(SL,L.length));put(R,pick(SR,R.length));}
   FILMS.forEach((fm,i)=>{const sp=FSP[i];if(!sp||!byId[fm.pid])return;const [x,y]=sp;
     lt+=`<g class="flantern" data-film="${fm.id}" tabindex="0" role="button" aria-label="Watch ${esc(fm.title)}: ${esc(fm.sub)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mls" style="--rot:0deg;--dl:-${i*2}s" transform="scale(1.55)"><circle r="38" fill="url(#lglow)"/>${ART?`<image class="limg" href="photos/art/lantern-film.webp" x="-17.9" y="-36" width="35.7" height="76.8"/>`:`
       <path d="M-14 -17L14 -17L10 15L-10 15Z" transform="translate(3 4)" fill="#0b1630" opacity=".35"/><path d="M-14 -17L14 -17L10 15L-10 15Z" fill="url(#lpaper)" stroke="#a8561c" stroke-width="1.2"/>
       <rect x="-15" y="-20" width="30" height="4" rx="1.5" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><rect x="-10" y="14" width="20" height="3" rx="1" fill="url(#ggold)" stroke="#6b4410" stroke-width=".6"/>
       <path d="M-4 -7L6 -1L-4 5Z" fill="#a8561c"/><ellipse cy="20" rx="2.2" ry="3.4" fill="#fff3b0"/>`}</g></g><text y="${f1(48)}" class="fltx">${esc(fm.title.split(' ')[0])}${fm.id==='annie'?' Mae':''}</text></g>`;});
+  MLS.forEach((id,i)=>{const sp=MSP[id];if(!sp)return;const [x,y]=sp,v=byId[id],nm=v.s.split(' ')[0];
+    lt+=`<g class="plantern" data-p="${id}" tabindex="0" role="button" aria-label="In memory of ${esc(v.n)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mls" style="--rot:0deg;--dl:-${(i*1.3+1).toFixed(1)}s" transform="scale(1.3)"><circle r="34" fill="url(#lglow)"/>${ART?`<image class="limg" href="photos/art/lantern-memory.webp" x="-16" y="-33" width="32.1" height="76.8"/>`:`<path d="M-14 -17L14 -17L10 15L-10 15Z" fill="url(#lpaper)" stroke="#a8561c" stroke-width="1.2"/><rect x="-15" y="-20" width="30" height="4" rx="1.5" fill="url(#ggold)"/><ellipse cy="20" rx="2.2" ry="3.4" fill="#fff3b0"/>`}</g></g><text y="${f1(48)}" class="fltx">${esc(nm)}</text></g>`;});
   [].forEach((c,i)=>{const sp=LS[i+NF];if(!sp)return;const h=hsh(c.id),x=sp[0]+(h%30)-15,y=sp[1]+((h>>5)%30)-15,rot=((h>>9)%14)-7;
     if(!first&&!seen.has(c.id))gardenNew[c.id]=Date.now();const nw=Date.now()-(gardenNew[c.id]||0)<2500;
     lt+=`<g class="mlantern${nw?' sprout':''}" data-c="${esc(c.id)}" tabindex="0" role="button" aria-label="A memory of ${esc(byId[c.pid].n)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mls" style="--rot:${rot}deg;--dl:-${(h%60)/10}s"><circle r="34" fill="url(#lglow)"/>${ART?`<image class="limg" href="photos/art/lantern-memory.webp" x="-16" y="-33" width="32.1" height="76.8"/>`:`
@@ -1881,7 +1893,7 @@ function tZoom(f,cx,cy,fast){tTouched=1;hidePop();const r=tsz();cx??=r.w/2;cy??=
    if(pts.size===2&&pinch){const [a,b]=[...pts.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]),r=pinchR||(pinchR=$('#tstage').getBoundingClientRect());tZoom(d/pinch,(a[0]+b[0])/2-r.left,(a[1]+b[1])/2-r.top,true);pinch=d;moved=99;return;}
    const dx=e.clientX-last[0],dy=e.clientY-last[1];moved+=Math.abs(dx)+Math.abs(dy);last=[e.clientX,e.clientY];if(moved<4)return;tv.x+=dx;tv.y+=dy;tTouched=1;gBegin();gFrame();});
  const up=e=>{pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(pts.size===1){last=[...pts.values()][0].slice();moved=99;}if(!pts.size){tsvg.classList.remove('drag');gEnd();}
-   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar,.mflower,.mlantern');if(ms){openMem(ms);return;}const fl=hit?.closest('.flantern');if(fl){openFilm(fl.dataset.film);return;}if(hit?.closest('.kchest')){location.hash='keepsakes';return;}const gs=hit?.closest('.gsign');if(gs){gardenNote(gs);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
+   if(e.type==='pointerup'&&moved<6){const hit=document.elementFromPoint(e.clientX,e.clientY),ms=hit?.closest('.tmstar,.mflower,.mlantern');if(ms){openMem(ms);return;}const fl=hit?.closest('.flantern');if(fl){openFilm(fl.dataset.film);return;}const pl=hit?.closest('.plantern');if(pl){select(pl.dataset.p);return;}if(hit?.closest('.kchest')){location.hash='keepsakes';return;}const gs=hit?.closest('.gsign');if(gs){gardenNote(gs);return;}const c=document.elementFromPoint(e.clientX,e.clientY)?.closest('.leaf');if(c){select(c.dataset.id);}else{const rp=document.elementFromPoint(e.clientX,e.clientY)?.closest('.rootpin');if(rp)showPlace(rp,true);else document.body.classList.remove('pdrawer');}}};
  tsvg.addEventListener('pointerup',up);tsvg.addEventListener('pointercancel',up);
  // wheel and trackpad: zoom in proportion to how far the fingers or wheel moved (a trackpad sends many small steps, so a fixed step per event raced),
  // pinch (ctrlKey) a little livelier than two-finger scrolling; the picture glides while zooming and is redrawn sharp once it settles
@@ -1895,7 +1907,7 @@ function tZoom(f,cx,cy,fast){tTouched=1;hidePop();const r=tsz();cx??=r.w/2;cy??=
    else if(k==='ArrowLeft'){tv.x+=step;tTouched=1;tApply(false);}else if(k==='ArrowRight'){tv.x-=step;tTouched=1;tApply(false);}else if(k==='ArrowUp'){tv.y+=step;tTouched=1;tApply(false);}else if(k==='ArrowDown'){tv.y-=step;tTouched=1;tApply(false);}else done=0;
    if(done)e.preventDefault();});
  tsvg.addEventListener('dblclick',e=>{const r=$('#tstage').getBoundingClientRect();tZoom(1.8,e.clientX-r.left,e.clientY-r.top);});
- tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){}const ms=e.target.closest?.('.tmstar,.mflower,.mlantern');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}const fl=e.target.closest?.('.flantern');if(fl&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openFilm(fl.dataset.film);return;}if((e.key==='Enter'||e.key===' ')&&e.target.closest?.('.kchest')){e.preventDefault();location.hash='keepsakes';return;}const gs=e.target.closest?.('.gsign');if(gs&&(e.key==='Enter'||e.key===' ')){e.preventDefault();gardenNote(gs);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
+ tsvg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){}const ms=e.target.closest?.('.tmstar,.mflower,.mlantern');if(ms&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openMem(ms);return;}const fl=e.target.closest?.('.flantern');if(fl&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openFilm(fl.dataset.film);return;}const pl=e.target.closest?.('.plantern');if(pl&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(pl.dataset.p);return;}if((e.key==='Enter'||e.key===' ')&&e.target.closest?.('.kchest')){e.preventDefault();location.hash='keepsakes';return;}const gs=e.target.closest?.('.gsign');if(gs&&(e.key==='Enter'||e.key===' ')){e.preventDefault();gardenNote(gs);return;}const c=e.target.closest?.('.leaf');if(c&&(e.key==='Enter'||e.key===' ')){e.preventDefault();select(c.dataset.id);}});}
 $('#tzin').onclick=()=>tZoom(1.3);$('#tzout').onclick=()=>tZoom(1/1.3);$('#tfit').onclick=()=>{tTouched=1;tFit();};
 $('#q').addEventListener('change',e=>{const v=e.target.value.toLowerCase().trim();const p=P.find(p=>p.n.toLowerCase()===v)||P.find(p=>p.n.toLowerCase().includes(v));if(p){select(p.id);tFocus(p.id);}});
 

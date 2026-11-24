@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Memorial lanterns
+- Lanterns now float for Jack, Margaret, Richard and Norma on the Graham side and Johnnie on the Harper side, alongside Ed's and Annie Mae's film lanterns. Each is labelled with a first name, and tapping one opens that person's card.
+
 ## 2026-11-24 — Every memory is a flower
 - Memories now always grow as flowers in the grass on the hill, whoever they're about, spread evenly in the gaps around the kids and grandkids. The lanterns are only Ed's and Annie Mae's memorial films.
 
