@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Three new photographs in the Keepsake Chest
+- The chest's Photographs now include "Jack Graham and his son Ed", "Renee and Ed", and "Renee, Ed and Johnnie Harper at the dinner table", next to Ed's photo. (Live page and preview.)
+
 ## 2026-11-24 — Photos for Evelyn, Wayne and Richard
 - Evelyn Groover and Wayne Graham now have their photos on the tree (they showed initials before), and Richard Graham has a new photo. Tapping each face shows the full picture. (Live page and preview.)
 
