@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Preview: a round planet when zoomed out
+- Zooming out no longer shows a brown box under the hill. The planet now continues all the way around as a circle, with its gold rim and grass ring, and the painted soil fades into the darker lower half.
+
 ## 2026-11-23 — Preview: grass back on the hill
 - The wide planet's top layer is green grass again (it came from Gemini as tan), with a jagged grass edge where it meets the soil. The kids, grandkids, garden and chest stand on the grass.
 
