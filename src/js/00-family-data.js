@@ -1,9 +1,9 @@
 /* ---------- the family: sources, people, photos, events, story ---------- */
 const SRC={
- obitEd:{t:'Ed Graham obituary — Caldwell & Cowan Funeral Home, Covington, December 2016',u:'https://www.caldwellandcowan.com/obituaries/Ed-Graham'},
+ obitEd:{t:'Ed Graham obituary — Caldwell & Cowan Funeral Home, Covington, December 2016',u:'https://www.familysearch.org/ark:/61903/1:1:61T4-BYMB'},
  obitJohnny:{t:'Johnnie Lee Harper Sr. obituary (June 2013) — FamilySearch, "United States, Obituary Records"',u:'https://www.familysearch.org/ark:/61903/1:1:XMMP-31CF'},
  obitNorma:{t:'Norma Jean Graham obituary — McKoon Funeral Home & Crematory, Greenville, GA, 2026',u:'https://www.legacy.com/us/obituaries/name/norma-graham-obituary?id=60799301'},
- census40:{t:'1940 U.S. Census, Upson County, Georgia — household of Earl and Sara Harper with son "Johnnie Lee" (FamilySearch index)',u:'https://www.familysearch.org/search/record/results?q.givenName=Johnny%20Lee&q.surname=Harper&q.fatherGivenName=Earl&q.fatherSurname=Harper&q.birthLikeDate.from=1936&q.birthLikeDate.to=1938'},
+ census40:{t:'1940 U.S. Census, Upson County, Georgia — household of Earl and Sara Harper with son "Johnnie Lee" (FamilySearch index)',u:'https://www.familysearch.org/ark:/61903/1:1:K7PB-BF8'},
  treeJack:{t:'FamilySearch Family Tree — John Richard "Jack" Graham (G2GT-TLY). Cites the Social Security Death Index, Social Security application file, 1930 census and Find a Grave.',u:'https://www.familysearch.org/tree/person/details/G2GT-TLY'},
  treeMargaret:{t:'FamilySearch Family Tree — Margaret E. Lush (G75F-V1N), with 8 attached sources',u:'https://www.familysearch.org/tree/person/details/G75F-V1N'},
  treeAnnie:{t:'FamilySearch Family Tree — "Annie Mae Ralston" (P618-82F): born Atlanta, died 2007; dates entered incorrectly, no sources yet',u:'https://www.familysearch.org/tree/person/details/P618-82F'},

@@ -55,7 +55,8 @@ $('#panel').addEventListener('submit',async e=>{e.preventDefault();if(e.target.c
     await refreshContribs();sfx.chime();const m2=$('#fmsg');if(m2)m2.textContent=STAGE?'Saved — thank you! It\'s growing in the memory garden.':'Saved — thank you!';
   }catch(err){btn.disabled=false;btn.textContent='Try again';if(msg)msg.textContent=err==='cancel'?'':err==='badphoto'?'That photo couldn\'t be read. Try a different one.':(err==='locked'||err?.error==='locked')?LOCKED_MSG:'That didn\'t save. Check your internet connection and try again.';}});
 
-function openLb(u,a,c){$('#lbImg').src=u;$('#lbImg').alt=a||'';$('#lbCap').textContent=c||'';$('#lb').classList.add('on');}
+// doc: a record screenshot, shown full width and scrollable so the words stay readable on a phone
+function openLb(u,a,c,doc){$('#lbImg').src=u;$('#lbImg').alt=a||'';$('#lbCap').textContent=c||'';$('#lb').classList.toggle('doc',!!doc);$('#lb').scrollTop=0;$('#lb').classList.add('on');}
 const closeLb=()=>$('#lb').classList.remove('on');$('#lb').onclick=closeLb;addEventListener('keydown',e=>{if(e.key==='Escape')closeLb();});
 function openForm(k){const d=$(`#panel details[data-k="${k}"]`);if(!d)return;d.open=true;d.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
   const f=d.querySelector(k==='photo'?'input[type=file]':'textarea');if(f)setTimeout(()=>f.focus({preventScroll:true}),RM?0:450);}

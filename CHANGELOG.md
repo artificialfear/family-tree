@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-23 — Records you can read in the chest
+- Tap a record in the Keepsake Chest to read it right on the page, no FamilySearch account needed: the 1940 census entry, Johnnie's, Ed's and Norma's obituaries, and Jack's and Margaret's FamilySearch pages. They open full width so they're readable on a phone.
+- Ed's obituary link (the funeral home page is gone) and the 1940 census link (it was a search that found nothing) now go to the FamilySearch records.
+- Annie Mae's FamilySearch page is still a link: it's someone else's unsourced entry with a typo in its dates.
+
 ## 2026-11-23 — Recipes, traditions and editing
 - The chest page is titled "The Keepsake Chest".
 - **Family Recipes:** anyone with the family passcode can add a recipe in the chest (name, ingredients, steps, an optional photo). Recipes show as cards you can open.

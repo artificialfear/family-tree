@@ -706,6 +706,9 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .kaddbox .form,.kcard.eform{display:grid;gap:8px;margin-top:10px}.kcard.eform textarea{min-height:90px}
 .erow{display:flex;gap:8px;flex-wrap:wrap}
 button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:pointer}.krec .kview{color:var(--pine);font-weight:600}
+
+/* record screenshots in the lightbox: full width, scroll to read */
+.lb.doc{overflow-y:auto;place-items:start center;padding:16px 10px 40px}.lb.doc img{max-width:min(96vw,900px);max-height:none;width:100%;background:#fff}
 </style>
 </head>
 <body>
@@ -844,10 +847,10 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 {
 /* ---------- the family: sources, people, photos, events, story ---------- */
 const SRC={
- obitEd:{t:'Ed Graham obituary — Caldwell & Cowan Funeral Home, Covington, December 2016',u:'https://www.caldwellandcowan.com/obituaries/Ed-Graham'},
+ obitEd:{t:'Ed Graham obituary — Caldwell & Cowan Funeral Home, Covington, December 2016',u:'https://www.familysearch.org/ark:/61903/1:1:61T4-BYMB'},
  obitJohnny:{t:'Johnnie Lee Harper Sr. obituary (June 2013) — FamilySearch, "United States, Obituary Records"',u:'https://www.familysearch.org/ark:/61903/1:1:XMMP-31CF'},
  obitNorma:{t:'Norma Jean Graham obituary — McKoon Funeral Home & Crematory, Greenville, GA, 2026',u:'https://www.legacy.com/us/obituaries/name/norma-graham-obituary?id=60799301'},
- census40:{t:'1940 U.S. Census, Upson County, Georgia — household of Earl and Sara Harper with son "Johnnie Lee" (FamilySearch index)',u:'https://www.familysearch.org/search/record/results?q.givenName=Johnny%20Lee&q.surname=Harper&q.fatherGivenName=Earl&q.fatherSurname=Harper&q.birthLikeDate.from=1936&q.birthLikeDate.to=1938'},
+ census40:{t:'1940 U.S. Census, Upson County, Georgia — household of Earl and Sara Harper with son "Johnnie Lee" (FamilySearch index)',u:'https://www.familysearch.org/ark:/61903/1:1:K7PB-BF8'},
  treeJack:{t:'FamilySearch Family Tree — John Richard "Jack" Graham (G2GT-TLY). Cites the Social Security Death Index, Social Security application file, 1930 census and Find a Grave.',u:'https://www.familysearch.org/tree/person/details/G2GT-TLY'},
  treeMargaret:{t:'FamilySearch Family Tree — Margaret E. Lush (G75F-V1N), with 8 attached sources',u:'https://www.familysearch.org/tree/person/details/G75F-V1N'},
  treeAnnie:{t:'FamilySearch Family Tree — "Annie Mae Ralston" (P618-82F): born Atlanta, died 2007; dates entered incorrectly, no sources yet',u:'https://www.familysearch.org/tree/person/details/P618-82F'},
@@ -1786,7 +1789,8 @@ $('#panel').addEventListener('submit',async e=>{e.preventDefault();if(e.target.c
     await refreshContribs();sfx.chime();const m2=$('#fmsg');if(m2)m2.textContent=STAGE?'Saved — thank you! It\'s growing in the memory garden.':'Saved — thank you!';
   }catch(err){btn.disabled=false;btn.textContent='Try again';if(msg)msg.textContent=err==='cancel'?'':err==='badphoto'?'That photo couldn\'t be read. Try a different one.':(err==='locked'||err?.error==='locked')?LOCKED_MSG:'That didn\'t save. Check your internet connection and try again.';}});
 
-function openLb(u,a,c){$('#lbImg').src=u;$('#lbImg').alt=a||'';$('#lbCap').textContent=c||'';$('#lb').classList.add('on');}
+// doc: a record screenshot, shown full width and scrollable so the words stay readable on a phone
+function openLb(u,a,c,doc){$('#lbImg').src=u;$('#lbImg').alt=a||'';$('#lbCap').textContent=c||'';$('#lb').classList.toggle('doc',!!doc);$('#lb').scrollTop=0;$('#lb').classList.add('on');}
 const closeLb=()=>$('#lb').classList.remove('on');$('#lb').onclick=closeLb;addEventListener('keydown',e=>{if(e.key==='Escape')closeLb();});
 function openForm(k){const d=$(`#panel details[data-k="${k}"]`);if(!d)return;d.open=true;d.scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});
   const f=d.querySelector(k==='photo'?'input[type=file]':'textarea');if(f)setTimeout(()=>f.focus({preventScroll:true}),RM?0:450);}
@@ -2115,14 +2119,15 @@ function drawTimeline(){
 
 /* ---------- keepsake chest ---------- */
 // screenshots of records, so anyone can read one without a FamilySearch account: SRC key -> [image, ...]
-const KEEPIMG={};
+// captured 2026-11-23 from Mat's FamilySearch login and Legacy.com. Annie Mae's FamilySearch page is left as a link: it's someone else's unsourced entry with a typo in its dates.
+const KEEPIMG={census40:['photos/records/census40.jpg'],obitJohnny:['photos/records/obitJohnny.jpg'],obitEd:['photos/records/obitEd.jpg'],obitNorma:['photos/records/obitNorma.jpg'],treeJack:['photos/records/treeJack.jpg'],treeMargaret:['photos/records/treeMargaret.jpg']};
 function renderKeepsakes(){const pics=$('#kpics');if(!pics)return;renderKeepDyn();if(pics.dataset.done)return;pics.dataset.done=1;
   pics.innerHTML=KEEP.photos.map(([u,c])=>`<button type="button" class="kpic" data-u="${esc(u)}" data-c="${esc(c)}"><img src="${esc(u)}" alt="" loading="lazy"><span>${esc(c)}</span></button>`).join('');
   pics.onclick=e=>{const b=e.target.closest('.kpic');if(b)openLb(b.dataset.u,b.dataset.c,b.dataset.c);};
   $('#krecs').innerHTML=KEEP.records.filter(k=>SRC[k]).map(k=>{const s=SRC[k],[t,...rest]=s.t.split(' — ');const ic=/obituary/i.test(s.t)?'📰':/census/i.test(s.t)?'📜':'🌳',im=KEEPIMG[k];
     const inner=`<span class="kic" aria-hidden="true">${ic}</span><span><b>${esc(t)}</b>${rest.length?`<small>${esc(rest.join(' — '))}</small>`:''}${im?'<small class="kview">Tap to read it</small>':''}</span>`;
     return im?`<button type="button" class="krec" data-img="${esc(im[0])}" data-cap="${esc(t)}">${inner}</button>`:`<a class="krec" href="${esc(s.u)}" target="_blank" rel="noopener">${inner}</a>`;}).join('');
-  $('#krecs').onclick=e=>{const b=e.target.closest('[data-img]');if(b)openLb(b.dataset.img,b.dataset.cap,b.dataset.cap);};
+  $('#krecs').onclick=e=>{const b=e.target.closest('[data-img]');if(b)openLb(b.dataset.img,b.dataset.cap,b.dataset.cap+' — tap anywhere to close',true);};
   $('#kadd').hidden=!assets;}
 // recipes and traditions change as people add them: redrawn on every refresh
 function renderKeepDyn(){const R=$('#krecipes'),T=$('#ktrads');if(!R)return;const by=(a,b)=>(a.at||0)-(b.at||0),mine=c=>c.by&&c.by===me;

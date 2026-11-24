@@ -50,14 +50,15 @@ function drawTimeline(){
 
 /* ---------- keepsake chest ---------- */
 // screenshots of records, so anyone can read one without a FamilySearch account: SRC key -> [image, ...]
-const KEEPIMG={};
+// captured 2026-11-23 from Mat's FamilySearch login and Legacy.com. Annie Mae's FamilySearch page is left as a link: it's someone else's unsourced entry with a typo in its dates.
+const KEEPIMG={census40:['photos/records/census40.jpg'],obitJohnny:['photos/records/obitJohnny.jpg'],obitEd:['photos/records/obitEd.jpg'],obitNorma:['photos/records/obitNorma.jpg'],treeJack:['photos/records/treeJack.jpg'],treeMargaret:['photos/records/treeMargaret.jpg']};
 function renderKeepsakes(){const pics=$('#kpics');if(!pics)return;renderKeepDyn();if(pics.dataset.done)return;pics.dataset.done=1;
   pics.innerHTML=KEEP.photos.map(([u,c])=>`<button type="button" class="kpic" data-u="${esc(u)}" data-c="${esc(c)}"><img src="${esc(u)}" alt="" loading="lazy"><span>${esc(c)}</span></button>`).join('');
   pics.onclick=e=>{const b=e.target.closest('.kpic');if(b)openLb(b.dataset.u,b.dataset.c,b.dataset.c);};
   $('#krecs').innerHTML=KEEP.records.filter(k=>SRC[k]).map(k=>{const s=SRC[k],[t,...rest]=s.t.split(' — ');const ic=/obituary/i.test(s.t)?'📰':/census/i.test(s.t)?'📜':'🌳',im=KEEPIMG[k];
     const inner=`<span class="kic" aria-hidden="true">${ic}</span><span><b>${esc(t)}</b>${rest.length?`<small>${esc(rest.join(' — '))}</small>`:''}${im?'<small class="kview">Tap to read it</small>':''}</span>`;
     return im?`<button type="button" class="krec" data-img="${esc(im[0])}" data-cap="${esc(t)}">${inner}</button>`:`<a class="krec" href="${esc(s.u)}" target="_blank" rel="noopener">${inner}</a>`;}).join('');
-  $('#krecs').onclick=e=>{const b=e.target.closest('[data-img]');if(b)openLb(b.dataset.img,b.dataset.cap,b.dataset.cap);};
+  $('#krecs').onclick=e=>{const b=e.target.closest('[data-img]');if(b)openLb(b.dataset.img,b.dataset.cap,b.dataset.cap+' — tap anywhere to close',true);};
   $('#kadd').hidden=!assets;}
 // recipes and traditions change as people add them: redrawn on every refresh
 function renderKeepDyn(){const R=$('#krecipes'),T=$('#ktrads');if(!R)return;const by=(a,b)=>(a.at||0)-(b.at||0),mine=c=>c.by&&c.by===me;
