@@ -695,6 +695,17 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .touch #tmstars .mls{animation:none}.touch #tmstars .mlantern.sprout .mls{animation:lrise 2.2s cubic-bezier(.2,.8,.3,1) both}
 @media(prefers-reduced-motion:reduce){#tmstars .mls,#tmstars .mlantern.sprout .mls{animation:none}}
 #tworld.story #tmstars .lanterns{opacity:.5}
+/* keepsake chest: recipes and traditions */
+.kcards{display:grid;gap:12px;margin:10px 0 8px}
+.kcard{padding:14px 16px;border:1px solid #d8c8a6;border-radius:10px;background:#fffaf0;box-shadow:2px 3px 0 rgba(60,40,10,.12);color:#3a2a14}
+.kcard summary{cursor:pointer;display:flex;flex-direction:column;gap:2px;min-height:0}.kcard summary b,.kcard>b{font:700 19px Spectral,Georgia,serif}
+.kcard small{color:#8a6a3a}.kcard h4{margin:12px 0 4px;font:700 15px Spectral,Georgia,serif;color:#6b4410}.kcard ul,.kcard ol{margin:0;padding-left:22px;line-height:1.5}
+.kcard p{margin:6px 0}.kcard .kimg{display:block;max-width:100%;max-height:260px;border-radius:8px;margin-top:10px;cursor:zoom-in}
+.kcard .kedit{margin-top:10px;min-height:34px;padding:4px 12px;font-size:14px}
+.kaddbox{margin:4px 0 22px}.kaddbox summary{cursor:pointer;font-weight:700;color:var(--clay)}
+.kaddbox .form,.kcard.eform{display:grid;gap:8px;margin-top:10px}.kcard.eform textarea{min-height:90px}
+.erow{display:flex;gap:8px;flex-wrap:wrap}
+button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:pointer}.krec .kview{color:var(--pine);font-weight:600}
 </style>
 </head>
 <body>
@@ -758,6 +769,7 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
   <p class="note" style="font-size:17px">🌸 Every memory you share grows a flower in the garden on the planet. 🏮 Memories of family who have passed rise as lanterns in the sky around the tree.</p>
   <p class="lead">These are the questions the records couldn't answer. If you know — or even half-remember — type it in. Short answers are perfect. On a phone, you can tap the microphone on your keyboard and talk instead of typing.</p>
   <div class="asks" id="asks"></div>
+  <p class="note" style="font-size:17px">Know a family tradition or recipe? <a href="#keepsakes">Add it to the Keepsake Chest</a>.</p>
   <h3 style="font-size:24px">Photos we're still looking for</h3>
   <p class="note">Tap a name to add a photo of that person.</p>
   <div class="wanted" id="wanted"></div>
@@ -799,7 +811,14 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
   <ol class="tl" id="tl"></ol>
 </section>
 
-<section class="band view" id="v-keepsakes"><h2>The keepsake chest</h2><p class="lead">Old photographs and the records this tree is built on. Tap a photo to see it larger.</p><div id="kpics" class="kpics"></div><h3>Records</h3><div id="krecs" class="krecs"></div><p id="kadd" class="kadd" hidden>Have an old photo or a document? Tap that person on the tree and choose <b>Add a photo</b>.</p></section>
+<section class="band view" id="v-keepsakes"><h2>The Keepsake Chest</h2><p class="lead">Old photographs, family recipes and traditions, and the records this tree is built on.</p>
+<h3>Photographs</h3><div id="kpics" class="kpics"></div>
+<h3>Family Recipes</h3><div id="krecipes" class="kcards"></div>
+<details class="kaddbox" data-k="recipe"><summary>+ Add a recipe</summary><form class="form kform" data-f="recipe"><input name="name" required maxlength="120" placeholder="Name of the dish (e.g. Grandma Annie's pound cake)"><textarea name="note" required placeholder="Ingredients — one per line"></textarea><textarea name="text" required placeholder="How to make it — one step per line"></textarea><label class="kph" hidden><span>A photo of it (optional)</span><input type="file" name="file" accept="image/*"></label><label class="fromf"><span>Shared by</span><input name="from" maxlength="60" placeholder="Your name"></label><button class="pri">Add to the chest</button></form></details>
+<h3>Family Traditions</h3><div id="ktrads" class="kcards"></div>
+<details class="kaddbox" data-k="tradition"><summary>+ Add a tradition</summary><form class="form kform" data-f="tradition"><input name="name" required maxlength="120" placeholder="Name it (e.g. Christmas Eve at Grandma's)"><textarea name="text" required placeholder="What does the family do, and when?"></textarea><label class="fromf"><span>Shared by</span><input name="from" maxlength="60" placeholder="Your name"></label><button class="pri">Add to the chest</button></form></details>
+<p class="note" id="kmsg"></p>
+<h3>Records</h3><div id="krecs" class="krecs"></div><p id="kadd" class="kadd" hidden>Have an old photo or a document of someone? Tap that person on the tree and choose <b>Add a photo</b>.</p></section>
 <section class="band view" id="v-sources">
   <h2 style="margin:0 0 6px;font-size:32px">Sources and how sure we are</h2>
   <p class="note" style="max-width:70ch">Every fact on this tree carries a badge. <b>Proven</b> means an obituary or record states it directly. <b>Probable</b> means records agree but haven't been checked against an original document. <b>Possible</b> means a lead from another researcher's online tree that still needs proof. <b>Family memory</b> is what someone in the family remembers — often the most valuable part, and worth checking too.</p>
@@ -986,6 +1005,9 @@ const TOUCH=matchMedia('(pointer:coarse)').matches;document.documentElement.clas
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let myName=(()=>{try{return localStorage.getItem('myname')||''}catch(e){return ''}})();
 const whoOf=c=>c.from||names[c.by]||'Family';
+// traditions and recipes belong to the whole family and live in the keepsake chest (old answers to the retired q10 count as traditions)
+// (until the backend is redeployed it saves them as 'story' with pid 'family': a recipe is the one with ingredients in note)
+const isRecipe=c=>c.type==='recipe'||(c.pid==='family'&&c.type!=='tradition'&&!!c.note),isTrad=c=>c.type==='tradition'||(c.type==='answer'&&c.q==='q10')||(c.pid==='family'&&!isRecipe(c)),isKeep=c=>isTrad(c)||isRecipe(c);
 let P=[],byId={},sel='mat',contribs=[],db=null,user=null,me=null,canWrite=false,isEditor=false,assets=null,names={},photo={};
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 
@@ -1129,7 +1151,7 @@ const CHEST={x:1835,y:1500},GSIGN={x:-46,y:1546};let gardenSeen=null;const garde
 // The grass starts SOIL0 deep and grows a row (36) at a time when the garden needs room, pushing the soil, roots and towns down.
 const SOIL0=250;let SOILD=SOIL0;
 const passed=c=>!byId[c.pid].living;
-const memCount=()=>contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]&&!passed(c)).length;
+const memCount=()=>contribs.filter(c=>['story','photo','answer'].includes(c.type)&&!isKeep(c)&&byId[c.pid]&&!passed(c)).length;
 function soilDepthFor(n){let D=SOIL0;while(D<SOIL0+36*20&&gardenSlots(D).length<n)D+=36;return D;}const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
 const RAD={ssp:36,son:40,par:62,gp:44,ggp:34,aunt:33,asp:26,kid:27,ksp:22,gk:30},FS={ssp:19,son:21,par:27,gp:22,ggp:18,aunt:18,asp:15,kid:15,ksp:13,gk:17};
 function tLayout(){
@@ -1340,7 +1362,7 @@ function hsh(t){let h=2166136261;for(const c of String(t)){h^=c.charCodeAt(0);h=
 
 /* ---------- in the sky above the tree: title banner ---------- */
 let SKYG=null;
-function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]);
+function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&!isKeep(c)&&byId[c.pid]);
   const star=`<path d="M0-9L2 -2L9 0L2 2L0 9L-2 2L-9 0L-2-2Z"/>`;
   // beside the person: try spots around their photo that miss every face and name label
   const inTree=TSTYLE==='ink'&&tw.querySelector('.leaf'),taken=[];let sky='',tree='';
@@ -1716,7 +1738,7 @@ function renderPanel(fresh){
   const p=byId[sel];if(!p)return;
   const kids=P.filter(k=>k.par.includes(p.id)),sibs=P.filter(k=>k.id!==p.id&&p.par.length&&k.par.length&&k.par.some(x=>p.par.includes(x)));
   const life=p.living?'Living':[p.b&&'Born '+p.b,p.d&&'Died '+p.d].filter(Boolean).join(' · ')||'Dates not yet known';
-  const mine=contribs.filter(c=>c.pid===p.id&&c.type!=='person').sort((a,b)=>(a.at||0)-(b.at||0));
+  const mine=contribs.filter(c=>c.pid===p.id&&c.type!=='person'&&!isKeep(c)).sort((a,b)=>(a.at||0)-(b.at||0));
   const rel=[p.par.length&&`Parents: ${p.par.map(link).join(' & ')}`,p.sp&&byId[p.sp]&&`Spouse: ${link(p.sp)}`,kids.length&&`Children: ${kids.map(k=>link(k.id)).join(', ')}`,sibs.length&&`Brothers & sisters: ${sibs.map(k=>link(k.id)).join(', ')}`].filter(Boolean).map(t=>`<div>${t}</div>`).join('');
   const el=$('#panel');
   el.innerHTML=`<button class="pclose" data-close aria-label="Close details">✕ Close</button>${photo[p.id]?`<img class="portrait" src="${esc(photo[p.id])}" alt="${esc(p.n)}">`:''}<h2>${esc(p.n)}</h2><div class="sub">${esc(life)} &nbsp;${badge(p.c)}</div>
@@ -1727,7 +1749,7 @@ function renderPanel(fresh){
    ${p.sibs?`<p class="note">${esc(p.sibs)}</p>`:''}
    ${rel?`<h3>Family</h3><div class="rel">${rel}</div>`:''}
    <h3>Memories &amp; photos</h3>
-   ${mine.length?mine.map(c=>`<div class="contrib">${c.type==='photo'&&c.asset?`<img src="${esc(assetUrl(c.asset))}" alt="${esc(c.text||'Family photo')}" loading="lazy" data-lb="${esc(assetUrl(c.asset))}">`:''}${c.audio?`<button type="button" class="vplay" data-audio="${esc(c.audio)}">▶ Play voice memory</button>`:''}<div>${c.type==='fix'?'<b>Correction: </b>':''}${c.type==='answer'&&ASKQ[c.q]?`<b>${esc(ASKQ[c.q])}</b><br>`:''}${esc(c.text)}</div><small>From ${esc(whoOf(c))} · ${c.at?new Date(c.at).toLocaleDateString():''}${(c.by&&c.by===me)||isEditor?` · <a data-del="${esc(c.id)}" style="cursor:pointer;color:var(--clay)">remove</a>`:''}</small></div>`).join(''):'<p class="note">Nothing added yet.</p>'}
+   ${mine.length?mine.map(c=>`<div class="contrib">${c.type==='photo'&&c.asset?`<img src="${esc(assetUrl(c.asset))}" alt="${esc(c.text||'Family photo')}" loading="lazy" data-lb="${esc(assetUrl(c.asset))}">`:''}${c.audio?`<button type="button" class="vplay" data-audio="${esc(c.audio)}">▶ Play voice memory</button>`:''}<div>${c.type==='fix'?'<b>Correction: </b>':''}${c.type==='answer'&&ASKQ[c.q]?`<b>${esc(ASKQ[c.q])}</b><br>`:''}${esc(c.text)}</div><small>From ${esc(whoOf(c))} · ${c.at?new Date(c.at).toLocaleDateString():''}${(c.by&&c.by===me)||isEditor?` · <a data-del="${esc(c.id)}" style="cursor:pointer;color:var(--clay)">remove</a>`:''}${c.by&&c.by===me&&c.type!=='fix'?` · <a data-edit="${esc(c.id)}" style="cursor:pointer;color:var(--clay)">edit</a>`:''}</small></div>`).join(''):'<p class="note">Nothing added yet.</p>'}
    ${forms(p)}`;
   if(fresh){el.classList.remove('fresh');void el.offsetWidth;el.classList.add('fresh');}
 }
@@ -1747,8 +1769,10 @@ function forms(p){
 }
 $('#panel').addEventListener('click',async e=>{const rb=e.target.closest('[data-rec]');if(rb){toggleRecord(rb.closest('form'));return;}
   const rd=e.target.closest('[data-rdel]');if(rd){clearRecording(rd.closest('form'));return;}if(e.target.closest('[data-close]')){document.body.classList.remove('pdrawer');return;}if(e.target.closest('[data-share]')){openForm('story');return;}const im=e.target.closest('[data-lb]');if(im){openLb(im.dataset.lb,im.alt,im.dataset.cap);return;}const g=e.target.closest('[data-go]');if(g){select(g.dataset.go);($('#v-chart').classList.contains('on')?focusOn:tFocus)(g.dataset.go);return;}
+  const ed=e.target.closest('[data-edit]');if(ed){const c=contribs.find(x=>x.id===ed.dataset.edit);if(c){const box=ed.closest('.contrib');box.innerHTML=`<form class="form eform" data-id="${esc(c.id)}"><textarea name="text" required>${esc(c.text||'')}</textarea><div class="erow"><button class="pri">Save changes</button><button type="button" data-ecancel>Cancel</button></div></form>`;box.querySelector('textarea').focus();}return;}
+  if(e.target.closest('[data-ecancel]')){renderPanel(false);return;}
   const d=e.target.closest('[data-del]');if(d&&db){d.textContent='removing…';try{const r=await withCode(code=>apiPost({action:'del',code,devId,id:d.dataset.del}));if(!r.ok)throw 0;await refreshContribs();}catch(err){if(err!=='cancel')d.textContent='could not remove';else d.textContent='remove';}}});
-$('#panel').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,t=f.dataset.f,fd=new FormData(f),btn=f.querySelector('button.pri'),msg=$('#fmsg');
+$('#panel').addEventListener('submit',async e=>{e.preventDefault();if(e.target.classList.contains('eform')){saveEdit(e.target);return;}const f=e.target,t=f.dataset.f,fd=new FormData(f),btn=f.querySelector('button.pri'),msg=$('#fmsg');
   if(f._recording){if(msg)msg.textContent='Tap Stop to finish your recording first.';return;}
   btn.disabled=true;btn.textContent='Saving…';
   try{const fr=String(fd.get('from')||'').trim().slice(0,60);if(fr){myName=fr;store.set('myname',fr);}const doc={type:t,pid:sel,by:me||'',from:fr,at:Date.now(),text:String(fd.get('text')||'').slice(0,4000)};
@@ -1776,8 +1800,8 @@ const ASK=[
  {id:'q6',pid:'annie',q:'What year did Annie Mae pass away?'},
  {id:'q7',pid:'johnny',q:'How did Johnnie and Annie Mae meet, and when did they marry?'},
  {id:'q8',pid:'earl',q:'What do you remember hearing about Earl and Sara Lee Harper, Johnnie’s parents?'},
- {id:'q9',pid:'ed',q:'How did Ed and Renee meet?'},
- {id:'q10',pid:'renee',q:'Is there a family tradition, recipe or holiday memory that belongs on this tree?'}];
+ {id:'q9',pid:'ed',q:'How did Ed and Renee meet?'}];
+// q10 ("Is there a family tradition, recipe or holiday memory…") was retired 2026-11-23: old answers to it show in the keepsake chest as traditions
 const ASKQ=Object.fromEntries(ASK.map(a=>[a.id,a.q]));
 const avatar=id=>photo[id]?`<img class="av" src="${esc(photo[id])}" alt="">`:`<div class="av" aria-hidden="true">${esc(initials(byId[id].s))}</div>`;
 function renderHelp(){
@@ -1819,6 +1843,12 @@ async function buildPoster(){const k={...tv};PRINT=true;NIGHT=false;drawLeafTree
 $('#posterBtn').onclick=async()=>{await buildPoster();setTimeout(()=>{try{print();}catch(e){}},300);};
 /* sound effects removed — every call below is a no-op */
 const sfx={chime(){},page(){},bloom(){},ctx(){}};
+
+/* editing: the device that shared something can change its words (backend action 'edit') */
+async function saveEdit(f){const fd=new FormData(f),btn=f.querySelector('button.pri'),doc={};['text','name','note','from'].forEach(k=>{if(fd.has(k))doc[k]=String(fd.get(k)||'').trim();});
+  btn.disabled=true;btn.textContent='Saving…';
+  try{const r=await withCode(code=>apiPost({action:'edit',code,devId,id:f.dataset.id,doc}));if(!r.ok)throw r;await refreshContribs();renderPanel(false);renderKeepDyn();}
+  catch(err){btn.disabled=false;btn.textContent=err==='cancel'?'Save changes':'Try again';}}
 /* ---------- music (Web Audio, gapless loops; one track for the tree, one for the story) ---------- */
 // lead: where the first note lands (samples from the first sound); a cold start begins right there
 // each file: an intro that plays once, then loops START..END (samples counted from the first sound, 44.1 kHz)
@@ -2084,12 +2114,39 @@ function drawTimeline(){
 }
 
 /* ---------- keepsake chest ---------- */
-function renderKeepsakes(){const pics=$('#kpics');if(!pics||pics.dataset.done)return;pics.dataset.done=1;
+// screenshots of records, so anyone can read one without a FamilySearch account: SRC key -> [image, ...]
+const KEEPIMG={};
+function renderKeepsakes(){const pics=$('#kpics');if(!pics)return;renderKeepDyn();if(pics.dataset.done)return;pics.dataset.done=1;
   pics.innerHTML=KEEP.photos.map(([u,c])=>`<button type="button" class="kpic" data-u="${esc(u)}" data-c="${esc(c)}"><img src="${esc(u)}" alt="" loading="lazy"><span>${esc(c)}</span></button>`).join('');
   pics.onclick=e=>{const b=e.target.closest('.kpic');if(b)openLb(b.dataset.u,b.dataset.c,b.dataset.c);};
-  $('#krecs').innerHTML=KEEP.records.filter(k=>SRC[k]).map(k=>{const s=SRC[k],[t,...rest]=s.t.split(' — ');const ic=/obituary/i.test(s.t)?'📰':/census/i.test(s.t)?'📜':'🌳';
-    return `<a class="krec" href="${esc(s.u)}" target="_blank" rel="noopener"><span class="kic" aria-hidden="true">${ic}</span><span><b>${esc(t)}</b>${rest.length?`<small>${esc(rest.join(' — '))}</small>`:''}</span></a>`;}).join('');
+  $('#krecs').innerHTML=KEEP.records.filter(k=>SRC[k]).map(k=>{const s=SRC[k],[t,...rest]=s.t.split(' — ');const ic=/obituary/i.test(s.t)?'📰':/census/i.test(s.t)?'📜':'🌳',im=KEEPIMG[k];
+    const inner=`<span class="kic" aria-hidden="true">${ic}</span><span><b>${esc(t)}</b>${rest.length?`<small>${esc(rest.join(' — '))}</small>`:''}${im?'<small class="kview">Tap to read it</small>':''}</span>`;
+    return im?`<button type="button" class="krec" data-img="${esc(im[0])}" data-cap="${esc(t)}">${inner}</button>`:`<a class="krec" href="${esc(s.u)}" target="_blank" rel="noopener">${inner}</a>`;}).join('');
+  $('#krecs').onclick=e=>{const b=e.target.closest('[data-img]');if(b)openLb(b.dataset.img,b.dataset.cap,b.dataset.cap);};
   $('#kadd').hidden=!assets;}
+// recipes and traditions change as people add them: redrawn on every refresh
+function renderKeepDyn(){const R=$('#krecipes'),T=$('#ktrads');if(!R)return;const by=(a,b)=>(a.at||0)-(b.at||0),mine=c=>c.by&&c.by===me;
+  const lines=t=>String(t||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
+  const editBtn=c=>mine(c)?`<button type="button" class="kedit" data-kedit="${esc(c.id)}">Edit</button>`:'';
+  const recs=contribs.filter(isRecipe).sort(by),trads=contribs.filter(isTrad).sort(by);
+  R.innerHTML=recs.length?recs.map(c=>`<details class="kcard" data-id="${esc(c.id)}"><summary><b>${esc(c.name||'A family recipe')}</b><small>From ${esc(whoOf(c))}</small></summary>
+    ${c.asset?`<img src="${esc(assetUrl(c.asset))}" alt="" loading="lazy" data-lb="${esc(assetUrl(c.asset))}" class="kimg">`:''}<h4>Ingredients</h4><ul>${lines(c.note).map(x=>`<li>${esc(x)}</li>`).join('')}</ul><h4>How to make it</h4><ol>${lines(c.text).map(x=>`<li>${esc(x)}</li>`).join('')}</ol>${editBtn(c)}</details>`).join('')
+    :'<p class="note">No recipes yet. Be the first to add one.</p>';
+  T.innerHTML=trads.length?trads.map(c=>`<div class="kcard" data-id="${esc(c.id)}"><b>${esc(c.name||(c.type==='answer'?'A family tradition':'A family tradition'))}</b>${lines(c.text).map(x=>`<p>${esc(x)}</p>`).join('')}<small>From ${esc(whoOf(c))}${c.at?' · '+new Date(c.at).toLocaleDateString():''}</small>${editBtn(c)}</div>`).join('')
+    :'<p class="note">No traditions yet. Be the first to add one.</p>';
+  document.querySelectorAll('#v-keepsakes .kaddbox').forEach(d=>d.hidden=!db);const ph=$('#v-keepsakes .kph');if(ph)ph.hidden=!assets;}
+$('#v-keepsakes').addEventListener('click',e=>{const im=e.target.closest('[data-lb]');if(im){openLb(im.dataset.lb,'','');return;}
+  if(e.target.closest('[data-kcancel]')){renderKeepDyn();return;}
+  const b=e.target.closest('[data-kedit]');if(!b)return;const c=contribs.find(x=>x.id===b.dataset.kedit);if(!c)return;const card=b.closest('.kcard'),rec=isRecipe(c);
+  card.outerHTML=`<form class="form kcard eform" data-id="${esc(c.id)}"><input name="name" required maxlength="120" value="${esc(c.name||'')}" placeholder="Name">${rec?`<textarea name="note" required placeholder="Ingredients — one per line">${esc(c.note||'')}</textarea>`:''}<textarea name="text" required placeholder="${rec?'Steps — one per line':'What does the family do?'}">${esc(c.text||'')}</textarea><label class="fromf"><span>Shared by</span><input name="from" maxlength="60" value="${esc(c.from||'')}"></label><div class="erow"><button class="pri">Save changes</button><button type="button" data-kcancel>Cancel</button></div></form>`;});
+$('#v-keepsakes').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;if(f.classList.contains('eform')){saveEdit(f);return;}
+  const t=f.dataset.f,fd=new FormData(f),btn=f.querySelector('button.pri'),msg=$('#kmsg');btn.disabled=true;btn.textContent='Saving…';
+  try{const fr=String(fd.get('from')||'').trim().slice(0,60);if(fr){myName=fr;store.set('myname',fr);}
+    const doc={type:t,pid:'family',from:fr,at:Date.now(),name:String(fd.get('name')||'').trim().slice(0,120),text:String(fd.get('text')||'').slice(0,4000)};if(t==='recipe')doc.note=String(fd.get('note')||'').slice(0,2000);
+    let photo=null;const fl=fd.get('file');if(t==='recipe'&&fl&&fl.size)photo=await shrinkPhoto(fl);if(photo)btn.textContent='Uploading photo…';
+    const r=await withCode(code=>apiPost({action:'add',code,devId,doc,photo}));if(!r.ok)throw r;await refreshContribs();renderKeepDyn();
+    f.reset();f.closest('details').open=false;btn.disabled=false;btn.textContent='Add to the chest';if(msg)msg.textContent=`Saved — thank you! Your ${t} is in the chest.`;}
+  catch(err){btn.disabled=false;btn.textContent='Try again';if(msg)msg.textContent=err==='cancel'?'':err==='badphoto'?'That photo couldn\'t be read. Try a different one.':(err==='locked'||err?.error==='locked')?LOCKED_MSG:'That didn\'t save. Check your internet connection and try again.';}});
 /* ---------- views ---------- */
 let fitted=0;
 function route(){const h=location.hash.slice(1),v=['tree','help','chart','places','timeline','sources','keepsakes'].includes(h)?h:'tree';if(v==='keepsakes')renderKeepsakes();
@@ -2130,7 +2187,7 @@ const LOCKED_MSG='Too many wrong passcodes. Please wait 15 minutes and try again
 async function apiPost(o){const r=await fetch(API,{method:'POST',body:JSON.stringify(o),headers:{'Content-Type':'text/plain;charset=utf-8'}});return r.json();}
 async function refreshContribs(){if(!API)return;const r=await fetch(API+(API.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});const j=await r.json();if(!j.ok)return;
   const next=JSON.stringify(j.items);if(next===refreshContribs.last)return;refreshContribs.last=next;contribs=j.items;
-  const keep={...view},tkeep={...tv};build();drawTree(false);view=keep;apply(false);drawLeafTree(false);tv=tkeep;tApply(false);renderPanel(false);drawTimeline();renderHelp();renderMemStars();}
+  const keep={...view},tkeep={...tv};build();drawTree(false);view=keep;apply(false);drawLeafTree(false);tv=tkeep;tApply(false);renderPanel(false);drawTimeline();renderHelp();renderMemStars();renderKeepDyn();}
 /* the family passcode: asked once, then remembered on this device */
 function askCode(wrong){return new Promise(res=>{const d=$('#codeDlg');$('#codeIn').value='';$('#codeErr').textContent=wrong==='locked'?LOCKED_MSG:wrong?'That passcode didn\'t match. Try again, or ask Mat.':'';
   d.hidden=false;setTimeout(()=>$('#codeIn').focus(),50);

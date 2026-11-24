@@ -10,7 +10,7 @@ const CHEST={x:1835,y:1500},GSIGN={x:-46,y:1546};let gardenSeen=null;const garde
 // The grass starts SOIL0 deep and grows a row (36) at a time when the garden needs room, pushing the soil, roots and towns down.
 const SOIL0=250;let SOILD=SOIL0;
 const passed=c=>!byId[c.pid].living;
-const memCount=()=>contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]&&!passed(c)).length;
+const memCount=()=>contribs.filter(c=>['story','photo','answer'].includes(c.type)&&!isKeep(c)&&byId[c.pid]&&!passed(c)).length;
 function soilDepthFor(n){let D=SOIL0;while(D<SOIL0+36*20&&gardenSlots(D).length<n)D+=36;return D;}const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
 const RAD={ssp:36,son:40,par:62,gp:44,ggp:34,aunt:33,asp:26,kid:27,ksp:22,gk:30},FS={ssp:19,son:21,par:27,gp:22,ggp:18,aunt:18,asp:15,kid:15,ksp:13,gk:17};
 function tLayout(){
@@ -221,7 +221,7 @@ function hsh(t){let h=2166136261;for(const c of String(t)){h^=c.charCodeAt(0);h=
 
 /* ---------- in the sky above the tree: title banner ---------- */
 let SKYG=null;
-function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]);
+function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&!isKeep(c)&&byId[c.pid]);
   const star=`<path d="M0-9L2 -2L9 0L2 2L0 9L-2 2L-9 0L-2-2Z"/>`;
   // beside the person: try spots around their photo that miss every face and name label
   const inTree=TSTYLE==='ink'&&tw.querySelector('.leaf'),taken=[];let sky='',tree='';

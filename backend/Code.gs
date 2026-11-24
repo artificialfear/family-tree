@@ -73,6 +73,7 @@ function doPost(e) {
   try {
     if (action === 'add') return json_({ ok: true, item: add_(req.doc || {}, req.photo, String(req.devId || ''), req.audio) });
     if (action === 'del') return json_({ ok: del_(String(req.id || ''), String(req.devId || '')) });
+    if (action === 'edit') return json_({ ok: edit_(String(req.id || ''), String(req.devId || ''), req.doc || {}) });
     return json_({ ok: false, error: 'unknown_action' });
   } finally {
     lock.releaseLock();
@@ -114,7 +115,8 @@ function list_() {
 }
 
 function add_(doc, photo, devId, audio) {
-  var types = ['story', 'photo', 'fix', 'answer', 'person'];
+  // tradition and recipe belong to the whole family (pid 'family') and show in the keepsake chest
+  var types = ['story', 'photo', 'fix', 'answer', 'person', 'tradition', 'recipe'];
   var type = types.indexOf(doc.type) >= 0 ? doc.type : 'story';
   var row = {
     id: Utilities.getUuid().slice(0, 12),
@@ -224,3 +226,24 @@ function codeOk_(code) {
 function norm_(s) { return String(s || '').trim().toLowerCase().replace(/\s+/g, ' '); }
 function clip_(s, n) { return String(s == null ? '' : s).slice(0, n); }
 function json_(o) { return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON); }
+
+// the device that shared something can change its words later (the text, a recipe or tradition's name and
+// ingredients, and who it's from). Nothing else about the row changes, and nobody else can edit it.
+function edit_(id, devId, doc) {
+  if (!id || !devId) return false;
+  var sh = sheet_(), n = sh.getLastRow();
+  if (n < 2) return false;
+  var ids = sh.getRange(2, 1, n - 1, 1).getValues();
+  var col = function (k) { return COLS.indexOf(k) + 1; };
+  for (var i = 0; i < ids.length; i++) {
+    if (String(ids[i][0]) !== id) continue;
+    var r = i + 2, owner = String(sh.getRange(r, col('by')).getValue());
+    if (!owner || owner !== hash_(devId) || String(sh.getRange(r, col('hidden')).getValue()).trim()) return false;
+    if (doc.text != null) sh.getRange(r, col('text')).setValue(clip_(doc.text, MAX_TEXT));
+    if (doc.name != null) sh.getRange(r, col('name')).setValue(clip_(doc.name, 120));
+    if (doc.note != null) sh.getRange(r, col('note')).setValue(clip_(doc.note, 2000));
+    if (doc.from != null) sh.getRange(r, col('from')).setValue(clip_(doc.from, 60));
+    return true;
+  }
+  return false;
+}

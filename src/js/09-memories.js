@@ -9,7 +9,7 @@ const LOCKED_MSG='Too many wrong passcodes. Please wait 15 minutes and try again
 async function apiPost(o){const r=await fetch(API,{method:'POST',body:JSON.stringify(o),headers:{'Content-Type':'text/plain;charset=utf-8'}});return r.json();}
 async function refreshContribs(){if(!API)return;const r=await fetch(API+(API.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});const j=await r.json();if(!j.ok)return;
   const next=JSON.stringify(j.items);if(next===refreshContribs.last)return;refreshContribs.last=next;contribs=j.items;
-  const keep={...view},tkeep={...tv};build();drawTree(false);view=keep;apply(false);drawLeafTree(false);tv=tkeep;tApply(false);renderPanel(false);drawTimeline();renderHelp();renderMemStars();}
+  const keep={...view},tkeep={...tv};build();drawTree(false);view=keep;apply(false);drawLeafTree(false);tv=tkeep;tApply(false);renderPanel(false);drawTimeline();renderHelp();renderMemStars();renderKeepDyn();}
 /* the family passcode: asked once, then remembered on this device */
 function askCode(wrong){return new Promise(res=>{const d=$('#codeDlg');$('#codeIn').value='';$('#codeErr').textContent=wrong==='locked'?LOCKED_MSG:wrong?'That passcode didn\'t match. Try again, or ask Mat.':'';
   d.hidden=false;setTimeout(()=>$('#codeIn').focus(),50);

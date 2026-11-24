@@ -74,6 +74,7 @@
   <p class="note" style="font-size:17px">🌸 Every memory you share grows a flower in the garden on the planet. 🏮 Memories of family who have passed rise as lanterns in the sky around the tree.</p>
   <p class="lead">These are the questions the records couldn't answer. If you know — or even half-remember — type it in. Short answers are perfect. On a phone, you can tap the microphone on your keyboard and talk instead of typing.</p>
   <div class="asks" id="asks"></div>
+  <p class="note" style="font-size:17px">Know a family tradition or recipe? <a href="#keepsakes">Add it to the Keepsake Chest</a>.</p>
   <h3 style="font-size:24px">Photos we're still looking for</h3>
   <p class="note">Tap a name to add a photo of that person.</p>
   <div class="wanted" id="wanted"></div>
@@ -115,7 +116,14 @@
   <ol class="tl" id="tl"></ol>
 </section>
 
-<section class="band view" id="v-keepsakes"><h2>The keepsake chest</h2><p class="lead">Old photographs and the records this tree is built on. Tap a photo to see it larger.</p><div id="kpics" class="kpics"></div><h3>Records</h3><div id="krecs" class="krecs"></div><p id="kadd" class="kadd" hidden>Have an old photo or a document? Tap that person on the tree and choose <b>Add a photo</b>.</p></section>
+<section class="band view" id="v-keepsakes"><h2>The Keepsake Chest</h2><p class="lead">Old photographs, family recipes and traditions, and the records this tree is built on.</p>
+<h3>Photographs</h3><div id="kpics" class="kpics"></div>
+<h3>Family Recipes</h3><div id="krecipes" class="kcards"></div>
+<details class="kaddbox" data-k="recipe"><summary>+ Add a recipe</summary><form class="form kform" data-f="recipe"><input name="name" required maxlength="120" placeholder="Name of the dish (e.g. Grandma Annie's pound cake)"><textarea name="note" required placeholder="Ingredients — one per line"></textarea><textarea name="text" required placeholder="How to make it — one step per line"></textarea><label class="kph" hidden><span>A photo of it (optional)</span><input type="file" name="file" accept="image/*"></label><label class="fromf"><span>Shared by</span><input name="from" maxlength="60" placeholder="Your name"></label><button class="pri">Add to the chest</button></form></details>
+<h3>Family Traditions</h3><div id="ktrads" class="kcards"></div>
+<details class="kaddbox" data-k="tradition"><summary>+ Add a tradition</summary><form class="form kform" data-f="tradition"><input name="name" required maxlength="120" placeholder="Name it (e.g. Christmas Eve at Grandma's)"><textarea name="text" required placeholder="What does the family do, and when?"></textarea><label class="fromf"><span>Shared by</span><input name="from" maxlength="60" placeholder="Your name"></label><button class="pri">Add to the chest</button></form></details>
+<p class="note" id="kmsg"></p>
+<h3>Records</h3><div id="krecs" class="krecs"></div><p id="kadd" class="kadd" hidden>Have an old photo or a document of someone? Tap that person on the tree and choose <b>Add a photo</b>.</p></section>
 <section class="band view" id="v-sources">
   <h2 style="margin:0 0 6px;font-size:32px">Sources and how sure we are</h2>
   <p class="note" style="max-width:70ch">Every fact on this tree carries a badge. <b>Proven</b> means an obituary or record states it directly. <b>Probable</b> means records agree but haven't been checked against an original document. <b>Possible</b> means a lead from another researcher's online tree that still needs proof. <b>Family memory</b> is what someone in the family remembers — often the most valuable part, and worth checking too.</p>

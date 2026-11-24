@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-11-23 — Recipes, traditions and editing
+- The chest page is titled "The Keepsake Chest".
+- **Family Recipes:** anyone with the family passcode can add a recipe in the chest (name, ingredients, steps, an optional photo). Recipes show as cards you can open.
+- **Family Traditions:** traditions are added in the chest too. They belong to the whole family, so they no longer land on one person's card or grow as a flower. Earlier answers to the "family tradition, recipe or holiday memory" question now show here as traditions, and that question now points to the chest.
+- **Editing:** whoever shared a memory, recipe or tradition can edit its words later from the same phone or computer, the same way removing works.
+- **Records:** the chest can now open a screenshot of a record right in the page (no FamilySearch account needed) once the screenshots are added.
+
 ## 2026-11-23 — Lanterns for loved ones, a calmer garden
 - Memories of family who have passed (Ed, Johnnie, Annie Mae, Jack, Margaret, Norma, Richard and the earlier generations) now rise as glowing paper lanterns in the sky around the tree. They gather over both shoulders of the canopy first, then spread down the sides. A new one rises into place while people are watching. Tap a lantern to read its memory.
 - Memories of the living are still flowers in the garden. The children and grandchildren now stand on clear grass, with the flowers growing on either side of them and beneath them.

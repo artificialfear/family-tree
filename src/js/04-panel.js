@@ -7,7 +7,7 @@ function renderPanel(fresh){
   const p=byId[sel];if(!p)return;
   const kids=P.filter(k=>k.par.includes(p.id)),sibs=P.filter(k=>k.id!==p.id&&p.par.length&&k.par.length&&k.par.some(x=>p.par.includes(x)));
   const life=p.living?'Living':[p.b&&'Born '+p.b,p.d&&'Died '+p.d].filter(Boolean).join(' · ')||'Dates not yet known';
-  const mine=contribs.filter(c=>c.pid===p.id&&c.type!=='person').sort((a,b)=>(a.at||0)-(b.at||0));
+  const mine=contribs.filter(c=>c.pid===p.id&&c.type!=='person'&&!isKeep(c)).sort((a,b)=>(a.at||0)-(b.at||0));
   const rel=[p.par.length&&`Parents: ${p.par.map(link).join(' & ')}`,p.sp&&byId[p.sp]&&`Spouse: ${link(p.sp)}`,kids.length&&`Children: ${kids.map(k=>link(k.id)).join(', ')}`,sibs.length&&`Brothers & sisters: ${sibs.map(k=>link(k.id)).join(', ')}`].filter(Boolean).map(t=>`<div>${t}</div>`).join('');
   const el=$('#panel');
   el.innerHTML=`<button class="pclose" data-close aria-label="Close details">✕ Close</button>${photo[p.id]?`<img class="portrait" src="${esc(photo[p.id])}" alt="${esc(p.n)}">`:''}<h2>${esc(p.n)}</h2><div class="sub">${esc(life)} &nbsp;${badge(p.c)}</div>
@@ -18,7 +18,7 @@ function renderPanel(fresh){
    ${p.sibs?`<p class="note">${esc(p.sibs)}</p>`:''}
    ${rel?`<h3>Family</h3><div class="rel">${rel}</div>`:''}
    <h3>Memories &amp; photos</h3>
-   ${mine.length?mine.map(c=>`<div class="contrib">${c.type==='photo'&&c.asset?`<img src="${esc(assetUrl(c.asset))}" alt="${esc(c.text||'Family photo')}" loading="lazy" data-lb="${esc(assetUrl(c.asset))}">`:''}${c.audio?`<button type="button" class="vplay" data-audio="${esc(c.audio)}">▶ Play voice memory</button>`:''}<div>${c.type==='fix'?'<b>Correction: </b>':''}${c.type==='answer'&&ASKQ[c.q]?`<b>${esc(ASKQ[c.q])}</b><br>`:''}${esc(c.text)}</div><small>From ${esc(whoOf(c))} · ${c.at?new Date(c.at).toLocaleDateString():''}${(c.by&&c.by===me)||isEditor?` · <a data-del="${esc(c.id)}" style="cursor:pointer;color:var(--clay)">remove</a>`:''}</small></div>`).join(''):'<p class="note">Nothing added yet.</p>'}
+   ${mine.length?mine.map(c=>`<div class="contrib">${c.type==='photo'&&c.asset?`<img src="${esc(assetUrl(c.asset))}" alt="${esc(c.text||'Family photo')}" loading="lazy" data-lb="${esc(assetUrl(c.asset))}">`:''}${c.audio?`<button type="button" class="vplay" data-audio="${esc(c.audio)}">▶ Play voice memory</button>`:''}<div>${c.type==='fix'?'<b>Correction: </b>':''}${c.type==='answer'&&ASKQ[c.q]?`<b>${esc(ASKQ[c.q])}</b><br>`:''}${esc(c.text)}</div><small>From ${esc(whoOf(c))} · ${c.at?new Date(c.at).toLocaleDateString():''}${(c.by&&c.by===me)||isEditor?` · <a data-del="${esc(c.id)}" style="cursor:pointer;color:var(--clay)">remove</a>`:''}${c.by&&c.by===me&&c.type!=='fix'?` · <a data-edit="${esc(c.id)}" style="cursor:pointer;color:var(--clay)">edit</a>`:''}</small></div>`).join(''):'<p class="note">Nothing added yet.</p>'}
    ${forms(p)}`;
   if(fresh){el.classList.remove('fresh');void el.offsetWidth;el.classList.add('fresh');}
 }
@@ -38,8 +38,10 @@ function forms(p){
 }
 $('#panel').addEventListener('click',async e=>{const rb=e.target.closest('[data-rec]');if(rb){toggleRecord(rb.closest('form'));return;}
   const rd=e.target.closest('[data-rdel]');if(rd){clearRecording(rd.closest('form'));return;}if(e.target.closest('[data-close]')){document.body.classList.remove('pdrawer');return;}if(e.target.closest('[data-share]')){openForm('story');return;}const im=e.target.closest('[data-lb]');if(im){openLb(im.dataset.lb,im.alt,im.dataset.cap);return;}const g=e.target.closest('[data-go]');if(g){select(g.dataset.go);($('#v-chart').classList.contains('on')?focusOn:tFocus)(g.dataset.go);return;}
+  const ed=e.target.closest('[data-edit]');if(ed){const c=contribs.find(x=>x.id===ed.dataset.edit);if(c){const box=ed.closest('.contrib');box.innerHTML=`<form class="form eform" data-id="${esc(c.id)}"><textarea name="text" required>${esc(c.text||'')}</textarea><div class="erow"><button class="pri">Save changes</button><button type="button" data-ecancel>Cancel</button></div></form>`;box.querySelector('textarea').focus();}return;}
+  if(e.target.closest('[data-ecancel]')){renderPanel(false);return;}
   const d=e.target.closest('[data-del]');if(d&&db){d.textContent='removing…';try{const r=await withCode(code=>apiPost({action:'del',code,devId,id:d.dataset.del}));if(!r.ok)throw 0;await refreshContribs();}catch(err){if(err!=='cancel')d.textContent='could not remove';else d.textContent='remove';}}});
-$('#panel').addEventListener('submit',async e=>{e.preventDefault();const f=e.target,t=f.dataset.f,fd=new FormData(f),btn=f.querySelector('button.pri'),msg=$('#fmsg');
+$('#panel').addEventListener('submit',async e=>{e.preventDefault();if(e.target.classList.contains('eform')){saveEdit(e.target);return;}const f=e.target,t=f.dataset.f,fd=new FormData(f),btn=f.querySelector('button.pri'),msg=$('#fmsg');
   if(f._recording){if(msg)msg.textContent='Tap Stop to finish your recording first.';return;}
   btn.disabled=true;btn.textContent='Saving…';
   try{const fr=String(fd.get('from')||'').trim().slice(0,60);if(fr){myName=fr;store.set('myname',fr);}const doc={type:t,pid:sel,by:me||'',from:fr,at:Date.now(),text:String(fd.get('text')||'').slice(0,4000)};
@@ -67,8 +69,8 @@ const ASK=[
  {id:'q6',pid:'annie',q:'What year did Annie Mae pass away?'},
  {id:'q7',pid:'johnny',q:'How did Johnnie and Annie Mae meet, and when did they marry?'},
  {id:'q8',pid:'earl',q:'What do you remember hearing about Earl and Sara Lee Harper, Johnnie’s parents?'},
- {id:'q9',pid:'ed',q:'How did Ed and Renee meet?'},
- {id:'q10',pid:'renee',q:'Is there a family tradition, recipe or holiday memory that belongs on this tree?'}];
+ {id:'q9',pid:'ed',q:'How did Ed and Renee meet?'}];
+// q10 ("Is there a family tradition, recipe or holiday memory…") was retired 2026-11-23: old answers to it show in the keepsake chest as traditions
 const ASKQ=Object.fromEntries(ASK.map(a=>[a.id,a.q]));
 const avatar=id=>photo[id]?`<img class="av" src="${esc(photo[id])}" alt="">`:`<div class="av" aria-hidden="true">${esc(initials(byId[id].s))}</div>`;
 function renderHelp(){
@@ -110,3 +112,9 @@ async function buildPoster(){const k={...tv};PRINT=true;NIGHT=false;drawLeafTree
 $('#posterBtn').onclick=async()=>{await buildPoster();setTimeout(()=>{try{print();}catch(e){}},300);};
 /* sound effects removed — every call below is a no-op */
 const sfx={chime(){},page(){},bloom(){},ctx(){}};
+
+/* editing: the device that shared something can change its words (backend action 'edit') */
+async function saveEdit(f){const fd=new FormData(f),btn=f.querySelector('button.pri'),doc={};['text','name','note','from'].forEach(k=>{if(fd.has(k))doc[k]=String(fd.get(k)||'').trim();});
+  btn.disabled=true;btn.textContent='Saving…';
+  try{const r=await withCode(code=>apiPost({action:'edit',code,devId,id:f.dataset.id,doc}));if(!r.ok)throw r;await refreshContribs();renderPanel(false);renderKeepDyn();}
+  catch(err){btn.disabled=false;btn.textContent=err==='cancel'?'Save changes':'Try again';}}

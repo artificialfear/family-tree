@@ -503,3 +503,14 @@ body.storyon.stagemode #tstage .cap{bottom:calc(var(--apron,24px) + 12px)}
 .touch #tmstars .mls{animation:none}.touch #tmstars .mlantern.sprout .mls{animation:lrise 2.2s cubic-bezier(.2,.8,.3,1) both}
 @media(prefers-reduced-motion:reduce){#tmstars .mls,#tmstars .mlantern.sprout .mls{animation:none}}
 #tworld.story #tmstars .lanterns{opacity:.5}
+/* keepsake chest: recipes and traditions */
+.kcards{display:grid;gap:12px;margin:10px 0 8px}
+.kcard{padding:14px 16px;border:1px solid #d8c8a6;border-radius:10px;background:#fffaf0;box-shadow:2px 3px 0 rgba(60,40,10,.12);color:#3a2a14}
+.kcard summary{cursor:pointer;display:flex;flex-direction:column;gap:2px;min-height:0}.kcard summary b,.kcard>b{font:700 19px Spectral,Georgia,serif}
+.kcard small{color:#8a6a3a}.kcard h4{margin:12px 0 4px;font:700 15px Spectral,Georgia,serif;color:#6b4410}.kcard ul,.kcard ol{margin:0;padding-left:22px;line-height:1.5}
+.kcard p{margin:6px 0}.kcard .kimg{display:block;max-width:100%;max-height:260px;border-radius:8px;margin-top:10px;cursor:zoom-in}
+.kcard .kedit{margin-top:10px;min-height:34px;padding:4px 12px;font-size:14px}
+.kaddbox{margin:4px 0 22px}.kaddbox summary{cursor:pointer;font-weight:700;color:var(--clay)}
+.kaddbox .form,.kcard.eform{display:grid;gap:8px;margin-top:10px}.kcard.eform textarea{min-height:90px}
+.erow{display:flex;gap:8px;flex-wrap:wrap}
+button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:pointer}.krec .kview{color:var(--pine);font-weight:600}

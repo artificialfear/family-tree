@@ -6,6 +6,9 @@ const TOUCH=matchMedia('(pointer:coarse)').matches;document.documentElement.clas
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let myName=(()=>{try{return localStorage.getItem('myname')||''}catch(e){return ''}})();
 const whoOf=c=>c.from||names[c.by]||'Family';
+// traditions and recipes belong to the whole family and live in the keepsake chest (old answers to the retired q10 count as traditions)
+// (until the backend is redeployed it saves them as 'story' with pid 'family': a recipe is the one with ingredients in note)
+const isRecipe=c=>c.type==='recipe'||(c.pid==='family'&&c.type!=='tradition'&&!!c.note),isTrad=c=>c.type==='tradition'||(c.type==='answer'&&c.q==='q10')||(c.pid==='family'&&!isRecipe(c)),isKeep=c=>isTrad(c)||isRecipe(c);
 let P=[],byId={},sel='mat',contribs=[],db=null,user=null,me=null,canWrite=false,isEditor=false,assets=null,names={},photo={};
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
 

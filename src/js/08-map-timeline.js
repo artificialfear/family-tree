@@ -49,12 +49,39 @@ function drawTimeline(){
 }
 
 /* ---------- keepsake chest ---------- */
-function renderKeepsakes(){const pics=$('#kpics');if(!pics||pics.dataset.done)return;pics.dataset.done=1;
+// screenshots of records, so anyone can read one without a FamilySearch account: SRC key -> [image, ...]
+const KEEPIMG={};
+function renderKeepsakes(){const pics=$('#kpics');if(!pics)return;renderKeepDyn();if(pics.dataset.done)return;pics.dataset.done=1;
   pics.innerHTML=KEEP.photos.map(([u,c])=>`<button type="button" class="kpic" data-u="${esc(u)}" data-c="${esc(c)}"><img src="${esc(u)}" alt="" loading="lazy"><span>${esc(c)}</span></button>`).join('');
   pics.onclick=e=>{const b=e.target.closest('.kpic');if(b)openLb(b.dataset.u,b.dataset.c,b.dataset.c);};
-  $('#krecs').innerHTML=KEEP.records.filter(k=>SRC[k]).map(k=>{const s=SRC[k],[t,...rest]=s.t.split(' — ');const ic=/obituary/i.test(s.t)?'📰':/census/i.test(s.t)?'📜':'🌳';
-    return `<a class="krec" href="${esc(s.u)}" target="_blank" rel="noopener"><span class="kic" aria-hidden="true">${ic}</span><span><b>${esc(t)}</b>${rest.length?`<small>${esc(rest.join(' — '))}</small>`:''}</span></a>`;}).join('');
+  $('#krecs').innerHTML=KEEP.records.filter(k=>SRC[k]).map(k=>{const s=SRC[k],[t,...rest]=s.t.split(' — ');const ic=/obituary/i.test(s.t)?'📰':/census/i.test(s.t)?'📜':'🌳',im=KEEPIMG[k];
+    const inner=`<span class="kic" aria-hidden="true">${ic}</span><span><b>${esc(t)}</b>${rest.length?`<small>${esc(rest.join(' — '))}</small>`:''}${im?'<small class="kview">Tap to read it</small>':''}</span>`;
+    return im?`<button type="button" class="krec" data-img="${esc(im[0])}" data-cap="${esc(t)}">${inner}</button>`:`<a class="krec" href="${esc(s.u)}" target="_blank" rel="noopener">${inner}</a>`;}).join('');
+  $('#krecs').onclick=e=>{const b=e.target.closest('[data-img]');if(b)openLb(b.dataset.img,b.dataset.cap,b.dataset.cap);};
   $('#kadd').hidden=!assets;}
+// recipes and traditions change as people add them: redrawn on every refresh
+function renderKeepDyn(){const R=$('#krecipes'),T=$('#ktrads');if(!R)return;const by=(a,b)=>(a.at||0)-(b.at||0),mine=c=>c.by&&c.by===me;
+  const lines=t=>String(t||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);
+  const editBtn=c=>mine(c)?`<button type="button" class="kedit" data-kedit="${esc(c.id)}">Edit</button>`:'';
+  const recs=contribs.filter(isRecipe).sort(by),trads=contribs.filter(isTrad).sort(by);
+  R.innerHTML=recs.length?recs.map(c=>`<details class="kcard" data-id="${esc(c.id)}"><summary><b>${esc(c.name||'A family recipe')}</b><small>From ${esc(whoOf(c))}</small></summary>
+    ${c.asset?`<img src="${esc(assetUrl(c.asset))}" alt="" loading="lazy" data-lb="${esc(assetUrl(c.asset))}" class="kimg">`:''}<h4>Ingredients</h4><ul>${lines(c.note).map(x=>`<li>${esc(x)}</li>`).join('')}</ul><h4>How to make it</h4><ol>${lines(c.text).map(x=>`<li>${esc(x)}</li>`).join('')}</ol>${editBtn(c)}</details>`).join('')
+    :'<p class="note">No recipes yet. Be the first to add one.</p>';
+  T.innerHTML=trads.length?trads.map(c=>`<div class="kcard" data-id="${esc(c.id)}"><b>${esc(c.name||(c.type==='answer'?'A family tradition':'A family tradition'))}</b>${lines(c.text).map(x=>`<p>${esc(x)}</p>`).join('')}<small>From ${esc(whoOf(c))}${c.at?' · '+new Date(c.at).toLocaleDateString():''}</small>${editBtn(c)}</div>`).join('')
+    :'<p class="note">No traditions yet. Be the first to add one.</p>';
+  document.querySelectorAll('#v-keepsakes .kaddbox').forEach(d=>d.hidden=!db);const ph=$('#v-keepsakes .kph');if(ph)ph.hidden=!assets;}
+$('#v-keepsakes').addEventListener('click',e=>{const im=e.target.closest('[data-lb]');if(im){openLb(im.dataset.lb,'','');return;}
+  if(e.target.closest('[data-kcancel]')){renderKeepDyn();return;}
+  const b=e.target.closest('[data-kedit]');if(!b)return;const c=contribs.find(x=>x.id===b.dataset.kedit);if(!c)return;const card=b.closest('.kcard'),rec=isRecipe(c);
+  card.outerHTML=`<form class="form kcard eform" data-id="${esc(c.id)}"><input name="name" required maxlength="120" value="${esc(c.name||'')}" placeholder="Name">${rec?`<textarea name="note" required placeholder="Ingredients — one per line">${esc(c.note||'')}</textarea>`:''}<textarea name="text" required placeholder="${rec?'Steps — one per line':'What does the family do?'}">${esc(c.text||'')}</textarea><label class="fromf"><span>Shared by</span><input name="from" maxlength="60" value="${esc(c.from||'')}"></label><div class="erow"><button class="pri">Save changes</button><button type="button" data-kcancel>Cancel</button></div></form>`;});
+$('#v-keepsakes').addEventListener('submit',async e=>{e.preventDefault();const f=e.target;if(f.classList.contains('eform')){saveEdit(f);return;}
+  const t=f.dataset.f,fd=new FormData(f),btn=f.querySelector('button.pri'),msg=$('#kmsg');btn.disabled=true;btn.textContent='Saving…';
+  try{const fr=String(fd.get('from')||'').trim().slice(0,60);if(fr){myName=fr;store.set('myname',fr);}
+    const doc={type:t,pid:'family',from:fr,at:Date.now(),name:String(fd.get('name')||'').trim().slice(0,120),text:String(fd.get('text')||'').slice(0,4000)};if(t==='recipe')doc.note=String(fd.get('note')||'').slice(0,2000);
+    let photo=null;const fl=fd.get('file');if(t==='recipe'&&fl&&fl.size)photo=await shrinkPhoto(fl);if(photo)btn.textContent='Uploading photo…';
+    const r=await withCode(code=>apiPost({action:'add',code,devId,doc,photo}));if(!r.ok)throw r;await refreshContribs();renderKeepDyn();
+    f.reset();f.closest('details').open=false;btn.disabled=false;btn.textContent='Add to the chest';if(msg)msg.textContent=`Saved — thank you! Your ${t} is in the chest.`;}
+  catch(err){btn.disabled=false;btn.textContent='Try again';if(msg)msg.textContent=err==='cancel'?'':err==='badphoto'?'That photo couldn\'t be read. Try a different one.':(err==='locked'||err?.error==='locked')?LOCKED_MSG:'That didn\'t save. Check your internet connection and try again.';}});
 /* ---------- views ---------- */
 let fitted=0;
 function route(){const h=location.hash.slice(1),v=['tree','help','chart','places','timeline','sources','keepsakes'].includes(h)?h:'tree';if(v==='keepsakes')renderKeepsakes();

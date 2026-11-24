@@ -27,8 +27,19 @@ def handle(route,req):
     d=o['doc'];it={'id':'i%d'%len(items),'type':d.get('type','story'),'pid':d.get('pid',''),'from':d.get('from',''),'at':int(time.time()*1000),'text':d.get('text',''),'by':sha(o.get('devId',''))}
     if o.get('audio'):aid='A%d'%len(audio_store);audio_store[aid]={'b64':o['audio']['b64'],'mime':o['audio']['mime'].split(';')[0]};it['audio']=aid
     if d.get('q'):it['q']=d['q']
-    if o.get('photo'):it['type']='photo';it['asset']='DRIVEID'
+    for k in ('name','note'):
+      if d.get(k):it[k]=d[k]
+    if o.get('photo'):
+      it['asset']='DRIVEID'
+      if it['type']=='story':it['type']='photo'
     items.append(it);return route.fulfill(status=200,headers=h,body=json.dumps({'ok':True,'item':it}))
+  if o['action']=='edit':
+    for it in items:
+      if it['id']==o['id'] and it['by']==sha(o['devId']):
+        for k in ('text','name','note','from'):
+          if k in o['doc']:it[k]=o['doc'][k]
+        return route.fulfill(status=200,headers=h,body='{"ok":true}')
+    return route.fulfill(status=200,headers=h,body='{"ok":false}')
   if o['action']=='del':
     for it in list(items):
       if it['id']==o['id'] and it['by']==sha(o['devId']):items.remove(it);return route.fulfill(status=200,headers=h,body='{"ok":true}')
@@ -80,6 +91,36 @@ try:
   check('voice memory plays',pg.inner_text('#panel .vplay').startswith('❚❚') or 'voice' in pg.inner_text('#panel .vplay').lower())
   pg.screenshot(path='/tmp/gh-voice-card.png')
   check('own post shows remove link (hash match)',pg.locator('#panel [data-del]').count()>=1)
+  # keepsake chest: recipes and traditions, the old tradition question, editing
+  items.append({'id':'legacyq10','type':'answer','q':'q10','pid':'renee','from':'Mat','at':1,'text':'Christmas Eve gumbo every year','by':'someoneelse'})
+  pg.evaluate("location.hash='keepsakes'");pg.evaluate("document.dispatchEvent(new Event('visibilitychange'))");pg.wait_for_timeout(1000)
+  check('chest heading is capitalized',pg.inner_text('#v-keepsakes h2')=='The Keepsake Chest')
+  check('old tradition answer shows in the chest','Christmas Eve gumbo' in pg.inner_text('#ktrads'))
+  check('old tradition answer is not a flower or lantern',pg.evaluate("[...document.querySelectorAll('.mflower,.mlantern')].every(e=>e.dataset.c!=='legacyq10')"))
+  pg.evaluate("select('renee')");pg.wait_for_timeout(300)
+  check("old tradition answer is not on Renee's card",'Christmas Eve gumbo' not in pg.inner_text('#panel'))
+  check('someone else\'s tradition has no edit button',pg.locator('#ktrads [data-kedit]').count()==0)
+  pg.click('#v-keepsakes details[data-k=recipe] summary')
+  pg.fill('#v-keepsakes form[data-f=recipe] input[name=name]','Pound cake');pg.fill('#v-keepsakes form[data-f=recipe] textarea[name=note]','2 cups flour\n1 cup butter')
+  pg.fill('#v-keepsakes form[data-f=recipe] textarea[name=text]','Cream the butter.\nBake at 325.');pg.fill('#v-keepsakes form[data-f=recipe] input[name=from]','Renee')
+  pg.click('#v-keepsakes form[data-f=recipe] button.pri');pg.wait_for_timeout(1200)
+  rc=[i for i in items if i['type']=='recipe']
+  check('recipe saved for the whole family',len(rc)==1 and rc[0]['pid']=='family' and rc[0]['name']=='Pound cake' and rc[0]['note'].startswith('2 cups'))
+  check('recipe shows in the chest','Pound cake' in pg.inner_text('#krecipes'))
+  pg.click('#krecipes details summary');pg.wait_for_timeout(200)
+  check('recipe lists ingredients and steps',pg.locator('#krecipes li').count()==4)
+  pg.click('#krecipes [data-kedit]');pg.wait_for_timeout(200)
+  pg.fill('#krecipes form.eform input[name=name]','Grandma Renee\'s pound cake');pg.click('#krecipes form.eform button.pri');pg.wait_for_timeout(1200)
+  check('sharer can edit their recipe',rc[0]['name']=="Grandma Renee's pound cake" and "Grandma Renee's pound cake" in pg.inner_text('#krecipes'))
+  pg.click('#v-keepsakes details[data-k=tradition] summary')
+  pg.fill('#v-keepsakes form[data-f=tradition] input[name=name]','Thanksgiving hands');pg.fill('#v-keepsakes form[data-f=tradition] textarea[name=text]','Everyone traces a turkey.')
+  pg.click('#v-keepsakes form[data-f=tradition] button.pri');pg.wait_for_timeout(1200)
+  check('tradition saved and shown',any(i['type']=='tradition' and i['name']=='Thanksgiving hands' for i in items) and 'Thanksgiving hands' in pg.inner_text('#ktrads'))
+  check('recipes and traditions are not flowers or lanterns',pg.evaluate("[...document.querySelectorAll('.mflower,.mlantern')].length")==sum(1 for i in items if i['type'] in ('story','photo','answer') and i.get('q')!='q10'))
+  pg.evaluate("location.hash='tree'");pg.evaluate("select('jack')");pg.wait_for_timeout(300)
+  pg.click('#panel [data-edit]');pg.wait_for_timeout(200);pg.fill('#panel form.eform textarea','He whistled Navy songs every morning.');pg.click('#panel form.eform button.pri');pg.wait_for_timeout(1200)
+  check('sharer can edit their memory','every morning' in pg.inner_text('#panel'))
+  pg.screenshot(path='/tmp/gh-chest.png')
   # lockout: a new device guessing wrong 5 times is locked
   pg.evaluate("localStorage.setItem('famcode','');localStorage.setItem('devid','attacker')");pg.reload();pg.wait_for_timeout(1500)
   pg.click('#skip');pg.wait_for_timeout(4000);pg.evaluate("select('jack')");pg.wait_for_timeout(300)
