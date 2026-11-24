@@ -117,6 +117,7 @@
 </section>
 
 <section class="band view" id="v-keepsakes"><h2>The Keepsake Chest</h2><p class="lead">Old photographs, family recipes and traditions, and the records this tree is built on.</p>
+<h3>Films</h3><div id="kfilms" class="kfilms"></div>
 <h3>Photographs</h3><div id="kpics" class="kpics"></div>
 <h3>Family Recipes</h3><div id="krecipes" class="kcards"></div>
 <details class="kaddbox" data-k="recipe"><summary>+ Add a recipe</summary><form class="form kform" data-f="recipe"><input name="name" required maxlength="120" placeholder="Name of the dish (e.g. Grandma Annie's pound cake)"><textarea name="note" required placeholder="Ingredients — one per line"></textarea><textarea name="text" required placeholder="How to make it — one step per line"></textarea><label class="kph" hidden><span>A photo of it (optional)</span><input type="file" name="file" accept="image/*"></label><label class="fromf"><span>Shared by</span><input name="from" maxlength="60" placeholder="Your name"></label><button class="pri">Add to the chest</button></form></details>
@@ -143,6 +144,7 @@
   <div class="row"><button type="button" id="codeX">Cancel</button><button class="pri" id="codeOk">Continue</button></div></form></div>
 <div id="poster" aria-hidden="true"></div>
 <div class="pop" id="pop" aria-hidden="true"><img alt=""><span></span></div>
+<div class="vbox" id="vbox" role="dialog" aria-modal="true" aria-labelledby="vTitle" hidden><div class="vin"><div class="vhead"><div><b id="vTitle"></b><small id="vBy"></small></div><button type="button" id="vClose" class="vx" aria-label="Close the video">✕ Close</button></div><video id="vEl" controls playsinline preload="none"></video></div></div>
 <div class="lb" id="lb" role="dialog" aria-label="Photo"><figure style="margin:0;text-align:center"><img id="lbImg" alt=""><figcaption id="lbCap" style="color:#f3f7f3;margin-top:12px;font:500 18px Spectral,serif"></figcaption></figure><button id="lbX">Close</button></div>
 
 <script>

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-11-23 — Ed's and Annie Mae's slideshows
+- Two films are now in the tree: Mat's slideshow for Ed (8:24) and Jeff Harper's celebration of life for Annie Mae (4:08). You can watch them from four places:
+  - **Their photo cards:** a "▶ Watch" button at the top when you tap Ed's or Annie Mae's face.
+  - **The Keepsake Chest:** a new Films section at the top.
+  - **Their lanterns:** a larger lantern with a play mark for each of them, at the top of the lantern crown, with their name under it.
+  - **Story mode:** a "▶ Watch" button on the "Johnnie and Annie Mae" and "Ed and Renee" chapters.
+- The tree's music pauses while a film plays and comes back when it closes. Story auto-play stops so the film isn't cut off.
+
 ## 2026-11-23 — Records you can read in the chest
 - Tap a record in the Keepsake Chest to read it right on the page, no FamilySearch account needed: the 1940 census entry, Johnnie's, Ed's and Norma's obituaries, and Jack's and Margaret's FamilySearch pages. They open full width so they're readable on a phone.
 - Ed's obituary link (the funeral home page is gone) and the 1940 census link (it was a search that found nothing) now go to the FamilySearch records.

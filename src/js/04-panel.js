@@ -12,6 +12,7 @@ function renderPanel(fresh){
   const el=$('#panel');
   el.innerHTML=`<button class="pclose" data-close aria-label="Close details">✕ Close</button>${photo[p.id]?`<img class="portrait" src="${esc(photo[p.id])}" alt="${esc(p.n)}">`:''}<h2>${esc(p.n)}</h2><div class="sub">${esc(life)} &nbsp;${badge(p.c)}</div>
    ${db&&canWrite?`<button class="share" data-share>💬 Share a memory of ${esc(p.g<0?p.s:p.s.split(' ')[0])}</button>`:''}
+   ${filmOf(p.id)?(f=>`<button type="button" class="filmbtn" data-film="${f.id}"><img src="${f.poster}" alt=""><span><b>▶ Watch: ${esc(f.sub)}</b><small>${esc(f.by)} · ${f.dur}</small></span></button>`)(filmOf(p.id)):''}
    ${p.story?`<div class="story">${esc(p.story)}</div>`:''}
    <h3>What we know</h3><table class="facts"><tbody>${p.f.map(([l,v,c,s])=>`<tr><td>${esc(l)}</td><td>${esc(v)}${sup(s)}<div>${badge(c)}</div></td></tr>`).join('')}</tbody></table>
    ${PHOTOS[p.id]&&PHOTOS[p.id].g.length?`<h3>Photos</h3><div class="gal">${PHOTOS[p.id].g.map(x=>{const o=typeof x==='string'?{u:x,c:''}:x;return `<img src="${o.u}" alt="${esc(o.c||p.n)}" title="${esc(o.c)}" loading="lazy" data-lb="${o.u}" data-cap="${esc(o.c)}">`;}).join('')}</div>`:''}
@@ -119,3 +120,16 @@ async function saveEdit(f){const fd=new FormData(f),btn=f.querySelector('button.
   btn.disabled=true;btn.textContent='Saving…';
   try{const r=await withCode(code=>apiPost({action:'edit',code,devId,id:f.dataset.id,doc}));if(!r.ok)throw r;await refreshContribs();renderPanel(false);renderKeepDyn();}
   catch(err){btn.disabled=false;btn.textContent=err==='cancel'?'Save changes':'Try again';}}
+
+/* film player: the tree's music pauses while a slideshow plays and comes back when it closes; story auto-play stops */
+let filmResume=false;
+function openFilm(id){const f=FILMS.find(x=>x.id===id);if(!f)return;const v=$('#vEl');
+  filmResume=mState==='playing';if(filmResume)pauseMusic();
+  if(typeof auto!=='undefined'&&auto){clearTimeout(auto);auto=null;if(si>=0)showStep();}
+  $('#vTitle').textContent=f.title+' — '+f.sub;$('#vBy').textContent=f.by;v.poster=f.poster;v.src=f.src;$('#vbox').hidden=false;document.body.classList.add('vopen');
+  const pr=v.play();if(pr&&pr.catch)pr.catch(()=>{});setTimeout(()=>$('#vClose').focus(),50);}
+function closeFilm(){const v=$('#vEl');if($('#vbox').hidden)return;v.pause();v.removeAttribute('src');v.load();$('#vbox').hidden=true;document.body.classList.remove('vopen');
+  if(filmResume)startMusic();filmResume=false;}
+$('#vClose').onclick=closeFilm;$('#vbox').addEventListener('click',e=>{if(e.target.id==='vbox')closeFilm();});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#vbox').hidden){e.stopPropagation();closeFilm();}},true);
+document.addEventListener('click',e=>{const b=e.target.closest('[data-film]');if(b&&!b.closest('#tworld')){e.preventDefault();openFilm(b.dataset.film);}});

@@ -53,6 +53,7 @@ function drawTimeline(){
 // captured 2026-11-23 from Mat's FamilySearch login and Legacy.com. Annie Mae's FamilySearch page is left as a link: it's someone else's unsourced entry with a typo in its dates.
 const KEEPIMG={census40:['photos/records/census40.jpg'],obitJohnny:['photos/records/obitJohnny.jpg'],obitEd:['photos/records/obitEd.jpg'],obitNorma:['photos/records/obitNorma.jpg'],treeJack:['photos/records/treeJack.jpg'],treeMargaret:['photos/records/treeMargaret.jpg']};
 function renderKeepsakes(){const pics=$('#kpics');if(!pics)return;renderKeepDyn();if(pics.dataset.done)return;pics.dataset.done=1;
+  $('#kfilms').innerHTML=FILMS.map(f=>`<button type="button" class="kfilm" data-film="${f.id}"><span class="kfpic"><img src="${f.poster}" alt="" loading="lazy"><i aria-hidden="true">▶</i></span><span class="kftx"><b>${esc(f.title)}</b><span>${esc(f.sub)}</span><small>${esc(f.by)} · ${f.dur}</small></span></button>`).join('');
   pics.innerHTML=KEEP.photos.map(([u,c])=>`<button type="button" class="kpic" data-u="${esc(u)}" data-c="${esc(c)}"><img src="${esc(u)}" alt="" loading="lazy"><span>${esc(c)}</span></button>`).join('');
   pics.onclick=e=>{const b=e.target.closest('.kpic');if(b)openLb(b.dataset.u,b.dataset.c,b.dataset.c);};
   $('#krecs').innerHTML=KEEP.records.filter(k=>SRC[k]).map(k=>{const s=SRC[k],[t,...rest]=s.t.split(' — ');const ic=/obituary/i.test(s.t)?'📰':/census/i.test(s.t)?'📜':'🌳',im=KEEPIMG[k];
