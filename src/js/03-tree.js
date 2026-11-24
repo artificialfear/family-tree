@@ -444,11 +444,11 @@ function treeArt(st,dl){
     if(ART&&!PRINT){
       // the painted tree: its leaves cover the canopy people (with a margin) and its trunk stands where the drawn trunk did (x 915)
       const cv=vals.filter(v=>v.y<1250),cx0=Math.min(...cv.map(v=>v.x-v.r)),cx1=Math.max(...cv.map(v=>v.x+v.r)),cy0=Math.min(...cv.map(v=>v.y-v.r)),cy1=Math.max(...cv.map(v=>v.y+v.r+30));
-      const TX=590,L0=10,L1=1175,T0=21,T1=566,sx=Math.max((915-(cx0-110))/(TX-L0),((cx1+110)-915)/(L1-TX)),sy=Math.max(sx*1.02,((cy1+60)-(cy0-140))/(T1-T0));
-      const treeImg=`<image class="arttree" href="photos/art/tree.webp" x="${f(915-TX*sx)}" y="${f(cy0-140-T0*sy)}" width="${f(1186*sx)}" height="${f(752*sy)}" preserveAspectRatio="none"/>`;
-      // the painted hill (its circle in the picture: centre 673.6,686.2, radius 681.7), with plain soil below its flat bottom edge
-      const hs=HILL.R/681.7,hx=HILL.cx-673.6*hs,hy=HILL.cy-686.2*hs;
-      const hill=`<g class="art planet"><rect x="${f(HILL.cx-HILL.R)}" y="${f(hy+620*hs)}" width="${f(2*HILL.R)}" height="4000" fill="#2b1709"/><image href="photos/art/planet.webp" x="${f(hx)}" y="${f(hy)}" width="${f(1352*hs)}" height="${f(663*hs)}" preserveAspectRatio="none"/></g>`;
+      const TX=1268,L0=92,L1=2479,T0=16,T1=1058,sx=Math.max((915-(cx0-110))/(TX-L0),((cx1+110)-915)/(L1-TX)),sy=Math.max(sx*1.02,((cy1+60)-(cy0-140))/(T1-T0));
+      const treeImg=`<image class="arttree" href="photos/art/tree.webp" x="${f(915-TX*sx)}" y="${f(cy0-140-T0*sy)}" width="${f(2576*sx)}" height="${f(1438*sy)}" preserveAspectRatio="none"/>`;
+      // the painted hill (Gemini's wide planet, 2576x1093: its circle is centre 1286.7,1308, radius 1314.6), with plain soil below its flat bottom edge
+      const hs=HILL.R/1314.6,hx=HILL.cx-1286.7*hs,hy=HILL.cy-1308*hs;
+      const hill=`<g class="art planet"><rect x="${f(HILL.cx-HILL.R)}" y="${f(hy+1085*hs)}" width="${f(2*HILL.R)}" height="4000" fill="#3a1d13"/><image href="photos/art/planet.webp" x="${f(hx)}" y="${f(hy)}" width="${f(2576*hs)}" height="${f(1093*hs)}" preserveAspectRatio="none"/></g>`;
       // family lines: thin bark-coloured lines from each person to their parents (tap someone to light up their family)
       let kin='';Object.keys(TP).forEach(id=>{const p=byId[id],ps=(p&&p.par||[]).filter(q=>TP[q]);if(!ps.length)return;const a=TP[id],mx=ps.reduce((s,q)=>s+TP[q].x,0)/ps.length,my=ps.reduce((s,q)=>s+TP[q].y,0)/ps.length;
         kin+=`<path class="kline" data-k=" ${id} ${ps.join(' ')} " d="M${f(mx)} ${f(my)}Q${f(mx)} ${f((my+a.y)/2)} ${f(a.x)} ${f(a.y)}"/>`;});

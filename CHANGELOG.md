@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-23 — Preview: the sharper tree and the wide planet
+- The preview now uses Gemini's new, larger tree painting, so the leaves and trunk stay sharp when you zoom in.
+- The hill is now the new wide planet painting: a tan topsoil band on top (where the kids, grandkids and garden stand) over layered soil, with the hometowns in the soil as before.
+
 ## 2026-11-23 — Preview: painted curtains, sky pieces and clouds
 - In the preview, the stage frame is now Gemini's painted art: the swagged valance across the top and the red-and-purple side curtains with gold tie-backs and tassels. The curtains keep their shape on any screen; only the straight part of the drape stretches.
 - The painted cloud border hangs under the valance at night, and a sunset-colored copy fades in for the sunset.
