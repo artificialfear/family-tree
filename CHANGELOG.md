@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-23 — Preview: painted keepsake chest and lanterns
+- The Keepsake Chest on the hill is now the painted navy-and-gold chest with the moon clasp. It sits in the topsoil on the right slope, and it lifts a little when you point at it.
+- The memory lanterns are now the painted paper lanterns, and Ed's and Annie Mae's film lanterns are the painted lanterns with the play mark. They still glow and drift the same way.
+
 ## 2026-11-23 — Preview: the sharper tree and the wide planet
 - The preview now uses Gemini's new, larger tree painting, so the leaves and trunk stay sharp when you zoom in.
 - The hill is now the new wide planet painting: a tan topsoil band on top (where the kids, grandkids and garden stand) over layered soil, with the hometowns in the soil as before.
