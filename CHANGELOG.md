@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Preview: grass back on the hill
+- The wide planet's top layer is green grass again (it came from Gemini as tan), with a jagged grass edge where it meets the soil. The kids, grandkids, garden and chest stand on the grass.
+
 ## 2026-11-23 — Preview: painted keepsake chest and lanterns
 - The Keepsake Chest on the hill is now the painted navy-and-gold chest with the moon clasp. It sits in the topsoil on the right slope, and it lifts a little when you point at it.
 - The memory lanterns are now the painted paper lanterns, and Ed's and Annie Mae's film lanterns are the painted lanterns with the play mark. They still glow and drift the same way.
