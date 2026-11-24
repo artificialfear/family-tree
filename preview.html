@@ -1185,11 +1185,12 @@ const ROOTPINS=[['orange',200,1710,'1911'],['durham',330,1785,'1930'],['louisvil
 // the planet (a circle under the tree) and the memory garden on it
 const PLANET={cx:915,cy:1272+2200,R:2200},surfY=x=>PLANET.cy-Math.sqrt(Math.max(0,PLANET.R**2-(x-PLANET.cx)**2));
 // preview: the painted planet is a round hill, radius 1400, top at y 1272 (same place as the drawn planet's top)
-const HILL={cx:915,cy:2672,R:1400},OLDP={...PLANET};if(ART)Object.assign(PLANET,HILL);
+// DROP lowers the hill (and everyone on it, the roots and the chest) so more of the painted trunk shows above it
+const DROP=ART?200:0,HILL={cx:915,cy:2672+DROP,R:1400},OLDP={...PLANET};if(ART)Object.assign(PLANET,HILL);
 const f1=n=>n.toFixed(1);
 const CHEST={x:1835,y:1500,rot:0},GSIGN={x:-46,y:1546};
 // preview: the chest is buried treasure in the middle of the planet, level, under the roots and hometowns
-if(ART){CHEST.x=915;CHEST.y=2120;CHEST.rot=0;CHEST.s=3;}let gardenSeen=null;const gardenNew={};
+if(ART){CHEST.x=915;CHEST.y=2120+DROP;CHEST.rot=0;CHEST.s=3;}let gardenSeen=null;const gardenNew={};
 // the planet is a cut-paper diorama: a grass layer on top for the garden, soil underneath where the roots reach the hometowns.
 // The grass starts SOIL0 deep and grows a row (36) at a time when the garden needs room, pushing the soil, roots and towns down.
 const SOIL0=ART?175:250;let SOILD=SOIL0;
@@ -1443,7 +1444,7 @@ function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contr
    Flowers step around faces, name scrolls, the main root, the root towns, the sign and the chest.
    A memory that arrives while the page is open sprouts (grows in). */
 function gardenSlots(D=SOILD){const ob=[];Object.values(TP).forEach(v=>{ob.push(['c',v.x,v.y,v.r+16]);ob.push(['r',v.x,v.y+v.r+24,Math.max(56,v.r*1.7),20]);});
-  ob.push(['r',915,1440,34,170]);
+  ob.push(['r',915,1440+DROP,34,170]);
   // the children and grandchildren on the planet stand on clear grass: no flowers among or above them
   const fam=Object.values(TP).filter(v=>v.y>1250);if(fam.length){const fx0=Math.min(...fam.map(v=>v.x-v.r))-50,fx1=Math.max(...fam.map(v=>v.x+v.r))+50,fb=Math.max(...fam.map(v=>v.y+v.r))+62;ob.push(['r',(fx0+fx1)/2,0,(fx1-fx0)/2,fb]);}ob.push(['r',CHEST.x,CHEST.y-40,100,72]);
   const ok=(x,y)=>ob.every(o=>o[0]==='c'?Math.hypot(x-o[1],y-o[2])>o[3]:Math.abs(x-o[1])>o[3]||Math.abs(y-o[2])>o[4]);
@@ -1608,8 +1609,8 @@ function treeArt(st,dl){
       ground='';
       // roots that lead to the places the family came from
       // below the grandchildren (their name scrolls end near y 1590), so the roots fan out under the whole family
-      const G=STAGE&&!ART?SOILD-SOIL0:0,PINS=ROOTPINS.map(([k,x,y,yr])=>[k,x,y+G,yr]);
-      const RB={x1:915,y1:1290,cx:915,cy:1420+G/2,x2:915,y2:1600+G};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
+      const G=STAGE&&!ART?SOILD-SOIL0:DROP,PINS=ROOTPINS.map(([k,x,y,yr])=>[k,x,y+G,yr]);
+      const RB={x1:915,y1:1290+DROP,cx:915,cy:1420+G/2,x2:915,y2:1600+G};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
       PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=1592+G,b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
         rts+=`<path class="root" d="${taperPath(b,13,2.2)}"/>`;
         for(let j=0;j<3;j++){const t=.35+j*.2,[qx,qy]=qpt(b,t),dir=(j%2?1:-1)*(px<915?1:-1),c={x1:qx,y1:qy,cx:qx+dir*24,cy:qy+22,x2:qx+dir*(30+rnd()*30),y2:qy+50+rnd()*30};rts+=`<path class="root" d="${taperPath(c,4,.6)}" opacity=".8"/>`;}

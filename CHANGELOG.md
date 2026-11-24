@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Preview: more of the trunk
+- The hill, with the kids, grandkids, roots, hometowns and chest, sits a little lower, so much more of the painted trunk shows between the leaves and the grass. Fit still shows the whole tree; it sits slightly smaller on wide screens.
+
 ## 2026-11-23 — Preview: the chest is buried treasure
 - The Keepsake Chest is now buried in the middle of the planet, under the roots and hometowns, level and about two and a half times bigger, with a soft gold glow around it. Tap it to open the chest as before.
 - Fit now includes the chest, so the whole tree sits a little smaller on wide screens.
