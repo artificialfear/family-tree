@@ -590,3 +590,7 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .art .theme-stage #mqPull{width:30px;height:172px;margin-left:-15px}
 .art .theme-stage #mqPull img{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5));pointer-events:none}
 @media(max-width:699px),(max-height:520px){.art .theme-stage #mqPull{width:20px;height:114px;margin-left:-10px}}
+/* a shorter pull cord: same width, the rope trimmed from the top so the tassel stays whole */
+.art .theme-stage #mqPull{width:24px;height:96px;margin-left:-12px}
+.art .theme-stage #mqPull img{object-fit:cover;object-position:50% 100%}
+@media(max-width:699px),(max-height:520px){.art .theme-stage #mqPull{width:16px;height:64px;margin-left:-8px}}

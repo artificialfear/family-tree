@@ -1,5 +1,7 @@
 /* ---------- illustrated tree ---------- */
 const tsvg=$('#tsvg'),tw=$('#tworld');let stageDraw=null,sbdKey='';
+// the banner's resting bottom edge in the stage (its layout box, so a hoisted or still-lowering banner doesn't count as gone)
+const mqBot=()=>{const m=$('#marquee');return m?m.offsetTop+m.offsetHeight:0;};
 // the hometowns at the ends of the roots, below the grandchildren
 // preview: the hometowns sit around the buried chest, inside the third soil layer (before DROP)
 const ARTPINS={orange:[610,1725],durham:[485,1840],louisville:[385,1960],greenville:[305,2090],collegepark:[1230,1725],newborn:[1350,1840],upson:[1450,1960],covington:[915,2205]};
@@ -103,8 +105,8 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
      const set=up=>{mq.classList.toggle('up',up);pull.classList.toggle('on',up);try{localStorage.setItem('ftBannerUp',up?'1':'')}catch(e){}};
      let up0=false;try{up0=localStorage.getItem('ftBannerUp')==='1'}catch(e){}set(up0);
      mq.addEventListener('click',()=>set(true));mq.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();set(true);}});pull.addEventListener('click',()=>set(false));}
-   const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;const tb=st.querySelector('.tools'),D=stageDims(r.width,r.height);$('#marquee').style.top=(r.width<700?4:6)+'px';if(r.width<700){const mb=$('#marquee').getBoundingClientRect().bottom-r.top;st.style.setProperty('--mqb',mb+'px');}st.style.setProperty('--apron',D.ah+'px');if(tb)st.style.setProperty('--tbh',tb.offsetHeight+'px');const obs=ART&&r.width>=700?[...st.querySelectorAll('#tmstars .flantern,#tmstars .plantern')].map(e=>{const b=e.getBoundingClientRect();return b.width?[b.left-r.left-14,b.top-r.top-10,b.right-r.left+14,b.bottom-r.top+10]:null;}).filter(Boolean):[];
-   bd.innerHTML=stageBackdrop(r.width,r.height,$('#marquee').getBoundingClientRect().bottom-r.top,canopyTopFit(r),obs);pr.innerHTML=stageFrame(r.width,r.height);};
+   const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;const tb=st.querySelector('.tools'),D=stageDims(r.width,r.height);$('#marquee').style.top=(r.width<700?4:6)+'px';if(r.width<700){const mb=mqBot();st.style.setProperty('--mqb',mb+'px');}st.style.setProperty('--apron',D.ah+'px');if(tb)st.style.setProperty('--tbh',tb.offsetHeight+'px');const obs=ART&&r.width>=700?[...st.querySelectorAll('#tmstars .flantern,#tmstars .plantern')].map(e=>{const b=e.getBoundingClientRect();return b.width?[b.left-r.left-14,b.top-r.top-10,b.right-r.left+14,b.bottom-r.top+10]:null;}).filter(Boolean):[];
+   bd.innerHTML=stageBackdrop(r.width,r.height,mqBot(),canopyTopFit(r),obs);pr.innerHTML=stageFrame(r.width,r.height);};
    draw();stageDraw=draw;let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(()=>{draw();if(!tTouched)tStart();},120);}).observe(st);}}
 /* the moon and sun as friendly faces, gold-rimmed like an old stage sign (original drawings) */
 function marqueeSVG(){
@@ -196,23 +198,24 @@ function stageBackdrop(W,H,mqb=200,gb=0,obs=[]){const ph=W<700;let sd=11;const r
       <path d="${p}" transform="translate(5 7)" class="pcsh"/><path d="${p}" class="pcl"/><path d="M${f(x0+w*.12)} ${f(cy-3)}H${f(x0+w*.88)}" class="pcln"/>`);});
   // the day-coloured copy of the cloud rows fades in over the night one (a fade costs nothing; changing the colours repainted it every frame)
   const RH=Math.ceil(top+(ph?8:14)+(ph?60:90)*1.25*1.35*.6+14);
-  if(ART){const SH=Math.ceil(top+(ph||H<520?62:118)),im=d=>`<svg class="srow${d?' srowday':''}" width="${W}" height="${SH}" viewBox="0 0 ${W} ${SH}" style="width:${W}px;height:${SH}px"><image href="photos/art/clouds-strip${d?'-day':''}.webp" width="${W}" height="${SH}" preserveAspectRatio="xMidYMax slice"/></svg>`;
+  if(ART){const SH=Math.ceil(top+(ph||H<520?62:160)),im=d=>`<svg class="srow${d?' srowday':''}" width="${W}" height="${SH}" viewBox="0 0 ${W} ${SH}" style="width:${W}px;height:${SH}px"><image href="photos/art/clouds-strip${d?'-day':''}.webp" width="${W}" height="${SH}" preserveAspectRatio="xMidYMax slice"/></svg>`;
     return im(0)+im(1)+stars+clouds;}
   return `<svg class="srow" width="${W}" height="${RH}" viewBox="0 0 ${W} ${RH}" style="width:${W}px;height:${RH}px"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
    <linearGradient id="pclg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe0c2"/><stop offset="1" stop-color="#f49a8e"/></linearGradient><linearGradient id="sgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient></defs>${back}${front}</svg>`+
    `<svg class="srow srowday" width="${W}" height="${RH}" viewBox="0 0 ${W} ${RH}" style="width:${W}px;height:${RH}px">${backD}${frontD}</svg>${stars}${clouds}`;}
 // where the top of the canopy lands when the whole tree is fitted (same sums as tFrame), so tall screens can hang the stars above it
 function canopyTopFit(r){if(!TB||!isFinite(TB.y0)||TB.x1-TB.x0<50)return 0;const SD=stageDims(r.width,r.height),m=$('#marquee'),tl=$('#tstage>.tools'),
-  top=Math.max(60,SD.top,m?m.getBoundingClientRect().bottom-r.top+(SD.ph?104:10):0),avail=r.height-top-8-SD.bot-(tl?tl.offsetHeight+10:0),w=TB.x1-TB.x0,h=TB.y1-TB.y0,
+  top=Math.max(60,SD.top,m?mqBot()+(SD.ph?104:10):0),avail=r.height-top-8-SD.bot-(tl?tl.offsetHeight+10:0),w=TB.x1-TB.x0,h=TB.y1-TB.y0,
   k=Math.max(.12,Math.min((r.width-36-SD.side*2)/w,avail/h,1.2));return top+avail/2-h*k/2-CANOPY_UP*k;}
 // how much of each edge the stage frame covers, so Fit keeps the family inside it
 function stageDims(W,H){const ph=W<700,vh=ph?22:Math.max(30,Math.min(56,W*.032)),n=Math.max(3,Math.round(W/(ph?150:250))),sw=W/n,dr=Math.min(sw*.16,ph?20:36),
   cw=ph?16:Math.max(26,Math.min(78,W*.045)),ah=ph?12:Math.max(16,Math.min(30,W*.018));
   if(ART){/* painted valance (1600x397, swags about 215 deep) and side curtains (612x1200, drape about 224 wide) */
     const ah=Math.max(14,Math.min(64,W*.04)),hv=Math.min(W*397/1600,H*(ph?.15:.2)),cwI=ph?Math.max(64,W*.19):Math.max(150,Math.min(290,W*.15));
-    return {ph,vh,n,sw,dr,cw,ah,hv,cwI,top:hv*.56+8,side:cwI*224/612*1.05,bot:ah+(ph?14:34)};}
+    const vy=ph?0:-hv*.22;// computers: the valance rides higher so more of the cloud border shows
+    return {ph,vh,n,sw,dr,cw,ah,hv,cwI,vy,top:hv*.56+vy+8,side:cwI*224/612*1.05,bot:ah+(ph?14:34)};}
   return {ph,vh,n,sw,dr,cw,ah,top:vh+dr*1.9+10,side:cw*1.3,bot:ah+(ph?14:34)};}
-function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah,hv,cwI}=stageDims(W,H);
+function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah,hv,cwI,vy}=stageDims(W,H);
   if(ART){// side curtains in three slices: swag + tie-back and the hem keep their shape, the straight drape between them stretches to the screen height
     const s=cwI/612,tH=912*s,hH=144*s,mH=Math.max(0,H-tH-hH);
     const cur=(src,iw,right)=>{const w=iw*s,x=right?W-w+24*s:-36*s,sl=(y,h,sy,sh)=>`<svg x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" viewBox="0 ${sy} ${iw} ${sh}" preserveAspectRatio="none"><image href="photos/art/${src}.webp" width="${iw}" height="1200"/></svg>`;
@@ -220,7 +223,7 @@ function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah,hv,cwI}=st
     // the painted apron: its footlights and lip show, the dark front runs off the bottom of the screen
     const apron=`<rect x="0" y="${f(H-ah*.55)}" width="${W}" height="${f(ah)}" fill="#1a0e0a"/><image href="photos/art/apron.webp" x="0" y="${f(H-ah)}" width="${W}" height="${f(W*129/1600)}" preserveAspectRatio="none"/>`;
     return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="pgl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset=".5" stop-color="#d9a441"/><stop offset="1" stop-color="#8f5f1b"/></linearGradient></defs>
-     ${apron}<rect x="-6" y="0" width="${f(cwI*.14+6)}" height="${H}" fill="#24092f"/><rect x="${f(W-cwI*.14)}" y="0" width="${f(cwI*.14+6)}" height="${H}" fill="#24092f"/>${cur('curtain-left',612,0)}${cur('curtain-right',546,1)}<image href="photos/art/valance-top.webp" x="0" y="0" width="${W}" height="${f(hv)}" preserveAspectRatio="none"/></svg>`;}
+     ${apron}<rect x="-6" y="0" width="${f(cwI*.14+6)}" height="${H}" fill="#24092f"/><rect x="${f(W-cwI*.14)}" y="0" width="${f(cwI*.14+6)}" height="${H}" fill="#24092f"/>${cur('curtain-left',612,0)}${cur('curtain-right',546,1)}<image href="photos/art/valance-top.webp" x="0" y="${f(vy)}" width="${W}" height="${f(hv)}" preserveAspectRatio="none"/></svg>`;}
   // valance: green swags behind, red swags in front, gold fringe, crescents where they meet
   let green='',red='',fringe='',orn='';
   for(let i=-1;i<=n;i++){const x=i*sw,gx=x+sw/2;
@@ -671,7 +674,7 @@ function gEnd(){if(gRaf){cancelAnimationFrame(gRaf);gRaf=0;}if(G)tApply(false);}
 function tBox(ids){const vs=(ids&&ids.length?ids:Object.keys(TP)).map(id=>TP[id]).filter(Boolean);if(!vs.length)return TB;
   return {x0:Math.min(...vs.map(v=>v.x-v.r-60)),x1:Math.max(...vs.map(v=>v.x+v.r+60)),y0:Math.min(...vs.map(v=>v.y-v.r-10)),y1:Math.max(...vs.map(v=>v.y+v.r+34))};}
 function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!r.width)return;
-  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?m.getBoundingClientRect().bottom-r.top+(SD.ph?104:10):0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot+((st=>st?st.offsetHeight+10:0)($('#tstage>.tools'))):0),b=(ids&&ids.length)?tBox(ids):(ART&&!PRINT&&SD&&!SD.ph&&r.width>r.height?{...TB,y1:Math.min(TB.y1,1272+DROP+600)}:TB),w=b.x1-b.x0,h=b.y1-b.y0;
+  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?mqBot()+(SD.ph?104:10):0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot+((st=>st?st.offsetHeight+10:0)($('#tstage>.tools'))):0),b=(ids&&ids.length)?tBox(ids):(ART&&!PRINT&&SD&&!SD.ph&&r.width>r.height?{...TB,y1:Math.min(TB.y1,1272+DROP+600)}:TB),w=b.x1-b.x0,h=b.y1-b.y0;
   const k=Math.max(.12,Math.min((r.width-36-(SD?SD.side*2:0))/w,avail/h,ids&&ids.length===1?1.5:1.2));
   tv.k=k;tv.x=r.width/2-(b.x0+b.x1)/2*k;tv.y=top+avail/2-(b.y0+b.y1)/2*k;
   // phones, opening view: zoom so the core family just fills the width (outer cousins run off the sides, a swipe away)

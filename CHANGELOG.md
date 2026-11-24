@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-24 — More clouds, phone stars back, shorter pull cord
+- On computers the top curtain sits higher and the painted cloud border hangs a little lower, so much more of the clouds shows.
+- Fixed: the hanging stars disappeared on phones after the banner started being lowered in on opening. They're back.
+- The pull cord is shorter (the rope is trimmed, the tassel stays whole) on phones and computers.
+
 ## 2026-11-24 — New app icon
 - The home-screen icon and the browser tab icon are now the painted tree with its lanterns and star flowers, filling the frame (no moon, no border). A padded version is used where phones crop icons into circles.
 
