@@ -552,3 +552,5 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .art .cover.curtain .cpanel.r{background-image:url(photos/art/curtain-closed-r.webp)}
 .art .cover.curtain .cpanel::after{display:none}
 .art #tworld .scroll.rib .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
+/* short landscape screens (a phone on its side): a smaller banner so it doesn't take over the sky */
+@media(max-height:520px) and (min-width:700px){.theme-stage #marquee{width:min(300px,36%)}}

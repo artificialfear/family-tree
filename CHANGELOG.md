@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-24 — Curtain edges, landscape phones, a little more zoom-out
+- The side curtains now reach past both edges of the screen, with dark velvet behind them, so no sky shows along the left or right edge.
+- On a phone turned sideways, the banner is much smaller, and the hanging stars and cloud border are scaled down to match.
+- You can zoom out a bit further than before (still not so far that the tree gets lost).
+
 ## 2026-11-24 — The painted stage is live
 - The main page now shows everything from the preview: Gemini's painted tree, planet and grass, curtains, banner, clouds, sun, moon, stars, lanterns, flowers, gold face frames, ribbon name tags, footlights and opening curtains, plus the buried Keepsake Chest with the hometowns around it.
 - The preview link still works and shows the same page.

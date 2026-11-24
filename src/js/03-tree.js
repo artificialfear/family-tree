@@ -157,7 +157,7 @@ function stageBackdrop(W,H,mqb=200,gb=0){const ph=W<700;let sd=11;const r=()=>(s
   const piece=(cls,i,x0,x1,y1,inner)=>`<svg class="${cls}" style="--i:${i};left:${f(x0)}px;width:${f(x1-x0)}px;height:${f(y1)}px" width="${f(x1-x0)}" height="${f(y1)}" viewBox="${f(x0)} 0 ${f(x1-x0)} ${f(y1)}" overflow="visible">${inner}</svg>`;
   // gold stars on strings, hanging from behind the valance at different drops and sizes.
   // They hang in the open sky: beside the tree on wide screens, in the gap under the sign on phones.
-  let stars='',si=0;const n=ph?8:tall?18:24,base=ph?6:13;for(let i=0;i<n;i++){const x=W*(.04+.92*(i+.5)/n)+(r()-.5)*W*(ph?.03:.025),dx=Math.abs(x-W/2)/W,rs=base*(ph?(i%3===1?1.5+r()*.5:.6+r()*.7):.55+r()*1.15);let len;
+  let stars='',si=0;const n=ph?8:tall?18:24,base=ph?6:H<520?8:13;for(let i=0;i<n;i++){const x=W*(.04+.92*(i+.5)/n)+(r()-.5)*W*(ph?.03:.025),dx=Math.abs(x-W/2)/W,rs=base*(ph?(i%3===1?1.5+r()*.5:.6+r()*.7):.55+r()*1.15);let len;
     if(ph){if(dx>.44||x>W*.74)continue;const PD=[.1,.95,.45,.75,0,.6,1,.3];const d=PD[i%PD.length];
       len=(dx>.32?top+14+d*(mqb+80-top):mqb+8+d*82)+rs;}
     else if(tall){if(dx>.45)continue;const PD=[.15,.8,.4,.95,.05,.6,.3,1,.5,.7,.2,.9];const d=PD[i%PD.length];
@@ -183,7 +183,7 @@ function stageBackdrop(W,H,mqb=200,gb=0){const ph=W<700;let sd=11;const r=()=>(s
       <path d="${p}" transform="translate(5 7)" class="pcsh"/><path d="${p}" class="pcl"/><path d="M${f(x0+w*.12)} ${f(cy-3)}H${f(x0+w*.88)}" class="pcln"/>`);});
   // the day-coloured copy of the cloud rows fades in over the night one (a fade costs nothing; changing the colours repainted it every frame)
   const RH=Math.ceil(top+(ph?8:14)+(ph?60:90)*1.25*1.35*.6+14);
-  if(ART){const SH=Math.ceil(top+(ph?62:118)),im=d=>`<svg class="srow${d?' srowday':''}" width="${W}" height="${SH}" viewBox="0 0 ${W} ${SH}" style="width:${W}px;height:${SH}px"><image href="photos/art/clouds-strip${d?'-day':''}.webp" width="${W}" height="${SH}" preserveAspectRatio="xMidYMax slice"/></svg>`;
+  if(ART){const SH=Math.ceil(top+(ph||H<520?62:118)),im=d=>`<svg class="srow${d?' srowday':''}" width="${W}" height="${SH}" viewBox="0 0 ${W} ${SH}" style="width:${W}px;height:${SH}px"><image href="photos/art/clouds-strip${d?'-day':''}.webp" width="${W}" height="${SH}" preserveAspectRatio="xMidYMax slice"/></svg>`;
     return im(0)+im(1)+stars+clouds;}
   return `<svg class="srow" width="${W}" height="${RH}" viewBox="0 0 ${W} ${RH}" style="width:${W}px;height:${RH}px"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
    <linearGradient id="pclg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe0c2"/><stop offset="1" stop-color="#f49a8e"/></linearGradient><linearGradient id="sgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient></defs>${back}${front}</svg>`+
@@ -202,12 +202,12 @@ function stageDims(W,H){const ph=W<700,vh=ph?22:Math.max(30,Math.min(56,W*.032))
 function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah,hv,cwI}=stageDims(W,H);
   if(ART){// side curtains in three slices: swag + tie-back and the hem keep their shape, the straight drape between them stretches to the screen height
     const s=cwI/612,tH=912*s,hH=144*s,mH=Math.max(0,H-tH-hH);
-    const cur=(src,iw,right)=>{const w=iw*s,x=right?W-w:0,sl=(y,h,sy,sh)=>`<svg x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" viewBox="0 ${sy} ${iw} ${sh}" preserveAspectRatio="none"><image href="photos/art/${src}.webp" width="${iw}" height="1200"/></svg>`;
+    const cur=(src,iw,right)=>{const w=iw*s,x=right?W-w+24*s:-36*s,sl=(y,h,sy,sh)=>`<svg x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" viewBox="0 ${sy} ${iw} ${sh}" preserveAspectRatio="none"><image href="photos/art/${src}.webp" width="${iw}" height="1200"/></svg>`;
       return sl(0,tH+1,0,913)+sl(tH,mH+2,912,144)+sl(H-hH,hH,1056,144);};
     // the painted apron: its footlights and lip show, the dark front runs off the bottom of the screen
     const apron=`<rect x="0" y="${f(H-ah*.55)}" width="${W}" height="${f(ah)}" fill="#1a0e0a"/><image href="photos/art/apron.webp" x="0" y="${f(H-ah)}" width="${W}" height="${f(W*129/1600)}" preserveAspectRatio="none"/>`;
     return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="pgl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset=".5" stop-color="#d9a441"/><stop offset="1" stop-color="#8f5f1b"/></linearGradient></defs>
-     ${apron}${cur('curtain-left',612,0)}${cur('curtain-right',546,1)}<image href="photos/art/valance-top.webp" x="0" y="0" width="${W}" height="${f(hv)}" preserveAspectRatio="none"/></svg>`;}
+     ${apron}<rect x="-6" y="0" width="${f(cwI*.14+6)}" height="${H}" fill="#24092f"/><rect x="${f(W-cwI*.14)}" y="0" width="${f(cwI*.14+6)}" height="${H}" fill="#24092f"/>${cur('curtain-left',612,0)}${cur('curtain-right',546,1)}<image href="photos/art/valance-top.webp" x="0" y="0" width="${W}" height="${f(hv)}" preserveAspectRatio="none"/></svg>`;}
   // valance: green swags behind, red swags in front, gold fringe, crescents where they meet
   let green='',red='',fringe='',orn='';
   for(let i=-1;i<=n;i++){const x=i*sw,gx=x+sw/2;
