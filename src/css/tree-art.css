@@ -647,3 +647,11 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 /* closing the curtains (Home): they become visible at once and slide together; the frame stays */
 .cover.curtain.closing .cpanel{transition:transform 1.6s cubic-bezier(.62,0,.28,1),opacity .25s ease}
 .cover.curtain.closing .cframe{opacity:1;transition:none}
+/* preview: painted roots and brass hometown pins */
+.preview .theme-stage #tworld .roots .root.rpaint{fill:url(#bark);stroke:#3c2210;stroke-width:1.2;opacity:1}
+.preview #tworld .roots .rsh{fill:#1a0c05;opacity:.45}
+.preview #tworld .roots .rhl{fill:none;stroke:#e2b56c;stroke-linecap:round;opacity:.6}
+.preview .rootpin .pglow{fill:url(#pglow)}
+.preview .rootpin .pbr{fill:url(#pbrass);stroke:#4a2e0c;stroke-width:1.2}
+.preview .rootpin .pbh{fill:#fff7dc;opacity:.8}
+.preview .rootpin:hover .pbr,.preview .rootpin:focus-visible .pbr{stroke:#ffe3a6;stroke-width:2}

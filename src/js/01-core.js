@@ -2,6 +2,7 @@
 const MAP=__MAP__;
 // preview.html: the painted tree and hill (Gemini artwork) instead of the drawn ones
 const ART=__ART__;const HANG=ART&&(__HANG__||/[?&]hang\b/.test(location.search));// preview: lanterns hang from the branches
+const PREVIEW=ART&&(__PREVIEW__||/[?&]preview\b/.test(location.search));if(PREVIEW)document.documentElement.classList.add('preview');// preview.html only: ideas being tried out (2026-11-24: painted roots)
 if(ART)document.documentElement.classList.add('art');
 const $=s=>document.querySelector(s);
 // touch screens (phones and tablets) get the lighter graphics paths: Android tablets ran out of graphics memory on the desktop ones
