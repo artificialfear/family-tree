@@ -8,8 +8,8 @@ const PLANET={cx:915,cy:1272+2200,R:2200},surfY=x=>PLANET.cy-Math.sqrt(Math.max(
 const HILL={cx:915,cy:2672,R:1400},OLDP={...PLANET};if(ART)Object.assign(PLANET,HILL);
 const f1=n=>n.toFixed(1);
 const CHEST={x:1835,y:1500,rot:0},GSIGN={x:-46,y:1546};
-// on the round hill the chest sits on the slope past Dustin, tilted part way to follow it
-if(ART){CHEST.x=1705;CHEST.y=surfY(1705)+50;CHEST.rot=Math.atan((1705-HILL.cx)/Math.sqrt(HILL.R**2-(1705-HILL.cx)**2))*180/Math.PI*.3;}let gardenSeen=null;const gardenNew={};
+// preview: the chest is buried treasure in the middle of the planet, level, under the roots and hometowns
+if(ART){CHEST.x=915;CHEST.y=2120;CHEST.rot=0;CHEST.s=3;}let gardenSeen=null;const gardenNew={};
 // the planet is a cut-paper diorama: a grass layer on top for the garden, soil underneath where the roots reach the hometowns.
 // The grass starts SOIL0 deep and grows a row (36) at a time when the garden needs room, pushing the soil, roots and towns down.
 const SOIL0=ART?175:250;let SOILD=SOIL0;
@@ -308,9 +308,9 @@ function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(Strin
       <rect x="-15" y="-20" width="30" height="4" rx="1.5" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><rect x="-10" y="14" width="20" height="3" rx="1" fill="url(#ggold)" stroke="#6b4410" stroke-width=".6"/><ellipse cy="20" rx="2.2" ry="3.4" fill="#fff3b0"/>`}</g></g></g>`;});
   gardenSeen=new Set(all.map(c=>c.id));
   // the chest: cut-paper wood with gold bands and a star clasp, a few gold stars floating out of it
-  const chest=`<g class="kchest" tabindex="0" role="button" aria-label="Open the keepsake chest: old photographs and family records" transform="translate(${CHEST.x} ${f1(CHEST.y)}) rotate(${f1(CHEST.rot)}) scale(1.3)">
-    <circle cx="0" cy="-34" r="20" fill="transparent"/><ellipse cx="${ART?4:0}" cy="${ART?5:7}" rx="${ART?54:60}" ry="9" fill="${ART?'#2a1408':'#0f2a16'}" opacity="${ART?.35:.55}"/>
-    <g class="kfloat">${(ART?[[-30,-94,5],[4,-110,6.5],[34,-90,4.5],[18,-128,3.5]]:[[-30,-74,5],[4,-90,6.5],[34,-70,4.5],[18,-108,3.5]]).map(([sx,sy,sr],i)=>`<path d="${star6(sx,sy,sr)}" fill="url(#ggold)" stroke="#6b4410" stroke-width=".8" class="kst" style="--i:${i}"/>`).join('')}</g>
+  const chest=`<g class="kchest" tabindex="0" role="button" aria-label="Open the keepsake chest: old photographs and family records" transform="translate(${CHEST.x} ${f1(CHEST.y)}) rotate(${f1(CHEST.rot)}) scale(${CHEST.s||1.3})">
+    ${ART?`<circle cx="3" cy="-34" r="80" fill="url(#kglow)"/>`:''}<circle cx="0" cy="-34" r="20" fill="transparent"/><ellipse cx="${ART?4:0}" cy="${ART?5:7}" rx="${ART?54:60}" ry="9" fill="${ART?'#2a1408':'#0f2a16'}" opacity="${ART?.35:.55}"/>
+    <g class="kfloat">${(ART?[[-62,-60,3],[66,-48,2.5],[-56,-14,2],[70,-8,2.2]]:[[-30,-74,5],[4,-90,6.5],[34,-70,4.5],[18,-108,3.5]]).map(([sx,sy,sr],i)=>`<path d="${star6(sx,sy,sr)}" fill="url(#ggold)" stroke="#6b4410" stroke-width=".8" class="kst" style="--i:${i}"/>`).join('')}</g>
     ${ART?`<rect x="-52" y="-78" width="106" height="86" fill="transparent"/><image class="kimg" href="photos/art/chest.webp" x="-50" y="-75.6" width="106" height="83.6"/>`:`<g transform="translate(5 6)" class="gshadow"><path d="M-44 -26v26q0 6 6 6h76q6 0 6-6v-26z"/><path d="M-44 -26q0-26 44-26q44 0 44 26z"/></g>
     <path d="M-44 -26v26q0 6 6 6h76q6 0 6-6v-26z" fill="url(#gwood)" stroke="#3e230c" stroke-width="2"/>
     <g class="klid"><path d="M-44 -26q0-26 44-26q44 0 44 26z" fill="url(#gwood)" stroke="#3e230c" stroke-width="2"/><path d="M-30 -42q30-12 60 0" fill="none" stroke="#c8915a" stroke-width="1.4" opacity=".6"/></g>
@@ -320,7 +320,7 @@ function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(Strin
     <path d="M-40 -1q40 9 80 0" fill="none" stroke="#1f3d24" stroke-width="7" stroke-linecap="round"/>`}</g>`;
   const grad=(id,a,b)=>`<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
   return `<defs><linearGradient id="ggold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient>
-    ${grad('gvel','#5b2a8f','#2c0f50')}${grad('gwood','#9a6234','#5e3615')}${Object.entries(FLC).map(([k,[a,b]])=>grad('gf-'+k,a,b)).join('')}<linearGradient id="lpaper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset=".6" stop-color="#ffc36e"/><stop offset="1" stop-color="#f08a3c"/></linearGradient><radialGradient id="lglow"><stop offset="0" stop-color="#ffd98a" stop-opacity=".55"/><stop offset="1" stop-color="#ffb860" stop-opacity="0"/></radialGradient></defs><g class="garden">${chest}${fl}</g><g class="lanterns">${lt}</g>`;}
+    ${grad('gvel','#5b2a8f','#2c0f50')}${grad('gwood','#9a6234','#5e3615')}${Object.entries(FLC).map(([k,[a,b]])=>grad('gf-'+k,a,b)).join('')}<radialGradient id="kglow"><stop offset="0" stop-color="#ffd77a" stop-opacity=".55"/><stop offset=".55" stop-color="#e0a440" stop-opacity=".18"/><stop offset="1" stop-color="#e0a440" stop-opacity="0"/></radialGradient><linearGradient id="lpaper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset=".6" stop-color="#ffc36e"/><stop offset="1" stop-color="#f08a3c"/></linearGradient><radialGradient id="lglow"><stop offset="0" stop-color="#ffd98a" stop-opacity=".55"/><stop offset="1" stop-color="#ffb860" stop-opacity="0"/></radialGradient></defs><g class="garden">${chest}${fl}</g><g class="lanterns">${lt}</g>`;}
 function gardenNote(el){const r=$('#tstage').getBoundingClientRect(),q=el.getBoundingClientRect(),n=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]).length;
   showNote(`<div class="mem"><div class="mq">The memory garden</div><p>Every flower is a memory someone shared about the family${n?` — ${n} so far`:''}. Tap a flower to read it.</p><p>To plant one, tap anyone's photo on the tree and choose <b>Add a memory or story</b>.</p></div>`,q.left-r.left+q.width/2,q.bottom-r.top);}
 // stars keep a readable size however far you zoom out
@@ -518,7 +518,7 @@ function drawLeafTree(grow){
     TBR=TBR.map(b=>{const d1=shiftAt(b.x1,b.y1),d2=shiftAt(b.x2,b.y2);if(!d1&&!d2)return b;const n={...b,x1:b.x1+d1,x2:b.x2+d2,cx:b.cx+(d1+d2)/2};
       n.d=`M${n.x1.toFixed(1)} ${n.y1.toFixed(1)}Q${n.cx.toFixed(1)} ${n.cy.toFixed(1)} ${n.x2.toFixed(1)} ${n.y2.toFixed(1)}`;return n;});}
   if(ART&&!PRINT){const old=x=>OLDP.cy-Math.sqrt(Math.max(0,OLDP.R**2-(x-OLDP.cx)**2));for(const id in TP){const v=TP[id];if(v.y>1250)TP[id]={...v,y:v.y+surfY(v.x)-old(v.x)};}}
-  const xs=[],ys=[];Object.values(TP).forEach(v=>{xs.push(v.x-v.r-70,v.x+v.r+70);ys.push(v.y-v.r-8,v.y+v.r+34);});TBR.forEach(b=>{xs.push(b.x1,b.x2);ys.push(b.y1,b.y2);});
+  const xs=[],ys=[];Object.values(TP).forEach(v=>{xs.push(v.x-v.r-70,v.x+v.r+70);ys.push(v.y-v.r-8,v.y+v.r+34);});TBR.forEach(b=>{xs.push(b.x1,b.x2);ys.push(b.y1,b.y2);});if(ART&&!PRINT)ys.push(CHEST.y+30);
   TB={x0:Math.min(...xs),y0:Math.min(...ys),x1:Math.max(...xs),y1:Math.max(...ys)};
   // the tree's size decides where tall screens hang the stars, so redraw the backdrop when it changes
   {const k=[TB.x0,TB.y0,TB.x1,TB.y1].map(Math.round).join();if(k!==sbdKey){sbdKey=k;if(stageDraw)requestAnimationFrame(()=>stageDraw());}}

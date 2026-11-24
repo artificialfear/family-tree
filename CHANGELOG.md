@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-23 — Preview: the chest is buried treasure
+- The Keepsake Chest is now buried in the middle of the planet, under the roots and hometowns, level and about two and a half times bigger, with a soft gold glow around it. Tap it to open the chest as before.
+- Fit now includes the chest, so the whole tree sits a little smaller on wide screens.
+
 ## 2026-11-23 — Preview: a round planet when zoomed out
 - Zooming out no longer shows a brown box under the hill. The planet now continues all the way around as a circle, with its gold rim and grass ring, and the painted soil fades into the darker lower half.
 
