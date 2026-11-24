@@ -756,6 +756,17 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 #tmstars .plantern{cursor:pointer}
 .art #tmstars .plantern .limg{transform-box:fill-box;transform-origin:50% 100%;transition:transform .3s}
 .art #tmstars .plantern:hover .limg,.art #tmstars .plantern:focus-visible .limg{transform:scale(1.12)}
+/* painted banner: a bit smaller on computers; tap to hoist it out of view, the pull cord lowers it */
+@media(min-width:700px) and (min-height:521px){.art.theme-stage #marquee,.art .theme-stage #marquee{width:min(420px,80%)}}
+.art .theme-stage #marquee{pointer-events:auto;cursor:pointer;transition:transform .9s cubic-bezier(.5,0,.3,1)}
+.art .theme-stage #marquee.up{transform:translateX(-50%) translateY(calc(-100% - 40px))}
+.art .theme-stage #marquee:focus-visible{outline:2px solid #ffe6a0;outline-offset:4px;border-radius:8px}
+#mqPull{display:none}
+.art .theme-stage #mqPull{display:block;position:absolute;top:0;left:50%;width:30px;height:90px;margin-left:-15px;padding:0;border:0;background:none;cursor:pointer;z-index:4;transform:translateY(-100%);transition:transform .5s ease .4s}
+.art .theme-stage #mqPull.on{transform:translateY(0)}
+.art .theme-stage #mqPull svg{width:100%;height:100%;display:block;filter:drop-shadow(0 3px 4px rgba(0,0,0,.5))}
+.art .theme-stage #mqPull:focus-visible{outline:2px solid #ffe6a0;outline-offset:2px}
+@media(max-width:699px),(max-height:520px){.art .theme-stage #mqPull{width:22px;height:66px;margin-left:-11px}}
 </style>
 </head>
 <body>
@@ -1303,6 +1314,13 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
    const pr=document.createElement('div');pr.id='proscen';pr.setAttribute('aria-hidden','true');cel.after(pr);
    $('#moonBtn').innerHTML=paperMoonSVG();$('#sunBtn').innerHTML=paperSunSVG();$('#sunBtn').setAttribute('aria-label','The setting sun: a note for Mom');
    const mq=document.createElement('div');mq.id='marquee';mq.innerHTML=marqueeSVG();pr.after(mq);
+   // tap the banner to hoist it up out of view; a gold pull cord stays under the valance to lower it again (remembered on this device)
+   if(ART){const pull=document.createElement('button');pull.type='button';pull.id='mqPull';pull.setAttribute('aria-label','Lower the family banner');
+     pull.innerHTML='<svg viewBox="0 0 30 90" aria-hidden="true"><line x1="15" y1="0" x2="15" y2="58" stroke="#d9a441" stroke-width="2.2"/><circle cx="15" cy="60" r="5" fill="#e8c06a" stroke="#7a4f12"/><path d="M9 64Q15 61 21 64L24 86Q15 90 6 86Z" fill="#d9a441" stroke="#7a4f12" stroke-width="1"/><path d="M10 68L9 85M13 68L13 87M17 68L17 87M20 68L21 85" stroke="#8a5a1c" stroke-width=".8"/></svg>';
+     mq.after(pull);mq.setAttribute('role','button');mq.setAttribute('tabindex','0');mq.setAttribute('aria-label','Raise the family banner out of view');
+     const set=up=>{mq.classList.toggle('up',up);pull.classList.toggle('on',up);try{localStorage.setItem('ftBannerUp',up?'1':'')}catch(e){}};
+     let up0=false;try{up0=localStorage.getItem('ftBannerUp')==='1'}catch(e){}set(up0);
+     mq.addEventListener('click',()=>set(true));mq.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();set(true);}});pull.addEventListener('click',()=>set(false));}
    const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;const tb=st.querySelector('.tools'),D=stageDims(r.width,r.height);$('#marquee').style.top=(r.width<700?4:6)+'px';if(r.width<700){const mb=$('#marquee').getBoundingClientRect().bottom-r.top;st.style.setProperty('--mqb',mb+'px');}st.style.setProperty('--apron',D.ah+'px');if(tb)st.style.setProperty('--tbh',tb.offsetHeight+'px');bd.innerHTML=stageBackdrop(r.width,r.height,$('#marquee').getBoundingClientRect().bottom-r.top,canopyTopFit(r));pr.innerHTML=stageFrame(r.width,r.height);};
    draw();stageDraw=draw;let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(()=>{draw();if(!tTouched)tStart();},120);}).observe(st);}}
 /* the moon and sun as friendly faces, gold-rimmed like an old stage sign (original drawings) */

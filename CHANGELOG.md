@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-24 — Smaller banner you can hoist away
+- On computers the family banner is about 20% smaller.
+- Tap the banner and it's hoisted up out of view; a little gold pull cord with a tassel then hangs from the middle of the curtain. Tap the cord to lower the banner again. Each device remembers which way you left it.
+
 ## 2026-11-24 — Memorial lanterns
 - Lanterns now float for Jack, Margaret, Richard and Norma on the Graham side and Johnnie on the Harper side, alongside Ed's and Annie Mae's film lanterns. Each is labelled with a first name, and tapping one opens that person's card.
 

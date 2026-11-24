@@ -96,6 +96,13 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
    const pr=document.createElement('div');pr.id='proscen';pr.setAttribute('aria-hidden','true');cel.after(pr);
    $('#moonBtn').innerHTML=paperMoonSVG();$('#sunBtn').innerHTML=paperSunSVG();$('#sunBtn').setAttribute('aria-label','The setting sun: a note for Mom');
    const mq=document.createElement('div');mq.id='marquee';mq.innerHTML=marqueeSVG();pr.after(mq);
+   // tap the banner to hoist it up out of view; a gold pull cord stays under the valance to lower it again (remembered on this device)
+   if(ART){const pull=document.createElement('button');pull.type='button';pull.id='mqPull';pull.setAttribute('aria-label','Lower the family banner');
+     pull.innerHTML='<svg viewBox="0 0 30 90" aria-hidden="true"><line x1="15" y1="0" x2="15" y2="58" stroke="#d9a441" stroke-width="2.2"/><circle cx="15" cy="60" r="5" fill="#e8c06a" stroke="#7a4f12"/><path d="M9 64Q15 61 21 64L24 86Q15 90 6 86Z" fill="#d9a441" stroke="#7a4f12" stroke-width="1"/><path d="M10 68L9 85M13 68L13 87M17 68L17 87M20 68L21 85" stroke="#8a5a1c" stroke-width=".8"/></svg>';
+     mq.after(pull);mq.setAttribute('role','button');mq.setAttribute('tabindex','0');mq.setAttribute('aria-label','Raise the family banner out of view');
+     const set=up=>{mq.classList.toggle('up',up);pull.classList.toggle('on',up);try{localStorage.setItem('ftBannerUp',up?'1':'')}catch(e){}};
+     let up0=false;try{up0=localStorage.getItem('ftBannerUp')==='1'}catch(e){}set(up0);
+     mq.addEventListener('click',()=>set(true));mq.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();set(true);}});pull.addEventListener('click',()=>set(false));}
    const draw=()=>{const r=st.getBoundingClientRect();if(r.width<10)return;const tb=st.querySelector('.tools'),D=stageDims(r.width,r.height);$('#marquee').style.top=(r.width<700?4:6)+'px';if(r.width<700){const mb=$('#marquee').getBoundingClientRect().bottom-r.top;st.style.setProperty('--mqb',mb+'px');}st.style.setProperty('--apron',D.ah+'px');if(tb)st.style.setProperty('--tbh',tb.offsetHeight+'px');bd.innerHTML=stageBackdrop(r.width,r.height,$('#marquee').getBoundingClientRect().bottom-r.top,canopyTopFit(r));pr.innerHTML=stageFrame(r.width,r.height);};
    draw();stageDraw=draw;let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(()=>{draw();if(!tTouched)tStart();},120);}).observe(st);}}
 /* the moon and sun as friendly faces, gold-rimmed like an old stage sign (original drawings) */
