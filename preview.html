@@ -879,7 +879,7 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
         <button id="tfit">Fit</button>
         <button id="tFull" aria-pressed="false">⤢ Full screen</button>
         <button id="tHelp" hidden>Can you help?</button>
-        <span class="progwrap" hidden><button id="tProg" aria-haspopup="true" aria-expanded="false">Program ▾</button><span class="prog" id="prog" role="menu" hidden><a role="menuitem" href="#chart">Chart</a><a role="menuitem" href="#places">Map</a><a role="menuitem" href="#timeline">Timeline</a><a role="menuitem" href="#keepsakes">Keepsakes</a><a role="menuitem" href="#sources">Sources</a></span></span>
+        <span class="progwrap" hidden><button id="tProg" aria-haspopup="true" aria-expanded="false">Program ▾</button><span class="prog" id="prog" role="menu" hidden><a role="menuitem" href="#home" id="goHome">Home</a><a role="menuitem" href="#chart">Chart</a><a role="menuitem" href="#places">Map</a><a role="menuitem" href="#timeline">Timeline</a><a role="menuitem" href="#keepsakes">Keepsakes</a><a role="menuitem" href="#sources">Sources</a></span></span>
         <button class="sq" id="tMusic" aria-label="Play music">♪</button>
         <button class="sq" id="tBig" aria-pressed="false" aria-label="Larger text" hidden>Aa</button>
         <button class="sq" id="tSky" aria-label="Sky">◐</button>
@@ -2377,6 +2377,13 @@ function openCurtain(story){if(cover.classList.contains('opening'))return;cover.
       setTimeout(()=>{cover.style.display='none';if(story)startStory();else setTimeout(showHint,300);},T);})));};
   setTimeout(()=>{if(pr){pr.then(go);setTimeout(go,900);}else go();},RM?0:420);}
 function closeCover(story){openCurtain(story);}
+// back to the welcome screen: the curtains close over the tree again, and the banner and sky pieces go back up, ready to come down next time
+function goHome(){if(si>=0&&typeof endStory==='function')endStory();document.querySelectorAll('.view.sheet').forEach(v=>v.classList.remove('sheet','on'));document.body.classList.remove('sheeton');
+  $('#v-tree').classList.add('on');if($('#prog'))$('#prog').hidden=true;
+  cover.style.display='';cover.classList.remove('opening');void cover.offsetWidth;
+  requestAnimationFrame(()=>{cover.classList.remove('open');if(STAGE){const st=$('#tstage');setTimeout(()=>{st.classList.add('hoisted');st.classList.remove('lowering');},RM?0:1900);}});
+  history.replaceState(null,'',location.pathname+location.search);}
+$('#goHome')&&($('#goHome').onclick=e=>{e.preventDefault();goHome();});
 // quietly fetch every face while the opening screen is showing, so they're ready when the tree grows
 (window.requestIdleCallback||(f=>setTimeout(f,1200)))(()=>{Object.values(photo).forEach(u=>{if(!u)return;const i=new Image();i.decoding='async';i.src=u;});});
 $('#begin').onclick=()=>{primeMusic('story');closeCover(true);};
