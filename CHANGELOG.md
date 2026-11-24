@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-23 — Preview: hometowns around the chest, lower stars
+- The hometowns now sit in the third layer of soil, spread around the buried chest: four on the left, three on the right, and Covington just below the chest. Their roots leave the main root sideways and pass beside the chest, and Covington's root bends around it. Every hometown and the chest can be tapped.
+- The chest sits a little higher, closer under the main root.
+- On computers, most of the hanging stars hang lower, in the open sky beside the tree, and none hang across the moon or sun.
+
 ## 2026-11-23 — Preview: banner lettering centered
 - "The", the "&", "Family" and the crescent moon now line up on the exact center of the banner. The banner picture moved a hair to the right to center its cloth, and the name is set so the "&" sits in the middle with "Graham" and "Harper" on either side.
 

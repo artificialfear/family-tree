@@ -1,6 +1,8 @@
 /* ---------- illustrated tree ---------- */
 const tsvg=$('#tsvg'),tw=$('#tworld');let stageDraw=null,sbdKey='';
 // the hometowns at the ends of the roots, below the grandchildren
+// preview: the hometowns sit around the buried chest, inside the third soil layer (before DROP)
+const ARTPINS={orange:[610,1725],durham:[485,1840],louisville:[385,1960],greenville:[305,2090],collegepark:[1230,1725],newborn:[1350,1840],upson:[1450,1960],covington:[915,2205]};
 const ROOTPINS=[['orange',200,1710,'1911'],['durham',330,1785,'1930'],['louisville',455,1700,'1932'],['greenville',590,1780,'1956'],['collegepark',730,1705,''],['covington',915,1820,'1982'],['newborn',1120,1710,''],['upson',1300,1780,'1940']];
 // the planet (a circle under the tree) and the memory garden on it
 const PLANET={cx:915,cy:1272+2200,R:2200},surfY=x=>PLANET.cy-Math.sqrt(Math.max(0,PLANET.R**2-(x-PLANET.cx)**2));
@@ -10,7 +12,7 @@ const DROP=ART?200:0,HILL={cx:915,cy:2672+DROP,R:1400},OLDP={...PLANET};if(ART)O
 const f1=n=>n.toFixed(1);
 const CHEST={x:1835,y:1500,rot:0},GSIGN={x:-46,y:1546};
 // preview: the chest is buried treasure in the middle of the planet, level, under the roots and hometowns
-if(ART){CHEST.x=915;CHEST.y=2120+DROP;CHEST.rot=0;CHEST.s=3;}let gardenSeen=null;const gardenNew={};
+if(ART){CHEST.x=915;CHEST.y=2060+DROP;CHEST.rot=0;CHEST.s=3;}let gardenSeen=null;const gardenNew={};
 // the planet is a cut-paper diorama: a grass layer on top for the garden, soil underneath where the roots reach the hometowns.
 // The grass starts SOIL0 deep and grows a row (36) at a time when the garden needs room, pushing the soil, roots and towns down.
 const SOIL0=ART?175:250;let SOILD=SOIL0;
@@ -162,6 +164,10 @@ function stageBackdrop(W,H,mqb=200,gb=0){const ph=W<700;let sd=11;const r=()=>(s
       const lo=dx<.2?mqb+14:top+16,hi=gb-rs-10;if(hi<lo+10)continue;len=lo+d*(hi-lo);
       if(x+rs>sunL-6&&len+rs>sunY-20)len=Math.max(top+16,sunY-26-rs);}
     else if(dx<.21)continue;
+    // preview on wide screens: most stars hang lower, in the open sky beside the tree (the ones nearest the banner stop above the canopy),
+    // and none hang across the moon or the sun
+    else if(ART){const q=r();len=dx<.31?mqb+10+q*Math.max(20,gb-mqb-30):top+H*.16+Math.pow(q,.8)*H*.5;
+      if(x>W*.78&&len>H*.13&&len<H*.43)len=H*.45+r()*H*.22;}
     else if(dx<.31)len=top+20+r()*Math.max(10,mqb-top-30);
     else len=top+(ph?16:24)+Math.pow(r(),1.4)*H*.46;
     if(ART){const e=si%2,iw=e?184:161,cx=e?91:80,cy=e?115:123,sc=rs*2.3/iw,ix=x-cx*sc,iy=len-cy*sc;
@@ -438,10 +444,13 @@ function treeArt(st,dl){
       ground='';
       // roots that lead to the places the family came from
       // below the grandchildren (their name scrolls end near y 1590), so the roots fan out under the whole family
-      const G=STAGE&&!ART?SOILD-SOIL0:DROP,PINS=ROOTPINS.map(([k,x,y,yr])=>[k,x,y+G,yr]);
-      const RB={x1:915,y1:ART?1272+DROP+SOIL0+30:1290,cx:915,cy:ART?(1272+DROP+SOIL0+30+1600+G)/2:1420+G/2,x2:915,y2:1600+G};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
-      PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=1592+G,b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
-        rts+=`<path class="root" d="${taperPath(b,13,2.2)}"/>`;
+      const G=STAGE&&!ART?SOILD-SOIL0:DROP,PINS=(ART?ROOTPINS.map(([k,x,y,yr])=>[k,...(ARTPINS[k]||[x,y]),yr]):ROOTPINS).map(([k,x,y,yr])=>[k,x,y+G,yr]);
+      const HUB=ART?1630:1600,RB={x1:915,y1:ART?1272+DROP+300:1290,cx:915,cy:ART?(1272+DROP+300+HUB+G)/2:1420+G/2,x2:915,y2:HUB+G};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
+      PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=HUB-8+G;let b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
+        // preview: side roots head out sideways first so they pass beside the chest; the root to Covington (straight below the chest) bends around its right side
+        if(ART&&Math.abs(px-915)>40)b={x1:sx,y1:sy,cx:px,cy:sy+(py-10-sy)*.15,x2:px,y2:py-10};
+        if(ART&&Math.abs(px-915)<=40){const m={x1:sx,y1:sy,cx:1120,cy:sy+20,x2:1118,y2:(sy+py)/2},n={x1:1118,y1:(sy+py)/2,cx:1118,cy:py-10,x2:px,y2:py-10};rts+=`<path class="root" d="${taperPath(m,13,7)}"/><path class="root" d="${taperPath(n,7,2.2)}"/>`;b=n;}
+        else rts+=`<path class="root" d="${taperPath(b,13,2.2)}"/>`;
         for(let j=0;j<3;j++){const t=.35+j*.2,[qx,qy]=qpt(b,t),dir=(j%2?1:-1)*(px<915?1:-1),c={x1:qx,y1:qy,cx:qx+dir*24,cy:qy+22,x2:qx+dir*(30+rnd()*30),y2:qy+50+rnd()*30};rts+=`<path class="root" d="${taperPath(c,4,.6)}" opacity=".8"/>`;}
         const nm=(PL_NAMES[k]||k).replace(' (Meriwether Co.)','');
         pins+=`<g class="rootpin" data-p="${k}" tabindex="0" role="button" aria-label="${esc(nm)} — show on the map" style="--d:${0}ms"><circle cx="${px}" cy="${py}" r="22" fill="transparent"/><circle class="pg" cx="${px}" cy="${py}" r="11"/><circle class="pd" cx="${px}" cy="${py}" r="5.5"/><text x="${px}" y="${py+36}" class="pl">${esc(nm)}</text>${yr?`<text x="${px}" y="${py+56}" class="py">${yr}</text>`:''}</g>`;});

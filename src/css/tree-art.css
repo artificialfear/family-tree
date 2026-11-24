@@ -545,3 +545,5 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .art #tmstars .kimg,.art #tmstars .limg{transform-box:fill-box;transform-origin:50% 100%;transition:transform .3s}
 .art #tmstars .kchest:hover .kimg,.art #tmstars .kchest:focus-visible .kimg{transform:translateY(-3px) scale(1.05)}
 .art #tmstars .mlantern:hover .limg,.art #tmstars .flantern:hover .limg,.art #tmstars .mlantern:focus-visible .limg,.art #tmstars .flantern:focus-visible .limg{transform:scale(1.12)}
+/* preview: only the chest itself takes taps, so the hometown pins around it stay reachable */
+.art #tmstars .kchest circle,.art #tmstars .kchest .kfloat,.art #tmstars .kchest .kdirt,.art #tmstars .kchest ellipse{pointer-events:none}
