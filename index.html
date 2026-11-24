@@ -772,6 +772,12 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .art .theme-stage #marquee.up{transition-delay:0s}
 .art .theme-stage #mqPull{transition:transform .4s ease-in 0s}
 .art .theme-stage #mqPull.on{transition:transform .5s ease-out .85s}
+/* opening night: the banner (or, if it was left hoisted, its pull cord) waits up in the flies and is lowered in with the moon and stars */
+.art .theme-stage.hoisted #marquee{transform:translateX(-50%) translateY(calc(-100% - 40px));transition:none}
+.art .theme-stage.hoisted #mqPull{transform:translateY(-100%);transition:none}
+.art .theme-stage.lowering #marquee:not(.up){transition:transform 1.5s cubic-bezier(.25,.8,.35,1) .5s}
+.art .theme-stage.lowering #mqPull.on{transition:transform .6s ease-out 1.2s}
+@media(prefers-reduced-motion:reduce){.art .theme-stage #marquee,.art .theme-stage #mqPull{transition:none!important}}
 </style>
 </head>
 <body>

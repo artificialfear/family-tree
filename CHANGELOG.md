@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — The banner is lowered in on opening night
+- When the curtains part, the family banner now starts up out of view and is lowered in on its cords along with the moon and stars. (If it was left hoisted, its pull cord drops in instead.)
+
 ## 2026-11-24 — Pull cord timing
 - Lowering the banner: the pull cord now rises out of view first, then the banner comes down. Raising it: the banner goes up first, then the cord drops.
 
