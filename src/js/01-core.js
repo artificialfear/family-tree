@@ -1,7 +1,8 @@
 /* ---------- shared helpers and state ---------- */
 const MAP=__MAP__;
 // preview.html: the painted tree and hill (Gemini artwork) instead of the drawn ones
-const ART=__ART__;if(ART)document.documentElement.classList.add('art');
+const ART=__ART__;const HANG=ART&&(__HANG__||/[?&]hang\b/.test(location.search));// preview: lanterns hang from the branches
+if(ART)document.documentElement.classList.add('art');
 const $=s=>document.querySelector(s);
 // touch screens (phones and tablets) get the lighter graphics paths: Android tablets ran out of graphics memory on the desktop ones
 const TOUCH=matchMedia('(pointer:coarse)').matches;document.documentElement.classList.toggle('touch',TOUCH);

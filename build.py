@@ -14,7 +14,7 @@ Usage: python3 build.py [--api URL] [--out FILE] [--classic]
 import argparse, glob, json, os
 here = os.path.dirname(os.path.abspath(__file__))
 ap = argparse.ArgumentParser()
-ap.add_argument('--api'); ap.add_argument('--out'); ap.add_argument('--art', action='store_true'); ap.add_argument('--classic', action='store_true')
+ap.add_argument('--api'); ap.add_argument('--out'); ap.add_argument('--art', action='store_true'); ap.add_argument('--classic', action='store_true'); ap.add_argument('--hang', action='store_true')
 a = ap.parse_args()
 src = os.path.join(here, 'src')
 read = lambda p: open(p, encoding='utf-8').read()
@@ -30,8 +30,9 @@ for ph in ('__MAP__', '__API__', '__ART__'):
     assert page.count(ph) == 1, (ph, page.count(ph))
 page = page.replace('__MAP__', mapdata).replace('__API__', json.dumps(api))
 art = not a.classic
-outs = [(a.out, art)] if a.out else [(os.path.join(here, 'index.html'), art), (os.path.join(here, 'preview.html'), art)]
-for out, art in outs:
-    html = page.replace('__ART__', 'true' if art else 'false')
+# preview.html tries out ideas before they go live (2026-11-24: lanterns hanging from the branches)
+outs = [(a.out, art, a.hang)] if a.out else [(os.path.join(here, 'index.html'), art, False), (os.path.join(here, 'preview.html'), art, True)]
+for out, art, hang in outs:
+    html = page.replace('__ART__', 'true' if art else 'false').replace('__HANG__', 'true' if hang else 'false')
     open(out, 'w', encoding='utf-8').write(html)
     print('built', os.path.relpath(out, here), len(html) // 1024, 'KB')

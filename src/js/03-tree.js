@@ -319,6 +319,15 @@ function artLanternSlots(can){const xs=can.map(v=>v.x-v.r),xe=can.map(v=>v.x+v.r
   const low=Math.max(...can.map(v=>v.y+v.r))+70;
   for(let y=low;y<=1272+DROP+40;y+=55)for(let x=x0+40;x<=x1-40;x+=60){if(Math.abs(x-915)<150)continue;if(y>surfY(x)-75)continue;if(ok(x,y))S.push([x,y]);}
   return spreadOrder(S,[[915-330,low+60],[915+330,low+60]]);}
+// preview (HANG): lanterns hang on short strings from the underside of the painted leaves.
+// LEAFBOT = lowest leaf pixel of tree.webp every 16 px across (−1 = no leaves); the trunk columns are skipped.
+let TREEMAP=null;
+const LEAFBOT=[-1,-1,-1,-1,-1,-1,766,782,788,847,863,863,868,869,864,894,907,901,916,907,912,906,894,872,1010,1022,1039,1041,1076,1086,1088,1086,1079,1073,1088,1099,1101,1094,1091,1075,1063,1061,1064,1060,1041,1041,1042,1040,1033,1011,980,971,741,688,703,853,724,721,712,691,776,711,713,709,701,-1,706,-1,-1,621,-1,-1,622,628,579,579,583,582,615,616,648,597,581,549,663,648,645,-1,627,643,650,699,623,604,580,643,703,718,721,718,715,725,728,725,746,703,727,755,-1,762,755,-1,770,756,998,1014,1018,1016,1009,1032,1036,1048,1048,1045,1038,1025,1026,1043,1051,1056,1057,1046,1052,1025,1006,1021,1021,1016,1006,978,982,983,987,976,978,951,939,900,895,882,815,806,792,721,697,685,-1,-1,-1,-1,-1];
+function hangSlots(){if(!TREEMAP)return [];const {x0,y0,sx,sy}=TREEMAP,S=[];
+  const ob=Object.values(TP).flatMap(v=>[[v.x,v.y,v.r+34],[v.x,v.y+v.r+22,Math.max(80,v.r*2.8)]]),clear=(x,y)=>!ob.some(([ox,oy,rr])=>Math.abs(x-ox)<rr+24&&Math.abs(y-oy)<rr*.55+48);
+  LEAFBOT.forEach((b,i)=>{if(b<0||i<8||i>LEAFBOT.length-8)return;const ix=i*16;if(ix>880&&ix<1700)return;// outer leaf lobes only, not over the trunk and branches
+    const x=x0+ix*sx,yb=y0+(b-6)*sy;for(const L of [70,105,140]){const y=yb+L+44;if(y>surfY(x)-90)break;if(clear(x,y)){S.push([x,y,yb]);break;}}});
+  return S;}
 function lanternSlots(){const can=Object.values(TP).filter(v=>v.y<1250);if(!can.length)return [];if(ART&&!PRINT)return artLanternSlots(can);
   const xs=can.map(v=>v.x),ys=can.map(v=>v.y),cX=(Math.min(...xs)+Math.max(...xs))/2,rX=(Math.max(...xs)-Math.min(...xs))/2+110,top=Math.min(...ys),cY=(top+1250)/2,rY=(1250-top)/2+120;
   const ob=Object.values(TP).flatMap(v=>[[v.x,v.y,v.r+34],[v.x,v.y+v.r+24,Math.max(70,v.r*1.9)]]);
@@ -335,6 +344,8 @@ const FLC={story:['#ffe0c2','#f49a8e','#b8586a'],photo:['#ffd9ea','#e8789f','#a8
 // one paper-cut flower: five rounded petals in a single shape
 const FLOWER=(()=>{let d='';for(let i=0;i<5;i++){const a=i*72*Math.PI/180,P=(r,o)=>[Math.sin(a+o)*r,-Math.cos(a+o)*r],v0=P(3.4,-.63),c0=P(12.5,-.5),c1=P(12.5,.5),v1=P(3.4,.63);
   d+=(i?'L':'M')+v0.map(f1).join(' ')+'C'+[...c0,...c1,...v1].map(f1).join(' ');}return d+'Z';})();
+// a hanging lantern's gold string up to the leaves and a soft warm pool of light around it
+const hangBits=(sp,y,sc,top)=>sp[2]==null?'':`<circle class="hglow" r="95" fill="url(#hglow)"/><line class="hstr" x1="0" y1="${(sp[2]-y).toFixed(1)}" x2="0" y2="${(-top*sc+2).toFixed(1)}"/>`;
 function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)),list=all,LS=lanternSlots();// every memory grows a flower; the lanterns are only the memorial films of family who have passed
   const S=gardenSlots(),mem=[...list].sort((a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)));
   const first=gardenSeen===null,seen=gardenSeen||new Set();let fl='';
@@ -351,15 +362,17 @@ function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(Strin
   // and handed out on each side in the order the people sit (outermost person, outermost lantern)
   const MLS=MEMLANTERNS.filter(id=>byId[id]&&TP[id]),ALL=[...FILMS.map((fm,i)=>({k:'f',i,pid:fm.pid})),...MLS.map(id=>({k:'m',pid:id}))].filter(o=>TP[o.pid]),FSP={},MSP={};
   {const px=o=>TP[o.pid].x,L=ALL.filter(o=>px(o)<915).sort((a,b)=>px(a)-px(b)),R=ALL.filter(o=>px(o)>=915).sort((a,b)=>px(a)-px(b));
-   const SL=LS.filter(q=>q[0]<915),SR=LS.filter(q=>q[0]>=915),pick=(pool,n)=>pool.slice(0,n).sort((a,b)=>a[0]-b[0]);
+   const HS=HANG?hangSlots():null,pool=HS&&HS.length>=ALL.length?HS:LS,SL0=pool.filter(q=>q[0]<915),SR0=pool.filter(q=>q[0]>=915);
+   // hanging: spread each side's lanterns out along the leaves (farthest-apart first), then hand them out in x order
+   const SL=HS&&pool===HS?spreadOrder(SL0,[[Math.min(...SL0.map(q=>q[0])),0]]):SL0,SR=HS&&pool===HS?spreadOrder(SR0,[[Math.max(...SR0.map(q=>q[0])),0]]):SR0,pick=(pool,n)=>pool.slice(0,n).sort((a,b)=>a[0]-b[0]);
    const put=(grp,sp)=>grp.forEach((o,j)=>{if(o.k==='f')FSP[o.i]=sp[j];else MSP[o.pid]=sp[j];});put(L,pick(SL,L.length));put(R,pick(SR,R.length));}
   FILMS.forEach((fm,i)=>{const sp=FSP[i];if(!sp||!byId[fm.pid])return;const [x,y]=sp;
-    lt+=`<g class="flantern" data-film="${fm.id}" tabindex="0" role="button" aria-label="Watch ${esc(fm.title)}: ${esc(fm.sub)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mls" style="--rot:0deg;--dl:-${i*2}s" transform="scale(1.55)"><circle r="38" fill="url(#lglow)"/>${ART?`<image class="limg" href="photos/art/lantern-film.webp" x="-17.9" y="-36" width="35.7" height="76.8"/>`:`
+    lt+=`<g class="flantern${sp[2]!=null?' hangl':''}" data-film="${fm.id}" tabindex="0" role="button" aria-label="Watch ${esc(fm.title)}: ${esc(fm.sub)}" transform="translate(${f1(x)} ${f1(y)})">${hangBits(sp,y,1.55,36)}<g class="mss"><g class="mls" style="--rot:0deg;--dl:-${i*2}s" transform="scale(1.55)"><circle r="38" fill="url(#lglow)"/>${ART?`<image class="limg" href="photos/art/lantern-film.webp" x="-17.9" y="-36" width="35.7" height="76.8"/>`:`
       <path d="M-14 -17L14 -17L10 15L-10 15Z" transform="translate(3 4)" fill="#0b1630" opacity=".35"/><path d="M-14 -17L14 -17L10 15L-10 15Z" fill="url(#lpaper)" stroke="#a8561c" stroke-width="1.2"/>
       <rect x="-15" y="-20" width="30" height="4" rx="1.5" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><rect x="-10" y="14" width="20" height="3" rx="1" fill="url(#ggold)" stroke="#6b4410" stroke-width=".6"/>
       <path d="M-4 -7L6 -1L-4 5Z" fill="#a8561c"/><ellipse cy="20" rx="2.2" ry="3.4" fill="#fff3b0"/>`}</g></g><text y="${f1(48)}" class="fltx">${esc(fm.title.split(' ')[0])}${fm.id==='annie'?' Mae':''}</text></g>`;});
   MLS.forEach((id,i)=>{const sp=MSP[id];if(!sp)return;const [x,y]=sp,v=byId[id],nm=v.s.split(' ')[0];
-    lt+=`<g class="plantern" data-p="${id}" tabindex="0" role="button" aria-label="In memory of ${esc(v.n)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mls" style="--rot:0deg;--dl:-${(i*1.3+1).toFixed(1)}s" transform="scale(1.3)"><circle r="34" fill="url(#lglow)"/>${ART?`<image class="limg" href="photos/art/lantern-memory.webp" x="-16" y="-33" width="32.1" height="76.8"/>`:`<path d="M-14 -17L14 -17L10 15L-10 15Z" fill="url(#lpaper)" stroke="#a8561c" stroke-width="1.2"/><rect x="-15" y="-20" width="30" height="4" rx="1.5" fill="url(#ggold)"/><ellipse cy="20" rx="2.2" ry="3.4" fill="#fff3b0"/>`}</g></g><text y="${f1(48)}" class="fltx">${esc(nm)}</text></g>`;});
+    lt+=`<g class="plantern${sp[2]!=null?' hangl':''}" data-p="${id}" tabindex="0" role="button" aria-label="In memory of ${esc(v.n)}" transform="translate(${f1(x)} ${f1(y)})">${hangBits(sp,y,1.3,33)}<g class="mss"><g class="mls" style="--rot:0deg;--dl:-${(i*1.3+1).toFixed(1)}s" transform="scale(1.3)"><circle r="34" fill="url(#lglow)"/>${ART?`<image class="limg" href="photos/art/lantern-memory.webp" x="-16" y="-33" width="32.1" height="76.8"/>`:`<path d="M-14 -17L14 -17L10 15L-10 15Z" fill="url(#lpaper)" stroke="#a8561c" stroke-width="1.2"/><rect x="-15" y="-20" width="30" height="4" rx="1.5" fill="url(#ggold)"/><ellipse cy="20" rx="2.2" ry="3.4" fill="#fff3b0"/>`}</g></g><text y="${f1(48)}" class="fltx">${esc(nm)}</text></g>`;});
   [].forEach((c,i)=>{const sp=LS[i+NF];if(!sp)return;const h=hsh(c.id),x=sp[0]+(h%30)-15,y=sp[1]+((h>>5)%30)-15,rot=((h>>9)%14)-7;
     if(!first&&!seen.has(c.id))gardenNew[c.id]=Date.now();const nw=Date.now()-(gardenNew[c.id]||0)<2500;
     lt+=`<g class="mlantern${nw?' sprout':''}" data-c="${esc(c.id)}" tabindex="0" role="button" aria-label="A memory of ${esc(byId[c.pid].n)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mls" style="--rot:${rot}deg;--dl:-${(h%60)/10}s"><circle r="34" fill="url(#lglow)"/>${ART?`<image class="limg" href="photos/art/lantern-memory.webp" x="-16" y="-33" width="32.1" height="76.8"/>`:`
@@ -379,7 +392,7 @@ function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(Strin
     <path d="M-40 -1q40 9 80 0" fill="none" stroke="#1f3d24" stroke-width="7" stroke-linecap="round"/>`}</g>`;
   const grad=(id,a,b)=>`<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
   return `<defs><linearGradient id="ggold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient>
-    ${grad('gvel','#5b2a8f','#2c0f50')}${grad('gwood','#9a6234','#5e3615')}${Object.entries(FLC).map(([k,[a,b]])=>grad('gf-'+k,a,b)).join('')}<radialGradient id="kglow"><stop offset="0" stop-color="#ffd77a" stop-opacity=".55"/><stop offset=".55" stop-color="#e0a440" stop-opacity=".18"/><stop offset="1" stop-color="#e0a440" stop-opacity="0"/></radialGradient><linearGradient id="lpaper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset=".6" stop-color="#ffc36e"/><stop offset="1" stop-color="#f08a3c"/></linearGradient><radialGradient id="lglow"><stop offset="0" stop-color="#ffd98a" stop-opacity=".55"/><stop offset="1" stop-color="#ffb860" stop-opacity="0"/></radialGradient></defs><g class="garden">${chest}${fl}</g><g class="lanterns">${lt}</g>`;}
+    ${grad('gvel','#5b2a8f','#2c0f50')}${grad('gwood','#9a6234','#5e3615')}${Object.entries(FLC).map(([k,[a,b]])=>grad('gf-'+k,a,b)).join('')}<radialGradient id="hglow"><stop offset="0" stop-color="#ffd27e" stop-opacity=".75"/><stop offset=".35" stop-color="#ffb04a" stop-opacity=".3"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient><radialGradient id="kglow"><stop offset="0" stop-color="#ffd77a" stop-opacity=".55"/><stop offset=".55" stop-color="#e0a440" stop-opacity=".18"/><stop offset="1" stop-color="#e0a440" stop-opacity="0"/></radialGradient><linearGradient id="lpaper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset=".6" stop-color="#ffc36e"/><stop offset="1" stop-color="#f08a3c"/></linearGradient><radialGradient id="lglow"><stop offset="0" stop-color="#ffd98a" stop-opacity=".55"/><stop offset="1" stop-color="#ffb860" stop-opacity="0"/></radialGradient></defs><g class="garden">${chest}${fl}</g><g class="lanterns">${lt}</g>`;}
 function gardenNote(el){const r=$('#tstage').getBoundingClientRect(),q=el.getBoundingClientRect(),n=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]).length;
   showNote(`<div class="mem"><div class="mq">The memory garden</div><p>Every flower is a memory someone shared about the family${n?` — ${n} so far`:''}. Tap a flower to read it.</p><p>To plant one, tap anyone's photo on the tree and choose <b>Add a memory or story</b>.</p></div>`,q.left-r.left+q.width/2,q.bottom-r.top);}
 // stars keep a readable size however far you zoom out
@@ -507,6 +520,7 @@ function treeArt(st,dl){
       // the painted tree: its leaves cover the canopy people (with a margin) and its trunk stands where the drawn trunk did (x 915)
       const cv=vals.filter(v=>v.y<1250),cx0=Math.min(...cv.map(v=>v.x-v.r)),cx1=Math.max(...cv.map(v=>v.x+v.r)),cy0=Math.min(...cv.map(v=>v.y-v.r)),cy1=Math.max(...cv.map(v=>v.y+v.r+30));
       const TX=1268,L0=92,L1=2479,T0=16,T1=1058,sx=Math.max((915-(cx0-110))/(TX-L0),((cx1+110)-915)/(L1-TX)),sy=Math.max(sx*1.02,((cy1+60)-(cy0-140))/(T1-T0));
+      TREEMAP={x0:915-TX*sx,y0:cy0-140-T0*sy,sx,sy};
       const treeImg=`<image class="arttree" href="photos/art/tree.webp" x="${f(915-TX*sx)}" y="${f(cy0-140-T0*sy)}" width="${f(2576*sx)}" height="${f(1438*sy)}" preserveAspectRatio="none"/>`;
       // the painted hill (Gemini's wide planet, 2576x1093: its circle is centre 1286.7,1308, radius 1314.6), with the rest of the planet drawn as a dark soil circle with a gold rim below its flat bottom edge, so zooming out shows a round planet
       const hs=HILL.R/1314.6,hx=HILL.cx-1286.7*hs,hy=HILL.cy-1308*hs;

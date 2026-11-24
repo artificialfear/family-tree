@@ -609,3 +609,10 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
  .stage .cap .smbox{height:150px}
  .stage .cap .smap figcaption{font-size:13px}
 }
+/* preview: hanging lanterns hold still on their strings; the warm glow flickers gently on computers only */
+#tmstars .hangl .mls{animation:none}
+#tmstars .hstr{stroke:#d9a441;stroke-width:1.6;opacity:.9}
+#tmstars .hglow{pointer-events:none}
+html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
+@keyframes hflick{0%{opacity:.85}35%{opacity:1}55%{opacity:.78}80%{opacity:.95}100%{opacity:.88}}
+@media(prefers-reduced-motion:reduce){#tmstars .hglow{animation:none}}
