@@ -808,6 +808,13 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
 @keyframes hflick{0%{opacity:.85}35%{opacity:1}55%{opacity:.78}80%{opacity:.95}100%{opacity:.88}}
 @media(prefers-reduced-motion:reduce){#tmstars .hglow{animation:none}}
+/* touch screens: while a page (Keepsake Chest, map, questions…) is open, the tree behind it stops being drawn. On Android tablets the big tree
+   layers plus the page ran out of graphics memory, which showed up as flashes and pictures with a corner missing. A plain dark wash stands in. */
+.touch body.sheeton #tstage #tsvg,.touch body.sheeton #tstage .sbackdrop,.touch body.sheeton #tstage #celest,.touch body.sheeton #tstage #tback,.touch body.sheeton #tstage #tfront,.touch body.sheeton #tstage .wlayer{visibility:hidden;transition:visibility 0s linear .4s}
+.touch body.sheeton #tstage{background:#120a22}
+.touch body.tfull .view.sheet{box-shadow:none;animation:sheetfade .25s ease-out}
+.touch body.sheeton::after{content:'';position:fixed;inset:0;background:rgba(8,4,16,.55);z-index:28;pointer-events:none}
+@keyframes sheetfade{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
@@ -1922,7 +1929,9 @@ function tApply(anim){tClamp();sunLight();endGlide();if(SW){clearTimeout(SW);SW=
   const moved=was&&(Math.abs(was.x-tv.x)>.5||Math.abs(was.y-tv.y)>.5||Math.abs(was.k-tv.k)>1e-4);
   // phones: sliding a picture this big makes Android show stale copies of it while it redraws, so fade out,
   // jump to the new view while hidden, and fade back in once it has been drawn
-  if(anim&&moved&&!RM&&(z.w<700||TOUCH)){const st=$('#tstage');st.classList.add('tswap');
+  // Android tablets: even the fade looked like a flash, so a tablet just jumps to the new view in one step
+  if(anim&&moved&&TOUCH&&z.w>=700)anim=false;
+  if(anim&&moved&&!RM&&z.w<700){const st=$('#tstage');st.classList.add('tswap');
     SW=setTimeout(()=>{SW=0;wl().forEach(e=>{if(e){e.classList.add('nomo');e.style.transform=T;}});tw.classList.add('nomo');setTW(tv,z);tsvg.style.transform='';msScale();
       requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>st.classList.remove('tswap'),140)));},200);
     G=null;st.classList.remove('moving');return;}
@@ -2442,7 +2451,7 @@ $('#v-keepsakes').addEventListener('submit',async e=>{e.preventDefault();const f
 let fitted=0;
 function route(){const h=location.hash.slice(1),v=['tree','help','chart','places','timeline','sources','keepsakes'].includes(h)?h:'tree';if(v==='keepsakes')renderKeepsakes();
   // stage theme: the tree stays on stage and every other section opens as a page over it
-  if(STAGE){document.querySelectorAll('.view').forEach(s=>{const me=s.id==='v-'+v;s.classList.toggle('on',s.id==='v-tree'||me);s.classList.toggle('sheet',me&&v!=='tree');});
+  if(STAGE){document.querySelectorAll('.view').forEach(s=>{const me=s.id==='v-'+v;s.classList.toggle('on',s.id==='v-tree'||me);s.classList.toggle('sheet',me&&v!=='tree');});document.body.classList.toggle('sheeton',v!=='tree');
     document.body.classList.toggle('sheeton',v!=='tree');if(v!=='tree'){const sh=$('#v-'+v);sh.scrollTop=0;if(!sh.querySelector('.shclose'))sh.insertAdjacentHTML('afterbegin','<button class="shclose" aria-label="Back to the tree">✕ Back to the tree</button>');}}
   else document.querySelectorAll('.view').forEach(s=>s.classList.toggle('on',s.id==='v-'+v));
   document.querySelectorAll('#tabs a').forEach(a=>a.setAttribute('aria-current',a.dataset.v===v));

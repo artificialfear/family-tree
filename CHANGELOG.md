@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-24 — Tablet flashes fixed; lanterns hang from their portraits
+- Android tablets: tapping Fit, a face or a button no longer makes the tree flash out and back in; the view just moves. While the Keepsake Chest or any other page is open, the tree behind it rests, which fixes the flashing and the photos with a corner cut off.
+- Live: each lantern now hangs on a short gold string from its person's portrait, with a warm glow (gently flickering on computers).
+
 ## 2026-11-24 — Story map beside the text; full screen on the welcome screen
 - On computers and tablets the story's little map is larger and sits right next to the chapter text instead of at the far right of the card.
 - The welcome screen now has the same full-screen button in its top-left corner as the tree.

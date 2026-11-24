@@ -31,7 +31,7 @@ for ph in ('__MAP__', '__API__', '__ART__'):
 page = page.replace('__MAP__', mapdata).replace('__API__', json.dumps(api))
 art = not a.classic
 # preview.html tries out ideas before they go live (2026-11-24: lanterns hanging from the branches)
-outs = [(a.out, art, a.hang)] if a.out else [(os.path.join(here, 'index.html'), art, False), (os.path.join(here, 'preview.html'), art, True)]
+outs = [(a.out, art, True)] if a.out else [(os.path.join(here, 'index.html'), art, True), (os.path.join(here, 'preview.html'), art, True)]
 for out, art, hang in outs:
     html = page.replace('__ART__', 'true' if art else 'false').replace('__HANG__', 'true' if hang else 'false')
     open(out, 'w', encoding='utf-8').write(html)

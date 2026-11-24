@@ -662,7 +662,9 @@ function tApply(anim){tClamp();sunLight();endGlide();if(SW){clearTimeout(SW);SW=
   const moved=was&&(Math.abs(was.x-tv.x)>.5||Math.abs(was.y-tv.y)>.5||Math.abs(was.k-tv.k)>1e-4);
   // phones: sliding a picture this big makes Android show stale copies of it while it redraws, so fade out,
   // jump to the new view while hidden, and fade back in once it has been drawn
-  if(anim&&moved&&!RM&&(z.w<700||TOUCH)){const st=$('#tstage');st.classList.add('tswap');
+  // Android tablets: even the fade looked like a flash, so a tablet just jumps to the new view in one step
+  if(anim&&moved&&TOUCH&&z.w>=700)anim=false;
+  if(anim&&moved&&!RM&&z.w<700){const st=$('#tstage');st.classList.add('tswap');
     SW=setTimeout(()=>{SW=0;wl().forEach(e=>{if(e){e.classList.add('nomo');e.style.transform=T;}});tw.classList.add('nomo');setTW(tv,z);tsvg.style.transform='';msScale();
       requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>st.classList.remove('tswap'),140)));},200);
     G=null;st.classList.remove('moving');return;}
