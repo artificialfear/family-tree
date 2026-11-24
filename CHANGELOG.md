@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Preview: the chest sinks into the soil
+- The buried chest's bottom edge now sits under a low mound of loose soil with a few pebbles, and small cracks spread out through the ground around it.
+
 ## 2026-11-23 — Preview: more of the trunk
 - The hill, with the kids, grandkids, roots, hometowns and chest, sits a little lower, so much more of the painted trunk shows between the leaves and the grass. Fit still shows the whole tree; it sits slightly smaller on wide screens.
 
