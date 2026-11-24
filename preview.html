@@ -820,6 +820,10 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 .touch .theme-stage#tstage,.touch #tstage.theme-stage{background-color:#1f2f6b}
 .touch .theme-stage.sky-day#tstage{background-color:#5a4d86}
 .touch .theme-stage .nightwash,.touch .theme-stage .sky .sunglow,.touch .theme-stage .sky .skydim,.touch .theme-stage .sky .cloud,.touch .theme-stage .sky .stars,.touch .sbackdrop .srowday{will-change:auto}
+/* lanterns hanging from portraits and the garden flowers zoom with the tree like everything else. They used to be enlarged when zoomed out,
+   but that size was only applied once a zoom finished, so they visibly popped and jumped back after every zoom. */
+#tmstars .hangl .mss,#tmstars .mflower .mss{transform:none;transition:none}
+#tmstars .hangl .fltx{transform:none}
 </style>
 </head>
 <body>

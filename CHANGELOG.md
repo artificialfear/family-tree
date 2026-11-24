@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Lanterns no longer jump after zooming
+- The lanterns (and the garden flowers) used to be enlarged when zoomed out, but only once each zoom finished, so they popped to a new size and shifted after every zoom. They now zoom smoothly with the tree, staying the same size relative to the portraits they hang from.
+
 ## 2026-11-24 — iPad banner lettering; Android sky flash
 - On iPads the family name on the banner now shows as solid gold letters with a dark edge, like on other devices (Safari was drawing the edge on top of the letters).
 - On Android tablets, if the sky momentarily drops out it now shows deep blue instead of flashing black, and the sky keeps fewer always-on graphics layers so it happens less.
