@@ -739,6 +739,11 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .art #tmstars .mlantern:hover .limg,.art #tmstars .flantern:hover .limg,.art #tmstars .mlantern:focus-visible .limg,.art #tmstars .flantern:focus-visible .limg{transform:scale(1.12)}
 /* preview: only the chest itself takes taps, so the hometown pins around it stay reachable */
 .art #tmstars .kchest circle,.art #tmstars .kchest .kfloat,.art #tmstars .kchest .kdirt,.art #tmstars .kchest ellipse{pointer-events:none}
+/* preview: painted closed curtains on the opening screen */
+.art .cover.curtain .cpanel{background:url(photos/art/curtain-closed-l.webp) 0 0/100% 100% no-repeat;box-shadow:none}
+.art .cover.curtain .cpanel.r{background-image:url(photos/art/curtain-closed-r.webp)}
+.art .cover.curtain .cpanel::after{display:none}
+.art #tworld .scroll.rib .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
 </style>
 </head>
 <body>
@@ -1378,7 +1383,7 @@ function canopyTopFit(r){if(!TB||!isFinite(TB.y0)||TB.x1-TB.x0<50)return 0;const
 function stageDims(W,H){const ph=W<700,vh=ph?22:Math.max(30,Math.min(56,W*.032)),n=Math.max(3,Math.round(W/(ph?150:250))),sw=W/n,dr=Math.min(sw*.16,ph?20:36),
   cw=ph?16:Math.max(26,Math.min(78,W*.045)),ah=ph?12:Math.max(16,Math.min(30,W*.018));
   if(ART){/* painted valance (1600x397, swags about 215 deep) and side curtains (612x1200, drape about 224 wide) */
-    const hv=Math.min(W*397/1600,H*(ph?.15:.2)),cwI=ph?Math.max(64,W*.19):Math.max(150,Math.min(290,W*.15));
+    const ah=Math.max(14,Math.min(64,W*.04)),hv=Math.min(W*397/1600,H*(ph?.15:.2)),cwI=ph?Math.max(64,W*.19):Math.max(150,Math.min(290,W*.15));
     return {ph,vh,n,sw,dr,cw,ah,hv,cwI,top:hv*.56+8,side:cwI*224/612*1.05,bot:ah+(ph?14:34)};}
   return {ph,vh,n,sw,dr,cw,ah,top:vh+dr*1.9+10,side:cw*1.3,bot:ah+(ph?14:34)};}
 function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah,hv,cwI}=stageDims(W,H);
@@ -1386,10 +1391,10 @@ function stageFrame(W,H){const f=n=>n.toFixed(1),{ph,vh,n,sw,dr,cw,ah,hv,cwI}=st
     const s=cwI/612,tH=912*s,hH=144*s,mH=Math.max(0,H-tH-hH);
     const cur=(src,iw,right)=>{const w=iw*s,x=right?W-w:0,sl=(y,h,sy,sh)=>`<svg x="${f(x)}" y="${f(y)}" width="${f(w)}" height="${f(h)}" viewBox="0 ${sy} ${iw} ${sh}" preserveAspectRatio="none"><image href="photos/art/${src}.webp" width="${iw}" height="1200"/></svg>`;
       return sl(0,tH+1,0,913)+sl(tH,mH+2,912,144)+sl(H-hH,hH,1056,144);};
-    let lights='';for(let x=W*.12;x<W*.9;x+=ph?70:120)lights+=`<ellipse cx="${f(x)}" cy="${f(H-ah)}" rx="${ph?10:16}" ry="${ph?3:5}" class="plight"/>`;
+    // the painted apron: its footlights and lip show, the dark front runs off the bottom of the screen
+    const apron=`<rect x="0" y="${f(H-ah*.55)}" width="${W}" height="${f(ah)}" fill="#1a0e0a"/><image href="photos/art/apron.webp" x="0" y="${f(H-ah)}" width="${W}" height="${f(W*129/1600)}" preserveAspectRatio="none"/>`;
     return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="pgl" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe6a0"/><stop offset=".5" stop-color="#d9a441"/><stop offset="1" stop-color="#8f5f1b"/></linearGradient></defs>
-     <rect x="0" y="${f(H-ah)}" width="${W}" height="${f(ah)}" class="papron"/><rect x="0" y="${f(H-ah)}" width="${W}" height="2.5" class="pgold"/>${lights}
-     ${cur('curtain-left',612,0)}${cur('curtain-right',546,1)}<image href="photos/art/valance-top.webp" x="0" y="0" width="${W}" height="${f(hv)}" preserveAspectRatio="none"/></svg>`;}
+     ${apron}${cur('curtain-left',612,0)}${cur('curtain-right',546,1)}<image href="photos/art/valance-top.webp" x="0" y="0" width="${W}" height="${f(hv)}" preserveAspectRatio="none"/></svg>`;}
   // valance: green swags behind, red swags in front, gold fringe, crescents where they meet
   let green='',red='',fringe='',orn='';
   for(let i=-1;i<=n;i++){const x=i*sw,gx=x+sw/2;
@@ -1496,7 +1501,9 @@ function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(Strin
       <path d="${star6(0,0,4.4)}" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><path d="${star6(-.6,-.6,1.8)}" fill="#fff6d8" opacity=".6"/>`}</g></g></g>`;});
   let lt='';const NF=FILMS.length;
   // each slideshow film gets a larger lantern with a play mark, in the best spots of the crown
-  FILMS.forEach((fm,i)=>{const sp=LS[i];if(!sp||!byId[fm.pid])return;const [x,y]=sp;
+  // the film lanterns take the best spots, each on its own person's side of the crown (Ed left, Annie Mae right)
+  const FS2=LS.slice(0,NF).sort((a,b)=>a[0]-b[0]),FO=FILMS.map((fm,i)=>i).sort((a,b)=>((TP[FILMS[a].pid]||{x:0}).x)-((TP[FILMS[b].pid]||{x:0}).x)),FSP={};FO.forEach((fi,j)=>FSP[fi]=FS2[j]);
+  FILMS.forEach((fm,i)=>{const sp=FSP[i];if(!sp||!byId[fm.pid])return;const [x,y]=sp;
     lt+=`<g class="flantern" data-film="${fm.id}" tabindex="0" role="button" aria-label="Watch ${esc(fm.title)}: ${esc(fm.sub)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mls" style="--rot:0deg;--dl:-${i*2}s" transform="scale(1.55)"><circle r="38" fill="url(#lglow)"/>${ART?`<image class="limg" href="photos/art/lantern-film.webp" x="-17.9" y="-36" width="35.7" height="76.8"/>`:`
       <path d="M-14 -17L14 -17L10 15L-10 15Z" transform="translate(3 4)" fill="#0b1630" opacity=".35"/><path d="M-14 -17L14 -17L10 15L-10 15Z" fill="url(#lpaper)" stroke="#a8561c" stroke-width="1.2"/>
       <rect x="-15" y="-20" width="30" height="4" rx="1.5" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><rect x="-10" y="14" width="20" height="3" rx="1" fill="url(#ggold)" stroke="#6b4410" stroke-width=".6"/>
@@ -1701,7 +1708,13 @@ function wornScroll(L,R,y0,y1,seed,arch,cls){const f=n=>n.toFixed(1),ym=(y0+y1)/
     `<path class="sfold" d="M${f(e)} ${f(y1-1)}L${f(e+sg*Math.min(10,tl*.45))} ${f(y1+dp)}L${f(e)} ${f(y1+dp)}Z"/>`;};
   let st='';let hh=seed;for(let i=0;i<2;i++){hh=Math.imul(hh^(hh>>>15),2246822519)>>>0;if(hh%3===0)continue;const sx=L+(R-L)*(.15+(hh%700)/1000),sy=y0+h*(.3+((hh>>>10)%40)/100);st+=`<ellipse class="sstain" cx="${f(sx)}" cy="${f(sy)}" rx="${f(h*.55)}" ry="${f(h*.22)}"/>`;}
   return `<g class="${cls}">${tail(-1)}${tail(1)}<path class="sshadow" d="${d}" transform="translate(0 ${f(Math.max(1.5,h*.05))})"/><path class="sbody" d="${d}"/>${st}<path class="sburn" d="${d}"/>`;}
-function scrollLabel(nm,r,fs,dx=0){const w=Math.max(50,nm.length*fs*.46+24),h=fs*1.6,y0=r+6,y1=y0+h,ym=(y0+y1)/2,L=-w/2,R=w/2,f=n=>n.toFixed(1);
+// preview: Gemini's parchment ribbon (1234x232) in three slices: the folded ends keep their shape, the straight middle stretches to the name.
+// Its front band runs x 143.5-1090.5, y 56.5-230.5; the middle slice is x 300-925.
+function ribGeo(nm,fs){const s=fs*2.333/232,m=Math.max(4,nm.length*fs*.47+fs*.9-322*s);return {s,m,w:609*s+m};}
+function ribbonLabel(nm,r,fs,dx=0){const f=n=>n.toFixed(1),{s,m,w}=ribGeo(nm,fs),x0=-w/2,y0=r+4-56.5*s,H=232*s,
+    sl=(x,wd,sx,sw)=>`<svg x="${f(x)}" y="${f(y0)}" width="${f(wd)}" height="${f(H)}" viewBox="${sx} 0 ${sw} 232" preserveAspectRatio="none" overflow="hidden"><image href="photos/art/ribbon.webp" width="1234" height="232"/></svg>`;
+  return `${dx?`<g transform="translate(${dx.toFixed(1)} 0)">`:''}<g class="scroll rib">${sl(x0,300*s+.6,0,300)}${sl(x0+300*s,m+.6,300,625)}${sl(x0+300*s+m,309*s,925,309)}<text class="lname" y="${f(y0+143.5*s+fs*.34)}" font-size="${fs}">${esc(nm)}</text></g>${dx?'</g>':''}`;}
+function scrollLabel(nm,r,fs,dx=0){if(ART&&!PRINT)return ribbonLabel(nm,r,fs,dx);const w=Math.max(50,nm.length*fs*.46+24),h=fs*1.6,y0=r+6,y1=y0+h,ym=(y0+y1)/2,L=-w/2,R=w/2,f=n=>n.toFixed(1);
   return `${dx?`<g transform="translate(${dx.toFixed(1)} 0)">`:''}${wornScroll(L,R,y0,y1,hsh(nm)||7,5,'scroll')}<text class="lname" y="${f(ym+fs*.34)}" font-size="${fs}">${esc(nm)}</text></g>${dx?'</g>':''}`;}
 const SCROLLDEFS=`<linearGradient id="scrollG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4e6c4"/><stop offset=".55" stop-color="#ead7ab"/><stop offset="1" stop-color="#d7bd8a"/></linearGradient>
   <radialGradient id="scrollBurn" cx=".5" cy=".45" r=".62"><stop offset=".55" stop-color="#7a4f24" stop-opacity="0"/><stop offset=".86" stop-color="#7a4f24" stop-opacity=".22"/><stop offset="1" stop-color="#5a3414" stop-opacity=".55"/></radialGradient>
@@ -1710,7 +1723,7 @@ function drawLeafTree(grow){
   const L=tLayout();TP=L.pos;TBR=L.br;
   const big=document.body.classList.contains('big')||$('#tstage').clientWidth<700,BIGT={gk:1.2,aunt:1.25,asp:1.25,kid:1.3,ksp:1.3,ggp:1.2,gp:1.15,par:1.05,son:1.05,ssp:1.05};
   // name scrolls: where two would overlap, slide both people (photo and scroll together) apart, and let their branches follow
-  if(SCROLLS){const bx=Object.entries(TP).map(([id,v])=>{const p=byId[id],fs=FS[v.t]*(big?BIGT[v.t]||1:1),nm=p.s.length>22?p.s.slice(0,21)+'…':p.s,w=Math.max(50,nm.length*fs*.46+24)+30,h=fs*1.6;return {id,x:v.x,dx:0,bx:[[v.y+v.r+6,v.y+v.r+6+h,w],[v.y-v.r-4,v.y+v.r+4,2*v.r+8]]};});
+  if(SCROLLS){const bx=Object.entries(TP).map(([id,v])=>{const p=byId[id],fs=FS[v.t]*(big?BIGT[v.t]||1:1),nm=p.s.length>22?p.s.slice(0,21)+'…':p.s,w=ART&&!PRINT?ribGeo(nm,fs).w*.86+14:Math.max(50,nm.length*fs*.46+24)+30,h=fs*(ART&&!PRINT?1.9:1.6);return {id,x:v.x,dx:0,bx:[[v.y+v.r+6,v.y+v.r+6+h,w],[v.y-v.r-4,v.y+v.r+4,2*v.r+8]]};});
     // each person is a photo box and a scroll box that move together; any overlap pushes the two people apart sideways
     const ovl=(a,b)=>{let m=0;for(const [ay0,ay1,aw] of a.bx)for(const [by0,by1,bw] of b.bx){if(ay1<=by0||by1<=ay0)continue;const o=(aw+bw)/2+6-Math.abs(a.x+a.dx-b.x-b.dx);if(o>m)m=o;}return m;};
     for(let it=0;it<60;it++){let any=0;for(let i=0;i<bx.length;i++)for(let j=i+1;j<bx.length;j++){const a=bx[i],b=bx[j],ov=ovl(a,b);if(ov<=0)continue;

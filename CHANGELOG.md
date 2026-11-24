@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-23 — Preview: ribbon name tags, painted footlights, painted opening curtains
+- Every name on the tree now sits on Gemini's parchment ribbon with folded swallowtail ends. The middle stretches to fit each name, so short and long names both look right, and the names are still lettered by the app.
+- The bottom of the stage is now the painted wooden apron with its row of glowing footlights.
+- The opening screen's closed curtains are the painted purple velvet curtains with gold fringe, and they part the same way.
+- Ed's film lantern is always on the left side of the tree and Annie Mae's on the right.
+
 ## 2026-11-23 — Preview: painted flowers and gold face frames
 - The memory garden's flowers are now Gemini's painted flowers with gold star centers: peach for stories, pink for photos, blue for answers, lavender for voice memories.
 - Every face on the tree, and every initials circle, now sits in an ornate antique-gold frame. The family-color ring still shows just inside it.

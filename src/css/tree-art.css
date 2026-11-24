@@ -547,3 +547,8 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .art #tmstars .mlantern:hover .limg,.art #tmstars .flantern:hover .limg,.art #tmstars .mlantern:focus-visible .limg,.art #tmstars .flantern:focus-visible .limg{transform:scale(1.12)}
 /* preview: only the chest itself takes taps, so the hometown pins around it stay reachable */
 .art #tmstars .kchest circle,.art #tmstars .kchest .kfloat,.art #tmstars .kchest .kdirt,.art #tmstars .kchest ellipse{pointer-events:none}
+/* preview: painted closed curtains on the opening screen */
+.art .cover.curtain .cpanel{background:url(photos/art/curtain-closed-l.webp) 0 0/100% 100% no-repeat;box-shadow:none}
+.art .cover.curtain .cpanel.r{background-image:url(photos/art/curtain-closed-r.webp)}
+.art .cover.curtain .cpanel::after{display:none}
+.art #tworld .scroll.rib .lname{fill:#3a2516;stroke:none;font-family:Spectral,Georgia,serif;font-style:italic;font-weight:600}
