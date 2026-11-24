@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Preview: banner lettering centered
+- "The", the "&", "Family" and the crescent moon now line up on the exact center of the banner. The banner picture moved a hair to the right to center its cloth, and the name is set so the "&" sits in the middle with "Graham" and "Harper" on either side.
+
 ## 2026-11-23 — Preview: banner purple matches the curtains
 - The banner's velvet is now the same blue-leaning purple as the valance and side curtains (it was redder), with the same range of shadows and highlights. The gold trim, stars and moon are unchanged.
 

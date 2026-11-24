@@ -1278,14 +1278,14 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
    draw();stageDraw=draw;let rt;new ResizeObserver(()=>{if(st.classList.contains('moving'))return;clearTimeout(rt);rt=setTimeout(()=>{draw();if(!tTouched)tStart();},120);}).observe(st);}}
 /* the moon and sun as friendly faces, gold-rimmed like an old stage sign (original drawings) */
 function marqueeSVG(){
-  // preview: Gemini's painted velvet banner (no lettering in the picture; the family name is set on it here so it stays sharp and exact)
+  // preview: Gemini's painted velvet banner, placed so its cloth and moon centre on x 260 (no lettering in the picture; the family name is set on it here so it stays sharp and exact)
   if(ART)return `<svg class="mqsign" viewBox="0 0 520 190" role="img" aria-label="The Graham and Harper Family" style="overflow:visible">
    <defs><linearGradient id="mqpG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe9a6"/><stop offset=".5" stop-color="#e6b65a"/><stop offset="1" stop-color="#b07a2a"/></linearGradient></defs>
-   <line x1="77.6" y1="-400" x2="77.6" y2="7" stroke="#d9a441" stroke-width="2"/><line x1="436" y1="-400" x2="436" y2="7" stroke="#d9a441" stroke-width="2"/>
-   <image href="photos/art/banner.webp" x="60" y="6" width="400" height="167.8"/>
+   <line x1="79.7" y1="-400" x2="79.7" y2="7" stroke="#d9a441" stroke-width="2"/><line x1="438.1" y1="-400" x2="438.1" y2="7" stroke="#d9a441" stroke-width="2"/>
+   <image href="photos/art/banner.webp" x="62.1" y="6" width="400" height="167.8"/>
    <g font-family="Spectral,Georgia,serif" text-anchor="middle">
     <text x="260" y="70" font-style="italic" font-size="17" fill="#f3dc95" stroke="#1e0a24" stroke-width="2.4" paint-order="stroke">The</text>
-    <text x="260" y="99" font-weight="700" font-size="35" fill="url(#mqpG)" stroke="#1e0a24" stroke-width="2.6" paint-order="stroke" textLength="300" lengthAdjust="spacingAndGlyphs">Graham &amp; Harper</text>
+    <g font-weight="700" font-size="35" fill="url(#mqpG)" stroke="#1e0a24" stroke-width="2.6" paint-order="stroke"><text x="238" y="99" text-anchor="end">Graham</text><text x="260" y="99">&amp;</text><text x="282" y="99" text-anchor="start">Harper</text></g>
     <text x="260" y="121" font-style="italic" font-size="17" fill="#f3dc95" stroke="#1e0a24" stroke-width="2.4" paint-order="stroke" letter-spacing="3">Family</text></g></svg>`;
   // the family name on a purple velvet pennant hung from a gold rod, with gold tassels (Mat's pick, design B)
   return `<svg class="mqsign" viewBox="0 0 520 190" role="img" aria-label="The Graham and Harper Family" style="overflow:visible">
