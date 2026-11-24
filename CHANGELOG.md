@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-23 — Preview: painted family banner
+- The family name now hangs on Gemini's painted plum velvet banner, with its gold rod, braid, fringe, tassels and sleeping moon, so it matches the curtains. "The Graham & Harper Family" is lettered on it in gold by the app, so the name stays sharp and spelled right.
+
 ## 2026-11-23 — Gentler trackpad zoom and keyboard zoom
 - Zooming with a trackpad or mouse wheel now follows how far you scroll or pinch, so small finger movements make small zooms instead of big jumps. A mouse wheel notch zooms about the same as before.
 - Keyboard: + (or =) zooms in, − zooms out, 0 fits the whole tree, and the arrow keys move around. Ctrl/Cmd with + or − still zooms the browser itself. This applies to the live page and the preview.
