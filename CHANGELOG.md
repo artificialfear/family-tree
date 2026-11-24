@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Every memory is a flower
+- Memories now always grow as flowers in the grass on the hill, whoever they're about, spread evenly in the gaps around the kids and grandkids. The lanterns are only Ed's and Annie Mae's memorial films.
+
 ## 2026-11-24 — Mother's Day 1993 home movie
 - The Keepsake Chest's films now include the full Mother's Day 1993 home video (32 minutes), with chapter buttons under the player: Arriving, The trampoline, Inside the house, A little one takes the camera, Late afternoon in the yard, Swing set and trampoline, Evening games, Sunset.
 - The story has a new "Mother's Day 1993" chapter before "For Mom". It lights up everyone in the video and has a "Watch the home movie" button that plays a 3-minute highlights reel.

@@ -70,7 +70,7 @@ try:
   pg.fill('#codeIn','  Wolfie ');pg.click('#codeOk');pg.wait_for_timeout(1200)
   check('memory saved',len(items)==1 and items[0]['from']=='Aunt Eileen')
   check('memory shown on card','He whistled Navy songs.' in pg.inner_text('#panel') and 'From Aunt Eileen' in pg.inner_text('#panel'))
-  check('memory of Jack (passed) rises as a lantern',pg.evaluate("document.querySelectorAll('.mlantern').length")==1 and pg.evaluate("document.querySelectorAll('.mflower,.mstar').length")==0)
+  check('memory of Jack (passed) grows as a flower, no memory lanterns',pg.evaluate("document.querySelectorAll('.mflower').length")==1 and pg.evaluate("document.querySelectorAll('.mlantern').length")==0)
   # second save: no passcode prompt
   pg.evaluate("location.hash='help'");pg.wait_for_timeout(400)
   pg.fill('#asks form textarea','Cousins raised him.');pg.click('#asks form button.pri');pg.wait_for_timeout(1000)

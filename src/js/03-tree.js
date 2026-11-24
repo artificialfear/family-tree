@@ -17,7 +17,7 @@ if(ART){CHEST.x=915;CHEST.y=2060+DROP;CHEST.rot=0;CHEST.s=3;}let gardenSeen=null
 // The grass starts SOIL0 deep and grows a row (36) at a time when the garden needs room, pushing the soil, roots and towns down.
 const SOIL0=ART?175:250;let SOILD=SOIL0;
 const passed=c=>!byId[c.pid].living;
-const memCount=()=>contribs.filter(c=>['story','photo','answer'].includes(c.type)&&!isKeep(c)&&byId[c.pid]&&!passed(c)).length;
+const memCount=()=>contribs.filter(c=>['story','photo','answer'].includes(c.type)&&!isKeep(c)&&byId[c.pid]).length;
 function soilDepthFor(n){let D=SOIL0;while(D<SOIL0+36*20&&gardenSlots(D).length<n)D+=36;return D;}const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
 const RAD={ssp:36,son:40,par:62,gp:44,ggp:34,aunt:33,asp:26,kid:27,ksp:22,gk:30},FS={ssp:19,son:21,par:27,gp:22,ggp:18,aunt:18,asp:15,kid:15,ksp:13,gk:17};
 function tLayout(){
@@ -278,11 +278,14 @@ function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contr
 /* memory garden: every memory plants a glowing flower on the planet, in rows along its rim, outer shoulders first.
    Flowers step around faces, name scrolls, the main root, the root towns, the sign and the chest.
    A memory that arrives while the page is open sprouts (grows in). */
-function gardenSlots(D=SOILD){const ob=[];Object.values(TP).forEach(v=>{ob.push(['c',v.x,v.y,v.r+16]);ob.push(['r',v.x,v.y+v.r+24,Math.max(56,v.r*1.7),20]);});
+function gardenSlots(D=SOILD){const ob=[];Object.values(TP).forEach(v=>{ob.push(['c',v.x,v.y,v.r+16]);ob.push(['r',v.x,v.y+v.r+24,ART&&!PRINT?Math.max(86,v.r*2.9):Math.max(56,v.r*1.7),ART&&!PRINT?26:20]);});
   ob.push(['r',915,1440+DROP,34,170]);
   // the children and grandchildren on the planet stand on clear grass: no flowers among or above them
-  const fam=Object.values(TP).filter(v=>v.y>1250);if(fam.length){const fx0=Math.min(...fam.map(v=>v.x-v.r))-50,fx1=Math.max(...fam.map(v=>v.x+v.r))+50,fb=Math.max(...fam.map(v=>v.y+v.r))+62;ob.push(['r',(fx0+fx1)/2,0,(fx1-fx0)/2,fb]);}ob.push(['r',CHEST.x,CHEST.y-40,100,72]);
+  const fam=Object.values(TP).filter(v=>v.y>1250);if(fam.length&&!(ART&&!PRINT)){const fx0=Math.min(...fam.map(v=>v.x-v.r))-50,fx1=Math.max(...fam.map(v=>v.x+v.r))+50,fb=Math.max(...fam.map(v=>v.y+v.r))+62;ob.push(['r',(fx0+fx1)/2,0,(fx1-fx0)/2,fb]);}ob.push(['r',CHEST.x,CHEST.y-40,100,72]);
   const ok=(x,y)=>ob.every(o=>o[0]==='c'?Math.hypot(x-o[1],y-o[2])>o[3]:Math.abs(x-o[1])>o[3]||Math.abs(y-o[2])>o[4]);
+  // painted hill: flowers grow in the green grass band, in the gaps between and below the kids and grandkids, spread evenly from the middle out
+  if(ART&&!PRINT){const S=[];for(let d=34;d<=SOIL0-22;d+=30)for(let x=-200+((d/30|0)%2)*17;x<=2030;x+=34){if(Math.abs(x-915)<70)continue;const y=surfY(x)+d;if(y>HILL.cy-HILL.R*.25)continue;if(ok(x,y))S.push([x,y]);}
+    return spreadOrder(S,[[700,surfY(700)+60],[1130,surfY(1130)+60]]);}
   const S=[];for(let j=0;30+j*36<=D-24;j++){const d=30+j*36;for(let x=-600+(j%2)*19;x<=2430;x+=38){if(Math.abs(x-PLANET.cx)>PLANET.R*(ART?.9:.62))continue;const y=surfY(x)+d;if(ok(x,y))S.push([x,y,j,y<1585?0:1]);}}
   return S.sort((a,b)=>a[3]-b[3]||a[2]-b[2]||Math.abs(b[0]-915)-Math.abs(a[0]-915));}
 /* lanterns: memories of family who have passed float in the open sky around the canopy,
@@ -316,7 +319,7 @@ const FLC={story:['#ffe0c2','#f49a8e','#b8586a'],photo:['#ffd9ea','#e8789f','#a8
 // one paper-cut flower: five rounded petals in a single shape
 const FLOWER=(()=>{let d='';for(let i=0;i<5;i++){const a=i*72*Math.PI/180,P=(r,o)=>[Math.sin(a+o)*r,-Math.cos(a+o)*r],v0=P(3.4,-.63),c0=P(12.5,-.5),c1=P(12.5,.5),v1=P(3.4,.63);
   d+=(i?'L':'M')+v0.map(f1).join(' ')+'C'+[...c0,...c1,...v1].map(f1).join(' ');}return d+'Z';})();
-function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)),list=all.filter(c=>!passed(c)),LS=lanternSlots();
+function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)),list=all,LS=lanternSlots();// every memory grows a flower; the lanterns are only the memorial films of family who have passed
   const S=gardenSlots(),mem=[...list].sort((a,b)=>String(a.at||'').localeCompare(String(b.at||''))||String(a.id).localeCompare(String(b.id)));
   const first=gardenSeen===null,seen=gardenSeen||new Set();let fl='';
   mem.forEach((c,i)=>{const sp=S[i];if(!sp)return;const [x,y]=sp,h=hsh(c.id),k=c.audio?'voice':FLC[c.type]?c.type:'story',rot=h%72,sw=((h>>8)%9-4);
@@ -334,7 +337,7 @@ function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(Strin
       <path d="M-14 -17L14 -17L10 15L-10 15Z" transform="translate(3 4)" fill="#0b1630" opacity=".35"/><path d="M-14 -17L14 -17L10 15L-10 15Z" fill="url(#lpaper)" stroke="#a8561c" stroke-width="1.2"/>
       <rect x="-15" y="-20" width="30" height="4" rx="1.5" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><rect x="-10" y="14" width="20" height="3" rx="1" fill="url(#ggold)" stroke="#6b4410" stroke-width=".6"/>
       <path d="M-4 -7L6 -1L-4 5Z" fill="#a8561c"/><ellipse cy="20" rx="2.2" ry="3.4" fill="#fff3b0"/>`}</g></g><text y="${f1(48)}" class="fltx">${esc(fm.title.split(' ')[0])}${fm.id==='annie'?' Mae':''}</text></g>`;});
-  [...all].filter(passed).sort(byDate).forEach((c,i)=>{const sp=LS[i+NF];if(!sp)return;const h=hsh(c.id),x=sp[0]+(h%30)-15,y=sp[1]+((h>>5)%30)-15,rot=((h>>9)%14)-7;
+  [].forEach((c,i)=>{const sp=LS[i+NF];if(!sp)return;const h=hsh(c.id),x=sp[0]+(h%30)-15,y=sp[1]+((h>>5)%30)-15,rot=((h>>9)%14)-7;
     if(!first&&!seen.has(c.id))gardenNew[c.id]=Date.now();const nw=Date.now()-(gardenNew[c.id]||0)<2500;
     lt+=`<g class="mlantern${nw?' sprout':''}" data-c="${esc(c.id)}" tabindex="0" role="button" aria-label="A memory of ${esc(byId[c.pid].n)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mls" style="--rot:${rot}deg;--dl:-${(h%60)/10}s"><circle r="34" fill="url(#lglow)"/>${ART?`<image class="limg" href="photos/art/lantern-memory.webp" x="-16" y="-33" width="32.1" height="76.8"/>`:`
       <path d="M-14 -17L14 -17L10 15L-10 15Z" transform="translate(3 4)" fill="#0b1630" opacity=".35"/><path d="M-14 -17L14 -17L10 15L-10 15Z" fill="url(#lpaper)" stroke="#a8561c" stroke-width="1.2"/><path d="M-5 -17L-4 15M5 -17L4 15" stroke="#d98a3c" stroke-width=".8" opacity=".6"/>
