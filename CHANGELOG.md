@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-24 — Preview: lanterns spread through the sky
+- On computers (and tablets held sideways), the lanterns float in the open sky to the left and right of the tree, spread out evenly, with Ed's on the left and Annie Mae's on the right.
+- On phones and tablets held upright, they float in the sky between the bottom of the leaves and the hill, on either side of the trunk, with Ed's and Annie Mae's nearest the trunk.
+- Turning a tablet re-arranges them for the new shape.
+
 ## 2026-11-23 — Preview: ribbon name tags, painted footlights, painted opening curtains
 - Every name on the tree now sits on Gemini's parchment ribbon with folded swallowtail ends. The middle stretches to fit each name, so short and long names both look right, and the names are still lettered by the app.
 - The bottom of the stage is now the painted wooden apron with its row of glowing footlights.

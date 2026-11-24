@@ -1474,7 +1474,20 @@ function gardenSlots(D=SOILD){const ob=[];Object.values(TP).forEach(v=>{ob.push(
   return S.sort((a,b)=>a[3]-b[3]||a[2]-b[2]||Math.abs(b[0]-915)-Math.abs(a[0]-915));}
 /* lanterns: memories of family who have passed float in the open sky around the canopy,
    gathering as a crown above it first and then down both sides */
-function lanternSlots(){const can=Object.values(TP).filter(v=>v.y<1250);if(!can.length)return [];
+// preview: lanterns spread through open sky. Wide screens: two loose columns of sky beside the canopy. Tall screens and phones:
+// the band of sky between the bottom of the leaves and the hill. Spots are handed out far-from-each-other first, alternating sides.
+let LWIDE=null;const lanternWide=()=>{const st=$('#tstage');return !!st&&st.clientWidth>=700&&st.clientWidth>st.clientHeight;};
+function spreadOrder(S,seeds){const out=[],left=[...S];let cur=seeds.map(p=>left.splice(left.reduce((bi,q,i)=>Math.hypot(q[0]-p[0],q[1]-p[1])<Math.hypot(left[bi][0]-p[0],left[bi][1]-p[1])?i:bi,0),1)[0]).filter(Boolean);out.push(...cur);
+  while(left.length){let bi=0,bd=-1;left.forEach((q,i)=>{const d=Math.min(...out.map(o=>Math.hypot(q[0]-o[0],(q[1]-o[1])*1.2)));if(d>bd){bd=d;bi=i;}});out.push(left.splice(bi,1)[0]);}return out;}
+function artLanternSlots(can){const xs=can.map(v=>v.x-v.r),xe=can.map(v=>v.x+v.r),x0=Math.min(...xs),x1=Math.max(...xe),top=Math.min(...can.map(v=>v.y-v.r));
+  const ob=Object.values(TP).flatMap(v=>[[v.x,v.y,v.r+40],[v.x,v.y+v.r+24,Math.max(80,v.r*2)]]),ok=(x,y)=>!ob.some(([ox,oy,rr])=>Math.hypot(x-ox,y-oy)<rr);
+  const S=[];LWIDE=lanternWide();
+  if(LWIDE){for(let y=top+130;y<=1250+DROP*.6;y+=70)for(const sd of[-1,1])for(let k=0;k<4;k++){const x=sd<0?x0-140-k*80:x1+140+k*80;if(ok(x,y))S.push([x+((y/70|0)%2)*20*sd,y]);}
+    return spreadOrder(S,[[x0-180,top+170],[x1+180,top+170]]);}
+  const low=Math.max(...can.map(v=>v.y+v.r))+70;
+  for(let y=low;y<=1272+DROP+40;y+=55)for(let x=x0+40;x<=x1-40;x+=60){if(Math.abs(x-915)<150)continue;if(y>surfY(x)-75)continue;if(ok(x,y))S.push([x,y]);}
+  return spreadOrder(S,[[915-330,low+60],[915+330,low+60]]);}
+function lanternSlots(){const can=Object.values(TP).filter(v=>v.y<1250);if(!can.length)return [];if(ART&&!PRINT)return artLanternSlots(can);
   const xs=can.map(v=>v.x),ys=can.map(v=>v.y),cX=(Math.min(...xs)+Math.max(...xs))/2,rX=(Math.max(...xs)-Math.min(...xs))/2+110,top=Math.min(...ys),cY=(top+1250)/2,rY=(1250-top)/2+120;
   const ob=Object.values(TP).flatMap(v=>[[v.x,v.y,v.r+34],[v.x,v.y+v.r+24,Math.max(70,v.r*1.9)]]);
   const S=[];for(let y=top-200,r=0;y<=1180;y+=62,r++)for(let x=cX-rX-700+(r%2)*31;x<=cX+rX+700;x+=62){
@@ -1765,7 +1778,7 @@ function drawLeafTree(grow){
 /* stage size is cached so dragging never forces the browser to re-measure the page */
 $('#tstage').addEventListener('scroll',e=>{const t=e.currentTarget;if(t.scrollTop||t.scrollLeft){t.scrollTop=0;t.scrollLeft=0;}});
 let TSZ={w:0,h:0};const tsz=()=>{if(!TSZ.w){const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};}return TSZ;};
-new ResizeObserver(()=>{const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};if(tw.childElementCount&&!G)tApply(false);}).observe($('#tstage'));
+new ResizeObserver(()=>{const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};if(ART&&LWIDE!==null&&lanternWide()!==LWIDE&&tw.querySelector('.leaf'))renderMemStars();if(tw.childElementCount&&!G)tApply(false);}).observe($('#tstage'));
 function tClamp(){const r={width:tsz().w,height:tsz().h};if(!r.width||!(TB.x1>TB.x0))return;const W=r.width,H=r.height,bw=TB.x1-TB.x0,bh=TB.y1-TB.y0;
   const kmin=Math.min(W/bw,H/bh)*(ART&&!PRINT?.85:.5);if(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
   const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(ART&&!PRINT?H*.5-(TB.y1+60)*k:H*.5-(TB.y1+(PRINT?0:340+SOILD-SOIL0))*k,tv.y));}
