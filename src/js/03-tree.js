@@ -593,7 +593,7 @@ $('#tstage').addEventListener('scroll',e=>{const t=e.currentTarget;if(t.scrollTo
 let TSZ={w:0,h:0};const tsz=()=>{if(!TSZ.w){const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};}return TSZ;};
 new ResizeObserver(()=>{const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};if(ART&&LWIDE!==null&&lanternWide()!==LWIDE&&tw.querySelector('.leaf'))renderMemStars();if(tw.childElementCount&&!G)tApply(false);}).observe($('#tstage'));
 function tClamp(){const r={width:tsz().w,height:tsz().h};if(!r.width||!(TB.x1>TB.x0))return;const W=r.width,H=r.height,bw=TB.x1-TB.x0,bh=TB.y1-TB.y0;
-  const kmin=Math.min(W/bw,H/bh)*(ART&&!PRINT?.85:.5);if(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
+  const kmin=Math.min(W/bw,H/bh)*(ART&&!PRINT?.6:.5);if(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
   const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(ART&&!PRINT?H*.5-(TB.y1+60)*k:H*.5-(TB.y1+(PRINT?0:340+SOILD-SOIL0))*k,tv.y));}
 let SKYEL=null;
 function sunLight(){if(SKY!=='day')return;
@@ -654,7 +654,11 @@ function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!
   // phones, opening view: zoom so the core family just fills the width (outer cousins run off the sides, a swipe away)
   // and centre the whole tree in the height between the sky and the buttons, so there's no empty ground below it
   if(SD&&SD.ph&&ids===TCORE){const k2=Math.max(.12,Math.min((r.width-6)/w,avail/(TB.y1-TB.y0)));tv.k=k2;tv.x=r.width/2-(b.x0+b.x1)/2*k2;tv.y=top+(avail-(TB.y1-TB.y0)*k2)/2-TB.y0*k2;}
-  else if(SD&&SD.ph&&!(ids&&ids.length===1))tv.y=Math.min(tv.y,top+12-TB.y0*k);tApply(anim);}
+  else if(SD&&SD.ph&&!(ids&&ids.length===1))tv.y=Math.min(tv.y,top+12-TB.y0*k);
+  // painted stage: framed views (Fit, the opening view, story chapters) never go below 85% of the whole-tree size, the same framing as before
+  // the zoom-out limit was loosened; scrolling, pinching and the - key can still zoom out further (to 60%, see tClamp)
+  if(ART&&!PRINT){const W=r.width,H=r.height,kf=Math.min(W/(TB.x1-TB.x0),H/(TB.y1-TB.y0))*.85;if(tv.k<kf){tv.x=W/2-(W/2-tv.x)*kf/tv.k;tv.y=H/2-(H/2-tv.y)*kf/tv.k;tv.k=kf;}}
+  tApply(anim);}
 // the setting sun sits right behind the trunk whenever the view is framed (first load, Fit); panning leaves it where it is
 function sunToTrunk(jump){const st=SKYEL||(SKYEL=$('#tstage .sky')),W=$('#tstage').getBoundingClientRect().width;if(!st||!W)return;
   if(jump)st.style.transition='none';st.style.setProperty('--sunx',Math.max(8,Math.min(92,(tv.x+915*tv.k)/W*100)).toFixed(2)+'%');if(jump){void st.offsetWidth;st.style.transition='';}}

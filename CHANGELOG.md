@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Zoom out past Fit on computers (fixed)
+- On a computer you can now zoom out to about 70% of the Fit size with scrolling, pinching or the − key. Last night's change to allow this didn't actually take effect; it does now. Fit and the opening view look exactly as before.
+
 ## 2026-11-24 — Curtain edges, landscape phones, a little more zoom-out
 - The side curtains now reach past both edges of the screen, with dark velvet behind them, so no sky shows along the left or right edge.
 - On a phone turned sideways, the banner is much smaller, and the hanging stars and cloud border are scaled down to match.
