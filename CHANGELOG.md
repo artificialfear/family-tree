@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Home closes the curtains
+- Tapping Home now shows the curtains sliding closed over the tree before the welcome card appears (they used to be invisible until the end).
+
 ## 2026-11-24 — Back to the welcome screen
 - The Program menu now starts with "Home". It closes the curtains over the tree and brings back the welcome screen; "Explore the tree" or "Begin the story" opens them again, with the banner and stars lowered in as before.
 

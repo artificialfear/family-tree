@@ -48,8 +48,11 @@ function closeCover(story){openCurtain(story);}
 // back to the welcome screen: the curtains close over the tree again, and the banner and sky pieces go back up, ready to come down next time
 function goHome(){if(si>=0&&typeof endStory==='function')endStory();document.querySelectorAll('.view.sheet').forEach(v=>v.classList.remove('sheet','on'));document.body.classList.remove('sheeton');
   $('#v-tree').classList.add('on');if($('#prog'))$('#prog').hidden=true;
-  cover.style.display='';cover.classList.remove('opening');void cover.offsetWidth;
-  requestAnimationFrame(()=>{cover.classList.remove('open');if(STAGE){const st=$('#tstage');setTimeout(()=>{st.classList.add('hoisted');st.classList.remove('lowering');},RM?0:1900);}});
+  // start from the open state (curtains pulled aside, card hidden), then draw the curtains closed; the card fades in once they meet
+  cover.classList.add('closing','opening','open');cover.style.display='';void cover.offsetWidth;const T=RM?300:1700;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{cover.classList.remove('open');
+    setTimeout(()=>{cover.classList.remove('opening');if(STAGE){const st=$('#tstage');st.classList.add('hoisted');st.classList.remove('lowering');}},T);
+    setTimeout(()=>cover.classList.remove('closing'),T+500);}));
   history.replaceState(null,'',location.pathname+location.search);}
 $('#goHome')&&($('#goHome').onclick=e=>{e.preventDefault();goHome();});
 // quietly fetch every face while the opening screen is showing, so they're ready when the tree grows

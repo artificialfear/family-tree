@@ -642,3 +642,6 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 .touch #mnote{box-shadow:0 6px 16px rgba(0,0,0,.5);contain:layout paint;will-change:opacity}
 .touch #mnote.on{animation:notefade .22s ease-out both}
 @keyframes notefade{from{opacity:0}to{opacity:1}}
+/* closing the curtains (Home): they become visible at once and slide together; the frame stays */
+.cover.curtain.closing .cpanel{transition:transform 1.6s cubic-bezier(.62,0,.28,1),opacity .25s ease}
+.cover.curtain.closing .cframe{opacity:1;transition:none}
