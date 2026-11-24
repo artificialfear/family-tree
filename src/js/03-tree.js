@@ -98,7 +98,7 @@ function moonSVG(p){const R=48,k=Math.cos(2*Math.PI*p),wax=p<.5,ls=wax?1:0,ts=wa
    const mq=document.createElement('div');mq.id='marquee';mq.innerHTML=marqueeSVG();pr.after(mq);
    // tap the banner to hoist it up out of view; a gold pull cord stays under the valance to lower it again (remembered on this device)
    if(ART){const pull=document.createElement('button');pull.type='button';pull.id='mqPull';pull.setAttribute('aria-label','Lower the family banner');
-     pull.innerHTML='<svg viewBox="0 0 30 90" aria-hidden="true"><line x1="15" y1="0" x2="15" y2="58" stroke="#d9a441" stroke-width="2.2"/><circle cx="15" cy="60" r="5" fill="#e8c06a" stroke="#7a4f12"/><path d="M9 64Q15 61 21 64L24 86Q15 90 6 86Z" fill="#d9a441" stroke="#7a4f12" stroke-width="1"/><path d="M10 68L9 85M13 68L13 87M17 68L17 87M20 68L21 85" stroke="#8a5a1c" stroke-width=".8"/></svg>';
+     pull.innerHTML='<img src="photos/art/pull-cord.webp" alt="" draggable="false">';
      mq.after(pull);mq.setAttribute('role','button');mq.setAttribute('tabindex','0');mq.setAttribute('aria-label','Raise the family banner out of view');
      const set=up=>{mq.classList.toggle('up',up);pull.classList.toggle('on',up);try{localStorage.setItem('ftBannerUp',up?'1':'')}catch(e){}};
      let up0=false;try{up0=localStorage.getItem('ftBannerUp')==='1'}catch(e){}set(up0);

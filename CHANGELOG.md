@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Painted pull cord
+- The banner's pull cord is now the painted twisted gold rope with its carved bead and tassel.
+
 ## 2026-11-24 — Stars higher, clear of the moon and lanterns
 - On computers the hanging stars sit higher again, and none of them (or their strings) hang across the moon, the sun or any lantern.
 
