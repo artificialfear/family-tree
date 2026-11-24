@@ -630,7 +630,9 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 .touch .theme-stage .nightwash,.touch .theme-stage .sky .sunglow,.touch .theme-stage .sky .skydim,.touch .theme-stage .sky .cloud,.touch .theme-stage .sky .stars,.touch .sbackdrop .srowday{will-change:auto}
 /* lanterns hanging from portraits and the garden flowers zoom with the tree like everything else. They used to be enlarged when zoomed out,
    but that size was only applied once a zoom finished, so they visibly popped and jumped back after every zoom. */
-#tmstars .hangl .mss,#tmstars .mflower .mss{transform:none;transition:none}
+#tmstars .hangl .mss{transform:none;transition:none}
+/* flowers: a fixed, larger size (they used to be enlarged only when zoomed out, which popped after every zoom) */
+#tmstars .mflower .mss{transform:scale(1.7);transition:none}
 #tmstars .hangl .fltx{transform:none}
 /* Android tablets, round two:
    - opening a page (Can you help?, the chest…): the tree is hidden the moment the page opens, under a near-solid wash, instead of 0.4 s later

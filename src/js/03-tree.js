@@ -302,7 +302,7 @@ function gardenSlots(D=SOILD){const ob=[];Object.values(TP).forEach(v=>{ob.push(
   const fam=Object.values(TP).filter(v=>v.y>1250);if(fam.length&&!(ART&&!PRINT)){const fx0=Math.min(...fam.map(v=>v.x-v.r))-50,fx1=Math.max(...fam.map(v=>v.x+v.r))+50,fb=Math.max(...fam.map(v=>v.y+v.r))+62;ob.push(['r',(fx0+fx1)/2,0,(fx1-fx0)/2,fb]);}ob.push(['r',CHEST.x,CHEST.y-40,100,72]);
   const ok=(x,y)=>ob.every(o=>o[0]==='c'?Math.hypot(x-o[1],y-o[2])>o[3]:Math.abs(x-o[1])>o[3]||Math.abs(y-o[2])>o[4]);
   // painted hill: flowers grow in the green grass band, in the gaps between and below the kids and grandkids, spread evenly from the middle out
-  if(ART&&!PRINT){const S=[];for(let d=34;d<=SOIL0-22;d+=30)for(let x=-200+((d/30|0)%2)*17;x<=2030;x+=34){if(Math.abs(x-915)<70)continue;const y=surfY(x)+d;if(y>HILL.cy-HILL.R*.25)continue;if(ok(x,y))S.push([x,y]);}
+  if(ART&&!PRINT){const S=[];for(let d=34;d<=SOIL0-22;d+=30)for(let x=915-640+((d/30|0)%2)*17;x<=915+640;x+=34){if(Math.abs(x-915)<70)continue;/* only the grass on the top of the hill, where it is on screen */const y=surfY(x)+d;if(y>HILL.cy-HILL.R*.25)continue;if(ok(x,y))S.push([x,y]);}
     return spreadOrder(S,[[700,surfY(700)+60],[1130,surfY(1130)+60]]);}
   const S=[];for(let j=0;30+j*36<=D-24;j++){const d=30+j*36;for(let x=-600+(j%2)*19;x<=2430;x+=38){if(Math.abs(x-PLANET.cx)>PLANET.R*(ART?.9:.62))continue;const y=surfY(x)+d;if(ok(x,y))S.push([x,y,j,y<1585?0:1]);}}
   return S.sort((a,b)=>a[3]-b[3]||a[2]-b[2]||Math.abs(b[0]-915)-Math.abs(a[0]-915));}

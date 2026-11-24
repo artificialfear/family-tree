@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Memory flowers visible again
+- The garden flowers had become tiny after the zoom fix, and one could land off the edge of the hill. They're now drawn larger at a steady size and always grow on the grass on top of the hill.
+
 ## 2026-11-24 — Home closes the curtains
 - Tapping Home now shows the curtains sliding closed over the tree before the welcome card appears (they used to be invisible until the end).
 
