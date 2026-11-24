@@ -632,3 +632,13 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
    but that size was only applied once a zoom finished, so they visibly popped and jumped back after every zoom. */
 #tmstars .hangl .mss,#tmstars .mflower .mss{transform:none;transition:none}
 #tmstars .hangl .fltx{transform:none}
+/* Android tablets, round two:
+   - opening a page (Can you help?, the chest…): the tree is hidden the moment the page opens, under a near-solid wash, instead of 0.4 s later
+     (that delayed swap was itself a visible flash)
+   - the note from the moon or sun: a plain fade with a small shadow; the springy scale-in and the 48 px soft shadow made Android redraw
+     the whole tree under it */
+.touch body.sheeton #tstage #tsvg,.touch body.sheeton #tstage .sbackdrop,.touch body.sheeton #tstage #celest,.touch body.sheeton #tstage #tback,.touch body.sheeton #tstage #tfront,.touch body.sheeton #tstage .wlayer{transition:none}
+.touch body.sheeton::after{background:rgba(8,4,16,.88)}
+.touch #mnote{box-shadow:0 6px 16px rgba(0,0,0,.5);contain:layout paint;will-change:opacity}
+.touch #mnote.on{animation:notefade .22s ease-out both}
+@keyframes notefade{from{opacity:0}to{opacity:1}}

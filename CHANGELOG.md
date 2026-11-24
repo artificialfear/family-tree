@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-24 — Smoother "Can you help?" and Mom's note on Android tablets
+- Opening "Can you help?" (or any page) now dims the stage in one step instead of swapping the tree out a moment later, which was a visible flash.
+- The note to Mom from the moon or sun now fades in gently instead of springing in with a large soft shadow.
+- The "Can you help?" page now explains that lanterns hang from the family we have lost (it still described the old floating lanterns).
+
 ## 2026-11-24 — Lanterns no longer jump after zooming
 - The lanterns (and the garden flowers) used to be enlarged when zoomed out, but only once each zoom finished, so they popped to a new size and shifted after every zoom. They now zoom smoothly with the tree, staying the same size relative to the portraits they hang from.
 
