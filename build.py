@@ -7,12 +7,13 @@
   src/mapdata.json    map shapes, replaces __MAP__
   src/api.txt         Apps Script /exec URL, replaces __API__ (empty = memories off)
 
-Usage: python3 build.py [--api URL] [--out FILE]
+Usage: python3 build.py [--api URL] [--out FILE] [--art]
+  With no --out it writes index.html and also preview.html (the painted tree and hill turned on).
 """
 import argparse, glob, json, os
 here = os.path.dirname(os.path.abspath(__file__))
 ap = argparse.ArgumentParser()
-ap.add_argument('--api'); ap.add_argument('--out', default=os.path.join(here, 'index.html'))
+ap.add_argument('--api'); ap.add_argument('--out'); ap.add_argument('--art', action='store_true')
 a = ap.parse_args()
 src = os.path.join(here, 'src')
 read = lambda p: open(p, encoding='utf-8').read()
@@ -24,8 +25,11 @@ page = read(os.path.join(src, 'index.html'))
 for slot in ('<!--CSS-->\n', '<!--JS-->\n'):
     assert page.count(slot) == 1, slot
 page = page.replace('<!--CSS-->\n', css).replace('<!--JS-->\n', js)
-for ph in ('__MAP__', '__API__'):
+for ph in ('__MAP__', '__API__', '__ART__'):
     assert page.count(ph) == 1, (ph, page.count(ph))
 page = page.replace('__MAP__', mapdata).replace('__API__', json.dumps(api))
-open(a.out, 'w', encoding='utf-8').write(page)
-print('built', os.path.relpath(a.out, here), len(page) // 1024, 'KB')
+outs = [(a.out, a.art)] if a.out else [(os.path.join(here, 'index.html'), a.art), (os.path.join(here, 'preview.html'), True)]
+for out, art in outs:
+    html = page.replace('__ART__', 'true' if art else 'false')
+    open(out, 'w', encoding='utf-8').write(html)
+    print('built', os.path.relpath(out, here), len(html) // 1024, 'KB')

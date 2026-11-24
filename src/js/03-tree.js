@@ -3,12 +3,16 @@ const tsvg=$('#tsvg'),tw=$('#tworld');let stageDraw=null,sbdKey='';
 // the hometowns at the ends of the roots, below the grandchildren
 const ROOTPINS=[['orange',200,1710,'1911'],['durham',330,1785,'1930'],['louisville',455,1700,'1932'],['greenville',590,1780,'1956'],['collegepark',730,1705,''],['covington',915,1820,'1982'],['newborn',1120,1710,''],['upson',1300,1780,'1940']];
 // the planet (a circle under the tree) and the memory garden on it
-const PLANET={cx:915,cy:1272+2200,R:2200},surfY=x=>PLANET.cy-Math.sqrt(PLANET.R**2-(x-PLANET.cx)**2);
+const PLANET={cx:915,cy:1272+2200,R:2200},surfY=x=>PLANET.cy-Math.sqrt(Math.max(0,PLANET.R**2-(x-PLANET.cx)**2));
+// preview: the painted planet is a round hill, radius 1400, top at y 1272 (same place as the drawn planet's top)
+const HILL={cx:915,cy:2672,R:1400},OLDP={...PLANET};if(ART)Object.assign(PLANET,HILL);
 const f1=n=>n.toFixed(1);
-const CHEST={x:1835,y:1500},GSIGN={x:-46,y:1546};let gardenSeen=null;const gardenNew={};
+const CHEST={x:1835,y:1500,rot:0},GSIGN={x:-46,y:1546};
+// on the round hill the chest sits on the slope past Dustin, tilted part way to follow it
+if(ART){CHEST.x=1700;CHEST.y=surfY(1700)+22;CHEST.rot=Math.atan((1700-HILL.cx)/Math.sqrt(HILL.R**2-(1700-HILL.cx)**2))*180/Math.PI*.45;}let gardenSeen=null;const gardenNew={};
 // the planet is a cut-paper diorama: a grass layer on top for the garden, soil underneath where the roots reach the hometowns.
 // The grass starts SOIL0 deep and grows a row (36) at a time when the garden needs room, pushing the soil, roots and towns down.
-const SOIL0=250;let SOILD=SOIL0;
+const SOIL0=ART?175:250;let SOILD=SOIL0;
 const passed=c=>!byId[c.pid].living;
 const memCount=()=>contribs.filter(c=>['story','photo','answer'].includes(c.type)&&!isKeep(c)&&byId[c.pid]&&!passed(c)).length;
 function soilDepthFor(n){let D=SOIL0;while(D<SOIL0+36*20&&gardenSlots(D).length<n)D+=36;return D;}const CANOPY_UP=200;let TP={},TBR=[],TB={x0:0,y0:0,x1:1,y1:1},tv={x:0,y:0,k:1},tTouched=0,tFitted=0;
@@ -245,7 +249,7 @@ function gardenSlots(D=SOILD){const ob=[];Object.values(TP).forEach(v=>{ob.push(
   // the children and grandchildren on the planet stand on clear grass: no flowers among or above them
   const fam=Object.values(TP).filter(v=>v.y>1250);if(fam.length){const fx0=Math.min(...fam.map(v=>v.x-v.r))-50,fx1=Math.max(...fam.map(v=>v.x+v.r))+50,fb=Math.max(...fam.map(v=>v.y+v.r))+62;ob.push(['r',(fx0+fx1)/2,0,(fx1-fx0)/2,fb]);}ob.push(['r',CHEST.x,CHEST.y-40,100,72]);
   const ok=(x,y)=>ob.every(o=>o[0]==='c'?Math.hypot(x-o[1],y-o[2])>o[3]:Math.abs(x-o[1])>o[3]||Math.abs(y-o[2])>o[4]);
-  const S=[];for(let j=0;30+j*36<=D-24;j++){const d=30+j*36;for(let x=-600+(j%2)*19;x<=2430;x+=38){if(Math.abs(x-PLANET.cx)>PLANET.R*.62)continue;const y=surfY(x)+d;if(ok(x,y))S.push([x,y,j,y<1585?0:1]);}}
+  const S=[];for(let j=0;30+j*36<=D-24;j++){const d=30+j*36;for(let x=-600+(j%2)*19;x<=2430;x+=38){if(Math.abs(x-PLANET.cx)>PLANET.R*(ART?.9:.62))continue;const y=surfY(x)+d;if(ok(x,y))S.push([x,y,j,y<1585?0:1]);}}
   return S.sort((a,b)=>a[3]-b[3]||a[2]-b[2]||Math.abs(b[0]-915)-Math.abs(a[0]-915));}
 /* lanterns: memories of family who have passed float in the open sky around the canopy,
    gathering as a crown above it first and then down both sides */
@@ -286,7 +290,7 @@ function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(Strin
       <rect x="-15" y="-20" width="30" height="4" rx="1.5" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><rect x="-10" y="14" width="20" height="3" rx="1" fill="url(#ggold)" stroke="#6b4410" stroke-width=".6"/><ellipse cy="20" rx="2.2" ry="3.4" fill="#fff3b0"/></g></g></g>`;});
   gardenSeen=new Set(all.map(c=>c.id));
   // the chest: cut-paper wood with gold bands and a star clasp, a few gold stars floating out of it
-  const chest=`<g class="kchest" tabindex="0" role="button" aria-label="Open the keepsake chest: old photographs and family records" transform="translate(${CHEST.x} ${CHEST.y}) scale(1.3)">
+  const chest=`<g class="kchest" tabindex="0" role="button" aria-label="Open the keepsake chest: old photographs and family records" transform="translate(${CHEST.x} ${f1(CHEST.y)}) rotate(${f1(CHEST.rot)}) scale(1.3)">
     <circle cx="0" cy="-34" r="20" fill="transparent"/><ellipse cx="0" cy="7" rx="60" ry="9" fill="#0f2a16" opacity=".55"/>
     <g class="kfloat">${[[-30,-74,5],[4,-90,6.5],[34,-70,4.5],[18,-108,3.5]].map(([sx,sy,sr],i)=>`<path d="${star6(sx,sy,sr)}" fill="url(#ggold)" stroke="#6b4410" stroke-width=".8" class="kst" style="--i:${i}"/>`).join('')}</g>
     <g transform="translate(5 6)" class="gshadow"><path d="M-44 -26v26q0 6 6 6h76q6 0 6-6v-26z"/><path d="M-44 -26q0-26 44-26q44 0 44 26z"/></g>
@@ -406,7 +410,7 @@ function treeArt(st,dl){
       ground='';
       // roots that lead to the places the family came from
       // below the grandchildren (their name scrolls end near y 1590), so the roots fan out under the whole family
-      const G=STAGE?SOILD-SOIL0:0,PINS=ROOTPINS.map(([k,x,y,yr])=>[k,x,y+G,yr]);
+      const G=STAGE&&!ART?SOILD-SOIL0:0,PINS=ROOTPINS.map(([k,x,y,yr])=>[k,x,y+G,yr]);
       const RB={x1:915,y1:1290,cx:915,cy:1420+G/2,x2:915,y2:1600+G};let rts=`<path class="root" d="${taperPath(RB,30,16)}"/>`,pins='';
       PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=1592+G,b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
         rts+=`<path class="root" d="${taperPath(b,13,2.2)}"/>`;
@@ -419,6 +423,18 @@ function treeArt(st,dl){
      <clipPath id="pclip"><circle cx="915" cy="${1272+2200}" r="2200"/></clipPath><radialGradient id="atmo"><stop offset=".975" stop-color="${PL.atmo}" stop-opacity="0"/><stop offset=".99" stop-color="${PL.atmo}" stop-opacity="${NIGHT?.28:.45}"/><stop offset="1" stop-color="${PL.atmo}" stop-opacity="0"/></radialGradient>${STAGE?`<pattern id="phatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-24)"><line x1="0" y1="0" x2="0" y2="8" stroke="#06100a" stroke-width="1.4"/></pattern>
       <radialGradient id="primg" gradientUnits="userSpaceOnUse" cx="915" cy="${1272+2200}" r="2200"><stop offset=".86" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff"/></radialGradient>
       <mask id="prim" maskUnits="userSpaceOnUse" x="-3000" y="0" width="8000" height="8000"><rect x="-3000" y="0" width="8000" height="8000" fill="url(#primg)"/></mask>`:''}`:'';
+    if(ART&&!PRINT){
+      // the painted tree: its leaves cover the canopy people (with a margin) and its trunk stands where the drawn trunk did (x 915)
+      const cv=vals.filter(v=>v.y<1250),cx0=Math.min(...cv.map(v=>v.x-v.r)),cx1=Math.max(...cv.map(v=>v.x+v.r)),cy0=Math.min(...cv.map(v=>v.y-v.r)),cy1=Math.max(...cv.map(v=>v.y+v.r+30));
+      const TX=590,L0=10,L1=1175,T0=21,T1=566,sx=Math.max((915-(cx0-110))/(TX-L0),((cx1+110)-915)/(L1-TX)),sy=Math.max(sx*1.02,((cy1+60)-(cy0-140))/(T1-T0));
+      const treeImg=`<image class="arttree" href="photos/art/tree.webp" x="${f(915-TX*sx)}" y="${f(cy0-140-T0*sy)}" width="${f(1186*sx)}" height="${f(752*sy)}" preserveAspectRatio="none"/>`;
+      // the painted hill (its circle in the picture: centre 673.6,686.2, radius 681.7), with plain soil below its flat bottom edge
+      const hs=HILL.R/681.7,hx=HILL.cx-673.6*hs,hy=HILL.cy-686.2*hs;
+      const hill=`<g class="art planet"><rect x="${f(HILL.cx-HILL.R)}" y="${f(hy+620*hs)}" width="${f(2*HILL.R)}" height="4000" fill="#2b1709"/><image href="photos/art/planet.webp" x="${f(hx)}" y="${f(hy)}" width="${f(1352*hs)}" height="${f(663*hs)}" preserveAspectRatio="none"/></g>`;
+      // family lines: thin bark-coloured lines from each person to their parents (tap someone to light up their family)
+      let kin='';Object.keys(TP).forEach(id=>{const p=byId[id],ps=(p&&p.par||[]).filter(q=>TP[q]);if(!ps.length)return;const a=TP[id],mx=ps.reduce((s,q)=>s+TP[q].x,0)/ps.length,my=ps.reduce((s,q)=>s+TP[q].y,0)/ps.length;
+        kin+=`<path class="kline" data-k=" ${id} ${ps.join(' ')} " d="M${f(mx)} ${f(my)}Q${f(mx)} ${f((my+a.y)/2)} ${f(a.x)} ${f(a.y)}"/>`;});
+      return {defs:defs+pdefs,planet:hill,treeImg,rootsUnder:ROOTS,under:'',ground:'',bg:null,roots:'',brs:`<g class="art">${kin}</g>`,over:''};}
     if(PT){const pu=(PRINT?under.replace(/<g class="art" filter="url\(#wc\)">[\s\S]*$/,''):'')+`<g filter="url(#ppaint)">${PT.back}</g>`;
       return {defs:defs+pdefs+PT.pdefs,planet,rootsUnder:ROOTS+`<g class="art">${PT.trunk}</g>`,under:pu,ground,bg:PRINT?['#f7efdd','#ecdfc2']:null,roots:'',brs:PT.brs,over:PT.lv};}
     return {defs:defs+pdefs,planet,rootsUnder:ROOTS,under,ground,bg:PRINT?['#f7efdd','#ecdfc2']:null,roots:`<g class="art">${roots}</g>`,brs:`<g class="art">${tint}</g>${brs}<g class="art">${grain}</g>`,over:lv};}
@@ -441,6 +457,11 @@ function bakeArt(art,html){
   return lastBake=bakePend[svg]=new Promise(res=>{const img=new Image();img.onload=()=>{try{const c=document.createElement('canvas');c.width=W;c.height=H;c.getContext('2d').drawImage(img,0,0,W,H);
       if(bg){const u=c.toDataURL('image/jpeg',.86);bakeCache[svg]=u;put(u);res();}else c.toBlob(b=>{if(b){const u=URL.createObjectURL(b);bakeCache[svg]=u;put(u);}res();},'image/png');}catch(e){res();}};
     img.onerror=()=>res();img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);});}
+// preview: the selected person's parents, spouse and children glow, and the family lines between them light up
+let kinOn=false;// only after someone taps a person (Mat is selected when the page opens, but nothing should be lit then)
+function markKin(){if(!ART)return;const p=kinOn&&byId[sel],K=new Set();if(p){(p.par||[]).forEach(q=>K.add(q));if(p.sp)K.add(p.sp);P.forEach(q=>{if((q.par||[]).includes(sel))K.add(q.id);});}
+  tw.querySelectorAll('.leaf').forEach(c=>c.classList.toggle('kin',K.has(c.dataset.id)));
+  tw.querySelectorAll('.kline').forEach(l=>l.classList.toggle('lit',!!p&&l.dataset.k.includes(' '+sel+' ')));}
 /* ---------- growing the tree from the ground up ---------- */
 const GROWT=2600;let GROWR=1400,growR=99999;
 const growEase=u=>1-(1-u)*(1-u);                      // fast at first, gentle at the tips
@@ -476,6 +497,7 @@ function drawLeafTree(grow){
     const shiftAt=(x,y)=>{let best=0,bd=1e9;for(const id in old){const o=old[id],d=Math.hypot(x-o.x,y-o.y);if(d<=o.r+6&&d<bd){bd=d;best=TP[id].x-o.x;}}return best;};
     TBR=TBR.map(b=>{const d1=shiftAt(b.x1,b.y1),d2=shiftAt(b.x2,b.y2);if(!d1&&!d2)return b;const n={...b,x1:b.x1+d1,x2:b.x2+d2,cx:b.cx+(d1+d2)/2};
       n.d=`M${n.x1.toFixed(1)} ${n.y1.toFixed(1)}Q${n.cx.toFixed(1)} ${n.cy.toFixed(1)} ${n.x2.toFixed(1)} ${n.y2.toFixed(1)}`;return n;});}
+  if(ART&&!PRINT){const old=x=>OLDP.cy-Math.sqrt(Math.max(0,OLDP.R**2-(x-OLDP.cx)**2));for(const id in TP){const v=TP[id];if(v.y>1250)TP[id]={...v,y:v.y+surfY(v.x)-old(v.x)};}}
   const xs=[],ys=[];Object.values(TP).forEach(v=>{xs.push(v.x-v.r-70,v.x+v.r+70);ys.push(v.y-v.r-8,v.y+v.r+34);});TBR.forEach(b=>{xs.push(b.x1,b.x2);ys.push(b.y1,b.y2);});
   TB={x0:Math.min(...xs),y0:Math.min(...ys),x1:Math.max(...xs),y1:Math.max(...ys)};
   // the tree's size decides where tall screens hang the stars, so redraw the backdrop when it changes
@@ -497,7 +519,8 @@ function drawLeafTree(grow){
   const art=treeArt(TSTYLE,dl);
   if(art&&PRINT){$('#tdefs').innerHTML=art.defs+defs;tw.innerHTML=`<g class="bake">${art.under+art.ground}</g>`+(art.rootsUnder||'')+art.brs+art.over+leaves;bakeArt(art,false);}
   else if(art){$('#tdefs').innerHTML=art.defs+defs+`<clipPath id="growclip" clipPathUnits="userSpaceOnUse"><circle id="growc" cx="915" cy="1300" r="${growR.toFixed(1)}"/></clipPath>`;
-    tw.innerHTML=(art.planet||'')+`<g class="growg" clip-path="url(#growclip)">${(art.rootsUnder||'')+art.brs+art.over}</g>`+leaves;bakeArt(art,true);}
+    if(art.treeImg){tw.innerHTML=`<g class="growg" clip-path="url(#growclip)">${art.treeImg}</g>`+art.planet+`<g class="growg" clip-path="url(#growclip)">${(art.rootsUnder||'')+art.brs}</g>`+leaves;markKin();}
+    else{tw.innerHTML=(art.planet||'')+`<g class="growg" clip-path="url(#growclip)">${(art.rootsUnder||'')+art.brs+art.over}</g>`+leaves;bakeArt(art,true);}}
   else{$('#tdefs').innerHTML=defs;tw.innerHTML=ground+brs+deco+leaves;}
   if(grow){tw.classList.add('tgrow');setTimeout(()=>tw.classList.remove('tgrow'),3400);}
   renderMemStars();

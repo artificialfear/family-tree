@@ -535,3 +535,9 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 #tmstars .flantern{cursor:pointer}
 #tmstars .fltx{font:italic 700 17px Spectral,Georgia,serif;fill:#ffe7b0;text-anchor:middle;paint-order:stroke;stroke:#140a2e;stroke-width:4px;transform:scale(var(--msk,1))}
 #tmstars .flantern:focus-visible path[fill="url(#lpaper)"]{stroke:#fff3b0;stroke-width:2.5}
+
+/* ---------- preview: painted tree and hill ---------- */
+.art #tbackimg{display:none}
+#tworld .kline{fill:none;stroke:#3a220f;stroke-width:3;stroke-linecap:round;opacity:.45;transition:opacity .3s,stroke .3s,stroke-width .3s}
+#tworld .kline.lit{stroke:#ffe7a1;opacity:1;stroke-width:5}
+#tworld .leaf.kin .ring{stroke:#f3d58a!important;stroke-width:6}

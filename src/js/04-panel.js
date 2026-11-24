@@ -2,7 +2,7 @@
 const badge=c=>`<span class="b ${c}"><i></i>${CL[c]}</span>`;
 const sup=ss=>ss.length?`<sup>${ss.map(s=>`<a href="#sources" title="${esc(SRC[s].t)}">${SK.indexOf(s)+1}</a>`).join(', ')}</sup>`:'';
 const link=id=>byId[id]?`<a data-go="${id}">${esc(byId[id].s)}</a>`:'';
-function select(id,quiet){if(!byId[id])return;sel=id;document.querySelectorAll('.card').forEach(c=>c.classList.toggle('sel',c.dataset.id===id));document.querySelectorAll('#tworld .leaf').forEach(c=>c.classList.toggle('sel',c.dataset.id===id));renderPanel(true);if(!quiet&&document.body.classList.contains('tfull'))document.body.classList.add('pdrawer');}
+function select(id,quiet){if(!byId[id])return;sel=id;document.querySelectorAll('.card').forEach(c=>c.classList.toggle('sel',c.dataset.id===id));document.querySelectorAll('#tworld .leaf').forEach(c=>c.classList.toggle('sel',c.dataset.id===id));kinOn=true;markKin();renderPanel(true);if(!quiet&&document.body.classList.contains('tfull'))document.body.classList.add('pdrawer');}
 function renderPanel(fresh){
   const p=byId[sel];if(!p)return;
   const kids=P.filter(k=>k.par.includes(p.id)),sibs=P.filter(k=>k.id!==p.id&&p.par.length&&k.par.length&&k.par.some(x=>p.par.includes(x)));

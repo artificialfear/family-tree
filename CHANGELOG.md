@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-23 — Preview: the painted tree and hill
+- A preview page, preview.html, shows the tree with Gemini's painted artwork: the painted tree behind everyone, and the painted planet as a round hill with grass on top and soil below. The live page is unchanged.
+- In the preview, thin bark-colored lines join each person to their parents. Tap someone and their parents, spouse and children glow and the lines between them turn gold.
+- The kids and grandkids stand on the hill's top, the garden grows along the green band and down its sides, the hometowns sit in the soil, and the chest sits on the right slope.
+
 ## 2026-11-23 — Ed's and Annie Mae's slideshows
 - Two films are now in the tree: Mat's slideshow for Ed (8:24) and Jeff Harper's celebration of life for Annie Mae (4:08). You can watch them from four places:
   - **Their photo cards:** a "▶ Watch" button at the top when you tap Ed's or Annie Mae's face.
