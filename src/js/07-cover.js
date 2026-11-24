@@ -40,7 +40,8 @@ function openCurtain(story){if(cover.classList.contains('opening'))return;cover.
       if(innerWidth!==w||innerHeight!==h){w=innerWidth;h=innerHeight;still=now;}
       if(now-still>(TOUCH?720:320)&&now-t0>200||now-t0>(TOUCH?2200:1600))res();else requestAnimationFrame(chk);})(t0);});
   let went=0;const go=()=>{if(went++)return;Promise.all([lastBake,settled()]).then(()=>{if(!tTouched)tStart();}).then(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{
-      cover.classList.add('open');startMusic(story?'story':'tree',true);{const st=$('#tstage');st.classList.add('lowering');st.classList.remove('hoisted');setTimeout(()=>st.classList.remove('lowering'),5000);}const T=RM?300:1900;
+      cover.classList.add('open');startMusic(story?'story':'tree',true);{const st=$('#tstage');if(ART&&typeof stageDraw==='function'&&stageDraw)stageDraw();// re-hang the stars around the lanterns now that the tree is laid out
+      st.classList.add('lowering');st.classList.remove('hoisted');setTimeout(()=>st.classList.remove('lowering'),5000);}const T=RM?300:1900;
       setTimeout(()=>{cover.style.display='none';if(story)startStory();else setTimeout(showHint,300);},T);})));};
   setTimeout(()=>{if(pr){pr.then(go);setTimeout(go,900);}else go();},RM?0:420);}
 function closeCover(story){openCurtain(story);}

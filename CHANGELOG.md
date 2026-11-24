@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Stars higher, clear of the moon and lanterns
+- On computers the hanging stars sit higher again, and none of them (or their strings) hang across the moon, the sun or any lantern.
+
 ## 2026-11-24 — The banner is lowered in on opening night
 - When the curtains part, the family banner now starts up out of view and is lowered in on its cords along with the moon and stars. (If it was left hoisted, its pull cord drops in instead.)
 
