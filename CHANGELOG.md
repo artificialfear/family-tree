@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — New app icon
+- The home-screen icon and the browser tab icon are now the painted tree with its lanterns and star flowers, filling the frame (no moon, no border). A padded version is used where phones crop icons into circles.
+
 ## 2026-11-24 — Painted pull cord
 - The banner's pull cord is now the painted twisted gold rope with its carved bead and tassel.
 
