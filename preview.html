@@ -1479,6 +1479,8 @@ function lanternSlots(){const can=Object.values(TP).filter(v=>v.y<1250);if(!can.
   // a crown over both shoulders of the canopy first, then down the sides
   const T=[[cX-rX*.72,top-40],[cX+rX*.72,top-40]],d=p=>Math.min(...T.map(([tx,ty])=>Math.hypot(p[0]-tx,(p[1]-ty)*1.25)));return S.sort((a,b)=>d(a)-d(b));}
 // flower papers by kind of memory: [light, dark, outline]
+// preview: Gemini's painted flowers, one per memory kind
+const FLIMG={story:'story-peach',photo:'photo-pink',answer:'answer-blue',voice:'voice-lavender'};
 const FLC={story:['#ffe0c2','#f49a8e','#b8586a'],photo:['#ffd9ea','#e8789f','#a8406a'],answer:['#dcefff','#7fb3e6','#3f6fa8'],voice:['#efe4ff','#a98be8','#6a4fb0']};
 // one paper-cut flower: five rounded petals in a single shape
 const FLOWER=(()=>{let d='';for(let i=0;i<5;i++){const a=i*72*Math.PI/180,P=(r,o)=>[Math.sin(a+o)*r,-Math.cos(a+o)*r],v0=P(3.4,-.63),c0=P(12.5,-.5),c1=P(12.5,.5),v1=P(3.4,.63);
@@ -1488,10 +1490,10 @@ function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(Strin
   const first=gardenSeen===null,seen=gardenSeen||new Set();let fl='';
   mem.forEach((c,i)=>{const sp=S[i];if(!sp)return;const [x,y]=sp,h=hsh(c.id),k=c.audio?'voice':FLC[c.type]?c.type:'story',rot=h%72,sw=((h>>8)%9-4);
     if(!first&&!seen.has(c.id))gardenNew[c.id]=Date.now();const nw=Date.now()-(gardenNew[c.id]||0)<2500;
-    fl+=`<g class="mflower${nw?' sprout':''}" data-c="${esc(c.id)}" tabindex="0" role="button" aria-label="A memory about ${esc(byId[c.pid].n)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mfs" style="--sw:${sw}deg;--dl:-${(h%50)/10}s"><circle r="20" fill="transparent"/>
+    fl+=`<g class="mflower${nw?' sprout':''}" data-c="${esc(c.id)}" tabindex="0" role="button" aria-label="A memory about ${esc(byId[c.pid].n)}" transform="translate(${f1(x)} ${f1(y)})"><g class="mss"><g class="mfs" style="--sw:${sw}deg;--dl:-${(h%50)/10}s"><circle r="20" fill="transparent"/>${ART?`<image href="photos/art/flower-${FLIMG[k]}.webp" x="-15" y="-17.2" width="30" height="40.4"/>`:`
       <path d="M0 17Q${f1(sw/2)} 9 0 3" class="mfstem"/><path d="M0 12q-8-5-11 1q6 3 11-1z" class="mfleaf"/>
       <g transform="rotate(${rot})"><path d="${FLOWER}" transform="translate(2.2 3)" class="pfsh"/><path d="${FLOWER}" fill="url(#gf-${k})" stroke="${FLC[k][2]}" stroke-width="1.1"/></g>
-      <path d="${star6(0,0,4.4)}" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><path d="${star6(-.6,-.6,1.8)}" fill="#fff6d8" opacity=".6"/></g></g></g>`;});
+      <path d="${star6(0,0,4.4)}" fill="url(#ggold)" stroke="#6b4410" stroke-width=".7"/><path d="${star6(-.6,-.6,1.8)}" fill="#fff6d8" opacity=".6"/>`}</g></g></g>`;});
   let lt='';const NF=FILMS.length;
   // each slideshow film gets a larger lantern with a play mark, in the best spots of the crown
   FILMS.forEach((fm,i)=>{const sp=LS[i];if(!sp||!byId[fm.pid])return;const [x,y]=sp;
@@ -1736,7 +1738,7 @@ function drawLeafTree(grow){
     if(ph)defs+=`<clipPath id="tc-${id}"><circle r="${r}"/></clipPath>`;
     const nm=p.s.length>22?p.s.slice(0,21)+'…':p.s;
     const face=ph?`<image href="${esc(ph)}" x="${-r}" y="${-r}" width="${2*r}" height="${2*r}" clip-path="url(#tc-${id})" preserveAspectRatio="xMidYMid slice"/>`:`<circle class="ini" r="${r}"/><text class="init" y="${(r*.32).toFixed(1)}" font-size="${(r*.78).toFixed(1)}">${esc(initials(p.s))}</text>`;
-    return `<g class="leaf${id===sel?' sel':''}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(p.n)}" transform="translate(${v.x.toFixed(1)},${v.y.toFixed(1)})"><g class="lin" style="--d:${dl(v.y,v.x)}ms"><circle class="glow" r="${r+3}"/><circle class="halo" r="${r+5}"/>${face}<circle class="ring" r="${r+1.5}" style="stroke:var(--${p.c})"/>${SCROLLS?scrollLabel(nm,r,fs,LDX[id]||0):`<text class="lname" y="${r+fs+6}" font-size="${fs}">${esc(nm)}</text>`}</g></g>`;}).join('');
+    return `<g class="leaf${id===sel?' sel':''}" data-id="${id}" tabindex="0" role="button" aria-label="${esc(p.n)}" transform="translate(${v.x.toFixed(1)},${v.y.toFixed(1)})"><g class="lin" style="--d:${dl(v.y,v.x)}ms"><circle class="glow" r="${r+3}"/><circle class="halo" r="${r+5}"/>${face}<circle class="ring" r="${r+1.5}" style="stroke:var(--${p.c})"/>${ART?`<image class="fring" href="photos/art/frame-circle.webp" x="${(-(r+3)/185*299).toFixed(1)}" y="${(-(r+3)/185*300).toFixed(1)}" width="${((r+3)/185*598).toFixed(1)}" height="${((r+3)/185*600).toFixed(1)}"/>`:''}${SCROLLS?scrollLabel(nm,r,fs,LDX[id]||0):`<text class="lname" y="${r+fs+6}" font-size="${fs}">${esc(nm)}</text>`}</g></g>`;}).join('');
   const art=treeArt(TSTYLE,dl);
   if(art&&PRINT){$('#tdefs').innerHTML=art.defs+defs;tw.innerHTML=`<g class="bake">${art.under+art.ground}</g>`+(art.rootsUnder||'')+art.brs+art.over+leaves;bakeArt(art,false);}
   else if(art){$('#tdefs').innerHTML=art.defs+defs+`<clipPath id="growclip" clipPathUnits="userSpaceOnUse"><circle id="growc" cx="915" cy="1300" r="${growR.toFixed(1)}"/></clipPath>`;
