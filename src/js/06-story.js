@@ -89,13 +89,13 @@ const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
 // corner button for the browser's own full screen. Phones and tablets don't switch on their own any more
 // (Android showed a black screen while it happened), so this lets them choose it. Hidden where the browser
 // can't do it (iPhone Safari) and when the site was opened from the home screen, which is already full screen.
-{const bf=$('#bFull'),d=document.documentElement,can=!!(document.fullscreenEnabled||document.webkitFullscreenEnabled)&&!!(d.requestFullscreen||d.webkitRequestFullscreen),
+{const bfs=[$('#bFull'),$('#cFull')].filter(Boolean),d=document.documentElement,can=!!(document.fullscreenEnabled||document.webkitFullscreenEnabled)&&!!(d.requestFullscreen||d.webkitRequestFullscreen),
   app=matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
   const IN='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     OUT='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const show=()=>{const on=!!fsEl();bf.innerHTML=on?OUT:IN;const t=on?'Exit full screen':'Full screen';bf.setAttribute('aria-label',t);bf.title=t;};
-  if(bf&&STAGE&&can&&!app){bf.hidden=false;show();
-    bf.onclick=()=>{try{if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document);else{const p=(d.requestFullscreen||d.webkitRequestFullscreen).call(d);if(p&&p.catch)p.catch(()=>{});}}catch(e){}};
+  const show=()=>{const on=!!fsEl(),t=on?'Exit full screen':'Full screen';bfs.forEach(bf=>{bf.innerHTML=on?OUT:IN;bf.setAttribute('aria-label',t);bf.title=t;});};
+  if(bfs.length&&STAGE&&can&&!app){bfs.forEach(bf=>bf.hidden=false);show();
+    const tog=()=>{try{if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document);else{const p=(d.requestFullscreen||d.webkitRequestFullscreen).call(d);if(p&&p.catch)p.catch(()=>{});}}catch(e){}};bfs.forEach(bf=>bf.onclick=e=>{e.stopPropagation();tog();});
     ['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,show));}}
 function refit(){setTimeout(()=>{if(si>=0&&PHONE())tFrame(Object.keys(TP));else if(si>=0&&storyFocus)tFrame(storyFocus);else tFit();},80);}
 function setFull(on,quiet){const b=document.body;if(STAGE&&!on)return null;if(on===b.classList.contains('tfull'))return null;let pr=null;

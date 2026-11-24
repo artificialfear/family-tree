@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-24 — Story map beside the text; full screen on the welcome screen
+- On computers and tablets the story's little map is larger and sits right next to the chapter text instead of at the far right of the card.
+- The welcome screen now has the same full-screen button in its top-left corner as the tree.
+
 ## 2026-11-24 — Chest a little higher, no cracks
 - The buried Keepsake Chest sits a little higher, right under where the roots split. The cracks in the ground around it are gone; the soil mound and pebbles stay.
 

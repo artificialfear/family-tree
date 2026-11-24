@@ -786,10 +786,25 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .art .theme-stage #mqPull{width:24px;height:96px;margin-left:-12px}
 .art .theme-stage #mqPull img{object-fit:cover;object-position:50% 100%}
 @media(max-width:699px),(max-height:520px){.art .theme-stage #mqPull{width:16px;height:64px;margin-left:-8px}}
+/* the welcome screen gets the same full-screen button, top-left */
+.cover .cfull:not([hidden]){display:flex;align-items:center;justify-content:center;position:fixed;z-index:31;top:calc(8px + env(safe-area-inset-top));left:calc(8px + env(safe-area-inset-left));
+  width:36px;height:36px;padding:0;border-radius:50%;border:2px solid #e2b552;background:#4a1f86;color:#ffe7a1;cursor:pointer;min-height:0;min-width:0;box-sizing:border-box;line-height:0;box-shadow:0 2px 6px rgba(0,0,0,.45);-webkit-tap-highlight-color:transparent}
+.cover .cfull::before{content:'';position:absolute;inset:-5px;border-radius:50%}
+.cover .cfull:hover{background:#5d2aa3}.cover .cfull:focus-visible{outline:2px solid #ffe7a1;outline-offset:2px}
+.cover .cfull svg{display:block;width:18px;height:18px}
+.cover.open .cfull{display:none!important}
+/* story card on computers and tablets: the text and the map side by side, the map right after the text instead of at the far edge */
+@media(min-width:700px){
+ .stage .cap.on{display:grid;grid-template-columns:minmax(0,68ch) auto;column-gap:22px;justify-content:start;align-items:start}
+ .stage .cap.on>*{grid-column:1}
+ .stage .cap.on>.smap{grid-column:2;grid-row:1 / span 8;float:none;width:190px;margin:4px 0 0}
+ .stage .cap .smbox{height:150px}
+ .stage .cap .smap figcaption{font-size:13px}
+}
 </style>
 </head>
 <body>
-<div class="cover" id="cover" role="dialog" aria-label="Welcome">
+<div class="cover" id="cover" role="dialog" aria-label="Welcome"><button class="bfull cfull" id="cFull" type="button" hidden aria-label="Full screen" title="Full screen"></button>
   <div class="drift" id="drift" aria-hidden="true"></div><div class="veil" aria-hidden="true"></div><div class="specks" id="specks" aria-hidden="true"></div>
   <div class="coverIn">
     <svg class="leaf" id="leaf" viewBox="-12 -14 244 172" aria-hidden="true"><g class="branches">
@@ -2239,13 +2254,13 @@ const fsEl=()=>document.fullscreenElement||document.webkitFullscreenElement;
 // corner button for the browser's own full screen. Phones and tablets don't switch on their own any more
 // (Android showed a black screen while it happened), so this lets them choose it. Hidden where the browser
 // can't do it (iPhone Safari) and when the site was opened from the home screen, which is already full screen.
-{const bf=$('#bFull'),d=document.documentElement,can=!!(document.fullscreenEnabled||document.webkitFullscreenEnabled)&&!!(d.requestFullscreen||d.webkitRequestFullscreen),
+{const bfs=[$('#bFull'),$('#cFull')].filter(Boolean),d=document.documentElement,can=!!(document.fullscreenEnabled||document.webkitFullscreenEnabled)&&!!(d.requestFullscreen||d.webkitRequestFullscreen),
   app=matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
   const IN='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     OUT='<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 4v5H4M20 9h-5V4M15 20v-5h5M4 15h5v5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  const show=()=>{const on=!!fsEl();bf.innerHTML=on?OUT:IN;const t=on?'Exit full screen':'Full screen';bf.setAttribute('aria-label',t);bf.title=t;};
-  if(bf&&STAGE&&can&&!app){bf.hidden=false;show();
-    bf.onclick=()=>{try{if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document);else{const p=(d.requestFullscreen||d.webkitRequestFullscreen).call(d);if(p&&p.catch)p.catch(()=>{});}}catch(e){}};
+  const show=()=>{const on=!!fsEl(),t=on?'Exit full screen':'Full screen';bfs.forEach(bf=>{bf.innerHTML=on?OUT:IN;bf.setAttribute('aria-label',t);bf.title=t;});};
+  if(bfs.length&&STAGE&&can&&!app){bfs.forEach(bf=>bf.hidden=false);show();
+    const tog=()=>{try{if(fsEl())(document.exitFullscreen||document.webkitExitFullscreen).call(document);else{const p=(d.requestFullscreen||d.webkitRequestFullscreen).call(d);if(p&&p.catch)p.catch(()=>{});}}catch(e){}};bfs.forEach(bf=>bf.onclick=e=>{e.stopPropagation();tog();});
     ['fullscreenchange','webkitfullscreenchange'].forEach(ev=>document.addEventListener(ev,show));}}
 function refit(){setTimeout(()=>{if(si>=0&&PHONE())tFrame(Object.keys(TP));else if(si>=0&&storyFocus)tFrame(storyFocus);else tFit();},80);}
 function setFull(on,quiet){const b=document.body;if(STAGE&&!on)return null;if(on===b.classList.contains('tfull'))return null;let pr=null;

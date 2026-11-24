@@ -594,3 +594,18 @@ button.krec{width:100%;text-align:left;font:inherit;font-weight:400;cursor:point
 .art .theme-stage #mqPull{width:24px;height:96px;margin-left:-12px}
 .art .theme-stage #mqPull img{object-fit:cover;object-position:50% 100%}
 @media(max-width:699px),(max-height:520px){.art .theme-stage #mqPull{width:16px;height:64px;margin-left:-8px}}
+/* the welcome screen gets the same full-screen button, top-left */
+.cover .cfull:not([hidden]){display:flex;align-items:center;justify-content:center;position:fixed;z-index:31;top:calc(8px + env(safe-area-inset-top));left:calc(8px + env(safe-area-inset-left));
+  width:36px;height:36px;padding:0;border-radius:50%;border:2px solid #e2b552;background:#4a1f86;color:#ffe7a1;cursor:pointer;min-height:0;min-width:0;box-sizing:border-box;line-height:0;box-shadow:0 2px 6px rgba(0,0,0,.45);-webkit-tap-highlight-color:transparent}
+.cover .cfull::before{content:'';position:absolute;inset:-5px;border-radius:50%}
+.cover .cfull:hover{background:#5d2aa3}.cover .cfull:focus-visible{outline:2px solid #ffe7a1;outline-offset:2px}
+.cover .cfull svg{display:block;width:18px;height:18px}
+.cover.open .cfull{display:none!important}
+/* story card on computers and tablets: the text and the map side by side, the map right after the text instead of at the far edge */
+@media(min-width:700px){
+ .stage .cap.on{display:grid;grid-template-columns:minmax(0,68ch) auto;column-gap:22px;justify-content:start;align-items:start}
+ .stage .cap.on>*{grid-column:1}
+ .stage .cap.on>.smap{grid-column:2;grid-row:1 / span 8;float:none;width:190px;margin:4px 0 0}
+ .stage .cap .smbox{height:150px}
+ .stage .cap .smap figcaption{font-size:13px}
+}
