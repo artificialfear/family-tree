@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — Sliding cloud rows (preview only)
+- On the preview page, the top clouds are now two rows that slide gently in opposite directions, like cut-out cloud flats pushed by a stagehand. The back row is a darker, flipped copy hanging a little lower. Tablets keep the clouds still for now, since big moving layers caused flashing on the Android tablet.
+
 ## 2026-11-25 — Jessica Ramey
 - Added Jessica Ramey, John Harper's daughter, with her photo. She appears among John's children on the tree and in the story's "houseful of cousins" chapter. John's six children now fan out a little wider so their name tags don't touch.
 
