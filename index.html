@@ -1239,7 +1239,7 @@ function drawTree(grow){
     e+=`<path class="edge" pathLength="1" style="--d:${gd(pp[0].ri)+300}ms" d="M${mx} ${my}V${bar}M${Math.min(mx,...xs)} ${bar}H${Math.max(mx,...xs)}${xs.map(x=>`M${x} ${bar}V${ky}`).join('')}"/>`;
   });
   let defs='';
-  const cards=P.map((p,i)=>{const v=pos[p.id];const yrs=p.living?'Living':(p.b||p.d)?`${p.b||'?'} – ${p.d||'?'}`:'Dates unknown';
+  const cards=P.map((p,i)=>{const v=pos[p.id];const yrs=p.living?'':(p.b||p.d)?`${p.b||'?'} – ${p.d||'?'}`:'Dates unknown';
     const nm=p.s.length>19?p.s.slice(0,18)+'…':p.s,ph=photo[p.id];
     if(ph)defs+=`<clipPath id="cp-${p.id}"><circle cx="30" cy="30" r="20"/></clipPath>`;
     const av=ph?`<image href="${esc(ph)}" x="10" y="10" width="40" height="40" clip-path="url(#cp-${p.id})" preserveAspectRatio="xMidYMid slice"/>`
@@ -2055,11 +2055,11 @@ function select(id,quiet){if(!byId[id])return;sel=id;document.querySelectorAll('
 function renderPanel(fresh){
   const p=byId[sel];if(!p)return;
   const kids=P.filter(k=>k.par.includes(p.id)),sibs=P.filter(k=>k.id!==p.id&&p.par.length&&k.par.length&&k.par.some(x=>p.par.includes(x)));
-  const life=p.living?'Living':[p.b&&'Born '+p.b,p.d&&'Died '+p.d].filter(Boolean).join(' · ')||'Dates not yet known';
+  const life=p.living?'':[p.b&&'Born '+p.b,p.d&&'Died '+p.d].filter(Boolean).join(' · ')||'Dates not yet known';
   const mine=contribs.filter(c=>c.pid===p.id&&c.type!=='person'&&!isKeep(c)).sort((a,b)=>(a.at||0)-(b.at||0));
   const rel=[p.par.length&&`Parents: ${p.par.map(link).join(' & ')}`,p.sp&&byId[p.sp]&&`Spouse: ${link(p.sp)}`,kids.length&&`Children: ${kids.map(k=>link(k.id)).join(', ')}`,sibs.length&&`Brothers & sisters: ${sibs.map(k=>link(k.id)).join(', ')}`].filter(Boolean).map(t=>`<div>${t}</div>`).join('');
   const el=$('#panel');
-  el.innerHTML=`<button class="pclose" data-close aria-label="Close details">✕ Close</button>${photo[p.id]?`<img class="portrait" src="${esc(photo[p.id])}" alt="${esc(p.n)}">`:''}<h2>${esc(p.n)}</h2><div class="sub">${esc(life)} &nbsp;${doubt(p.c)}</div>
+  el.innerHTML=`<button class="pclose" data-close aria-label="Close details">✕ Close</button>${photo[p.id]?`<img class="portrait" src="${esc(photo[p.id])}" alt="${esc(p.n)}">`:''}<h2>${esc(p.n)}</h2>${life||doubt(p.c)?`<div class="sub">${esc(life)} &nbsp;${doubt(p.c)}</div>`:''}
    ${db&&canWrite?`<button class="share" data-share>💬 Share a memory of ${esc(p.g<0?p.s:p.s.split(' ')[0])}</button>`:''}
    ${filmOf(p.id)?(f=>`<button type="button" class="filmbtn" data-film="${f.id}"><img src="${f.poster}" alt=""><span><b>▶ Watch: ${esc(f.sub)}</b><small>${esc(f.by)} · ${f.dur}</small></span></button>`)(filmOf(p.id)):''}
    ${p.story?`<div class="story">${esc(p.story)}</div>`:''}

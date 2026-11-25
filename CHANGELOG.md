@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — No more "Living" label
+- Person cards and the chart no longer say "Living" under living family members. Dates now appear only for the people we have lost.
+
 ## 2026-11-25 — Warmer person cards
 - "What we know" is now "Their story", and the lines no longer say "named in his obituary". They say who the person is to the family instead (for example "Son of Ed and Renee — the oldest of their four sons" or "Married to Pam"). The record each fact comes from is still one tap away through its small number.
 - The "Proven" and "Family memory" tags are gone. Only facts we're unsure of still show "Probable" or "Possible".

@@ -49,7 +49,7 @@ function drawTree(grow){
     e+=`<path class="edge" pathLength="1" style="--d:${gd(pp[0].ri)+300}ms" d="M${mx} ${my}V${bar}M${Math.min(mx,...xs)} ${bar}H${Math.max(mx,...xs)}${xs.map(x=>`M${x} ${bar}V${ky}`).join('')}"/>`;
   });
   let defs='';
-  const cards=P.map((p,i)=>{const v=pos[p.id];const yrs=p.living?'Living':(p.b||p.d)?`${p.b||'?'} – ${p.d||'?'}`:'Dates unknown';
+  const cards=P.map((p,i)=>{const v=pos[p.id];const yrs=p.living?'':(p.b||p.d)?`${p.b||'?'} – ${p.d||'?'}`:'Dates unknown';
     const nm=p.s.length>19?p.s.slice(0,18)+'…':p.s,ph=photo[p.id];
     if(ph)defs+=`<clipPath id="cp-${p.id}"><circle cx="30" cy="30" r="20"/></clipPath>`;
     const av=ph?`<image href="${esc(ph)}" x="10" y="10" width="40" height="40" clip-path="url(#cp-${p.id})" preserveAspectRatio="xMidYMid slice"/>`
