@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — Livelier clouds
+- The sliding cloud rows now sway a little faster: each slide takes 4.5 seconds instead of 6.
+
 ## 2026-11-25 — Sliding clouds are live
 - The two sliding cloud rows, the higher top curtain and the lower cloud bank are now on the main tree (computers and phones; tablets keep the clouds still).
 
