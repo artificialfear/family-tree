@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — Sliding clouds are live
+- The two sliding cloud rows, the higher top curtain and the lower cloud bank are now on the main tree (computers and phones; tablets keep the clouds still).
+
 ## 2026-11-25 — More cloud showing (preview only)
 - On the preview page, the top curtain rides a little higher and the cloud rows hang a little lower, so more of the moving clouds show.
 
