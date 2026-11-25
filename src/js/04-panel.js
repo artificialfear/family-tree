@@ -1,6 +1,7 @@
 /* ---------- person panel ---------- */
 const badge=c=>`<span class="b ${c}"><i></i>${CL[c]}</span>`;
-const sup=ss=>ss.length?`<sup>${ss.map(s=>`<a href="#sources" title="${esc(SRC[s].t)}">${SK.indexOf(s)+1}</a>`).join(', ')}</sup>`:'';
+const doubt=c=>c==='probable'||c==='possible'?badge(c):''; /* only flag facts we're unsure of */
+const sup=s0=>{const ss=s0.filter(x=>x!=='family');return ss.length?`<sup>${ss.map(s=>`<a href="#sources" title="${esc(SRC[s].t)}">${SK.indexOf(s)+1}</a>`).join(', ')}</sup>`:'';};
 const link=id=>byId[id]?`<a data-go="${id}">${esc(byId[id].s)}</a>`:'';
 function select(id,quiet){if(!byId[id])return;sel=id;document.querySelectorAll('.card').forEach(c=>c.classList.toggle('sel',c.dataset.id===id));document.querySelectorAll('#tworld .leaf').forEach(c=>c.classList.toggle('sel',c.dataset.id===id));kinOn=true;markKin();renderPanel(true);if(!quiet&&document.body.classList.contains('tfull'))document.body.classList.add('pdrawer');}
 function renderPanel(fresh){
@@ -10,11 +11,11 @@ function renderPanel(fresh){
   const mine=contribs.filter(c=>c.pid===p.id&&c.type!=='person'&&!isKeep(c)).sort((a,b)=>(a.at||0)-(b.at||0));
   const rel=[p.par.length&&`Parents: ${p.par.map(link).join(' & ')}`,p.sp&&byId[p.sp]&&`Spouse: ${link(p.sp)}`,kids.length&&`Children: ${kids.map(k=>link(k.id)).join(', ')}`,sibs.length&&`Brothers & sisters: ${sibs.map(k=>link(k.id)).join(', ')}`].filter(Boolean).map(t=>`<div>${t}</div>`).join('');
   const el=$('#panel');
-  el.innerHTML=`<button class="pclose" data-close aria-label="Close details">✕ Close</button>${photo[p.id]?`<img class="portrait" src="${esc(photo[p.id])}" alt="${esc(p.n)}">`:''}<h2>${esc(p.n)}</h2><div class="sub">${esc(life)} &nbsp;${badge(p.c)}</div>
+  el.innerHTML=`<button class="pclose" data-close aria-label="Close details">✕ Close</button>${photo[p.id]?`<img class="portrait" src="${esc(photo[p.id])}" alt="${esc(p.n)}">`:''}<h2>${esc(p.n)}</h2><div class="sub">${esc(life)} &nbsp;${doubt(p.c)}</div>
    ${db&&canWrite?`<button class="share" data-share>💬 Share a memory of ${esc(p.g<0?p.s:p.s.split(' ')[0])}</button>`:''}
    ${filmOf(p.id)?(f=>`<button type="button" class="filmbtn" data-film="${f.id}"><img src="${f.poster}" alt=""><span><b>▶ Watch: ${esc(f.sub)}</b><small>${esc(f.by)} · ${f.dur}</small></span></button>`)(filmOf(p.id)):''}
    ${p.story?`<div class="story">${esc(p.story)}</div>`:''}
-   <h3>What we know</h3><table class="facts"><tbody>${p.f.map(([l,v,c,s])=>`<tr><td>${esc(l)}</td><td>${esc(v)}${sup(s)}<div>${badge(c)}</div></td></tr>`).join('')}</tbody></table>
+   ${p.f.length?`<h3>Their story</h3><table class="facts"><tbody>${p.f.map(([l,v,c,s])=>`<tr><td>${esc(l)}</td><td>${esc(v)}${sup(s)}${doubt(c)?`<div>${doubt(c)}</div>`:''}</td></tr>`).join('')}</tbody></table>`:(db&&canWrite?`<p class="invite">Know a story about ${esc(p.g<0?p.s:p.s.split(' ')[0])}? Add it below and it will grow a flower on the hill.</p>`:'')}
    ${PHOTOS[p.id]&&PHOTOS[p.id].g.length?`<h3>Photos</h3><div class="gal">${PHOTOS[p.id].g.map(x=>{const o=typeof x==='string'?{u:x,c:''}:x;return `<img src="${o.u}" alt="${esc(o.c||p.n)}" title="${esc(o.c)}" loading="lazy" data-lb="${o.u}" data-cap="${esc(o.c)}">`;}).join('')}</div>`:''}
    ${p.sibs?`<p class="note">${esc(p.sibs)}</p>`:''}
    ${rel?`<h3>Family</h3><div class="rel">${rel}</div>`:''}

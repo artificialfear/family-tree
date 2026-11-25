@@ -190,6 +190,7 @@ button.share{display:flex;align-items:center;justify-content:center;gap:8px;widt
 .vplay{display:inline-flex;align-items:center;gap:6px;margin:4px 0 6px;min-height:40px;padding:6px 14px;border-radius:999px;background:var(--pine);color:var(--bg);border-color:var(--pine)}
 #mnote .vplay{background:#e8b48a;color:#1f2a40;border-color:#e8b48a}
 body.tfull:not(.pdrawer) aside.panel.fresh{animation:none}
+.invite{font-style:italic;color:var(--mute);margin:12px 0}
 /* ---------- tree art styles ---------- */
 #tworld .br.t,#poster .br.t{fill:var(--bk,var(--bark));stroke:none}
 #tworld .root,#poster .root{fill:var(--bk,var(--bark))}
@@ -963,7 +964,7 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 <h3>Records</h3><div id="krecs" class="krecs"></div><p id="kadd" class="kadd" hidden>Have an old photo or a document of someone? Tap that person on the tree and choose <b>Add a photo</b>.</p></section>
 <section class="band view" id="v-sources">
   <h2 style="margin:0 0 6px;font-size:32px">Sources and how sure we are</h2>
-  <p class="note" style="max-width:70ch">Every fact on this tree carries a badge. <b>Proven</b> means an obituary or record states it directly. <b>Probable</b> means records agree but haven't been checked against an original document. <b>Possible</b> means a lead from another researcher's online tree that still needs proof. <b>Family memory</b> is what someone in the family remembers — often the most valuable part, and worth checking too.</p>
+  <p class="note" style="max-width:70ch">Facts from a record carry a small number that links to it in the list below. Facts we're less sure of carry a badge: <b>Probable</b> means records agree but haven't been checked against an original document. <b>Possible</b> means a lead from another researcher's online tree that still needs proof. Facts with no badge and no number come from what the family remembers — often the most valuable part of all.</p>
   <ol class="srcs" id="srcs"></ol>
   <h3>Still unknown — can you help?</h3>
   <ul id="gaps"></ul>
@@ -1026,63 +1027,63 @@ const BASE=[
   f:[['Maiden name','Lush','proven',['obitEd']],['Born','20 May 1932, Louisville (Jefferson County), Kentucky','probable',['treeMargaret']],['Moves','Mobile, Alabama (1940); DeKalb, Missouri (1950); Springfield, Illinois (1961); Atlanta (1972)','probable',['treeMargaret']],['Married','John Richard "Jack" Graham','proven',['obitEd']],['Died','23 June 1988, College Park, Georgia (home in Meriwether County)','probable',['treeMargaret']],['Buried','College Park, Georgia','probable',['treeMargaret']],['Parents','Cecil Castlemaine Christian and, most likely, James Willard Lush','possible',['treeMargaret']]],
   story:'Margaret moved from state to state as a girl and young woman — Kentucky, Alabama, Missouri, Illinois — before settling in Georgia and raising eight children.'},
  {id:'johnny',n:'Johnnie Lee Harper Sr.',s:'Johnnie Lee Harper Sr.',g:2,ord:1,sp:'annie',par:['earl','sara'],b:'c. 1937',d:'2013',c:'proven',
-  f:[['Born','About 1937 (age 76 at death); listed at age 3 in Upson County in 1940','proven',['obitJohnny','census40']],['Married','Annie Mae Ralston','proven',['obitJohnny']],['Home','Newborn, Georgia','proven',['obitJohnny']],['Died','18 June 2013','proven',['obitJohnny']],['Funeral','21 June 2013, Caldwell & Cowan Funeral Home chapel, Covington','proven',['obitJohnny']],['Parents','Earl Harper and Sara Lee (Christian) Harper','proven',['obitJohnny']]],
-  story:'His obituary remembers a man who loved to dance, enjoyed a bit of gambling and the lottery, loved life, and cherished his family. He left 13 grandchildren and 11 great-grandchildren.',
+  f:[['Born','About 1937 (age 76 at death); listed at age 3 in Upson County in 1940','proven',['obitJohnny','census40']],['Married','Annie Mae Ralston','proven',['obitJohnny']],['Home','Newborn, Georgia','proven',['obitJohnny']],['Died','18 June 2013','proven',['obitJohnny']],['Parents','Earl Harper and Sara Lee (Christian) Harper','proven',['obitJohnny']]],
+  story:'Johnnie loved to dance, enjoyed a bit of gambling and the lottery, loved life, and cherished his family. He was granddaddy to 13 grandchildren and 11 great-grandchildren.',
   sibs:'Brothers and sisters in the 1940 census household (probable): Sally Mae, W. Jack, Jimmy, Henry Louis and James I. Harper.'},
  {id:'annie',n:'Annie Mae (Ralston) Harper',s:'Annie Mae Harper',g:2,ord:2,sp:'johnny',b:'',d:'c. 2007',c:'proven',
   f:[['Maiden name','Ralston','proven',['obitJohnny']],['Married','Johnnie Lee Harper Sr.','proven',['obitJohnny']],['Died','Before June 2013','proven',['obitJohnny']],['Died','About 2007–2008','family',['family']],['Possible record','An online tree entry for an Annie Mae Ralston, born in Atlanta, died 2007','possible',['treeAnnie']],['Parents','Not yet known','family',[]]]},
 
  {id:'richard',n:'Richard Graham',s:'Richard Graham',g:1,ord:1,par:['jack','margaret'],b:'1956',d:'2016',c:'proven',f:[['Born','1956','probable',['treeJack']],['Died','2016, before his brother Ed','proven',['obitEd']]]},
- {id:'norma',n:'Norma Jean Graham',s:'Norma Graham',g:1,ord:2,sp:'howard',par:['jack','margaret'],b:'1957',d:'2026',c:'proven',f:[['Born','1957','probable',['treeJack']],['Died','2026; services by McKoon Funeral Home, Greenville, GA','proven',['obitNorma']]]},
- {id:'evelyn',n:'Evelyn (Graham) Groover',s:'Evelyn Groover',g:1,ord:3,par:['jack','margaret'],living:1,c:'proven',f:[['Sister of Ed','Named in his obituary','proven',['obitEd']]]},
- {id:'eileen',n:'Eileen (Graham) Newsom',s:'Eileen Newsom',g:1,ord:4,par:['jack','margaret'],living:1,c:'proven',f:[['Sister of Ed','Named in his obituary; spelled "Newsom"','proven',['obitEd','obitNorma']]]},
- {id:'donna',n:'Donna Graham',s:'Donna Graham',g:1,ord:5,par:['jack','margaret'],living:1,c:'proven',f:[['Sister of Ed','Named in his obituary','proven',['obitEd']]]},
- {id:'wayne',n:'Wayne Graham',s:'Wayne Graham',g:1,ord:6,par:['jack','margaret'],living:1,c:'proven',f:[['Brother of Ed','Named in his obituary','proven',['obitEd']]]},
- {id:'bruce',n:'Bruce Graham',s:'Bruce Graham',g:1,ord:7,par:['jack','margaret'],living:1,c:'proven',f:[['Brother of Ed','Named in his obituary','proven',['obitEd']]]},
+ {id:'norma',n:'Norma Jean Graham',s:'Norma Graham',g:1,ord:2,sp:'howard',par:['jack','margaret'],b:'1957',d:'2026',c:'proven',f:[['Born','1957','probable',['treeJack']],['Died','2026','proven',['obitNorma']]]},
+ {id:'evelyn',n:'Evelyn (Graham) Groover',s:'Evelyn Groover',g:1,ord:3,par:['jack','margaret'],living:1,c:'proven',f:[['Sister of','Ed Graham','proven',['obitEd']]]},
+ {id:'eileen',n:'Eileen (Graham) Newsom',s:'Eileen Newsom',g:1,ord:4,par:['jack','margaret'],living:1,c:'proven',f:[['Sister of','Ed Graham','proven',['obitEd','obitNorma']]]},
+ {id:'donna',n:'Donna Graham',s:'Donna Graham',g:1,ord:5,par:['jack','margaret'],living:1,c:'proven',f:[['Sister of','Ed Graham','proven',['obitEd']]]},
+ {id:'wayne',n:'Wayne Graham',s:'Wayne Graham',g:1,ord:6,par:['jack','margaret'],living:1,c:'proven',f:[['Brother of','Ed Graham','proven',['obitEd']]]},
+ {id:'bruce',n:'Bruce Graham',s:'Bruce Graham',g:1,ord:7,par:['jack','margaret'],living:1,c:'proven',f:[['Brother of','Ed Graham','proven',['obitEd']]]},
  {id:'ed',n:'Edward Lawrence "Ed" Graham',s:'Ed Graham',g:1,ord:8,sp:'renee',par:['jack','margaret'],b:'1958',d:'2016',c:'proven',
   f:[['Full name','Edward Lawrence Graham','family',['family']],['Born','About 1958 (age 58 at death)','proven',['obitEd']],['Married','Renee Harper, 1982 — "his wife of 34 years"','proven',['obitEd']],['Home','Newborn, Georgia','proven',['obitEd']],['Died','6 December 2016','proven',['obitEd']],['Parents','John Richard and Margaret (Lush) Graham','proven',['obitEd']]],
-  story:'His obituary remembers him as a good man who treasured the time he spent with his four sons and his grandchildren.'},
+  story:'Ed was a good man who treasured the time he spent with his four sons and his grandchildren.'},
  {id:'renee',n:'Cheryl Renee (Harper) Graham',s:'Renee Graham',g:1,ord:1,sp:'ed',par:['johnny','annie'],living:1,c:'proven',
   f:[['Full name','Cheryl Renee Harper','family',['family']],['Parents','Johnnie Lee Harper Sr. and Annie Mae (Ralston) Harper','proven',['obitJohnny']],['Married','Ed Graham, 1982','proven',['obitEd']]],
   story:'Renee knows more about this family than any record does. Everything she adds here makes the tree truer.'},
- {id:'pam',n:'Pamela "Pam" (Harper) Bearden',s:'Pam Bearden',g:1,ord:2,sp:'steve',par:['johnny','annie'],living:1,c:'proven',f:[['Daughter of Johnnie and Annie Mae','Named in his obituary','proven',['obitJohnny']]]},
- {id:'johnh',n:'John Harper',s:'John Harper',g:1,ord:3,sp:'danyelle',par:['johnny','annie'],living:1,c:'proven',f:[['Son of Johnnie and Annie Mae','Named in his obituary','proven',['obitJohnny']]]},
- {id:'jeff',n:'Jeff Harper',s:'Jeff Harper',g:1,ord:4,sp:'david',par:['johnny','annie'],living:1,c:'proven',f:[['Son of Johnnie and Annie Mae','Named in his obituary','proven',['obitJohnny']]]},
+ {id:'pam',n:'Pamela "Pam" (Harper) Bearden',s:'Pam Bearden',g:1,ord:2,sp:'steve',par:['johnny','annie'],living:1,c:'proven',f:[['Daughter of','Johnnie and Annie Mae Harper','proven',['obitJohnny']]]},
+ {id:'johnh',n:'John Harper',s:'John Harper',g:1,ord:3,sp:'danyelle',par:['johnny','annie'],living:1,c:'proven',f:[['Son of','Johnnie and Annie Mae Harper','proven',['obitJohnny']]]},
+ {id:'jeff',n:'Jeff Harper',s:'Jeff Harper',g:1,ord:4,sp:'david',par:['johnny','annie'],living:1,c:'proven',f:[['Son of','Johnnie and Annie Mae Harper','proven',['obitJohnny']]]},
 
- {id:'steve',n:'Steve Bearden',s:'Steve Bearden',g:1,ord:2.5,sp:'pam',living:1,c:'proven',f:[['Married','Pam Harper — named together in Johnnie Harper\'s obituary','proven',['obitJohnny']]]},
- {id:'danyelle',n:'Danyelle Lundy',s:'Danyelle Lundy',g:1,ord:3.5,sp:'johnh',living:1,c:'proven',f:[['Married','John Harper — named together in Johnnie Harper\'s obituary','proven',['obitJohnny']],['Last name','Lundy','family',['family']]]},
- {id:'david',n:'David Roth',s:'David Roth',g:1,ord:4.5,sp:'jeff',living:1,c:'proven',f:[['Spouse','Jeff Harper — named together in Johnnie Harper\'s obituary','proven',['obitJohnny']]]},
- {id:'howard',n:'Howard Smith',s:'Howard Smith',g:1,ord:2.5,sp:'norma',b:'',d:'deceased',c:'family',f:[['Married','Norma Jean Graham','family',['family']],['Children','Brandon, Jeremy and Michael Smith','family',['family']],['Died','Date not yet known','family',['family']]]},
- {id:'amber',n:'Amber Newsom',s:'Amber Newsom',g:0,ord:1,par:['eileen'],living:1,c:'family',f:[['Daughter of','Eileen (Graham) Newsom','family',['family']]]},
- {id:'stevenn',n:'Steven Newsom',s:'Steven Newsom',g:0,ord:2,par:['eileen'],living:1,c:'family',f:[['Son of','Eileen (Graham) Newsom','family',['family']]]},
- {id:'brandon',n:'Brandon Smith',s:'Brandon Smith',g:0,ord:1,par:['norma','howard'],living:1,c:'family',f:[['Son of','Norma Graham and Howard Smith','family',['family']],['Service','Photographed in U.S. Navy uniform, like his grandfather Jack','probable',['family']]]},
- {id:'jeremy',n:'Jeremy Smith',s:'Jeremy Smith',g:0,ord:2,par:['norma','howard'],living:1,c:'family',f:[['Son of','Norma Graham and Howard Smith','family',['family']]]},
- {id:'michael',n:'Michael Smith',s:'Michael Smith',g:0,ord:3,par:['norma','howard'],living:1,c:'family',f:[['Son of','Norma Graham and Howard Smith','family',['family']]]},
- {id:'andrew',n:'Andrew Graham',s:'Andrew Graham',g:0,ord:1,par:['wayne'],living:1,c:'family',f:[['Son of','Wayne Graham','family',['family']]]},
- {id:'alissa',n:'Alissa Graham',s:'Alissa Graham',g:0,ord:1,par:['donna'],living:1,c:'family',f:[['Daughter of','Donna Graham','family',['family']]]},
- {id:'malik',n:'Malik Graham',s:'Malik Graham',g:0,ord:2,par:['donna'],living:1,c:'family',f:[['Son of','Donna Graham','family',['family']]]},
- {id:'lydia',n:'Lydia',s:'Lydia',g:-1,ord:1,par:['chris','amanda'],living:1,c:'family',f:[['Daughter of','Chris and Amanda Graham','family',['family']]]},
- {id:'lilly',n:'Lilly',s:'Lilly',g:-1,ord:1,par:['jon','jessica'],living:1,c:'family',f:[['Daughter of','Jon and Jessica Graham','family',['family']]]},
- {id:'maddie',n:'Maddie',s:'Maddie',g:-1,ord:2,par:['jon','jessica'],living:1,c:'family',f:[['Daughter of','Jon and Jessica Graham','family',['family']]]},
- {id:'dustinjr',n:'Dustin Jr.',s:'Dustin Jr.',g:-1,ord:1,par:['dustin'],living:1,c:'family',f:[['Son of','Dustin Graham','family',['family']]]},
- {id:'ashley',n:'Ashley (Harper) Coley',s:'Ashley Coley',g:0,ord:1,par:['pam'],living:1,c:'family',f:[['Daughter of','Pam (Harper) Bearden','family',['family']]]},
- {id:'shelby',n:'Shelby (Harper) Livingston',s:'Shelby Livingston',g:0,ord:2,sp:'peanut',par:['pam'],living:1,c:'family',f:[['Daughter of','Pam (Harper) Bearden','family',['family']],['Married','"Peanut" Livingston','family',['family']]]},
- {id:'peanut',n:'"Peanut" Livingston',s:'Peanut Livingston',g:0,ord:2.5,sp:'shelby',living:1,c:'family',f:[['Married','Shelby (Harper) Livingston','family',['family']]]},
- {id:'kayla',n:'Kayla Gentry',s:'Kayla Gentry',g:0,ord:3,sp:'rodney',par:['pam'],living:1,c:'family',f:[['Daughter of','Pam (Harper) Bearden','family',['family']],['Married','Rodney Gentry','family',['family']]]},
- {id:'rodney',n:'Rodney Gentry',s:'Rodney Gentry',g:0,ord:3.5,sp:'kayla',living:1,c:'family',f:[['Married','Kayla Gentry','family',['family']]]},
- {id:'johnjohn',n:'John "John John" Harper',s:'John John Harper',g:0,ord:1,par:['johnh'],living:1,c:'family',f:[['Son of','John Harper','family',['family']]]},
- {id:'chasity',n:'Chasity Harper',s:'Chasity Harper',g:0,ord:2,par:['johnh'],living:1,c:'family',f:[['Child of','John Harper','family',['family']]]},
- {id:'amberl',n:'Amber Lundy',s:'Amber Lundy',g:0,ord:3,par:['johnh','danyelle'],living:1,c:'family',f:[['Daughter of','John Harper and Danyelle Lundy','family',['family']]]},
- {id:'ashleyl',n:'Ashley Lundy',s:'Ashley Lundy',g:0,ord:4,par:['johnh','danyelle'],living:1,c:'family',f:[['Daughter of','John Harper and Danyelle Lundy','family',['family']]]},
- {id:'shannon',n:'Shannon (Harper) Wright',s:'Shannon Wright',g:0,ord:5,par:['johnh'],living:1,c:'family',f:[['Child of','John Harper','family',['family']]]},
- {id:'jacob',n:'Jacob',s:'Jacob',g:0,ord:1,par:['jeff','david'],living:1,c:'family',f:[['Son of','Jeff Harper and David Roth','family',['family']]]},
- {id:'amanda',n:'Amanda Graham',s:'Amanda Graham',g:0,ord:1.5,sp:'chris',living:1,c:'proven',f:[['Married','Chris Graham — named together in Ed\'s obituary','proven',['obitEd']]]},
- {id:'emily',n:'Emily Graham',s:'Emily Graham',g:0,ord:2.5,sp:'mat',living:1,c:'proven',f:[['Married','Mat Graham — named together in Ed\'s obituary','proven',['obitEd']]]},
- {id:'jessica',n:'Jessica Graham',s:'Jessica Graham',g:0,ord:3.5,sp:'jon',living:1,c:'proven',f:[['Married','Jon Graham — named together in Ed\'s obituary','proven',['obitEd']]]},
- {id:'chris',n:'Christopher Graham',s:'Chris Graham',g:0,ord:1,sp:'amanda',par:['ed','renee'],living:1,b:'1983',c:'proven',f:[['Born','1983, Covington, Georgia','family',['family']],['Son of Ed and Renee','Named in Ed\'s obituary, with his wife Amanda','proven',['obitEd']]]},
- {id:'mat',n:'Mathew Thomas Graham',s:'Mat Graham',g:0,ord:2,sp:'emily',par:['ed','renee'],living:1,b:'1987',c:'proven',f:[['Born','1987, Covington, Georgia','family',['family']],['Son of Ed and Renee','Named in Ed\'s obituary, with his wife Emily','proven',['obitEd']]],story:'Mat built this tree.'},
- {id:'jon',n:'Jonathan Graham',s:'Jon Graham',g:0,ord:3,sp:'jessica',par:['ed','renee'],living:1,b:'1988',c:'proven',f:[['Born','1988, Covington, Georgia','family',['family']],['Son of Ed and Renee','Named in Ed\'s obituary, with his wife Jessica','proven',['obitEd']]]},
- {id:'dustin',n:'Dustin Graham',s:'Dustin Graham',g:0,ord:4,par:['ed','renee'],living:1,b:'1994',c:'proven',f:[['Born','1994, Covington, Georgia','family',['family']],['Son of Ed and Renee','Named in Ed\'s obituary','proven',['obitEd']]]}
+ {id:'steve',n:'Steve Bearden',s:'Steve Bearden',g:1,ord:2.5,sp:'pam',living:1,c:'proven',f:[['Married to','Pam','proven',['obitJohnny']]]},
+ {id:'danyelle',n:'Danyelle Lundy',s:'Danyelle Lundy',g:1,ord:3.5,sp:'johnh',living:1,c:'proven',f:[['Married to','John Harper','proven',['obitJohnny']]]},
+ {id:'david',n:'David Roth',s:'David Roth',g:1,ord:4.5,sp:'jeff',living:1,c:'proven',f:[['Married to','Jeff Harper','proven',['obitJohnny']]]},
+ {id:'howard',n:'Howard Smith',s:'Howard Smith',g:1,ord:2.5,sp:'norma',b:'',d:'deceased',c:'family',f:[['Died','Date not yet known','family',['family']]]},
+ {id:'amber',n:'Amber Newsom',s:'Amber Newsom',g:0,ord:1,par:['eileen'],living:1,c:'family',f:[]},
+ {id:'stevenn',n:'Steven Newsom',s:'Steven Newsom',g:0,ord:2,par:['eileen'],living:1,c:'family',f:[]},
+ {id:'brandon',n:'Brandon Smith',s:'Brandon Smith',g:0,ord:1,par:['norma','howard'],living:1,c:'family',f:[['Service','Photographed in U.S. Navy uniform, like his grandfather Jack','probable',['family']]]},
+ {id:'jeremy',n:'Jeremy Smith',s:'Jeremy Smith',g:0,ord:2,par:['norma','howard'],living:1,c:'family',f:[]},
+ {id:'michael',n:'Michael Smith',s:'Michael Smith',g:0,ord:3,par:['norma','howard'],living:1,c:'family',f:[]},
+ {id:'andrew',n:'Andrew Graham',s:'Andrew Graham',g:0,ord:1,par:['wayne'],living:1,c:'family',f:[]},
+ {id:'alissa',n:'Alissa Graham',s:'Alissa Graham',g:0,ord:1,par:['donna'],living:1,c:'family',f:[]},
+ {id:'malik',n:'Malik Graham',s:'Malik Graham',g:0,ord:2,par:['donna'],living:1,c:'family',f:[]},
+ {id:'lydia',n:'Lydia',s:'Lydia',g:-1,ord:1,par:['chris','amanda'],living:1,c:'family',f:[]},
+ {id:'lilly',n:'Lilly',s:'Lilly',g:-1,ord:1,par:['jon','jessica'],living:1,c:'family',f:[]},
+ {id:'maddie',n:'Maddie',s:'Maddie',g:-1,ord:2,par:['jon','jessica'],living:1,c:'family',f:[]},
+ {id:'dustinjr',n:'Dustin Jr.',s:'Dustin Jr.',g:-1,ord:1,par:['dustin'],living:1,c:'family',f:[]},
+ {id:'ashley',n:'Ashley (Harper) Coley',s:'Ashley Coley',g:0,ord:1,par:['pam'],living:1,c:'family',f:[]},
+ {id:'shelby',n:'Shelby (Harper) Livingston',s:'Shelby Livingston',g:0,ord:2,sp:'peanut',par:['pam'],living:1,c:'family',f:[]},
+ {id:'peanut',n:'"Peanut" Livingston',s:'Peanut Livingston',g:0,ord:2.5,sp:'shelby',living:1,c:'family',f:[]},
+ {id:'kayla',n:'Kayla Gentry',s:'Kayla Gentry',g:0,ord:3,sp:'rodney',par:['pam'],living:1,c:'family',f:[]},
+ {id:'rodney',n:'Rodney Gentry',s:'Rodney Gentry',g:0,ord:3.5,sp:'kayla',living:1,c:'family',f:[]},
+ {id:'johnjohn',n:'John "John John" Harper',s:'John John Harper',g:0,ord:1,par:['johnh'],living:1,c:'family',f:[]},
+ {id:'chasity',n:'Chasity Harper',s:'Chasity Harper',g:0,ord:2,par:['johnh'],living:1,c:'family',f:[]},
+ {id:'amberl',n:'Amber Lundy',s:'Amber Lundy',g:0,ord:3,par:['johnh','danyelle'],living:1,c:'family',f:[]},
+ {id:'ashleyl',n:'Ashley Lundy',s:'Ashley Lundy',g:0,ord:4,par:['johnh','danyelle'],living:1,c:'family',f:[]},
+ {id:'shannon',n:'Shannon (Harper) Wright',s:'Shannon Wright',g:0,ord:5,par:['johnh'],living:1,c:'family',f:[]},
+ {id:'jacob',n:'Jacob',s:'Jacob',g:0,ord:1,par:['jeff','david'],living:1,c:'family',f:[]},
+ {id:'amanda',n:'Amanda Graham',s:'Amanda Graham',g:0,ord:1.5,sp:'chris',living:1,c:'proven',f:[['Married to','Chris Graham','proven',['obitEd']]]},
+ {id:'emily',n:'Emily Graham',s:'Emily Graham',g:0,ord:2.5,sp:'mat',living:1,c:'proven',f:[['Married to','Mat Graham','proven',['obitEd']]]},
+ {id:'jessica',n:'Jessica Graham',s:'Jessica Graham',g:0,ord:3.5,sp:'jon',living:1,c:'proven',f:[['Married to','Jon Graham','proven',['obitEd']]]},
+ {id:'chris',n:'Christopher Graham',s:'Chris Graham',g:0,ord:1,sp:'amanda',par:['ed','renee'],living:1,b:'1983',c:'proven',f:[['Born','1983, Covington, Georgia','family',['family']],['Son of','Ed and Renee — the oldest of their four sons','proven',['obitEd']]]},
+ {id:'mat',n:'Mathew Thomas Graham',s:'Mat Graham',g:0,ord:2,sp:'emily',par:['ed','renee'],living:1,b:'1987',c:'proven',f:[['Born','1987, Covington, Georgia','family',['family']],['Son of','Ed and Renee — the second of their four sons','proven',['obitEd']]],story:'Mat built this tree.'},
+ {id:'jon',n:'Jonathan Graham',s:'Jon Graham',g:0,ord:3,sp:'jessica',par:['ed','renee'],living:1,b:'1988',c:'proven',f:[['Born','1988, Covington, Georgia','family',['family']],['Son of','Ed and Renee — the third of their four sons','proven',['obitEd']]]},
+ {id:'dustin',n:'Dustin Graham',s:'Dustin Graham',g:0,ord:4,par:['ed','renee'],living:1,b:'1994',c:'proven',f:[['Born','1994, Covington, Georgia','family',['family']],['Son of','Ed and Renee — the youngest of their four sons','proven',['obitEd']]]}
 ];
 
 // slideshow films made after they passed: on their cards, in the keepsake chest, as a special lantern each, and in story mode
@@ -2047,7 +2048,8 @@ $('#q').addEventListener('change',e=>{const v=e.target.value.toLowerCase().trim(
 
 /* ---------- person panel ---------- */
 const badge=c=>`<span class="b ${c}"><i></i>${CL[c]}</span>`;
-const sup=ss=>ss.length?`<sup>${ss.map(s=>`<a href="#sources" title="${esc(SRC[s].t)}">${SK.indexOf(s)+1}</a>`).join(', ')}</sup>`:'';
+const doubt=c=>c==='probable'||c==='possible'?badge(c):''; /* only flag facts we're unsure of */
+const sup=s0=>{const ss=s0.filter(x=>x!=='family');return ss.length?`<sup>${ss.map(s=>`<a href="#sources" title="${esc(SRC[s].t)}">${SK.indexOf(s)+1}</a>`).join(', ')}</sup>`:'';};
 const link=id=>byId[id]?`<a data-go="${id}">${esc(byId[id].s)}</a>`:'';
 function select(id,quiet){if(!byId[id])return;sel=id;document.querySelectorAll('.card').forEach(c=>c.classList.toggle('sel',c.dataset.id===id));document.querySelectorAll('#tworld .leaf').forEach(c=>c.classList.toggle('sel',c.dataset.id===id));kinOn=true;markKin();renderPanel(true);if(!quiet&&document.body.classList.contains('tfull'))document.body.classList.add('pdrawer');}
 function renderPanel(fresh){
@@ -2057,11 +2059,11 @@ function renderPanel(fresh){
   const mine=contribs.filter(c=>c.pid===p.id&&c.type!=='person'&&!isKeep(c)).sort((a,b)=>(a.at||0)-(b.at||0));
   const rel=[p.par.length&&`Parents: ${p.par.map(link).join(' & ')}`,p.sp&&byId[p.sp]&&`Spouse: ${link(p.sp)}`,kids.length&&`Children: ${kids.map(k=>link(k.id)).join(', ')}`,sibs.length&&`Brothers & sisters: ${sibs.map(k=>link(k.id)).join(', ')}`].filter(Boolean).map(t=>`<div>${t}</div>`).join('');
   const el=$('#panel');
-  el.innerHTML=`<button class="pclose" data-close aria-label="Close details">✕ Close</button>${photo[p.id]?`<img class="portrait" src="${esc(photo[p.id])}" alt="${esc(p.n)}">`:''}<h2>${esc(p.n)}</h2><div class="sub">${esc(life)} &nbsp;${badge(p.c)}</div>
+  el.innerHTML=`<button class="pclose" data-close aria-label="Close details">✕ Close</button>${photo[p.id]?`<img class="portrait" src="${esc(photo[p.id])}" alt="${esc(p.n)}">`:''}<h2>${esc(p.n)}</h2><div class="sub">${esc(life)} &nbsp;${doubt(p.c)}</div>
    ${db&&canWrite?`<button class="share" data-share>💬 Share a memory of ${esc(p.g<0?p.s:p.s.split(' ')[0])}</button>`:''}
    ${filmOf(p.id)?(f=>`<button type="button" class="filmbtn" data-film="${f.id}"><img src="${f.poster}" alt=""><span><b>▶ Watch: ${esc(f.sub)}</b><small>${esc(f.by)} · ${f.dur}</small></span></button>`)(filmOf(p.id)):''}
    ${p.story?`<div class="story">${esc(p.story)}</div>`:''}
-   <h3>What we know</h3><table class="facts"><tbody>${p.f.map(([l,v,c,s])=>`<tr><td>${esc(l)}</td><td>${esc(v)}${sup(s)}<div>${badge(c)}</div></td></tr>`).join('')}</tbody></table>
+   ${p.f.length?`<h3>Their story</h3><table class="facts"><tbody>${p.f.map(([l,v,c,s])=>`<tr><td>${esc(l)}</td><td>${esc(v)}${sup(s)}${doubt(c)?`<div>${doubt(c)}</div>`:''}</td></tr>`).join('')}</tbody></table>`:(db&&canWrite?`<p class="invite">Know a story about ${esc(p.g<0?p.s:p.s.split(' ')[0])}? Add it below and it will grow a flower on the hill.</p>`:'')}
    ${PHOTOS[p.id]&&PHOTOS[p.id].g.length?`<h3>Photos</h3><div class="gal">${PHOTOS[p.id].g.map(x=>{const o=typeof x==='string'?{u:x,c:''}:x;return `<img src="${o.u}" alt="${esc(o.c||p.n)}" title="${esc(o.c)}" loading="lazy" data-lb="${o.u}" data-cap="${esc(o.c)}">`;}).join('')}</div>`:''}
    ${p.sibs?`<p class="note">${esc(p.sibs)}</p>`:''}
    ${rel?`<h3>Family</h3><div class="rel">${rel}</div>`:''}

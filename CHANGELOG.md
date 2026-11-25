@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-25 — Warmer person cards
+- "What we know" is now "Their story", and the lines no longer say "named in his obituary". They say who the person is to the family instead (for example "Son of Ed and Renee — the oldest of their four sons" or "Married to Pam"). The record each fact comes from is still one tap away through its small number.
+- The "Proven" and "Family memory" tags are gone. Only facts we're unsure of still show "Probable" or "Possible".
+- Cousins and grandkids no longer repeat their parents twice. Their cards invite a story instead: "Know a story about Shelby? Add it below and it will grow a flower on the hill."
+- Johnnie's funeral details and Norma's funeral home were removed; Johnnie's and Ed's stories now speak about them directly rather than quoting their obituaries.
+
 ## 2026-11-25 — Danyelle Lundy
 - Danyelle's name is now Danyelle Lundy (it had been listed as Harper). Amber and Ashley Lundy are now shown as her daughters with John Harper, and the photo caption reads "John Harper and Danyelle Lundy".
 

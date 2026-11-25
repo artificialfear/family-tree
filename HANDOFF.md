@@ -73,6 +73,7 @@ A Thanksgiving 2026 gift for Mat's mom, Renee. Interactive illustrated family tr
 - (Before round 2) Not reproducible here: the ~3 s black screen right after full screen on the tablet (headless Chrome can't go full screen). The lighter bake and the extra settle time are the mitigation; needs Mat's re-test.
 
 ## Decisions Mat made
+- 2026-11-25 warmer cards: panel heading "Their story"; `doubt(c)` shows a badge only for probable/possible (fact rows and the header); `sup()` hides the generic `family` source number; facts that only repeated the Family section (child-of / married / children with source family) were deleted from BASE, and a card with no facts shows an `.invite` line. Don't reintroduce "named in his obituary" wording; keep sources in the footnote.
 - 2026-11-25: Danyelle's surname is Lundy (not Harper); she is still John Harper's wife. Amber and Ashley Lundy have par [johnh, danyelle]; John John, Chasity and Shannon stay par [johnh] only.
 - Public site (GitHub Pages) so relatives need no account; family passcode (not per-post approval) for adding memories; noindex tags so search engines skip it.
 - Grandkids and minors: photos + first names only, no birth years. Jacob (Jeff & David's son) added 2026-11-21 as a cousin. Other great-grandkids of Johnny & Annie Mae (Lilly(H), Madison, Lydia(H)) stay off for now.
