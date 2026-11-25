@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-24 — Flowers stay put when Google is slow
+- Each device now keeps a copy of the family's memories, so the flowers (and memories on cards) show immediately and stay visible even if the Google backend is slow or not answering. New memories appear as soon as it answers again.
+
 ## 2026-11-24 — Memory flowers visible again
 - The garden flowers had become tiny after the zoom fix, and one could land off the edge of the hill. They're now drawn larger at a steady size and always grow on the grass on top of the hill.
 

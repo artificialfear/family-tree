@@ -2535,8 +2535,11 @@ let devHash='';
 async function hashDev(){try{const d=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(devId));devHash=[...new Uint8Array(d)].map(b=>b.toString(16).padStart(2,'0')).join('');}catch(e){devHash='';}return devHash;}
 const LOCKED_MSG='Too many wrong passcodes. Please wait 15 minutes and try again, or ask Mat for the passcode.';
 async function apiPost(o){const r=await fetch(API,{method:'POST',body:JSON.stringify(o),headers:{'Content-Type':'text/plain;charset=utf-8'}});return r.json();}
-async function refreshContribs(){if(!API)return;const r=await fetch(API+(API.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});const j=await r.json();if(!j.ok)return;
-  const next=JSON.stringify(j.items);if(next===refreshContribs.last)return;refreshContribs.last=next;contribs=j.items;
+// memories are kept on the device too, so the flowers show straight away and survive a slow or unreachable Google backend
+// (a fetch that hangs is given up after 25 s, and the copy on the device stays on screen)
+async function refreshContribs(){if(!API)return;const ac=window.AbortController?new AbortController():null,to=ac&&setTimeout(()=>ac.abort(),25000);
+  let j;try{const r=await fetch(API+(API.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store',signal:ac&&ac.signal});j=await r.json();}finally{clearTimeout(to);}if(!j||!j.ok||!Array.isArray(j.items))return;
+  const next=JSON.stringify(j.items);store.set('ftContribs',next);if(next===refreshContribs.last)return;refreshContribs.last=next;contribs=j.items;
   const keep={...view},tkeep={...tv};build();drawTree(false);view=keep;apply(false);drawLeafTree(false);tv=tkeep;tApply(false);renderPanel(false);drawTimeline();renderHelp();renderMemStars();renderKeepDyn();}
 /* the family passcode: asked once, then remembered on this device */
 function askCode(wrong){return new Promise(res=>{const d=$('#codeDlg');$('#codeIn').value='';$('#codeErr').textContent=wrong==='locked'?LOCKED_MSG:wrong?'That passcode didn\'t match. Try again, or ask Mat.':'';
@@ -2594,6 +2597,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-audio]');i
   if(!API){renderPanel(false);return;}
   db=true;canWrite=true;assets=true;me=await hashDev();
   renderPanel(false);renderHelp();
+  {const c=store.get('ftContribs');if(c)try{const it=JSON.parse(c);if(Array.isArray(it)&&it.length){refreshContribs.last=c;contribs=it;const keep={...view},tkeep={...tv};build();drawTree(false);view=keep;apply(false);drawLeafTree(false);tv=tkeep;tApply(false);renderPanel(false);drawTimeline();renderHelp();renderMemStars();renderKeepDyn();}}catch(e){}}
   try{await refreshContribs();}catch(e){}
   setInterval(()=>{if(!document.hidden)refreshContribs().catch(()=>{});},90000);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshContribs().catch(()=>{});});
