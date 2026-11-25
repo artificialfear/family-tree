@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — Jessica Ramey
+- Added Jessica Ramey, John Harper's daughter, with her photo. She appears among John's children on the tree and in the story's "houseful of cousins" chapter. John's six children now fan out a little wider so their name tags don't touch.
+
 ## 2026-11-25 — No more "Living" label
 - Person cards and the chart no longer say "Living" under living family members. Dates now appear only for the people we have lost.
 

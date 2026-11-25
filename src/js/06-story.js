@@ -10,7 +10,7 @@ const MN=[[],
  [['Johnnie Lee Harper','johnny'],['Annie Mae Ralston','annie'],['Renee','renee'],['Pam','pam'],['John','johnh'],['Jeff','jeff']],
  [['Ed Graham','ed'],['Renee Harper','renee']],
  [['Ed','ed'],['Renee','renee'],['Chris','chris'],['Mat','mat'],['Jon','jon'],['Dustin','dustin'],['Amanda','amanda'],['Emily','emily'],['Jessica','jessica'],['Lydia','lydia'],['Lilly','lilly'],['Maddie','maddie'],['Dustin Jr','dustinjr']],
- [['Amber','amber'],['Steven','stevenn'],['Brandon','brandon'],['Jeremy','jeremy'],['Michael','michael'],['Andrew','andrew'],['Alissa','alissa'],['Malik','malik'],['Ashley','ashley'],['Shelby','shelby'],['Kayla','kayla'],['John John','johnjohn'],['Chasity','chasity'],['Amber','amberl'],['Ashley','ashleyl'],['Shannon','shannon'],['Jacob','jacob']],
+ [['Amber','amber'],['Steven','stevenn'],['Brandon','brandon'],['Jeremy','jeremy'],['Michael','michael'],['Andrew','andrew'],['Alissa','alissa'],['Malik','malik'],['Ashley','ashley'],['Shelby','shelby'],['Kayla','kayla'],['John John','johnjohn'],['Chasity','chasity'],['Amber','amberl'],['Ashley','ashleyl'],['Shannon','shannon'],['Jessica','jessicar'],['Jacob','jacob']],
  [['Ed','ed'],['Johnnie','johnny'],['Annie Mae','annie']]];
 function markNames(t,ms){let out='',pos=0;
   (ms||[]).forEach(([fr,id])=>{if(!byId[id])return;const re=new RegExp('\\b'+fr.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','g');re.lastIndex=pos;const m=re.exec(t);if(!m)return;

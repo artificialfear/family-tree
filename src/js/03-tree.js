@@ -50,7 +50,7 @@ function tLayout(){
       const sp=byId[p.sp];
       if(sp&&!pos[sp.id]){const sa=a+(118/R),sx=side==='h'?x-122:N.x+Math.cos(sa)*R,sy=side==='h'?y:N.y+Math.sin(sa)*R;put(sp.id,sx,sy,'asp');
         const ux=(sx-x),uy=(sy-y),ul=Math.hypot(ux,uy);B(x+ux/ul*RAD.aunt,y+uy/ul*RAD.aunt,(x+sx)/2,(y+sy)/2-6,sx-ux/ul*RAD.asp,sy-uy/ul*RAD.asp,4);}
-      const m=ks.length,step=m>3?29:m>2?(document.body.classList.contains('big')?41:34):30,KR=m>3?205:m>2?170:185,kOff=(sp&&side==='h'&&ad<180)?-20:0;ks.forEach((k,j)=>{const ka=a+((j-(m-1)/2)*step+kOff)*D,cx=Math.cos(ka),cy=Math.sin(ka),kx=x+cx*KR,ky=y+cy*KR;put(k.id,kx,ky,'kid');
+      const m=ks.length,step=m>5?26:m>3?29:m>2?(document.body.classList.contains('big')?41:34):30,KR=m>5?232:m>3?205:m>2?170:185,kOff=(sp&&side==='h'&&ad<180)?-20:0;ks.forEach((k,j)=>{const ka=a+((j-(m-1)/2)*step+kOff)*D,cx=Math.cos(ka),cy=Math.sin(ka),kx=x+cx*KR,ky=y+cy*KR;put(k.id,kx,ky,'kid');
         B(x+cx*RAD.aunt,y+cy*RAD.aunt,x+cx*90,y+cy*90,kx-cx*RAD.kid,ky-cy*RAD.kid,4);
         const ksp=byId[k.sp];if(ksp&&!pos[ksp.id]){const qx=x+cx*(KR+118),qy=y+cy*(KR+118);put(ksp.id,qx,qy,'ksp');B(kx+cx*RAD.kid,ky+cy*RAD.kid,kx+cx*40,ky+cy*40,qx-cx*RAD.ksp,qy-cy*RAD.ksp,3);}});
     });};
