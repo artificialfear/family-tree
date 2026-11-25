@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — Danyelle Lundy
+- Danyelle's name is now Danyelle Lundy (it had been listed as Harper). Amber and Ashley Lundy are now shown as her daughters with John Harper, and the photo caption reads "John Harper and Danyelle Lundy".
+
 ## 2026-11-24 — Flowers stay put when Google is slow
 - Each device now keeps a copy of the family's memories, so the flowers (and memories on cards) show immediately and stay visible even if the Google backend is slow or not answering. New memories appear as soon as it answers again.
 
