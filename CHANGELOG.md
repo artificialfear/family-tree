@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — More cloud showing (preview only)
+- On the preview page, the top curtain rides a little higher and the cloud rows hang a little lower, so more of the moving clouds show.
+
 ## 2026-11-25 — Sliding cloud rows (preview only)
 - On the preview page, the top clouds are now two rows that slide gently in opposite directions, like cut-out cloud flats pushed by a stagehand. The back row is a darker, flipped copy hanging a little lower. Tablets keep the clouds still for now, since big moving layers caused flashing on the Android tablet.
 
