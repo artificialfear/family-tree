@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-26 — Smooth tablet sky, tablet clouds and the wiggling chest are live
+- Tablets now slide the clouds and fade the sky, stars and clouds smoothly between sunset and night (a few rare flashes may remain on the Android tablet).
+- The keepsake chest wiggles every 4 seconds on phones and computers until it has been opened on that device.
+
 ## 2026-11-26 — Chest wiggles every 4 seconds (preview only)
 - The preview's chest now wiggles every 4 seconds (was 6) until it's opened, on phones and computers.
 
