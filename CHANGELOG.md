@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-26 — Chest wiggles every 4 seconds (preview only)
+- The preview's chest now wiggles every 4 seconds (was 6) until it's opened, on phones and computers.
+
 ## 2026-11-26 — Tablet trial: no black bands (preview only)
 - Fixed dark bands flashing across the tree on the Android tablet in the preview. The stars and clouds were fading by sharing one number with the whole stage, which made the tablet redraw the entire tree every frame; each now fades on its own. The chest doesn't wiggle on tablets (the wiggle also makes the tablet redraw the whole tree); it still wiggles on phones and computers.
 

@@ -695,8 +695,8 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
  .preview.touch .theme-stage .sbackdrop .srowday{opacity:calc(1 - var(--nt))!important}
  .touch .kwig{animation:none!important}/* the wiggle repaints the whole tree on tablets, which flashed */
 }
-/* PREVIEW: the keepsake chest gives a little wiggle every few seconds until someone opens it on this device */
-.preview .kwig{transform-box:fill-box;transform-origin:50% 100%;animation:kwig 6s ease-in-out 3s infinite}
-@keyframes kwig{0%,80%,100%{transform:none}83%{transform:rotate(-4deg)}86%{transform:rotate(4deg)}89%{transform:rotate(-3deg)}92%{transform:rotate(2.5deg)}95%{transform:rotate(-1deg)}}
+/* PREVIEW: the keepsake chest gives a little wiggle every 4 seconds until someone opens it on this device */
+.preview .kwig{transform-box:fill-box;transform-origin:50% 100%;animation:kwig 4s ease-in-out 2s infinite}
+@keyframes kwig{0%,77%,100%{transform:none}80%{transform:rotate(-4deg)}84.5%{transform:rotate(4deg)}89%{transform:rotate(-3deg)}93.5%{transform:rotate(2.5deg)}97.5%{transform:rotate(-1deg)}}
 .chestseen .kwig,body.sheeton .kwig{animation:none!important}
 @media (prefers-reduced-motion:reduce){.kwig{animation:none!important}}
