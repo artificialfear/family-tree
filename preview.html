@@ -841,13 +841,13 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 .cover.curtain.closing .cpanel{transition:transform 1.6s cubic-bezier(.62,0,.28,1),opacity .25s ease}
 .cover.curtain.closing .cframe{opacity:1;transition:none}
 /* preview: painted roots and brass hometown pins */
-.preview .theme-stage #tworld .roots .root.rpaint{fill:url(#bark);stroke:#3c2210;stroke-width:1.2;opacity:1}
-.preview #tworld .roots .rsh{fill:#1a0c05;opacity:.45}
-.preview #tworld .roots .rhl{fill:none;stroke:#e2b56c;stroke-linecap:round;opacity:.6}
-.preview .rootpin .pglow{fill:url(#pglow)}
-.preview .rootpin .pbr{fill:url(#pbrass);stroke:#4a2e0c;stroke-width:1.2}
-.preview .rootpin .pbh{fill:#fff7dc;opacity:.8}
-.preview .rootpin:hover .pbr,.preview .rootpin:focus-visible .pbr{stroke:#ffe3a6;stroke-width:2}
+.art .theme-stage #tworld .roots .root.rpaint{fill:url(#bark);stroke:#3c2210;stroke-width:1.2;opacity:1}
+.art #tworld .roots .rsh{fill:#1a0c05;opacity:.45}
+.art #tworld .roots .rhl{fill:none;stroke:#e2b56c;stroke-linecap:round;opacity:.6}
+.art .rootpin .pglow{fill:url(#pglow)}
+.art .rootpin .pbr{fill:url(#pbrass);stroke:#4a2e0c;stroke-width:1.2}
+.art .rootpin .pbh{fill:#fff7dc;opacity:.8}
+.art .rootpin:hover .pbr,.art .rootpin:focus-visible .pbr{stroke:#ffe3a6;stroke-width:2}
 /* sliding cloud rows (two flats pushed on rods by a stagehand) */
 .sbackdrop .crow{position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform;animation:cslideF 4.5s ease-in-out infinite alternate}
 .sbackdrop .crow.cback{animation-name:cslideB}
@@ -859,9 +859,9 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 @media (min-width:700px){.sbackdrop .crow{animation-name:cslideFw}.sbackdrop .crow.cback{animation-name:cslideBw}}
 @keyframes cslideFw{from{transform:translateX(19px)}to{transform:translateX(-19px)}}
 @keyframes cslideBw{from{transform:translateX(-15px)}to{transform:translateX(15px)}}
-.preview .kdirt{display:none}
+.art .kdirt{display:none}
 /* level ground (preview): bigger hometown names, now there's room underground */
-.preview .rootpin .pl{font-size:27px;stroke-width:6px}.preview .rootpin .py{font-size:19px}
+.art .rootpin .pl{font-size:27px;stroke-width:6px}.art .rootpin .py{font-size:19px}
 </style>
 </head>
 <body>
@@ -1333,7 +1333,7 @@ const CHEST={x:1835,y:1500,rot:0},GSIGN={x:-46,y:1546};
 if(ART){CHEST.x=915;CHEST.y=1990+DROP;CHEST.rot=0;CHEST.s=3;}
 /* preview: level ground. The painted tree stands with its root flare on a level strip of painted ground that runs off both edges of the screen;
    the family stands on the grass in two rows like a family photo; the chest sits half sunk in the grass; the roots and hometowns lie in the deepest layer */
-const FLAT=ART&&PREVIEW,GY=1615,GT={w:2256*1.5,h:830*1.5,y:GY-46*1.5},
+const FLAT=ART,GY=1615,GT={w:2256*1.5,h:830*1.5,y:GY-46*1.5},
   mSurf=()=>GY;
 if(FLAT){CHEST.x=1780;CHEST.s=2.35;CHEST.y=GY+10-8*2.35;}/* sitting on the grass to the right of the trunk, clear of the buttons */let gardenSeen=null;const gardenNew={};
 // the planet is a cut-paper diorama: a grass layer on top for the garden, soil underneath where the roots reach the hometowns.
@@ -1735,7 +1735,7 @@ function openMem(b){const c=contribs.find(x=>x.id===b.dataset.c);if(!c)return;
   $('#mnote [data-see]').onclick=ev=>{const id=ev.currentTarget.dataset.see;$('#mnote').hidden=true;select(id);tFocus(id);};}
 $('#celest').addEventListener('click',e=>{const b=e.target.closest('.mstar');if(b)openMem(b);});
 // preview: painted roots: a soft shadow under each root, a bark-textured body and a highlight along its top
-function rootP(b,w0,w1){if(!PREVIEW)return `<path class="root" d="${taperPath(b,w0,w1)}"/>`;w0*=2;w1=Math.max(2.4,w1*1.8);const d=taperPath(b,w0,w1);
+function rootP(b,w0,w1){if(!ART)return `<path class="root" d="${taperPath(b,w0,w1)}"/>`;w0*=2;w1=Math.max(2.4,w1*1.8);const d=taperPath(b,w0,w1);
   const o=Math.max(1.5,w0*.12),sh=taperPath({...b,x1:b.x1+o,x2:b.x2+o,cx:b.cx+o,y1:b.y1+o*1.4,y2:b.y2+o*1.4,cy:b.cy+o*1.4},w0,w1),h=Math.max(.6,w0*.09);
   const hl=`M${(b.x1-h).toFixed(1)} ${(b.y1-w0*.18).toFixed(1)}Q${(b.cx-h).toFixed(1)} ${(b.cy-(w0+w1)*.12).toFixed(1)} ${(b.x2).toFixed(1)} ${(b.y2-w1*.2).toFixed(1)}`;
   return `<path class="rsh" d="${sh}"/><path class="root rpaint" d="${d}"/><path class="rhl" d="${hl}" stroke-width="${Math.max(.8,w0*.12).toFixed(1)}"/>`;}
@@ -1845,7 +1845,7 @@ function treeArt(st,dl){
         else rts+=`${rootP(b,13,2.2)}`;
         for(let j=0;j<3;j++){const t=.35+j*.2,[qx,qy]=qpt(b,t),dir=(j%2?1:-1)*(px<915?1:-1),c={x1:qx,y1:qy,cx:qx+dir*24,cy:qy+22,x2:qx+dir*(30+rnd()*30),y2:qy+50+rnd()*30};rts+=`<path class="root" d="${taperPath(c,4,.6)}" opacity=".8"/>`;}
         const nm=(PL_NAMES[k]||k).replace(' (Meriwether Co.)','');
-        pins+=`<g class="rootpin" data-p="${k}" tabindex="0" role="button" aria-label="${esc(nm)} — show on the map" style="--d:${0}ms"><circle cx="${px}" cy="${py}" r="22" fill="transparent"/>${PREVIEW?`<circle class="pglow" cx="${px}" cy="${py}" r="20"/><circle class="pbr" cx="${px}" cy="${py}" r="10.5"/><circle class="pbh" cx="${px-3.2}" cy="${py-3.4}" r="3"/>`:`<circle class="pg" cx="${px}" cy="${py}" r="11"/><circle class="pd" cx="${px}" cy="${py}" r="5.5"/>`}<text x="${px}" y="${py+(FLAT?44:36)}" class="pl">${esc(nm)}</text>${yr?`<text x="${px}" y="${py+(FLAT?68:56)}" class="py">${yr}</text>`:''}</g>`;});
+        pins+=`<g class="rootpin" data-p="${k}" tabindex="0" role="button" aria-label="${esc(nm)} — show on the map" style="--d:${0}ms"><circle cx="${px}" cy="${py}" r="22" fill="transparent"/>${ART?`<circle class="pglow" cx="${px}" cy="${py}" r="20"/><circle class="pbr" cx="${px}" cy="${py}" r="10.5"/><circle class="pbh" cx="${px-3.2}" cy="${py-3.4}" r="3"/>`:`<circle class="pg" cx="${px}" cy="${py}" r="11"/><circle class="pd" cx="${px}" cy="${py}" r="5.5"/>`}<text x="${px}" y="${py+(FLAT?44:36)}" class="pl">${esc(nm)}</text>${yr?`<text x="${px}" y="${py+(FLAT?68:56)}" class="py">${yr}</text>`:''}</g>`;});
       ROOTS=`<g class="art roots">${rts}</g>${pins}`;}
     under=(!PRINT?'':`<rect class="art" x="${X0-400}" y="${TB.y0-300}" width="${X1-X0+800}" height="${gb-TB.y0+600}" filter="url(#grain)"/>`)+`<g class="art" filter="url(#wc)">${wash}</g>`;
     const pdefs=!PRINT?`<radialGradient id="pfill" gradientUnits="userSpaceOnUse" cx="915" cy="1272" r="1500"><stop offset="0" stop-color="${PL.a}"/><stop offset=".35" stop-color="${PL.b}"/><stop offset="1" stop-color="${PL.c}"/></radialGradient>
@@ -1895,6 +1895,8 @@ let kinOn=false;// only after someone taps a person (Mat is selected when the pa
 function markKin(){if(!ART)return;const p=kinOn&&byId[sel],K=new Set();if(p){(p.par||[]).forEach(q=>K.add(q));if(p.sp)K.add(p.sp);P.forEach(q=>{if((q.par||[]).includes(sel))K.add(q.id);});}
   tw.querySelectorAll('.leaf').forEach(c=>c.classList.toggle('kin',K.has(c.dataset.id)));
   tw.querySelectorAll('.kline').forEach(l=>l.classList.toggle('lit',!!p&&l.dataset.k.includes(' '+sel+' ')));}
+/* the family lines go dark again when the person's card is closed (they used to stay lit until someone else was tapped) */
+new MutationObserver(()=>{const b=document.body.classList;if(kinOn&&b.contains('tfull')&&!b.contains('pdrawer')){kinOn=false;markKin();}}).observe(document.body,{attributes:true,attributeFilter:['class']});
 /* ---------- growing the tree from the ground up ---------- */
 const GROWT=2600;let GROWR=1400,growR=99999;
 const growEase=u=>1-(1-u)*(1-u);                      // fast at first, gentle at the tips

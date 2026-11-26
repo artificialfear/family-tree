@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-25 — Level ground is live
+- The main tree now has everything from tonight's preview: level ground that runs off both edges of the screen, the tree growing out of the grass, Ed and Renee's children and grandchildren in two rows below the leaves, flowers along the grass on both sides, the wooden chest sitting on the grass, painted roots with brass hometown pins spread wide underground, and bigger hometown names.
+- Fixed: the gold family lines (for example from Ed and Renee down to their sons) stayed lit after you closed someone's card. They now go dark when the card closes.
+
 ## 2026-11-25 — Hometowns work again (preview only)
 - Fixed: on the preview, hovering over or clicking a hometown under the tree did nothing. (The painted brass pins from the roots trial didn't have the dot the hometown note looks for, so the note silently failed.)
 - Hometown names are about 40% larger, and the hometowns sit 20% farther apart down the roots.
