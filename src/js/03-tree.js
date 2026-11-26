@@ -5,7 +5,7 @@ const mqBot=()=>{const m=$('#marquee');return m?m.offsetTop+m.offsetHeight:0;};
 // the hometowns at the ends of the roots, below the grandchildren
 // preview: the hometowns sit around the buried chest, inside the third soil layer (before DROP)
 const ARTPINS={orange:[610,1725],durham:[485,1840],louisville:[385,1960],greenville:[305,2090],collegepark:[1230,1725],newborn:[1350,1840],upson:[1450,1960],covington:[915,2205]};
-const ROOTPINS=[['orange',200,1710,'1911'],['durham',330,1785,'1930'],['louisville',455,1700,'1932'],['greenville',590,1780,'1956'],['collegepark',730,1705,''],['covington',915,1820,'1982'],['newborn',1120,1710,''],['upson',1300,1780,'1940']];
+const ROOTPINS=[['orange',200,1710,'1911'],['durham',330,1785,'1930'],['louisville',455,1700,'1932'],['greenville',590,1780,'1956'],['collegepark',730,1705,''],['covington',915,1820,'1983'],['newborn',1120,1710,''],['upson',1300,1780,'1940']];
 // the planet (a circle under the tree) and the memory garden on it
 const PLANET={cx:915,cy:1272+2200,R:2200},surfY=x=>FLAT?mSurf(x):PLANET.cy-Math.sqrt(Math.max(0,PLANET.R**2-(x-PLANET.cx)**2));
 // preview: the painted planet is a round hill, radius 1400, top at y 1272 (same place as the drawn planet's top)
@@ -507,7 +507,7 @@ function treeArt(st,dl){
         tf+=`<path transform="translate(${f(x)} ${f(y)}) rotate(${d.toFixed(1)})" d="M-4 1l-5 -12M0 1l1 -15M4 1l6 -11"/>`;}
       let dots='';for(let i=0;i<60;i++){const a=(rnd()-.5)*1.2,dd=40+rnd()*420,x=cx+(R-dd)*Math.sin(a),y=cy-(R-dd)*Math.cos(a);dots+=`<circle cx="${f(x)}" cy="${f(y)}" r="${f(1.5+rnd()*2.5)}"/>`;}
       // tree rings: newest just under the surface, oldest deepest
-      const BXc=915,BYc=1272,RINGS=[[2026,150],[1987,240],[1982,320],[1956,420],[1940,520],[1932,610],[1930,690],[1911,800]];
+      const BXc=915,BYc=1272,RINGS=[[2026,150],[1987,240],[1983,320],[1956,420],[1940,520],[1932,610],[1930,690],[1911,800]];
       let rings='';RINGS.forEach(([yr,rr],i)=>{const a=(i%2?1:-1)*(12+i*2.2)*Math.PI/180,lx=BXc+Math.sin(a)*rr,ly=BYc+Math.cos(a)*rr;
         rings+=`<circle cx="${BXc}" cy="${BYc}" r="${rr}" fill="none" stroke="${K.line}" stroke-width="1.3" stroke-dasharray="${i%3?'2 7':'10 6'}" opacity=".16"/><text x="${f(lx)}" y="${f(ly+5)}" class="ringyr" transform="rotate(${f(-a*180/Math.PI)} ${f(lx)} ${f(ly)})">${yr}</text>`;});
       rings=`<g clip-path="url(#pclip)">${rings}</g>`;

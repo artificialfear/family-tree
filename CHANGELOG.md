@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-26 — Ed and Renee married in 1983
+- Ed and Renee's wedding year is now 1983 (was 1982) on both their cards, the timeline, the story chapter and the Covington root. Ed's card now says "together for 33 years" instead of quoting the obituary's "34 years", which was counted from 1982.
+
 ## 2026-11-26 — Floating chest and tablet-safe sky fade are live
 - The chest's wiggle now works on tablets too (the chest picture floats on its own layer), and tablets fade between sunset and night with the fading pieces readied a split second before the fade starts.
 
