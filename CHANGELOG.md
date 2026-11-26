@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-11-25 — Tree planted in the ground (preview only)
+- The ground sits higher so the grass covers the bottom of the trunk's root flare and the tree looks like it grows out of the ground.
+- Ed and Renee's children and grandchildren are back up off the ground, in two rows below the leaves, so the flowers along the grass never run into a portrait.
+- The chest now sits on top of the grass instead of half sunk.
+
 ## 2026-11-25 — Level ground without the mound (preview only)
 - The mound is gone from the preview: the painted tree stands on the level ground on its own root flare. Mat's brothers and their wives stand along the back of the grass, the grandchildren in front, like a family photo. Flowers grow along the grass on both sides of the trunk; the chest sits half sunk in the grass to the right of the family.
 
