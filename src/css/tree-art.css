@@ -666,3 +666,4 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 @media (min-width:700px){.sbackdrop .crow{animation-name:cslideFw}.sbackdrop .crow.cback{animation-name:cslideBw}}
 @keyframes cslideFw{from{transform:translateX(19px)}to{transform:translateX(-19px)}}
 @keyframes cslideBw{from{transform:translateX(-15px)}to{transform:translateX(15px)}}
+.preview .kdirt{display:none}

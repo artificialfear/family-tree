@@ -7,14 +7,20 @@ const mqBot=()=>{const m=$('#marquee');return m?m.offsetTop+m.offsetHeight:0;};
 const ARTPINS={orange:[610,1725],durham:[485,1840],louisville:[385,1960],greenville:[305,2090],collegepark:[1230,1725],newborn:[1350,1840],upson:[1450,1960],covington:[915,2205]};
 const ROOTPINS=[['orange',200,1710,'1911'],['durham',330,1785,'1930'],['louisville',455,1700,'1932'],['greenville',590,1780,'1956'],['collegepark',730,1705,''],['covington',915,1820,'1982'],['newborn',1120,1710,''],['upson',1300,1780,'1940']];
 // the planet (a circle under the tree) and the memory garden on it
-const PLANET={cx:915,cy:1272+2200,R:2200},surfY=x=>PLANET.cy-Math.sqrt(Math.max(0,PLANET.R**2-(x-PLANET.cx)**2));
+const PLANET={cx:915,cy:1272+2200,R:2200},surfY=x=>FLAT?mSurf(x):PLANET.cy-Math.sqrt(Math.max(0,PLANET.R**2-(x-PLANET.cx)**2));
 // preview: the painted planet is a round hill, radius 1400, top at y 1272 (same place as the drawn planet's top)
 // DROP lowers the hill (and everyone on it, the roots and the chest) so more of the painted trunk shows above it
 const DROP=ART?200:0,HILL={cx:915,cy:2672+DROP,R:1400},OLDP={...PLANET};if(ART)Object.assign(PLANET,HILL);
 const f1=n=>n.toFixed(1);
 const CHEST={x:1835,y:1500,rot:0},GSIGN={x:-46,y:1546};
 // preview: the chest is buried treasure in the middle of the planet, level, under the roots and hometowns
-if(ART){CHEST.x=915;CHEST.y=1990+DROP;CHEST.rot=0;CHEST.s=3;}let gardenSeen=null;const gardenNew={};
+if(ART){CHEST.x=915;CHEST.y=1990+DROP;CHEST.rot=0;CHEST.s=3;}
+/* preview: level ground. A wide grassy mound under the tree (the family stands on it) sits on a level strip of painted ground that runs off both
+   edges of the screen; the chest sits half sunk in the grass at the foot of the mound; the roots and hometowns lie in the deepest, darkest layer */
+const FLAT=ART&&PREVIEW,MND={cx:915,w:1900,top:1440,h:590},GY=MND.top+MND.h-70,GT={w:2256*1.5,h:830*1.5,y:GY-46*1.5},
+  MPROF=[.777,.723,.617,.528,.459,.416,.365,.323,.285,.241,.211,.188,.163,.156,.123,.097,.088,.067,.041,.031,.029,.038,.038,.029,.02,.021,.022,.035,.033,.035,.05,.072,.071,.084,.129,.159,.165,.174,.232,.277,.305,.331,.357,.432,.509,.539,.602,.71,.779],
+  mSurf=x=>{const u=(x-(MND.cx-MND.w/2))/MND.w*48;if(u<=0||u>=48)return GY;const i=Math.floor(u),t=u-i;return Math.min(GY,MND.top+(MPROF[i]*(1-t)+MPROF[i+1]*t)*MND.h);};
+if(FLAT){CHEST.x=1790;CHEST.s=2.9;CHEST.y=GY+26*2.9;}/* at the right foot of the mound, clear of the buttons; a little more than half shows above the grass */let gardenSeen=null;const gardenNew={};
 // the planet is a cut-paper diorama: a grass layer on top for the garden, soil underneath where the roots reach the hometowns.
 // The grass starts SOIL0 deep and grows a row (36) at a time when the garden needs room, pushing the soil, roots and towns down.
 const SOIL0=ART?175:250;let SOILD=SOIL0;
@@ -299,12 +305,16 @@ function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contr
 /* memory garden: every memory plants a glowing flower on the planet, in rows along its rim, outer shoulders first.
    Flowers step around faces, name scrolls, the main root, the root towns, the sign and the chest.
    A memory that arrives while the page is open sprouts (grows in). */
-function gardenSlots(D=SOILD){const ob=[];Object.values(TP).forEach(v=>{ob.push(['c',v.x,v.y,v.r+16]);ob.push(['r',v.x,v.y+v.r+24,ART&&!PRINT?Math.max(86,v.r*2.9):Math.max(56,v.r*1.7),ART&&!PRINT?26:20]);});
+function gardenSlots(D=SOILD){const ob=[];Object.values(TP).forEach(v=>{ob.push(['c',v.x,v.y,v.r+16]);ob.push(['r',v.x,v.y+v.r+24,ART&&!PRINT?Math.max(86,v.r*2.9):Math.max(56,v.r*1.7),ART&&!PRINT?(FLAT?34:26):20]);});
   ob.push(['r',915,1440+DROP,34,170]);
   // the children and grandchildren on the planet stand on clear grass: no flowers among or above them
-  const fam=Object.values(TP).filter(v=>v.y>1250);if(fam.length&&!(ART&&!PRINT)){const fx0=Math.min(...fam.map(v=>v.x-v.r))-50,fx1=Math.max(...fam.map(v=>v.x+v.r))+50,fb=Math.max(...fam.map(v=>v.y+v.r))+62;ob.push(['r',(fx0+fx1)/2,0,(fx1-fx0)/2,fb]);}ob.push(['r',CHEST.x,CHEST.y-40,100,72]);
+  const fam=Object.values(TP).filter(v=>v.y>1250);if(fam.length&&!(ART&&!PRINT)){const fx0=Math.min(...fam.map(v=>v.x-v.r))-50,fx1=Math.max(...fam.map(v=>v.x+v.r))+50,fb=Math.max(...fam.map(v=>v.y+v.r))+62;ob.push(['r',(fx0+fx1)/2,0,(fx1-fx0)/2,fb]);}ob.push(FLAT?['r',CHEST.x,GY,175,110]:['r',CHEST.x,CHEST.y-40,100,72]);
   const ok=(x,y)=>ob.every(o=>o[0]==='c'?Math.hypot(x-o[1],y-o[2])>o[3]:Math.abs(x-o[1])>o[3]||Math.abs(y-o[2])>o[4]);
   // painted hill: flowers grow in the green grass band, in the gaps between and below the kids and grandkids, spread evenly from the middle out
+  if(FLAT){const S=[];/* the mound's grass, then the level grass band out to both sides */
+    for(let d=34;d<=124;d+=30)for(let x=915-900+((d/30|0)%2)*17;x<=915+900;x+=34){if(Math.abs(x-915)<70)continue;const y=surfY(x)+d;if(y>GY-30)continue;if(ok(x,y))S.push([x,y]);}
+    for(const d of[36,80])for(let x=915-2600+(d>40?18:0);x<=915+2600;x+=36){if(Math.abs(x-915)<190)continue;if(ok(x,GY+d))S.push([x,GY+d]);}
+    return spreadOrder(S,[[700,surfY(700)+60],[1130,surfY(1130)+60]]);}
   if(ART&&!PRINT){const S=[];for(let d=34;d<=SOIL0-22;d+=30)for(let x=915-640+((d/30|0)%2)*17;x<=915+640;x+=34){if(Math.abs(x-915)<70)continue;/* only the grass on the top of the hill, where it is on screen */const y=surfY(x)+d;if(y>HILL.cy-HILL.R*.25)continue;if(ok(x,y))S.push([x,y]);}
     return spreadOrder(S,[[700,surfY(700)+60],[1130,surfY(1130)+60]]);}
   const S=[];for(let j=0;30+j*36<=D-24;j++){const d=30+j*36;for(let x=-600+(j%2)*19;x<=2430;x+=38){if(Math.abs(x-PLANET.cx)>PLANET.R*(ART?.9:.62))continue;const y=surfY(x)+d;if(ok(x,y))S.push([x,y,j,y<1585?0:1]);}}
@@ -399,7 +409,7 @@ function gardenSVG(all){const byDate=(a,b)=>String(a.at||'').localeCompare(Strin
     <path d="M-40 -1q40 9 80 0" fill="none" stroke="#1f3d24" stroke-width="7" stroke-linecap="round"/>`}</g>`;
   const grad=(id,a,b)=>`<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient>`;
   return `<defs><linearGradient id="ggold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe7a1"/><stop offset=".5" stop-color="#e3b04b"/><stop offset="1" stop-color="#a8721f"/></linearGradient>
-    ${grad('gvel','#5b2a8f','#2c0f50')}${grad('gwood','#9a6234','#5e3615')}${Object.entries(FLC).map(([k,[a,b]])=>grad('gf-'+k,a,b)).join('')}<pattern id="bark" patternUnits="userSpaceOnUse" width="46" height="38"><rect width="46" height="38" fill="#80532e"/><path d="M2 6q9-3 18 1M24 14q8-2 17 2M5 25q8-3 16 0M28 31q7-2 14 1" stroke="#5a3519" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".75"/><path d="M10 15q6-2 12 1M30 4q5-1 10 1M14 34q6-2 11 0" stroke="#b07f4b" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".7"/></pattern><radialGradient id="pbrass" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff1c2"/><stop offset=".35" stop-color="#e6b85c"/><stop offset=".8" stop-color="#9b6a22"/><stop offset="1" stop-color="#5e3d10"/></radialGradient><radialGradient id="pglow"><stop offset="0" stop-color="#ffd27e" stop-opacity=".55"/><stop offset="1" stop-color="#ffb04a" stop-opacity="0"/></radialGradient><radialGradient id="hglow"><stop offset="0" stop-color="#ffd27e" stop-opacity=".75"/><stop offset=".35" stop-color="#ffb04a" stop-opacity=".3"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient><radialGradient id="kglow"><stop offset="0" stop-color="#ffd77a" stop-opacity=".55"/><stop offset=".55" stop-color="#e0a440" stop-opacity=".18"/><stop offset="1" stop-color="#e0a440" stop-opacity="0"/></radialGradient><linearGradient id="lpaper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset=".6" stop-color="#ffc36e"/><stop offset="1" stop-color="#f08a3c"/></linearGradient><radialGradient id="lglow"><stop offset="0" stop-color="#ffd98a" stop-opacity=".55"/><stop offset="1" stop-color="#ffb860" stop-opacity="0"/></radialGradient></defs><g class="garden">${chest}${fl}</g><g class="lanterns">${lt}</g>`;}
+    ${grad('gvel','#5b2a8f','#2c0f50')}${grad('gwood','#9a6234','#5e3615')}${Object.entries(FLC).map(([k,[a,b]])=>grad('gf-'+k,a,b)).join('')}<pattern id="bark" patternUnits="userSpaceOnUse" width="46" height="38"><rect width="46" height="38" fill="#80532e"/><path d="M2 6q9-3 18 1M24 14q8-2 17 2M5 25q8-3 16 0M28 31q7-2 14 1" stroke="#5a3519" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".75"/><path d="M10 15q6-2 12 1M30 4q5-1 10 1M14 34q6-2 11 0" stroke="#b07f4b" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".7"/></pattern><radialGradient id="pbrass" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#fff1c2"/><stop offset=".35" stop-color="#e6b85c"/><stop offset=".8" stop-color="#9b6a22"/><stop offset="1" stop-color="#5e3d10"/></radialGradient><radialGradient id="pglow"><stop offset="0" stop-color="#ffd27e" stop-opacity=".55"/><stop offset="1" stop-color="#ffb04a" stop-opacity="0"/></radialGradient><radialGradient id="hglow"><stop offset="0" stop-color="#ffd27e" stop-opacity=".75"/><stop offset=".35" stop-color="#ffb04a" stop-opacity=".3"/><stop offset="1" stop-color="#ff9a3a" stop-opacity="0"/></radialGradient><radialGradient id="kglow"><stop offset="0" stop-color="#ffd77a" stop-opacity=".55"/><stop offset=".55" stop-color="#e0a440" stop-opacity=".18"/><stop offset="1" stop-color="#e0a440" stop-opacity="0"/></radialGradient><linearGradient id="lpaper" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset=".6" stop-color="#ffc36e"/><stop offset="1" stop-color="#f08a3c"/></linearGradient><radialGradient id="lglow"><stop offset="0" stop-color="#ffd98a" stop-opacity=".55"/><stop offset="1" stop-color="#ffb860" stop-opacity="0"/></radialGradient></defs><g class="garden">${chest}${FLAT?`<g class="klip" pointer-events="none"><clipPath id="klipc"><rect x="${CHEST.x-230}" y="${GY-60}" width="460" height="205"/></clipPath><g clip-path="url(#klipc)">${[...new Set([Math.floor((CHEST.x-230-915)/GT.w),Math.floor((CHEST.x+230-915)/GT.w)])].map(i=>`<image href="photos/art/ground-tile.webp" x="${(915+i*GT.w).toFixed(1)}" y="${GT.y.toFixed(1)}" width="${(GT.w+1).toFixed(1)}" height="${GT.h.toFixed(1)}" preserveAspectRatio="none"/>`).join('')}</g></g>`:''}${fl}</g><g class="lanterns">${lt}</g>`;}
 function gardenNote(el){const r=$('#tstage').getBoundingClientRect(),q=el.getBoundingClientRect(),n=contribs.filter(c=>['story','photo','answer'].includes(c.type)&&byId[c.pid]).length;
   showNote(`<div class="mem"><div class="mq">The memory garden</div><p>Every flower is a memory someone shared about the family${n?` — ${n} so far`:''}. Tap a flower to read it.</p><p>To plant one, tap anyone's photo on the tree and choose <b>Add a memory or story</b>.</p></div>`,q.left-r.left+q.width/2,q.bottom-r.top);}
 // stars keep a readable size however far you zoom out
@@ -512,12 +522,12 @@ function treeArt(st,dl){
       ground='';
       // roots that lead to the places the family came from
       // below the grandchildren (their name scrolls end near y 1590), so the roots fan out under the whole family
-      const G=STAGE&&!ART?SOILD-SOIL0:DROP,PINS=(ART?ROOTPINS.map(([k,x,y,yr])=>[k,...(ARTPINS[k]||[x,y]),yr]):ROOTPINS).map(([k,x,y,yr])=>[k,x,y+G,yr]);
-      const HUB=ART?1630:1600,RB={x1:915,y1:ART?1272+DROP+300:1290,cx:915,cy:ART?(1272+DROP+300+HUB+G)/2:1420+G/2,x2:915,y2:HUB+G};let rts=`${rootP(RB,30,16)}`,pins='';
+      const G=STAGE&&!ART?SOILD-SOIL0:FLAT?GY+640-1725:DROP,PINS=(ART?ROOTPINS.map(([k,x,y,yr])=>[k,...(ARTPINS[k]||[x,y]),yr]):ROOTPINS).map(([k,x,y,yr])=>[k,x,y+G,yr]);
+      const HUB=FLAT?1650:ART?1630:1600,RY=FLAT?GY+140:1272+DROP+300,RB={x1:915,y1:ART?RY:1290,cx:915,cy:ART?(RY+HUB+G)/2:1420+G/2,x2:915,y2:HUB+G};let rts=`${rootP(RB,30,16)}`,pins='';
       PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=HUB-8+G;let b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
         // preview: side roots head out sideways first so they pass beside the chest; the root to Covington (straight below the chest) bends around its right side
         if(ART&&Math.abs(px-915)>40)b={x1:sx,y1:sy,cx:px,cy:sy+(py-10-sy)*.15,x2:px,y2:py-10};
-        if(ART&&Math.abs(px-915)<=40){const m={x1:sx,y1:sy,cx:1120,cy:sy+20,x2:1118,y2:(sy+py)/2},n={x1:1118,y1:(sy+py)/2,cx:1118,cy:py-10,x2:px,y2:py-10};rts+=`${rootP(m,13,7)}${rootP(n,7,2.2)}`;b=n;}
+        if(ART&&!FLAT&&Math.abs(px-915)<=40){const m={x1:sx,y1:sy,cx:1120,cy:sy+20,x2:1118,y2:(sy+py)/2},n={x1:1118,y1:(sy+py)/2,cx:1118,cy:py-10,x2:px,y2:py-10};rts+=`${rootP(m,13,7)}${rootP(n,7,2.2)}`;b=n;}
         else rts+=`${rootP(b,13,2.2)}`;
         for(let j=0;j<3;j++){const t=.35+j*.2,[qx,qy]=qpt(b,t),dir=(j%2?1:-1)*(px<915?1:-1),c={x1:qx,y1:qy,cx:qx+dir*24,cy:qy+22,x2:qx+dir*(30+rnd()*30),y2:qy+50+rnd()*30};rts+=`<path class="root" d="${taperPath(c,4,.6)}" opacity=".8"/>`;}
         const nm=(PL_NAMES[k]||k).replace(' (Meriwether Co.)','');
@@ -542,7 +552,8 @@ function treeArt(st,dl){
       // family lines: thin bark-coloured lines from each person to their parents (tap someone to light up their family)
       let kin='';Object.keys(TP).forEach(id=>{const p=byId[id],ps=(p&&p.par||[]).filter(q=>TP[q]);if(!ps.length)return;const a=TP[id],mx=ps.reduce((s,q)=>s+TP[q].x,0)/ps.length,my=ps.reduce((s,q)=>s+TP[q].y,0)/ps.length;
         kin+=`<path class="kline" data-k=" ${id} ${ps.join(' ')} " d="M${f(mx)} ${f(my)}Q${f(mx)} ${f((my+a.y)/2)} ${f(a.x)} ${f(a.y)}"/>`;});
-      return {defs:defs+pdefs,planet:hill,treeImg,rootsUnder:ROOTS,under:'',ground:'',bg:null,roots:'',brs:`<g class="art">${kin}</g>`,over:''};}
+      const ground=FLAT?`<g class="art planet"><image href="photos/art/mound.webp" x="${MND.cx-MND.w/2}" y="${MND.top}" width="${MND.w}" height="${MND.h}" preserveAspectRatio="none"/><defs><linearGradient id="gfade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e1a13" stop-opacity="0"/><stop offset="1" stop-color="#2e1a13"/></linearGradient></defs><rect x="-60000" y="${f(GT.y+GT.h-4)}" width="120000" height="80000" fill="#2e1a13"/>${Array.from({length:14},(_,i)=>`<image href="photos/art/ground-tile.webp" x="${f(915+(i-7)*GT.w)}" y="${f(GT.y)}" width="${f(GT.w+1)}" height="${f(GT.h)}" preserveAspectRatio="none"/>`).join('')}<rect x="-60000" y="${f(GT.y+GT.h-260)}" width="120000" height="257" fill="url(#gfade)"/></g>`:'';
+      return {defs:defs+pdefs,planet:FLAT?ground:hill,treeImg,rootsUnder:ROOTS,under:'',ground:'',bg:null,roots:'',brs:`<g class="art">${kin}</g>`,over:''};}
     if(PT){const pu=(PRINT?under.replace(/<g class="art" filter="url\(#wc\)">[\s\S]*$/,''):'')+`<g filter="url(#ppaint)">${PT.back}</g>`;
       return {defs:defs+pdefs+PT.pdefs,planet,rootsUnder:ROOTS+`<g class="art">${PT.trunk}</g>`,under:pu,ground,bg:PRINT?['#f7efdd','#ecdfc2']:null,roots:'',brs:PT.brs,over:PT.lv};}
     return {defs:defs+pdefs,planet,rootsUnder:ROOTS,under,ground,bg:PRINT?['#f7efdd','#ecdfc2']:null,roots:`<g class="art">${roots}</g>`,brs:`<g class="art">${tint}</g>${brs}<g class="art">${grain}</g>`,over:lv};}
@@ -646,7 +657,7 @@ let TSZ={w:0,h:0};const tsz=()=>{if(!TSZ.w){const s=$('#tstage');TSZ={w:s.client
 new ResizeObserver(()=>{const s=$('#tstage');TSZ={w:s.clientWidth,h:s.clientHeight};if(ART&&LWIDE!==null&&lanternWide()!==LWIDE&&tw.querySelector('.leaf'))renderMemStars();if(tw.childElementCount&&!G)tApply(false);}).observe($('#tstage'));
 function tClamp(){const r={width:tsz().w,height:tsz().h};if(!r.width||!(TB.x1>TB.x0))return;const W=r.width,H=r.height,bw=TB.x1-TB.x0,bh=TB.y1-TB.y0;
   const kmin=Math.min(W/bw,H/bh)*(ART&&!PRINT?(tw.classList.contains('story')?.35:.6):.5);// story chapters with many people (Mother's Day 1993) need to zoom out further to fit above the captionif(tv.k<kmin){const cx=W/2,cy=H/2;tv.x=cx-(cx-tv.x)*kmin/tv.k;tv.y=cy-(cy-tv.y)*kmin/tv.k;tv.k=kmin;}
-  const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(ART&&!PRINT?H*.5-(TB.y1+60)*k:H*.5-(TB.y1+(PRINT?0:340+SOILD-SOIL0))*k,tv.y));}
+  const k=tv.k;tv.x=Math.min(W*.6-TB.x0*k,Math.max(W*.4-TB.x1*k,tv.x));tv.y=Math.min(H*.55-TB.y0*k,Math.max(ART&&!PRINT?H*.5-((FLAT?Math.max(TB.y1,GY+1120):TB.y1)+60)*k:H*.5-(TB.y1+(PRINT?0:340+SOILD-SOIL0))*k,tv.y));}
 let SKYEL=null;
 function sunLight(){if(SKY!=='day')return;
   // stage: the sun hangs in the sky, not behind the tree, so the light no longer follows the view — always full sunset light
@@ -702,7 +713,7 @@ function gEnd(){if(gRaf){cancelAnimationFrame(gRaf);gRaf=0;}if(G)tApply(false);}
 function tBox(ids){const vs=(ids&&ids.length?ids:Object.keys(TP)).map(id=>TP[id]).filter(Boolean);if(!vs.length)return TB;
   return {x0:Math.min(...vs.map(v=>v.x-v.r-60)),x1:Math.max(...vs.map(v=>v.x+v.r+60)),y0:Math.min(...vs.map(v=>v.y-v.r-10)),y1:Math.max(...vs.map(v=>v.y+v.r+34))};}
 function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!r.width)return;
-  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?mqBot()+(SD.ph?104:10):0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot+((st=>st?st.offsetHeight+10:0)($('#tstage>.tools'))):0),b=(ids&&ids.length)?tBox(ids):(ART&&!PRINT&&SD&&!SD.ph&&r.width>r.height?{...TB,y1:Math.min(TB.y1,1272+DROP+600)}:TB),w=b.x1-b.x0,h=b.y1-b.y0;
+  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?mqBot()+(SD.ph?104:10):0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot+((st=>st?st.offsetHeight+10:0)($('#tstage>.tools'))):0),b=(ids&&ids.length)?tBox(ids):(ART&&!PRINT&&SD&&!SD.ph&&r.width>r.height?{...TB,y1:Math.min(TB.y1,FLAT?GY+190:1272+DROP+600)}:TB),w=b.x1-b.x0,h=b.y1-b.y0;
   const k=Math.max(.12,Math.min((r.width-36-(SD?SD.side*2:0))/w,avail/h,ids&&ids.length===1?1.5:1.2));
   tv.k=k;tv.x=r.width/2-(b.x0+b.x1)/2*k;tv.y=top+avail/2-(b.y0+b.y1)/2*k;
   // phones, opening view: zoom so the core family just fills the width (outer cousins run off the sides, a swipe away)

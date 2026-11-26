@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-25 — Level ground (preview only)
+- On the preview page, the round planet is replaced by level ground that runs off both edges of the screen at every zoom: a wide grassy mound under the tree where the family stands, on a strip of grass and three soil layers.
+- The keepsake chest sits half sunk in the grass at the right foot of the mound, where it's visible above the buttons.
+- Memory flowers grow on the mound and all along the grass to both sides — room for several hundred instead of about 50.
+- The roots keep their shape; the hometowns now sit in the deepest, darkest layer.
+
 ## 2026-11-25 — Computer clouds match the phone
 - On computers the cloud rows now slide about twice as far in the same time, so they feel as lively as on phones (the clouds are drawn much bigger on a computer, so the same small slide looked slower).
 
