@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — Level ground without the mound (preview only)
+- The mound is gone from the preview: the painted tree stands on the level ground on its own root flare. Mat's brothers and their wives stand along the back of the grass, the grandchildren in front, like a family photo. Flowers grow along the grass on both sides of the trunk; the chest sits half sunk in the grass to the right of the family.
+
 ## 2026-11-25 — Level ground (preview only)
 - On the preview page, the round planet is replaced by level ground that runs off both edges of the screen at every zoom: a wide grassy mound under the tree where the family stands, on a strip of grass and three soil layers.
 - The keepsake chest sits half sunk in the grass at the right foot of the mound, where it's visible above the buttons.

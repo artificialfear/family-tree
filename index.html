@@ -1329,12 +1329,11 @@ const f1=n=>n.toFixed(1);
 const CHEST={x:1835,y:1500,rot:0},GSIGN={x:-46,y:1546};
 // preview: the chest is buried treasure in the middle of the planet, level, under the roots and hometowns
 if(ART){CHEST.x=915;CHEST.y=1990+DROP;CHEST.rot=0;CHEST.s=3;}
-/* preview: level ground. A wide grassy mound under the tree (the family stands on it) sits on a level strip of painted ground that runs off both
-   edges of the screen; the chest sits half sunk in the grass at the foot of the mound; the roots and hometowns lie in the deepest, darkest layer */
-const FLAT=ART&&PREVIEW,MND={cx:915,w:1900,top:1440,h:590},GY=MND.top+MND.h-70,GT={w:2256*1.5,h:830*1.5,y:GY-46*1.5},
-  MPROF=[.777,.723,.617,.528,.459,.416,.365,.323,.285,.241,.211,.188,.163,.156,.123,.097,.088,.067,.041,.031,.029,.038,.038,.029,.02,.021,.022,.035,.033,.035,.05,.072,.071,.084,.129,.159,.165,.174,.232,.277,.305,.331,.357,.432,.509,.539,.602,.71,.779],
-  mSurf=x=>{const u=(x-(MND.cx-MND.w/2))/MND.w*48;if(u<=0||u>=48)return GY;const i=Math.floor(u),t=u-i;return Math.min(GY,MND.top+(MPROF[i]*(1-t)+MPROF[i+1]*t)*MND.h);};
-if(FLAT){CHEST.x=1790;CHEST.s=2.9;CHEST.y=GY+26*2.9;}/* at the right foot of the mound, clear of the buttons; a little more than half shows above the grass */let gardenSeen=null;const gardenNew={};
+/* preview: level ground. The painted tree stands with its root flare on a level strip of painted ground that runs off both edges of the screen;
+   the family stands on the grass in two rows like a family photo; the chest sits half sunk in the grass; the roots and hometowns lie in the deepest layer */
+const FLAT=ART&&PREVIEW,GY=1700,GT={w:2256*1.5,h:830*1.5,y:GY-46*1.5},
+  mSurf=()=>GY;
+if(FLAT){CHEST.x=1790;CHEST.s=2.9;CHEST.y=GY+26*2.9;}/* on the grass to the right of the family, clear of the buttons; a little more than half shows above the grass */let gardenSeen=null;const gardenNew={};
 // the planet is a cut-paper diorama: a grass layer on top for the garden, soil underneath where the roots reach the hometowns.
 // The grass starts SOIL0 deep and grows a row (36) at a time when the garden needs room, pushing the soil, roots and towns down.
 const SOIL0=ART?175:250;let SOILD=SOIL0;
@@ -1625,9 +1624,8 @@ function gardenSlots(D=SOILD){const ob=[];Object.values(TP).forEach(v=>{ob.push(
   const fam=Object.values(TP).filter(v=>v.y>1250);if(fam.length&&!(ART&&!PRINT)){const fx0=Math.min(...fam.map(v=>v.x-v.r))-50,fx1=Math.max(...fam.map(v=>v.x+v.r))+50,fb=Math.max(...fam.map(v=>v.y+v.r))+62;ob.push(['r',(fx0+fx1)/2,0,(fx1-fx0)/2,fb]);}ob.push(FLAT?['r',CHEST.x,GY,175,110]:['r',CHEST.x,CHEST.y-40,100,72]);
   const ok=(x,y)=>ob.every(o=>o[0]==='c'?Math.hypot(x-o[1],y-o[2])>o[3]:Math.abs(x-o[1])>o[3]||Math.abs(y-o[2])>o[4]);
   // painted hill: flowers grow in the green grass band, in the gaps between and below the kids and grandkids, spread evenly from the middle out
-  if(FLAT){const S=[];/* the mound's grass, then the level grass band out to both sides */
-    for(let d=34;d<=124;d+=30)for(let x=915-900+((d/30|0)%2)*17;x<=915+900;x+=34){if(Math.abs(x-915)<70)continue;const y=surfY(x)+d;if(y>GY-30)continue;if(ok(x,y))S.push([x,y]);}
-    for(const d of[36,80])for(let x=915-2600+(d>40?18:0);x<=915+2600;x+=36){if(Math.abs(x-915)<190)continue;if(ok(x,GY+d))S.push([x,GY+d]);}
+  if(FLAT){const S=[];/* two rows along the level grass out to both sides, clear of the trunk's root flare */
+    for(const d of[36,80])for(let x=915-2600+(d>40?18:0);x<=915+2600;x+=36){if(Math.abs(x-915)<330)continue;if(ok(x,GY+d))S.push([x,GY+d]);}
     return spreadOrder(S,[[700,surfY(700)+60],[1130,surfY(1130)+60]]);}
   if(ART&&!PRINT){const S=[];for(let d=34;d<=SOIL0-22;d+=30)for(let x=915-640+((d/30|0)%2)*17;x<=915+640;x+=34){if(Math.abs(x-915)<70)continue;/* only the grass on the top of the hill, where it is on screen */const y=surfY(x)+d;if(y>HILL.cy-HILL.R*.25)continue;if(ok(x,y))S.push([x,y]);}
     return spreadOrder(S,[[700,surfY(700)+60],[1130,surfY(1130)+60]]);}
@@ -1866,7 +1864,7 @@ function treeArt(st,dl){
       // family lines: thin bark-coloured lines from each person to their parents (tap someone to light up their family)
       let kin='';Object.keys(TP).forEach(id=>{const p=byId[id],ps=(p&&p.par||[]).filter(q=>TP[q]);if(!ps.length)return;const a=TP[id],mx=ps.reduce((s,q)=>s+TP[q].x,0)/ps.length,my=ps.reduce((s,q)=>s+TP[q].y,0)/ps.length;
         kin+=`<path class="kline" data-k=" ${id} ${ps.join(' ')} " d="M${f(mx)} ${f(my)}Q${f(mx)} ${f((my+a.y)/2)} ${f(a.x)} ${f(a.y)}"/>`;});
-      const ground=FLAT?`<g class="art planet"><image href="photos/art/mound.webp" x="${MND.cx-MND.w/2}" y="${MND.top}" width="${MND.w}" height="${MND.h}" preserveAspectRatio="none"/><defs><linearGradient id="gfade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e1a13" stop-opacity="0"/><stop offset="1" stop-color="#2e1a13"/></linearGradient></defs><rect x="-60000" y="${f(GT.y+GT.h-4)}" width="120000" height="80000" fill="#2e1a13"/>${Array.from({length:14},(_,i)=>`<image href="photos/art/ground-tile.webp" x="${f(915+(i-7)*GT.w)}" y="${f(GT.y)}" width="${f(GT.w+1)}" height="${f(GT.h)}" preserveAspectRatio="none"/>`).join('')}<rect x="-60000" y="${f(GT.y+GT.h-260)}" width="120000" height="257" fill="url(#gfade)"/></g>`:'';
+      const ground=FLAT?`<g class="art planet"><defs><linearGradient id="gfade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2e1a13" stop-opacity="0"/><stop offset="1" stop-color="#2e1a13"/></linearGradient></defs><rect x="-60000" y="${f(GT.y+GT.h-4)}" width="120000" height="80000" fill="#2e1a13"/>${Array.from({length:14},(_,i)=>`<image href="photos/art/ground-tile.webp" x="${f(915+(i-7)*GT.w)}" y="${f(GT.y)}" width="${f(GT.w+1)}" height="${f(GT.h)}" preserveAspectRatio="none"/>`).join('')}<rect x="-60000" y="${f(GT.y+GT.h-260)}" width="120000" height="257" fill="url(#gfade)"/></g>`:'';
       return {defs:defs+pdefs,planet:FLAT?ground:hill,treeImg,rootsUnder:ROOTS,under:'',ground:'',bg:null,roots:'',brs:`<g class="art">${kin}</g>`,over:''};}
     if(PT){const pu=(PRINT?under.replace(/<g class="art" filter="url\(#wc\)">[\s\S]*$/,''):'')+`<g filter="url(#ppaint)">${PT.back}</g>`;
       return {defs:defs+pdefs+PT.pdefs,planet,rootsUnder:ROOTS+`<g class="art">${PT.trunk}</g>`,under:pu,ground,bg:PRINT?['#f7efdd','#ecdfc2']:null,roots:'',brs:PT.brs,over:PT.lv};}
@@ -1936,7 +1934,8 @@ function drawLeafTree(grow){
     const shiftAt=(x,y)=>{let best=0,bd=1e9;for(const id in old){const o=old[id],d=Math.hypot(x-o.x,y-o.y);if(d<=o.r+6&&d<bd){bd=d;best=TP[id].x-o.x;}}return best;};
     TBR=TBR.map(b=>{const d1=shiftAt(b.x1,b.y1),d2=shiftAt(b.x2,b.y2);if(!d1&&!d2)return b;const n={...b,x1:b.x1+d1,x2:b.x2+d2,cx:b.cx+(d1+d2)/2};
       n.d=`M${n.x1.toFixed(1)} ${n.y1.toFixed(1)}Q${n.cx.toFixed(1)} ${n.cy.toFixed(1)} ${n.x2.toFixed(1)} ${n.y2.toFixed(1)}`;return n;});}
-  if(ART&&!PRINT){const old=x=>OLDP.cy-Math.sqrt(Math.max(0,OLDP.R**2-(x-OLDP.cx)**2));for(const id in TP){const v=TP[id];if(v.y>1250)TP[id]={...v,y:v.y+surfY(v.x)-old(v.x)};}}
+  if(FLAT){for(const id in TP){const v=TP[id];if(v.y>1250)TP[id]={...v,y:v.t==='gk'?GY-34:GY-190};}}/* adults stand at the back, the grandchildren in front on the grass */
+  else if(ART&&!PRINT){const old=x=>OLDP.cy-Math.sqrt(Math.max(0,OLDP.R**2-(x-OLDP.cx)**2));for(const id in TP){const v=TP[id];if(v.y>1250)TP[id]={...v,y:v.y+surfY(v.x)-old(v.x)};}}
   const xs=[],ys=[];Object.values(TP).forEach(v=>{xs.push(v.x-v.r-70,v.x+v.r+70);ys.push(v.y-v.r-8,v.y+v.r+34);});TBR.forEach(b=>{xs.push(b.x1,b.x2);ys.push(b.y1,b.y2);});if(ART&&!PRINT)ys.push(CHEST.y+30);
   TB={x0:Math.min(...xs),y0:Math.min(...ys),x1:Math.max(...xs),y1:Math.max(...ys)};
   // the tree's size decides where tall screens hang the stars, so redraw the backdrop when it changes
@@ -2027,7 +2026,7 @@ function gEnd(){if(gRaf){cancelAnimationFrame(gRaf);gRaf=0;}if(G)tApply(false);}
 function tBox(ids){const vs=(ids&&ids.length?ids:Object.keys(TP)).map(id=>TP[id]).filter(Boolean);if(!vs.length)return TB;
   return {x0:Math.min(...vs.map(v=>v.x-v.r-60)),x1:Math.max(...vs.map(v=>v.x+v.r+60)),y0:Math.min(...vs.map(v=>v.y-v.r-10)),y1:Math.max(...vs.map(v=>v.y+v.r+34))};}
 function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!r.width)return;
-  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?mqBot()+(SD.ph?104:10):0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot+((st=>st?st.offsetHeight+10:0)($('#tstage>.tools'))):0),b=(ids&&ids.length)?tBox(ids):(ART&&!PRINT&&SD&&!SD.ph&&r.width>r.height?{...TB,y1:Math.min(TB.y1,FLAT?GY+190:1272+DROP+600)}:TB),w=b.x1-b.x0,h=b.y1-b.y0;
+  const SD=STAGE?stageDims(r.width,r.height):null,cap=$('#cap'),capH=cap.classList.contains('on')?cap.offsetHeight+24:0,top=SD?Math.max(60,SD.top,(()=>{const m=$('#marquee');return m?mqBot()+(SD.ph?104:10):0;})()):60,avail=r.height-capH-top-8-(SD?SD.bot+((st=>st?st.offsetHeight+10:0)($('#tstage>.tools'))):0),b=(ids&&ids.length)?tBox(ids):(ART&&!PRINT&&SD&&!SD.ph&&r.width>r.height?{...TB,y1:FLAT?GY+40:Math.min(TB.y1,1272+DROP+600)}:TB),w=b.x1-b.x0,h=b.y1-b.y0;
   const k=Math.max(.12,Math.min((r.width-36-(SD?SD.side*2:0))/w,avail/h,ids&&ids.length===1?1.5:1.2));
   tv.k=k;tv.x=r.width/2-(b.x0+b.x1)/2*k;tv.y=top+avail/2-(b.y0+b.y1)/2*k;
   // phones, opening view: zoom so the core family just fills the width (outer cousins run off the sides, a swipe away)
@@ -2036,7 +2035,7 @@ function tFrame(ids,anim=true){const r=$('#tstage').getBoundingClientRect();if(!
   else if(SD&&SD.ph&&!(ids&&ids.length===1))tv.y=Math.min(tv.y,top+12-TB.y0*k);
   // painted stage: Fit and the opening view never go below 85% of the whole-tree size, the same framing as before
   // the zoom-out limit was loosened; scrolling, pinching and the - key can still zoom out further (to 60%, see tClamp)
-  if(ART&&!PRINT&&(!ids||!ids.length||ids===TCORE)){const W=r.width,H=r.height,kf=Math.min(W/(TB.x1-TB.x0),H/(TB.y1-TB.y0))*.85;if(tv.k<kf){tv.x=W/2-(W/2-tv.x)*kf/tv.k;tv.y=H/2-(H/2-tv.y)*kf/tv.k;tv.k=kf;}}
+  if(ART&&!PRINT&&!FLAT&&(!ids||!ids.length||ids===TCORE)){const W=r.width,H=r.height,kf=Math.min(W/(TB.x1-TB.x0),H/(TB.y1-TB.y0))*.85;if(tv.k<kf){tv.x=W/2-(W/2-tv.x)*kf/tv.k;tv.y=H/2-(H/2-tv.y)*kf/tv.k;tv.k=kf;}}
   tApply(anim);}
 // the setting sun sits right behind the trunk whenever the view is framed (first load, Fit); panning leaves it where it is
 function sunToTrunk(jump){const st=SKYEL||(SKYEL=$('#tstage .sky')),W=$('#tstage').getBoundingClientRect().width;if(!st||!W)return;
