@@ -681,7 +681,8 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 @media (min-width:700px){
  .preview.touch .sbackdrop .crow{animation:cslideFw 4.5s ease-in-out infinite alternate}
  .preview.touch .sbackdrop .crow.cback{animation-name:cslideBw}
+ .preview.touch .theme-stage .sky .sunglow{display:none!important}
  .preview.touch #tstage.theme-stage{--nt:1;transition:--nt 3s ease-in-out;
-  background:linear-gradient(180deg,color-mix(in srgb,#0a1440 calc(var(--nt)*100%),#3a3f78) 0%,color-mix(in srgb,#0f1e58 calc(var(--nt)*100%),#6a4f8a) 22%,color-mix(in srgb,#14286f calc(var(--nt)*100%),#b0608a) 44%,color-mix(in srgb,#1a3480 calc(var(--nt)*100%),#e8807a) 62%,color-mix(in srgb,#203b87 calc(var(--nt)*100%),#ffa86a) 78%,color-mix(in srgb,#253d80 calc(var(--nt)*100%),#ffcf8a) 90%,color-mix(in srgb,#2a3f7a calc(var(--nt)*100%),#ffe6b0) 100%)}
+  background:radial-gradient(75% 65% at 50% 62%,color-mix(in srgb,rgba(255,206,135,.9) calc((1 - var(--nt))*100%),transparent) 0%,color-mix(in srgb,rgba(255,160,115,.5) calc((1 - var(--nt))*100%),transparent) 40%,transparent 80%),linear-gradient(180deg,color-mix(in srgb,#0a1440 calc(var(--nt)*100%),#3a3f78) 0%,color-mix(in srgb,#0f1e58 calc(var(--nt)*100%),#6a4f8a) 22%,color-mix(in srgb,#14286f calc(var(--nt)*100%),#b0608a) 44%,color-mix(in srgb,#1a3480 calc(var(--nt)*100%),#e8807a) 62%,color-mix(in srgb,#203b87 calc(var(--nt)*100%),#ffa86a) 78%,color-mix(in srgb,#253d80 calc(var(--nt)*100%),#ffcf8a) 90%,color-mix(in srgb,#2a3f7a calc(var(--nt)*100%),#ffe6b0) 100%)}
  .preview.touch #tstage.theme-stage.sky-day{--nt:0}
 }

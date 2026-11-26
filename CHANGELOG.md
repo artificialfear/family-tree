@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-26 — Tablet trial: no jump at the start of sunset (preview only)
+- On the preview, the tablet's change to sunset no longer jumps at the start: the warm sunset glow (which used to pop on at once) is now part of the same blended background, so it fades in with the sky.
+
 ## 2026-11-26 — Tablet trial: moving clouds and a smooth sky (preview only)
 - On the preview page, tablets get the sliding clouds and a 3-second night ⇄ sunset change again, done a new way: the stage's own background blends between the sunset and night colours, so there's no separate night layer for the Android tablet to drop. The live tree keeps the flash-free still clouds and instant switch on tablets until Mat confirms the trial doesn't flash.
 
