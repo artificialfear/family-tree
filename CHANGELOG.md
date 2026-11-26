@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-26 — Smoother tablet sky and a wiggling chest (preview only)
+- On the preview, tablets now fade the small stars, the little day clouds and the cloud rows' sunset colours together with the sky, instead of switching them at once.
+- The keepsake chest gives a little wiggle every six seconds to invite a tap. It stops for good on that device once someone opens the chest, and it holds still while a card or page is open.
+
 ## 2026-11-26 — Tablet trial: no jump at the start of sunset (preview only)
 - On the preview, the tablet's change to sunset no longer jumps at the start: the warm sunset glow (which used to pop on at once) is now part of the same blended background, so it fades in with the sky.
 
