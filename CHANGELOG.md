@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-26 — Tablet trial: moving clouds and a smooth sky (preview only)
+- On the preview page, tablets get the sliding clouds and a 3-second night ⇄ sunset change again, done a new way: the stage's own background blends between the sunset and night colours, so there's no separate night layer for the Android tablet to drop. The live tree keeps the flash-free still clouds and instant switch on tablets until Mat confirms the trial doesn't flash.
+
 ## 2026-11-26 — Tablet night sky painted directly
 - Second fix for the Android tablet flash on the sunset/night button: on tablets the night sky is now painted straight onto the stage instead of laid over the sunset as a separate layer, so there's no layer for the tablet to drop for a frame.
 
