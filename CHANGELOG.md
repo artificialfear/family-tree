@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-26 — Tablet trial: no black bands (preview only)
+- Fixed dark bands flashing across the tree on the Android tablet in the preview. The stars and clouds were fading by sharing one number with the whole stage, which made the tablet redraw the entire tree every frame; each now fades on its own. The chest doesn't wiggle on tablets (the wiggle also makes the tablet redraw the whole tree); it still wiggles on phones and computers.
+
 ## 2026-11-26 — Smoother tablet sky and a wiggling chest (preview only)
 - On the preview, tablets now fade the small stars, the little day clouds and the cloud rows' sunset colours together with the sky, instead of switching them at once.
 - The keepsake chest gives a little wiggle every six seconds to invite a tap. It stops for good on that device once someone opens the chest, and it holds still while a card or page is open.

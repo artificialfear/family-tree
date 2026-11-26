@@ -870,7 +870,7 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
  .touch .theme-stage.sky-night,.touch #tstage.theme-stage.sky-night{background:linear-gradient(180deg,#0a1440 0%,#13266b 40%,#1d3a8a 72%,#2a3f7a 100%)}}
 /* PREVIEW TRIAL (tablets): sliding clouds and a smooth night ⇄ sunset change without the overlay layer that flashed.
    The stage's own background mixes from the sunset colours to the night colours as one animated number (--nt), so nothing is a separate layer. */
-@property --nt{syntax:'<number>';inherits:true;initial-value:1}
+@property --nt{syntax:'<number>';inherits:false;initial-value:1}
 @media (min-width:700px){
  .preview.touch .sbackdrop .crow{animation:cslideFw 4.5s ease-in-out infinite alternate}
  .preview.touch .sbackdrop .crow.cback{animation-name:cslideBw}
@@ -879,9 +879,14 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
   background:radial-gradient(75% 65% at 50% 62%,color-mix(in srgb,rgba(255,206,135,.9) calc((1 - var(--nt))*100%),transparent) 0%,color-mix(in srgb,rgba(255,160,115,.5) calc((1 - var(--nt))*100%),transparent) 40%,transparent 80%),linear-gradient(180deg,color-mix(in srgb,#0a1440 calc(var(--nt)*100%),#3a3f78) 0%,color-mix(in srgb,#0f1e58 calc(var(--nt)*100%),#6a4f8a) 22%,color-mix(in srgb,#14286f calc(var(--nt)*100%),#b0608a) 44%,color-mix(in srgb,#1a3480 calc(var(--nt)*100%),#e8807a) 62%,color-mix(in srgb,#203b87 calc(var(--nt)*100%),#ffa86a) 78%,color-mix(in srgb,#253d80 calc(var(--nt)*100%),#ffcf8a) 90%,color-mix(in srgb,#2a3f7a calc(var(--nt)*100%),#ffe6b0) 100%)}
  .preview.touch #tstage.theme-stage.sky-day{--nt:0}
  /* the stars, the little day clouds and the cloud rows' day colours follow the same number, so they fade with the sky (no separate fading layers) */
+ /* each fades its own copy of the number: when the stage's number was inherited, every frame restyled the whole tree too, and the tablet
+    dropped strips of the tree while it repainted (black bands) */
+ .preview.touch .theme-stage .sky .stars,.preview.touch .theme-stage .sky .cloud,.preview.touch .theme-stage .sbackdrop .srowday{--nt:1;transition:--nt 3s ease-in-out!important}
+ .preview.touch .theme-stage.sky-day .sky .stars,.preview.touch .theme-stage.sky-day .sky .cloud,.preview.touch .theme-stage.sky-day .sbackdrop .srowday{--nt:0}
  .preview.touch .theme-stage .sky .stars{opacity:calc(.12 + .88*var(--nt))!important}
  .preview.touch .theme-stage .sky .cloud{opacity:calc(1 - var(--nt))!important}
  .preview.touch .theme-stage .sbackdrop .srowday{opacity:calc(1 - var(--nt))!important}
+ .touch .kwig{animation:none!important}/* the wiggle repaints the whole tree on tablets, which flashed */
 }
 /* PREVIEW: the keepsake chest gives a little wiggle every few seconds until someone opens it on this device */
 .preview .kwig{transform-box:fill-box;transform-origin:50% 100%;animation:kwig 6s ease-in-out 3s infinite}
