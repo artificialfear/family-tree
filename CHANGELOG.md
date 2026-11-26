@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — "Keepsakes" chest label (preview only)
+- The preview's chest is about 20% smaller and has "Keepsakes" lettered on its cream panel.
+
 ## 2026-11-25 — Straight-on chest (preview only)
 - The preview's keepsake chest is Mat's new straight-on painting, sitting flush on the grass to the right of the trunk.
 
