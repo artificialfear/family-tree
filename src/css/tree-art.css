@@ -661,7 +661,7 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 @keyframes cslideF{from{transform:translateX(9px)}to{transform:translateX(-9px)}}
 @keyframes cslideB{from{transform:translateX(-7px)}to{transform:translateX(7px)}}
 @media (prefers-reduced-motion:reduce){.sbackdrop .crow{animation:none}}
-@media (min-width:700px){.touch .sbackdrop .crow{animation:none}} /* Android tablets flash with big animated layers */
+@media (min-width:700px){.touch .sbackdrop .crow{animation:none;will-change:auto;transform:none}} /* Android tablets flash with big animated layers; with the clouds still, the rows needn't be separate GPU layers either (they flashed when the sky fades between day and night) */
 /* wide screens: the cloud flats are drawn much bigger, so slide them farther to keep the same felt speed as on phones */
 @media (min-width:700px){.sbackdrop .crow{animation-name:cslideFw}.sbackdrop .crow.cback{animation-name:cslideBw}}
 @keyframes cslideFw{from{transform:translateX(19px)}to{transform:translateX(-19px)}}

@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — Tablet flash on the day/night button
+- Fixed small flashes on the Android tablet when switching between sunset and night. The two new cloud rows were each kept as a separate graphics layer for the sliding motion, even on tablets where the clouds stay still, and the tablet flickered when those layers faded between day and night.
+
 ## 2026-11-25 — Level ground is live
 - The main tree now has everything from tonight's preview: level ground that runs off both edges of the screen, the tree growing out of the grass, Ed and Renee's children and grandchildren in two rows below the leaves, flowers along the grass on both sides, the wooden chest sitting on the grass, painted roots with brass hometown pins spread wide underground, and bigger hometown names.
 - Fixed: the gold family lines (for example from Ed and Renee down to their sons) stayed lit after you closed someone's card. They now go dark when the card closes.
