@@ -578,9 +578,9 @@ function bakeArt(art,html){
 /* the chest wiggles now and then until it has been opened once on this device */
 if(store.get('ftChestSeen'))document.documentElement.classList.add('chestseen');
 addEventListener('hashchange',()=>{if(location.hash==='#keepsakes'){store.set('ftChestSeen','1');document.documentElement.classList.add('chestseen');}});
-/* PREVIEW: the chest picture floats on the front world layer (an HTML layer that pans and zooms with the tree), so its wiggle is a cheap
+/* the chest picture floats on the front world layer (an HTML layer that pans and zooms with the tree), so its wiggle is a cheap
    GPU move that never makes a tablet redraw the tree; the drawing in the tree keeps the glow and still takes the taps */
-function placeChest(){if(!(PREVIEW&&FLAT))return;const fr=$('#tfront');if(!fr)return;let im=$('#kfl');
+function placeChest(){if(!FLAT)return;const fr=$('#tfront');if(!fr)return;let im=$('#kfl');
   if(!im){im=document.createElement('img');im.id='kfl';im.alt='';im.decoding='async';im.src='photos/art/chest-wood.webp';fr.appendChild(im);}
   const s=CHEST.s;im.style.cssText=`left:${(CHEST.x-60*s).toFixed(1)}px;top:${(CHEST.y-67.2*s).toFixed(1)}px;width:${(120*s).toFixed(1)}px;height:${(75.2*s).toFixed(1)}px`;}
 let kinOn=false;// only after someone taps a person (Mat is selected when the page opens, but nothing should be lit then)

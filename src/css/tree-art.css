@@ -700,25 +700,25 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 @keyframes kwig{0%,77%,100%{transform:none}80%{transform:rotate(-4deg)}84.5%{transform:rotate(4deg)}89%{transform:rotate(-3deg)}93.5%{transform:rotate(2.5deg)}97.5%{transform:rotate(-1deg)}}
 .chestseen .kwig,body.sheeton .kwig{animation:none!important}
 @media (prefers-reduced-motion:reduce){.kwig{animation:none!important}}
-/* ---------- PREVIEW trials (2026-11-26) ---------- */
+/* ---------- tablet-safe sky fade and floating chest (live 2026-11-26) ---------- */
 /* floating chest picture (see placeChest) */
 #kfl{display:none}
-.preview #kfl{display:block;position:absolute;pointer-events:none;transform-origin:50% 100%;will-change:transform;animation:kwig 4s ease-in-out 2s infinite;transition:translate .2s,scale .2s,opacity .6s}
-.preview.chestseen #kfl,body.sheeton #kfl{animation:none}
-@media (prefers-reduced-motion:reduce){.preview #kfl{animation:none}}
-.preview #tmstars .kchest .kwig{visibility:hidden}
+#kfl{display:block;position:absolute;pointer-events:none;transform-origin:50% 100%;will-change:transform;animation:kwig 4s ease-in-out 2s infinite;transition:translate .2s,scale .2s,opacity .6s}
+.chestseen #kfl,body.sheeton #kfl{animation:none}
+@media (prefers-reduced-motion:reduce){#kfl{animation:none}}
+#tmstars .kchest .kwig{visibility:hidden;animation:none!important}
 #tstage:has(#tworld.story) #kfl,#tstage:has(#tworld.morph) #kfl{opacity:.5}
 #tstage:has(.kchest:hover) #kfl,#tstage:has(.kchest:focus-visible) #kfl{translate:0 -3px;scale:1.05}
 /* tablets: back to plain GPU fades for night ⇄ sunset (no per-frame repainting), with the layers promoted ahead of time by .skyprep */
 @media (min-width:700px){
- .preview.touch #tstage.theme-stage{transition:none;background:linear-gradient(180deg,#3a3f78 0%,#6a4f8a 22%,#b0608a 44%,#e8807a 62%,#ffa86a 78%,#ffcf8a 90%,#ffe6b0 100%)}
- .preview.touch .theme-stage .nightwash{display:block!important;opacity:1;transition:opacity 3s ease-in-out!important}
- .preview.touch .theme-stage.sky-day .nightwash{opacity:0}
- .preview.touch .theme-stage .sky .sunglow{display:block!important;opacity:0;transition:opacity 3s ease-in-out!important}
- .preview.touch .theme-stage.sky-day .sky .sunglow{opacity:1}
- .preview.touch .theme-stage .sky .stars{opacity:1!important;transition:opacity 3s ease-in-out!important}
- .preview.touch .theme-stage.sky-day .sky .stars{opacity:.12!important}
- .preview.touch .theme-stage .sky .cloud,.preview.touch .theme-stage .sbackdrop .srowday{opacity:0!important;transition:opacity 3s ease-in-out!important}
- .preview.touch .theme-stage.sky-day .sky .cloud,.preview.touch .theme-stage.sky-day .sbackdrop .srowday{opacity:1!important}
- .preview.touch .skyprep .nightwash,.preview.touch .skyprep .sky .sunglow,.preview.touch .skyprep .sky .stars,.preview.touch .skyprep .sky .cloud,.preview.touch .skyprep .sbackdrop .srowday{will-change:opacity!important}
+ .touch #tstage.theme-stage{transition:none;background:linear-gradient(180deg,#3a3f78 0%,#6a4f8a 22%,#b0608a 44%,#e8807a 62%,#ffa86a 78%,#ffcf8a 90%,#ffe6b0 100%)}
+ .touch .theme-stage .nightwash{display:block!important;opacity:1;transition:opacity 3s ease-in-out!important}
+ .touch .theme-stage.sky-day .nightwash{opacity:0}
+ .touch .theme-stage .sky .sunglow{display:block!important;opacity:0;transition:opacity 3s ease-in-out!important}
+ .touch .theme-stage.sky-day .sky .sunglow{opacity:1}
+ .touch .theme-stage .sky .stars{opacity:1!important;transition:opacity 3s ease-in-out!important}
+ .touch .theme-stage.sky-day .sky .stars{opacity:.12!important}
+ .touch .theme-stage .sky .cloud,.touch .theme-stage .sbackdrop .srowday{opacity:0!important;transition:opacity 3s ease-in-out!important}
+ .touch .theme-stage.sky-day .sky .cloud,.touch .theme-stage.sky-day .sbackdrop .srowday{opacity:1!important}
+ .touch .skyprep .nightwash,.touch .skyprep .sky .sunglow,.touch .skyprep .sky .stars,.touch .skyprep .sky .cloud,.touch .skyprep .sbackdrop .srowday{will-change:opacity!important}
 }

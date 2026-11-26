@@ -94,9 +94,9 @@ $('#asks').addEventListener('click',e=>{const g=e.target.closest('[data-go]');if
 $('#wanted').addEventListener('click',e=>{const b=e.target.closest('[data-want]');if(b)goPerson(b.dataset.want,'photo');});
 // night ⇄ sunset only. On the stage the change is animated (moon/sun on strings, sky fades), so the tree isn't redrawn
 $('#tSky').onclick=()=>{SKYPREF=SKY==='day'?'night':'day';store.set('sky',SKYPREF);const go=()=>{if(STAGE){applySky(false);sunLight();}else applySky(true);};
-  /* PREVIEW, tablets: put the fading sky pieces on their own GPU layers a moment *before* the fade starts (promoting them in the same frame
+  /* tablets: put the fading sky pieces on their own GPU layers a moment *before* the fade starts (promoting them in the same frame
      as the change is what made the tablet skip drawing them for a frame), then let them go again once the fade is done */
-  if(PREVIEW&&TOUCH&&innerWidth>=700){const st=$('#tstage');clearTimeout(st._sp);st.classList.add('skyprep');
+  if(TOUCH&&innerWidth>=700){const st=$('#tstage');clearTimeout(st._sp);st.classList.add('skyprep');
     requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>{go();st._sp=setTimeout(()=>st.classList.remove('skyprep'),3600);},150)));}
   else go();};
 /* ---------- larger text ---------- */

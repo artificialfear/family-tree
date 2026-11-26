@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-26 — Floating chest and tablet-safe sky fade are live
+- The chest's wiggle now works on tablets too (the chest picture floats on its own layer), and tablets fade between sunset and night with the fading pieces readied a split second before the fade starts.
+
 ## 2026-11-26 — Preview: chest wiggles on tablets, flash-free sky trial
 - On the preview, the chest picture now floats on its own layer that moves with the tree, so it can wiggle on tablets too without making the tablet redraw the tree.
 - Tablets go back to plain GPU fades for the night ⇄ sunset change (no redrawing every frame), and the fading pieces are readied a split second before the fade starts — the moment the old version flashed.
