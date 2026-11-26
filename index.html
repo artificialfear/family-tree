@@ -864,6 +864,10 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 .art .rootpin .pl{font-size:27px;stroke-width:6px}.art .rootpin .py{font-size:19px}
 /* Android tablets: the full-screen night wash (and the other sky layers) flicker for a frame when their 3-second fade starts, so on tablets the sky switches between sunset and night at once; the sun and moon still slide in and out */
 @media (min-width:700px){.touch .theme-stage .nightwash,.touch .theme-stage .sky .sunglow,.touch .theme-stage .sky .skydim,.touch .theme-stage .sky .cloud,.touch .theme-stage .sky .stars,.touch .sbackdrop .srowday{transition:none!important}}
+/* Android tablets still flashed the sunset sky for a split second at night ⇄ sunset even with no fade: the full-screen night wash is a separate
+   layer the tablet briefly stops drawing. On tablets the night colours are painted straight onto the stage instead, so there is no layer to drop. */
+@media (min-width:700px){.touch .theme-stage .nightwash{display:none!important}
+ .touch .theme-stage.sky-night,.touch #tstage.theme-stage.sky-night{background:linear-gradient(180deg,#0a1440 0%,#13266b 40%,#1d3a8a 72%,#2a3f7a 100%)}}
 </style>
 </head>
 <body>

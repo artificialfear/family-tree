@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-26 — Tablet night sky painted directly
+- Second fix for the Android tablet flash on the sunset/night button: on tablets the night sky is now painted straight onto the stage instead of laid over the sunset as a separate layer, so there's no layer for the tablet to drop for a frame.
+
 ## 2026-11-25 — Tablet sky switches instantly
 - On tablets the sky now switches between sunset and night at once instead of fading over 3 seconds. Mat's screen recording showed the Android tablet flashing the opposite sky for a split second each time the fade started. The sun and moon still slide in and out.
 
