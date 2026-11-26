@@ -520,7 +520,7 @@ function treeArt(st,dl){
       ground='';
       // roots that lead to the places the family came from
       // below the grandchildren (their name scrolls end near y 1590), so the roots fan out under the whole family
-      const G=STAGE&&!ART?SOILD-SOIL0:FLAT?GY+640-1725:DROP,PINS=(ART?ROOTPINS.map(([k,x,y,yr])=>[k,...(ARTPINS[k]||[x,y]),yr]):ROOTPINS).map(([k,x,y,yr])=>[k,FLAT?915+(x-915)*(innerWidth<700?.78:2.2):x,y+G,yr]);/* level ground: the hometowns spread out wide now the chest isn't underground */
+      const G=STAGE&&!ART?SOILD-SOIL0:FLAT?GY+640-1725:DROP,PINS=(ART?ROOTPINS.map(([k,x,y,yr])=>[k,...(ARTPINS[k]||[x,y]),yr]):ROOTPINS).map(([k,x,y,yr])=>[k,FLAT?915+(x-915)*(innerWidth<700?.8:2.15):x,(FLAT?1725+(y-1725)*1.2:y)+G,yr]);/* level ground: the hometowns spread out wide now the chest isn't underground */
       const HUB=FLAT?1650:ART?1630:1600,RY=FLAT?GY+140:1272+DROP+300,RB={x1:915,y1:ART?RY:1290,cx:915,cy:ART?(RY+HUB+G)/2:1420+G/2,x2:915,y2:HUB+G};let rts=`${rootP(RB,30,16)}`,pins='';
       PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=HUB-8+G;let b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
         // preview: side roots head out sideways first so they pass beside the chest; the root to Covington (straight below the chest) bends around its right side
@@ -529,7 +529,7 @@ function treeArt(st,dl){
         else rts+=`${rootP(b,13,2.2)}`;
         for(let j=0;j<3;j++){const t=.35+j*.2,[qx,qy]=qpt(b,t),dir=(j%2?1:-1)*(px<915?1:-1),c={x1:qx,y1:qy,cx:qx+dir*24,cy:qy+22,x2:qx+dir*(30+rnd()*30),y2:qy+50+rnd()*30};rts+=`<path class="root" d="${taperPath(c,4,.6)}" opacity=".8"/>`;}
         const nm=(PL_NAMES[k]||k).replace(' (Meriwether Co.)','');
-        pins+=`<g class="rootpin" data-p="${k}" tabindex="0" role="button" aria-label="${esc(nm)} — show on the map" style="--d:${0}ms"><circle cx="${px}" cy="${py}" r="22" fill="transparent"/>${PREVIEW?`<circle class="pglow" cx="${px}" cy="${py}" r="20"/><circle class="pbr" cx="${px}" cy="${py}" r="10.5"/><circle class="pbh" cx="${px-3.2}" cy="${py-3.4}" r="3"/>`:`<circle class="pg" cx="${px}" cy="${py}" r="11"/><circle class="pd" cx="${px}" cy="${py}" r="5.5"/>`}<text x="${px}" y="${py+36}" class="pl">${esc(nm)}</text>${yr?`<text x="${px}" y="${py+56}" class="py">${yr}</text>`:''}</g>`;});
+        pins+=`<g class="rootpin" data-p="${k}" tabindex="0" role="button" aria-label="${esc(nm)} — show on the map" style="--d:${0}ms"><circle cx="${px}" cy="${py}" r="22" fill="transparent"/>${PREVIEW?`<circle class="pglow" cx="${px}" cy="${py}" r="20"/><circle class="pbr" cx="${px}" cy="${py}" r="10.5"/><circle class="pbh" cx="${px-3.2}" cy="${py-3.4}" r="3"/>`:`<circle class="pg" cx="${px}" cy="${py}" r="11"/><circle class="pd" cx="${px}" cy="${py}" r="5.5"/>`}<text x="${px}" y="${py+(FLAT?44:36)}" class="pl">${esc(nm)}</text>${yr?`<text x="${px}" y="${py+(FLAT?68:56)}" class="py">${yr}</text>`:''}</g>`;});
       ROOTS=`<g class="art roots">${rts}</g>${pins}`;}
     under=(!PRINT?'':`<rect class="art" x="${X0-400}" y="${TB.y0-300}" width="${X1-X0+800}" height="${gb-TB.y0+600}" filter="url(#grain)"/>`)+`<g class="art" filter="url(#wc)">${wash}</g>`;
     const pdefs=!PRINT?`<radialGradient id="pfill" gradientUnits="userSpaceOnUse" cx="915" cy="1272" r="1500"><stop offset="0" stop-color="${PL.a}"/><stop offset=".35" stop-color="${PL.b}"/><stop offset="1" stop-color="${PL.c}"/></radialGradient>

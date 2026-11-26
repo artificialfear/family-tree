@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-25 — Hometowns work again (preview only)
+- Fixed: on the preview, hovering over or clicking a hometown under the tree did nothing. (The painted brass pins from the roots trial didn't have the dot the hometown note looks for, so the note silently failed.)
+- Hometown names are about 40% larger, and the hometowns sit 20% farther apart down the roots.
+
 ## 2026-11-25 — All roots fit on a phone (preview only)
 - On phones the hometown roots spread less, so all eight hometowns and their names fit on the screen at once when you scroll down to them. Computers keep the wide spread.
 

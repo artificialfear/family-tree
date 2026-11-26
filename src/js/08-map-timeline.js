@@ -22,7 +22,7 @@ function showPlace(pin,pin2){const k=pin.dataset.p,name=PL_NAMES[k]||PL[k]||k;cl
   if(placeKey===k&&!$('#mnote').hidden)return;placeKey=k;
   const evs=EV.filter(e=>e.p===k).sort((a,b)=>(a.y||0)-(b.y||0)),who=[...new Set(evs.flatMap(e=>e.w||[]))].filter(id=>byId[id]);
   const faces=who.slice(0,8).map(id=>`<button class="pf" data-go="${id}" title="${esc(byId[id].n)}">${photo[id]?`<img src="${esc(photo[id])}" alt="">`:`<span>${esc(initials(byId[id].s))}</span>`}<i>${esc(byId[id].s.split(' ')[0])}</i></button>`).join('');
-  const r=$('#tstage').getBoundingClientRect(),q=pin.querySelector('.pd').getBoundingClientRect();
+  const r=$('#tstage').getBoundingClientRect(),q=(pin.querySelector('.pd,.pbr')||pin).getBoundingClientRect();/* painted pins (preview) have no .pd dot */
   showNote(`<div class="place"><div class="g1">${esc(name)}</div>${evs.length?`<ul>${evs.slice(0,8).map(e=>`<li><b>${e.y?(e.a?'c. ':'')+e.y:''}</b> ${esc(e.t)}</li>`).join('')}</ul>`:'<p>Part of the family story.</p>'}${faces?`<div class="pfaces">${faces}</div>`:''}<button class="maplink" data-map="${k}">See it on the map →</button></div>`,q.left-r.left+q.width/2,q.bottom-r.top);
   who.forEach((id,i)=>setTimeout(()=>spotlight(id),i*120));
   const n=$('#mnote');n.classList.add('placenote');

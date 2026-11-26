@@ -667,3 +667,5 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 @keyframes cslideFw{from{transform:translateX(19px)}to{transform:translateX(-19px)}}
 @keyframes cslideBw{from{transform:translateX(-15px)}to{transform:translateX(15px)}}
 .preview .kdirt{display:none}
+/* level ground (preview): bigger hometown names, now there's room underground */
+.preview .rootpin .pl{font-size:27px;stroke-width:6px}.preview .rootpin .py{font-size:19px}
