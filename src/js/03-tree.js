@@ -520,7 +520,7 @@ function treeArt(st,dl){
       ground='';
       // roots that lead to the places the family came from
       // below the grandchildren (their name scrolls end near y 1590), so the roots fan out under the whole family
-      const G=STAGE&&!ART?SOILD-SOIL0:FLAT?GY+640-1725:DROP,PINS=(ART?ROOTPINS.map(([k,x,y,yr])=>[k,...(ARTPINS[k]||[x,y]),yr]):ROOTPINS).map(([k,x,y,yr])=>[k,FLAT?915+(x-915)*2.2:x,y+G,yr]);/* level ground: the hometowns spread out wide now the chest isn't underground */
+      const G=STAGE&&!ART?SOILD-SOIL0:FLAT?GY+640-1725:DROP,PINS=(ART?ROOTPINS.map(([k,x,y,yr])=>[k,...(ARTPINS[k]||[x,y]),yr]):ROOTPINS).map(([k,x,y,yr])=>[k,FLAT?915+(x-915)*(innerWidth<700?.78:2.2):x,y+G,yr]);/* level ground: the hometowns spread out wide now the chest isn't underground */
       const HUB=FLAT?1650:ART?1630:1600,RY=FLAT?GY+140:1272+DROP+300,RB={x1:915,y1:ART?RY:1290,cx:915,cy:ART?(RY+HUB+G)/2:1420+G/2,x2:915,y2:HUB+G};let rts=`${rootP(RB,30,16)}`,pins='';
       PINS.forEach(([k,px,py,yr],i)=>{const sx=915+(px<915?-6:px>915?6:0),sy=HUB-8+G;let b={x1:sx,y1:sy,cx:sx+(px-sx)*.25,cy:py-40,x2:px,y2:py-10};
         // preview: side roots head out sideways first so they pass beside the chest; the root to Covington (straight below the chest) bends around its right side

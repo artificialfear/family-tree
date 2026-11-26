@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — All roots fit on a phone (preview only)
+- On phones the hometown roots spread less, so all eight hometowns and their names fit on the screen at once when you scroll down to them. Computers keep the wide spread.
+
 ## 2026-11-25 — Wooden chest and wider roots (preview only)
 - The preview's chest is now Mat's wooden straight-on chest (no label).
 - The hometown roots spread out more than twice as wide underground, now that the chest isn't buried in the middle.
