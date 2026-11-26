@@ -293,7 +293,7 @@ function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contr
   const free=(x,y)=>obst.every(([ox,oy,or])=>Math.hypot(x-ox,y-oy)>or+12)&&taken.every(([tx,ty])=>Math.hypot(x-tx,y-ty)>30);
   const ANG=[-50,-130,-90,-20,-160,-70,-110,10,190,30,150];
   // on the stage every memory is a flower in the garden instead (Mat, 2026-11-23), so no stars beside people or in the sky
-  if(STAGE&&inTree){box.innerHTML='';let g=tw.querySelector('#tmstars');if(!g){g=document.createElementNS('http://www.w3.org/2000/svg','g');g.id='tmstars';tw.appendChild(g);}g.innerHTML=gardenSVG(list);msScale();return;}
+  if(STAGE&&inTree){box.innerHTML='';let g=tw.querySelector('#tmstars');if(!g){g=document.createElementNS('http://www.w3.org/2000/svg','g');g.id='tmstars';tw.appendChild(g);}g.innerHTML=gardenSVG(list);msScale();placeChest();return;}
   list.forEach(c=>{const h=hsh(c.id),v=inTree&&TP[c.pid];let spot=null;
     if(v)for(const d of [v.r+26,v.r+46,v.r+66]){for(const a of ANG){const x=v.x+Math.cos(a*Math.PI/180)*d,y=v.y+Math.sin(a*Math.PI/180)*d;if(free(x,y)){spot=[x,y];break;}}if(spot)break;}
     const lab=`A memory about ${esc(byId[c.pid].n)}`;
@@ -578,6 +578,11 @@ function bakeArt(art,html){
 /* the chest wiggles now and then until it has been opened once on this device */
 if(store.get('ftChestSeen'))document.documentElement.classList.add('chestseen');
 addEventListener('hashchange',()=>{if(location.hash==='#keepsakes'){store.set('ftChestSeen','1');document.documentElement.classList.add('chestseen');}});
+/* PREVIEW: the chest picture floats on the front world layer (an HTML layer that pans and zooms with the tree), so its wiggle is a cheap
+   GPU move that never makes a tablet redraw the tree; the drawing in the tree keeps the glow and still takes the taps */
+function placeChest(){if(!(PREVIEW&&FLAT))return;const fr=$('#tfront');if(!fr)return;let im=$('#kfl');
+  if(!im){im=document.createElement('img');im.id='kfl';im.alt='';im.decoding='async';im.src='photos/art/chest-wood.webp';fr.appendChild(im);}
+  const s=CHEST.s;im.style.cssText=`left:${(CHEST.x-60*s).toFixed(1)}px;top:${(CHEST.y-67.2*s).toFixed(1)}px;width:${(120*s).toFixed(1)}px;height:${(75.2*s).toFixed(1)}px`;}
 let kinOn=false;// only after someone taps a person (Mat is selected when the page opens, but nothing should be lit then)
 function markKin(){if(!ART)return;const p=kinOn&&byId[sel],K=new Set();if(p){(p.par||[]).forEach(q=>K.add(q));if(p.sp)K.add(p.sp);P.forEach(q=>{if((q.par||[]).includes(sel))K.add(q.id);});}
   tw.querySelectorAll('.leaf').forEach(c=>c.classList.toggle('kin',K.has(c.dataset.id)));

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-26 — Preview: chest wiggles on tablets, flash-free sky trial
+- On the preview, the chest picture now floats on its own layer that moves with the tree, so it can wiggle on tablets too without making the tablet redraw the tree.
+- Tablets go back to plain GPU fades for the night ⇄ sunset change (no redrawing every frame), and the fading pieces are readied a split second before the fade starts — the moment the old version flashed.
+
 ## 2026-11-26 — Smooth tablet sky, tablet clouds and the wiggling chest are live
 - Tablets now slide the clouds and fade the sky, stars and clouds smoothly between sunset and night (a few rare flashes may remain on the Android tablet).
 - The keepsake chest wiggles every 4 seconds on phones and computers until it has been opened on that device.

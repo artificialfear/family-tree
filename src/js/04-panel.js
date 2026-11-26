@@ -93,7 +93,12 @@ const goPerson=(id,form)=>{location.hash='tree';setTimeout(()=>{select(id,1);tFo
 $('#asks').addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();goPerson(g.dataset.go);}});
 $('#wanted').addEventListener('click',e=>{const b=e.target.closest('[data-want]');if(b)goPerson(b.dataset.want,'photo');});
 // night ⇄ sunset only. On the stage the change is animated (moon/sun on strings, sky fades), so the tree isn't redrawn
-$('#tSky').onclick=()=>{SKYPREF=SKY==='day'?'night':'day';store.set('sky',SKYPREF);if(STAGE){applySky(false);sunLight();}else applySky(true);};
+$('#tSky').onclick=()=>{SKYPREF=SKY==='day'?'night':'day';store.set('sky',SKYPREF);const go=()=>{if(STAGE){applySky(false);sunLight();}else applySky(true);};
+  /* PREVIEW, tablets: put the fading sky pieces on their own GPU layers a moment *before* the fade starts (promoting them in the same frame
+     as the change is what made the tablet skip drawing them for a frame), then let them go again once the fade is done */
+  if(PREVIEW&&TOUCH&&innerWidth>=700){const st=$('#tstage');clearTimeout(st._sp);st.classList.add('skyprep');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>{go();st._sp=setTimeout(()=>st.classList.remove('skyprep'),3600);},150)));}
+  else go();};
 /* ---------- larger text ---------- */
 function setBig(on){document.body.classList.toggle('big',on);store.set('bigtext',on?'1':'0');
   $('#bigBtn').setAttribute('aria-pressed',on);$('#bigBtn').textContent=on?'Aa Normal text':'Aa Larger text';$('#tBig').setAttribute('aria-pressed',on);$('#tBig').setAttribute('aria-label',on?'Normal text':'Larger text');

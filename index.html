@@ -893,6 +893,28 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 @keyframes kwig{0%,77%,100%{transform:none}80%{transform:rotate(-4deg)}84.5%{transform:rotate(4deg)}89%{transform:rotate(-3deg)}93.5%{transform:rotate(2.5deg)}97.5%{transform:rotate(-1deg)}}
 .chestseen .kwig,body.sheeton .kwig{animation:none!important}
 @media (prefers-reduced-motion:reduce){.kwig{animation:none!important}}
+/* ---------- PREVIEW trials (2026-11-26) ---------- */
+/* floating chest picture (see placeChest) */
+#kfl{display:none}
+.preview #kfl{display:block;position:absolute;pointer-events:none;transform-origin:50% 100%;will-change:transform;animation:kwig 4s ease-in-out 2s infinite;transition:translate .2s,scale .2s,opacity .6s}
+.preview.chestseen #kfl,body.sheeton #kfl{animation:none}
+@media (prefers-reduced-motion:reduce){.preview #kfl{animation:none}}
+.preview #tmstars .kchest .kwig{visibility:hidden}
+#tstage:has(#tworld.story) #kfl,#tstage:has(#tworld.morph) #kfl{opacity:.5}
+#tstage:has(.kchest:hover) #kfl,#tstage:has(.kchest:focus-visible) #kfl{translate:0 -3px;scale:1.05}
+/* tablets: back to plain GPU fades for night ⇄ sunset (no per-frame repainting), with the layers promoted ahead of time by .skyprep */
+@media (min-width:700px){
+ .preview.touch #tstage.theme-stage{transition:none;background:linear-gradient(180deg,#3a3f78 0%,#6a4f8a 22%,#b0608a 44%,#e8807a 62%,#ffa86a 78%,#ffcf8a 90%,#ffe6b0 100%)}
+ .preview.touch .theme-stage .nightwash{display:block!important;opacity:1;transition:opacity 3s ease-in-out!important}
+ .preview.touch .theme-stage.sky-day .nightwash{opacity:0}
+ .preview.touch .theme-stage .sky .sunglow{display:block!important;opacity:0;transition:opacity 3s ease-in-out!important}
+ .preview.touch .theme-stage.sky-day .sky .sunglow{opacity:1}
+ .preview.touch .theme-stage .sky .stars{opacity:1!important;transition:opacity 3s ease-in-out!important}
+ .preview.touch .theme-stage.sky-day .sky .stars{opacity:.12!important}
+ .preview.touch .theme-stage .sky .cloud,.preview.touch .theme-stage .sbackdrop .srowday{opacity:0!important;transition:opacity 3s ease-in-out!important}
+ .preview.touch .theme-stage.sky-day .sky .cloud,.preview.touch .theme-stage.sky-day .sbackdrop .srowday{opacity:1!important}
+ .preview.touch .skyprep .nightwash,.preview.touch .skyprep .sky .sunglow,.preview.touch .skyprep .sky .stars,.preview.touch .skyprep .sky .cloud,.preview.touch .skyprep .sbackdrop .srowday{will-change:opacity!important}
+}
 </style>
 </head>
 <body>
@@ -1640,7 +1662,7 @@ function renderMemStars(){const box=$('#mstars');if(!box)return;const list=contr
   const free=(x,y)=>obst.every(([ox,oy,or])=>Math.hypot(x-ox,y-oy)>or+12)&&taken.every(([tx,ty])=>Math.hypot(x-tx,y-ty)>30);
   const ANG=[-50,-130,-90,-20,-160,-70,-110,10,190,30,150];
   // on the stage every memory is a flower in the garden instead (Mat, 2026-11-23), so no stars beside people or in the sky
-  if(STAGE&&inTree){box.innerHTML='';let g=tw.querySelector('#tmstars');if(!g){g=document.createElementNS('http://www.w3.org/2000/svg','g');g.id='tmstars';tw.appendChild(g);}g.innerHTML=gardenSVG(list);msScale();return;}
+  if(STAGE&&inTree){box.innerHTML='';let g=tw.querySelector('#tmstars');if(!g){g=document.createElementNS('http://www.w3.org/2000/svg','g');g.id='tmstars';tw.appendChild(g);}g.innerHTML=gardenSVG(list);msScale();placeChest();return;}
   list.forEach(c=>{const h=hsh(c.id),v=inTree&&TP[c.pid];let spot=null;
     if(v)for(const d of [v.r+26,v.r+46,v.r+66]){for(const a of ANG){const x=v.x+Math.cos(a*Math.PI/180)*d,y=v.y+Math.sin(a*Math.PI/180)*d;if(free(x,y)){spot=[x,y];break;}}if(spot)break;}
     const lab=`A memory about ${esc(byId[c.pid].n)}`;
@@ -1925,6 +1947,11 @@ function bakeArt(art,html){
 /* the chest wiggles now and then until it has been opened once on this device */
 if(store.get('ftChestSeen'))document.documentElement.classList.add('chestseen');
 addEventListener('hashchange',()=>{if(location.hash==='#keepsakes'){store.set('ftChestSeen','1');document.documentElement.classList.add('chestseen');}});
+/* PREVIEW: the chest picture floats on the front world layer (an HTML layer that pans and zooms with the tree), so its wiggle is a cheap
+   GPU move that never makes a tablet redraw the tree; the drawing in the tree keeps the glow and still takes the taps */
+function placeChest(){if(!(PREVIEW&&FLAT))return;const fr=$('#tfront');if(!fr)return;let im=$('#kfl');
+  if(!im){im=document.createElement('img');im.id='kfl';im.alt='';im.decoding='async';im.src='photos/art/chest-wood.webp';fr.appendChild(im);}
+  const s=CHEST.s;im.style.cssText=`left:${(CHEST.x-60*s).toFixed(1)}px;top:${(CHEST.y-67.2*s).toFixed(1)}px;width:${(120*s).toFixed(1)}px;height:${(75.2*s).toFixed(1)}px`;}
 let kinOn=false;// only after someone taps a person (Mat is selected when the page opens, but nothing should be lit then)
 function markKin(){if(!ART)return;const p=kinOn&&byId[sel],K=new Set();if(p){(p.par||[]).forEach(q=>K.add(q));if(p.sp)K.add(p.sp);P.forEach(q=>{if((q.par||[]).includes(sel))K.add(q.id);});}
   tw.querySelectorAll('.leaf').forEach(c=>c.classList.toggle('kin',K.has(c.dataset.id)));
@@ -2205,7 +2232,12 @@ const goPerson=(id,form)=>{location.hash='tree';setTimeout(()=>{select(id,1);tFo
 $('#asks').addEventListener('click',e=>{const g=e.target.closest('[data-go]');if(g){e.preventDefault();goPerson(g.dataset.go);}});
 $('#wanted').addEventListener('click',e=>{const b=e.target.closest('[data-want]');if(b)goPerson(b.dataset.want,'photo');});
 // night ⇄ sunset only. On the stage the change is animated (moon/sun on strings, sky fades), so the tree isn't redrawn
-$('#tSky').onclick=()=>{SKYPREF=SKY==='day'?'night':'day';store.set('sky',SKYPREF);if(STAGE){applySky(false);sunLight();}else applySky(true);};
+$('#tSky').onclick=()=>{SKYPREF=SKY==='day'?'night':'day';store.set('sky',SKYPREF);const go=()=>{if(STAGE){applySky(false);sunLight();}else applySky(true);};
+  /* PREVIEW, tablets: put the fading sky pieces on their own GPU layers a moment *before* the fade starts (promoting them in the same frame
+     as the change is what made the tablet skip drawing them for a frame), then let them go again once the fade is done */
+  if(PREVIEW&&TOUCH&&innerWidth>=700){const st=$('#tstage');clearTimeout(st._sp);st.classList.add('skyprep');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>setTimeout(()=>{go();st._sp=setTimeout(()=>st.classList.remove('skyprep'),3600);},150)));}
+  else go();};
 /* ---------- larger text ---------- */
 function setBig(on){document.body.classList.toggle('big',on);store.set('bigtext',on?'1':'0');
   $('#bigBtn').setAttribute('aria-pressed',on);$('#bigBtn').textContent=on?'Aa Normal text':'Aa Larger text';$('#tBig').setAttribute('aria-pressed',on);$('#tBig').setAttribute('aria-label',on?'Normal text':'Larger text');
