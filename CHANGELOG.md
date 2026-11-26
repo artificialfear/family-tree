@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — Computer clouds match the phone
+- On computers the cloud rows now slide about twice as far in the same time, so they feel as lively as on phones (the clouds are drawn much bigger on a computer, so the same small slide looked slower).
+
 ## 2026-11-25 — Livelier clouds
 - The sliding cloud rows now sway a little faster: each slide takes 4.5 seconds instead of 6.
 

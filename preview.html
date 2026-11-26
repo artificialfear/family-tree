@@ -855,6 +855,10 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 @keyframes cslideB{from{transform:translateX(-7px)}to{transform:translateX(7px)}}
 @media (prefers-reduced-motion:reduce){.sbackdrop .crow{animation:none}}
 @media (min-width:700px){.touch .sbackdrop .crow{animation:none}} /* Android tablets flash with big animated layers */
+/* wide screens: the cloud flats are drawn much bigger, so slide them farther to keep the same felt speed as on phones */
+@media (min-width:700px){.sbackdrop .crow{animation-name:cslideFw}.sbackdrop .crow.cback{animation-name:cslideBw}}
+@keyframes cslideFw{from{transform:translateX(19px)}to{transform:translateX(-19px)}}
+@keyframes cslideBw{from{transform:translateX(-15px)}to{transform:translateX(15px)}}
 </style>
 </head>
 <body>
@@ -1511,7 +1515,7 @@ function stageBackdrop(W,H,mqb=200,gb=0,obs=[]){const ph=W<700;let sd=11;const r
   const RH=Math.ceil(top+(ph?8:14)+(ph?60:90)*1.25*1.35*.6+14);
   if(ART){const SH=Math.ceil(top+(ph||H<520?78:205)),im=d=>`<svg class="srow${d?' srowday':''}" width="${W}" height="${SH}" viewBox="0 0 ${W} ${SH}" style="width:${W}px;height:${SH}px"><image href="photos/art/clouds-strip${d?'-day':''}.webp" width="${W}" height="${SH}" preserveAspectRatio="xMidYMax slice"/></svg>`;
     {/* two cut-out cloud rows slid on rods in opposite directions; the back row is a darker flipped copy hanging a little lower */
-      const P2=24,dy=ph?7:12,rw=(d,b)=>`<svg class="srow${d?' srowday':''}" width="${W}" height="${SH+dy}" viewBox="0 0 ${W} ${SH+dy}" style="width:${W}px;height:${SH+dy}px"><image href="photos/art/clouds-strip${b?'-back':''}${d?'-day':''}.webp" x="${-P2}" y="${b?dy:0}" width="${W+2*P2}" height="${SH}" preserveAspectRatio="xMidYMax slice"/></svg>`;
+      const P2=ph?24:44,dy=ph?7:12,rw=(d,b)=>`<svg class="srow${d?' srowday':''}" width="${W}" height="${SH+dy}" viewBox="0 0 ${W} ${SH+dy}" style="width:${W}px;height:${SH+dy}px"><image href="photos/art/clouds-strip${b?'-back':''}${d?'-day':''}.webp" x="${-P2}" y="${b?dy:0}" width="${W+2*P2}" height="${SH}" preserveAspectRatio="xMidYMax slice"/></svg>`;
       return `<div class="crow cback">${rw(0,1)}${rw(1,1)}</div><div class="crow cfront">${rw(0,0)}${rw(1,0)}</div>`+stars+clouds;}
     return im(0)+im(1)+stars+clouds;}
   return `<svg class="srow" width="${W}" height="${RH}" viewBox="0 0 ${W} ${RH}" style="width:${W}px;height:${RH}px"><defs><linearGradient id="scg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c4fae"/><stop offset="1" stop-color="#18307a"/></linearGradient>
