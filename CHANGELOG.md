@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-11-25 — Tablet sky switches instantly
+- On tablets the sky now switches between sunset and night at once instead of fading over 3 seconds. Mat's screen recording showed the Android tablet flashing the opposite sky for a split second each time the fade started. The sun and moon still slide in and out.
+
 ## 2026-11-25 — Tablet flash on the day/night button
 - Fixed small flashes on the Android tablet when switching between sunset and night. The two new cloud rows were each kept as a separate graphics layer for the sliding motion, even on tablets where the clouds stay still, and the tablet flickered when those layers faded between day and night.
 

@@ -669,3 +669,5 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 .art .kdirt{display:none}
 /* level ground (preview): bigger hometown names, now there's room underground */
 .art .rootpin .pl{font-size:27px;stroke-width:6px}.art .rootpin .py{font-size:19px}
+/* Android tablets: the full-screen night wash (and the other sky layers) flicker for a frame when their 3-second fade starts, so on tablets the sky switches between sunset and night at once; the sun and moon still slide in and out */
+@media (min-width:700px){.touch .theme-stage .nightwash,.touch .theme-stage .sky .sunglow,.touch .theme-stage .sky .skydim,.touch .theme-stage .sky .cloud,.touch .theme-stage .sky .stars,.touch .sbackdrop .srowday{transition:none!important}}
