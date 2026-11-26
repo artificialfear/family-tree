@@ -667,4 +667,3 @@ html:not(.touch) #tmstars .hglow{animation:hflick 3.2s ease-in-out infinite alte
 @keyframes cslideFw{from{transform:translateX(19px)}to{transform:translateX(-19px)}}
 @keyframes cslideBw{from{transform:translateX(-15px)}to{transform:translateX(15px)}}
 .preview .kdirt{display:none}
-.klabel{font-family:Spectral,Georgia,serif;font-style:italic;font-weight:700;font-size:7.4px;fill:#6b4515;letter-spacing:.2px;pointer-events:none}

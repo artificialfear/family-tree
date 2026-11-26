@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-25 — Wooden chest and wider roots (preview only)
+- The preview's chest is now Mat's wooden straight-on chest (no label).
+- The hometown roots spread out more than twice as wide underground, now that the chest isn't buried in the middle.
+
 ## 2026-11-25 — "Keepsakes" chest label (preview only)
 - The preview's chest is about 20% smaller and has "Keepsakes" lettered on its cream panel.
 
